@@ -14,7 +14,7 @@
     "prismaMigrateLocalNoSeed": "dotenv -e .env.local -- npx prisma migrate dev --skip-seed",
     "prismaDBSeed": "dotenv -e .env.local -- npx prisma db seed",
     "prismaDBReset": "dotenv -e .env.local -- npx prisma db push --force-reset && dotenv -e .env.local -- npx prisma db seed",
-    "vercel-build": "prisma generate && prisma migrate deploy && next build"
+    "vercelBuild": "prisma generate && prisma migrate deploy && next build"
   },
   "dependencies": {
     "@apollo/client": "^3.7.17",
