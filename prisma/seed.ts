@@ -22,7 +22,7 @@ async function main() {
       featureDiscovery: ['asdf1'],
       emailProvider: ['email1'],
       theme: 'light',
-      notifications: { 'asdf': '1234' },
+      notifications: { asdf: '1234' },
       updatedAt: new Date(),
       userRole: 'SUPERADMIN',
     },
@@ -47,7 +47,7 @@ async function main() {
       featureDiscovery: ['asdf1'],
       emailProvider: ['email1'],
       theme: 'light',
-      notifications: { 'asdf': '1234' },
+      notifications: { asdf: '1234' },
       updatedAt: new Date(),
       userRole: 'SUPERADMIN',
     },
@@ -88,7 +88,7 @@ async function main() {
   console.log({ company3 })
 
   const defaultRoles = async (companyIdS: string) => {
-    let companyId = parseInt(companyIdS)
+    const companyId = parseInt(companyIdS)
 
     const role1 = await prisma.role.upsert({
       where: { id: companyId * 1000 + 1 },
@@ -122,7 +122,7 @@ async function main() {
     })
   }
 
-  for (let company of [company1, company2, company3]) {
+  for (const company of [company1, company2, company3]) {
     await defaultRoles(company.id)
   }
 
@@ -162,17 +162,19 @@ async function main() {
     },
   })
 
-  const adminPhoto = '1' || await prisma.attachment.upsert({
-    where: { id: 1 },
-    update: {},
-    create: {
-      contentType: 'profilePhoto',
-      filename: 'photo1.png',
-      path: '/images/photo1.png',
-      uploaderId: 1,
-      updatedAt: new Date(),
-    },
-  })
+  const adminPhoto =
+    '1' ||
+    (await prisma.attachment.upsert({
+      where: { id: 1 },
+      update: {},
+      create: {
+        contentType: 'profilePhoto',
+        filename: 'photo1.png',
+        path: '/images/photo1.png',
+        uploaderId: 1,
+        updatedAt: new Date(),
+      },
+    }))
 }
 
 main()
