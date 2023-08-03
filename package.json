@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "CHOKIDAR_USEPOLLING=true  next dev",
-    "build": "prisma generate && prisma migrate deploy && next build",
+    "build": "npm install -g dotenv-cli && prisma generate && prisma migrate deploy && next build",
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix && npx prisma format",
