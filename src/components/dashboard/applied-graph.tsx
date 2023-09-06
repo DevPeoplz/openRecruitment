@@ -31,6 +31,11 @@ const baseChartOptions: GoogleChartOptions = {
   },
   chartArea: { width: '95%', height: '80%' },
   pointSize: 5,
+  animation: {
+    startup: true,
+    easing: 'linear',
+    duration: 300,
+  },
 }
 
 function reducerChartOptions(state: GoogleChartOptions, action: string) {
