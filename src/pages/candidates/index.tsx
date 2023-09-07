@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useMemo } from 'react'
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { LayoutSideMenu } from '@/components/layout/main/layout-side-menu'
 import {
   Column,
@@ -35,13 +35,174 @@ import { ArrowDownCircleIcon, ArrowUpCircleIcon } from '@heroicons/react/20/soli
 import { Select } from '@/components/UI/select'
 import { useSession } from 'next-auth/react'
 import { getLocalStorageKey } from '@/components/utils'
+import DropdownWithChecks from '@/components/UI/dropdown-with-checks'
+import {
+  ArrowPathIcon,
+  ArrowPathRoundedSquareIcon,
+  ViewColumnsIcon,
+} from '@heroicons/react/24/outline'
 
 const Page = () => {
   const sidebar = (
     <div className="flex grow flex-col gap-y-5 overflow-y-auto  border-gray-200 bg-white pt-3">
       <nav className="flex flex-1 flex-col">
         <ul>
-          <li>Sidebar</li>
+          <div className="max-w-100 border-t border-gray-200 p-5">
+            <h2 className="text-lg font-medium text-gray-900">Filters Placeholder...</h2>
+
+            <div className="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
+              <div>
+                <label htmlFor="first-name" className="block text-sm font-medium text-gray-700">
+                  First name
+                </label>
+                <div className="mt-1">
+                  <input
+                    type="text"
+                    id="first-name"
+                    name="first-name"
+                    autoComplete="given-name"
+                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="last-name" className="block text-sm font-medium text-gray-700">
+                  Last name
+                </label>
+                <div className="mt-1">
+                  <input
+                    type="text"
+                    id="last-name"
+                    name="last-name"
+                    autoComplete="family-name"
+                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  />
+                </div>
+              </div>
+
+              <div className="sm:col-span-2">
+                <label htmlFor="company" className="block text-sm font-medium text-gray-700">
+                  Company
+                </label>
+                <div className="mt-1">
+                  <input
+                    type="text"
+                    name="company"
+                    id="company"
+                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  />
+                </div>
+              </div>
+
+              <div className="sm:col-span-2">
+                <label htmlFor="address" className="block text-sm font-medium text-gray-700">
+                  Address
+                </label>
+                <div className="mt-1">
+                  <input
+                    type="text"
+                    name="address"
+                    id="address"
+                    autoComplete="street-address"
+                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  />
+                </div>
+              </div>
+
+              <div className="sm:col-span-2">
+                <label htmlFor="apartment" className="block text-sm font-medium text-gray-700">
+                  Apartment, suite, etc.
+                </label>
+                <div className="mt-1">
+                  <input
+                    type="text"
+                    name="apartment"
+                    id="apartment"
+                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="city" className="block text-sm font-medium text-gray-700">
+                  City
+                </label>
+                <div className="mt-1">
+                  <input
+                    type="text"
+                    name="city"
+                    id="city"
+                    autoComplete="address-level2"
+                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="country" className="block text-sm font-medium text-gray-700">
+                  Country
+                </label>
+                <div className="mt-1">
+                  <select
+                    id="country"
+                    name="country"
+                    autoComplete="country-name"
+                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  >
+                    <option>United States</option>
+                    <option>Canada</option>
+                    <option>Mexico</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="region" className="block text-sm font-medium text-gray-700">
+                  State / Province
+                </label>
+                <div className="mt-1">
+                  <input
+                    type="text"
+                    name="region"
+                    id="region"
+                    autoComplete="address-level1"
+                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="postal-code" className="block text-sm font-medium text-gray-700">
+                  Postal code
+                </label>
+                <div className="mt-1">
+                  <input
+                    type="text"
+                    name="postal-code"
+                    id="postal-code"
+                    autoComplete="postal-code"
+                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  />
+                </div>
+              </div>
+
+              <div className="sm:col-span-2">
+                <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                  Phone
+                </label>
+                <div className="mt-1">
+                  <input
+                    type="text"
+                    name="phone"
+                    id="phone"
+                    autoComplete="tel"
+                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
         </ul>
       </nav>
     </div>
@@ -100,7 +261,6 @@ const defaultColumns: ColumnDef<Person>[] = [
     header: 'Age',
     footer: (props) => props.column.id,
   },
-
   {
     accessorKey: 'visits',
     id: 'visits',
@@ -192,23 +352,34 @@ const DraggableColumnHeader: FC<{
 
 function HubTable() {
   const { data: session } = useSession()
-  const [data, setData] = React.useState(() => makeData(20))
-  const [columns] = React.useState(() => [...defaultColumns])
-  const [sorting, setSorting] = React.useState<SortingState>([])
-  const [globalFilter, setGlobalFilter] = React.useState('')
+  const [data, setData] = useState(() => makeData(20))
+  const [columns] = useState(() => [...defaultColumns])
+  const [sorting, setSorting] = useState<SortingState>([])
+  const [globalFilter, setGlobalFilter] = useState('')
 
-  const storageKey = useMemo(() => {
-    if (!session?.user?.email || !session?.user?.selectedCompany) return undefined
+  const storageKey = useCallback(
+    (key: string) => {
+      if (!session?.user?.email || !session?.user?.selectedCompany) return ''
 
-    return getLocalStorageKey(
-      `${session?.user?.email}//${session?.user?.selectedCompany}`,
-      'candidate-hub',
-      'columnOrder'
+      return getLocalStorageKey(
+        `${session?.user?.email}//${session?.user?.selectedCompany}`,
+        'candidate-hub',
+        key
+      )
+    },
+    [session?.user?.email, session?.user?.selectedCompany]
+  )
+
+  const [columnVisibility, setColumnVisibility] = useState(() => {
+    const storedColumnVisibility = JSON.parse(
+      localStorage.getItem(storageKey('columnVisibility')) as string
     )
-  }, [session?.user?.email, session?.user?.selectedCompany])
+
+    return storedColumnVisibility ? storedColumnVisibility : {}
+  })
 
   const [columnOrder, setColumnOrder] = React.useState<ColumnOrderState>(() => {
-    const storedColumnOrder = JSON.parse(localStorage.getItem(storageKey ?? '') as string)
+    const storedColumnOrder = JSON.parse(localStorage.getItem(storageKey('columnOrder')) as string)
 
     return storedColumnOrder ? storedColumnOrder : columns.map((column) => column.id as string)
   })
@@ -234,16 +405,23 @@ function HubTable() {
   )
 
   const resetOrder = () => {
-    localStorage.removeItem(storageKey)
+    localStorage.removeItem(storageKey('columnOrder'))
     setColumnOrder(columns.map((column) => column.id as string))
   }
 
   useEffect(() => {
     // store the column order in local storage
-    if (storageKey) {
-      localStorage.setItem(storageKey, JSON.stringify(columnOrder))
+    if (storageKey('columnOrder') !== '') {
+      localStorage.setItem(storageKey('columnOrder'), JSON.stringify(columnOrder))
     }
   }, [columnOrder, storageKey])
+
+  useEffect(() => {
+    // store the column order in local storage
+    if (storageKey('columnVisibility') !== '') {
+      localStorage.setItem(storageKey('columnVisibility'), JSON.stringify(columnVisibility))
+    }
+  }, [columnVisibility, storageKey])
 
   const dataQuery = {}
 
@@ -254,10 +432,12 @@ function HubTable() {
     columns,
     state: {
       pagination,
+      columnVisibility,
       columnOrder,
       sorting,
       globalFilter,
     },
+    onColumnVisibilityChange: setColumnVisibility,
     onPaginationChange: setPagination,
     manualPagination: manualPagination,
     pageCount: dataQuery?.data?.pageCount ?? -1,
@@ -282,13 +462,34 @@ function HubTable() {
           onChange={(value) => setGlobalFilter(String(value))}
           placeholder="Search all columns..."
         />
-        <button
-          type="button"
-          onClick={() => resetOrder()}
-          className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-        >
-          Reset Order
-        </button>
+        <div className="flex flex-wrap gap-2">
+          <DropdownWithChecks
+            icon={ViewColumnsIcon}
+            columns={[
+              {
+                id: 'toggle-all',
+                label: 'Toggle All',
+                checked: table.getIsAllColumnsVisible(),
+                onClick: table.getToggleAllColumnsVisibilityHandler(),
+                needsDivider: true,
+              },
+              ...table.getAllLeafColumns().map((column) => ({
+                id: column.id,
+                label:
+                  typeof column.columnDef.header === 'string' ? column.columnDef.header : column.id,
+                checked: column.getIsVisible(),
+                onClick: column.getToggleVisibilityHandler(),
+              })),
+            ]}
+          />
+          <button
+            type="button"
+            onClick={() => resetOrder()}
+            className="relative rounded-md bg-white p-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+          >
+            <ArrowPathIcon className="h-5 w-5" />
+          </button>
+        </div>
       </div>
       <div className="mt-8 flow-root">
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
