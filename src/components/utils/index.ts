@@ -22,3 +22,6 @@ export const getChildrenOnDisplayName = (children: ReactNode, displayName: strin
     return childDisplayName === displayName ? child : null
   })
 }
+
+export const getLocalStorageKey = (email: string | null | undefined, menu: string, key: string) =>
+  btoa(`${email ?? ''}//${menu ?? ''}//${key ?? ''}`)

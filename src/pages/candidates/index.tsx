@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useEffect, useMemo } from 'react'
 import { LayoutSideMenu } from '@/components/layout/main/layout-side-menu'
 import {
   Column,
@@ -33,6 +33,8 @@ import {
 } from '@heroicons/react/20/solid'
 import { ArrowDownCircleIcon, ArrowUpCircleIcon } from '@heroicons/react/20/solid'
 import { Select } from '@/components/UI/select'
+import { useSession } from 'next-auth/react'
+import { getLocalStorageKey } from '@/components/utils'
 
 const Page = () => {
   const sidebar = (
@@ -189,14 +191,27 @@ const DraggableColumnHeader: FC<{
 }
 
 function HubTable() {
+  const { data: session } = useSession()
   const [data, setData] = React.useState(() => makeData(20))
   const [columns] = React.useState(() => [...defaultColumns])
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [globalFilter, setGlobalFilter] = React.useState('')
 
-  const [columnOrder, setColumnOrder] = React.useState<ColumnOrderState>(
-    columns.map((column) => column.id as string) //must start out with populated columnOrder so we can splice
-  )
+  const storageKey = useMemo(() => {
+    if (!session?.user?.email || !session?.user?.selectedCompany) return undefined
+
+    return getLocalStorageKey(
+      `${session?.user?.email}//${session?.user?.selectedCompany}`,
+      'candidate-hub',
+      'columnOrder'
+    )
+  }, [session?.user?.email, session?.user?.selectedCompany])
+
+  const [columnOrder, setColumnOrder] = React.useState<ColumnOrderState>(() => {
+    const storedColumnOrder = JSON.parse(localStorage.getItem(storageKey ?? '') as string)
+
+    return storedColumnOrder ? storedColumnOrder : columns.map((column) => column.id as string)
+  })
 
   const pageSizeOptions = [10, 20, 30, 50]
 
@@ -218,7 +233,17 @@ function HubTable() {
     [pageIndex, pageSize]
   )
 
-  const resetOrder = () => setColumnOrder(columns.map((column) => column.id as string))
+  const resetOrder = () => {
+    localStorage.removeItem(storageKey)
+    setColumnOrder(columns.map((column) => column.id as string))
+  }
+
+  useEffect(() => {
+    // store the column order in local storage
+    if (storageKey) {
+      localStorage.setItem(storageKey, JSON.stringify(columnOrder))
+    }
+  }, [columnOrder, storageKey])
 
   const dataQuery = {}
 

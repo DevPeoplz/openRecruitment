@@ -18,6 +18,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/react'
 import clsx from 'clsx'
+import { getLocalStorageKey } from '@/components/utils'
 
 type childrenNavigationItem = {
   name: string
@@ -100,9 +101,6 @@ const navigation: Navigation = {
   ],
 }
 
-const getLocalStorageKey = (email: string | null | undefined, key: string, menu: string) =>
-  btoa(`${email ?? ''}//${menu ?? ''}//${key ?? ''}`)
-
 export default function SideMenu({ menu }: { menu?: string }) {
   const { data: session } = useSession()
   const router = useRouter()
@@ -112,7 +110,7 @@ export default function SideMenu({ menu }: { menu?: string }) {
 
     const getSideMenuState = (name: string) => {
       const itemState = JSON.parse(
-        window.localStorage.getItem(getLocalStorageKey(session?.user?.email, name, path)) || '{}'
+        window.localStorage.getItem(getLocalStorageKey(session?.user?.email, path, name)) || '{}'
       )
 
       return itemState['open'] || false
@@ -138,7 +136,7 @@ export default function SideMenu({ menu }: { menu?: string }) {
         itemsRef.current[btoa(name)]?.getAttribute('data-headlessui-state') === 'open'
 
       window.localStorage.setItem(
-        getLocalStorageKey(session?.user?.email, name, path),
+        getLocalStorageKey(session?.user?.email, path, name),
         JSON.stringify({ open: !itemState })
       )
 
