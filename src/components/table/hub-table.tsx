@@ -1,5 +1,4 @@
-import React, { FC, useCallback, useEffect, useMemo, useState } from 'react'
-import { LayoutSideMenu } from '@/components/layout/main/layout-side-menu'
+import React, { FC, useCallback, useEffect, useState } from 'react'
 import {
   Column,
   ColumnDef,
@@ -17,7 +16,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 
-import { RankingInfo, rankItem, compareItems } from '@tanstack/match-sorter-utils'
+import { RankingInfo, rankItem } from '@tanstack/match-sorter-utils'
 
 import { DndProvider, useDrag, useDrop } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
@@ -35,11 +34,7 @@ import { Select } from '@/components/UI/select'
 import { useSession } from 'next-auth/react'
 import { getLocalStorageKey } from '@/components/utils'
 import DropdownWithChecks from '@/components/UI/dropdown-with-checks'
-import {
-  ArrowPathIcon,
-  ArrowPathRoundedSquareIcon,
-  ViewColumnsIcon,
-} from '@heroicons/react/24/outline'
+import { ArrowPathIcon, ViewColumnsIcon } from '@heroicons/react/24/outline'
 
 declare module '@tanstack/table-core' {
   interface FilterMeta {
@@ -133,10 +128,11 @@ const createDraggableColumnHeader = <T,>() => {
 }
 
 const createHubTable = <T,>() => {
-  const HubTable: React.FC<{ data: T[]; defaultColumns: ColumnDef<T>[] }> = ({
-    data,
-    defaultColumns,
-  }) => {
+  const HubTable: React.FC<{
+    data: T[]
+    defaultColumns: ColumnDef<T>[]
+    defaultColumnVisibility?: Record<string, boolean>
+  }> = ({ data, defaultColumns, defaultColumnVisibility }) => {
     const { data: session } = useSession()
     const [columns] = useState(() => [...defaultColumns])
     const [sorting, setSorting] = useState<SortingState>([])
@@ -159,6 +155,13 @@ const createHubTable = <T,>() => {
       const storedColumnVisibility = JSON.parse(
         localStorage.getItem(storageKey('columnVisibility')) as string
       )
+
+      console.log(storedColumnVisibility)
+      console.log(defaultColumnVisibility)
+
+      if (!storedColumnVisibility && defaultColumnVisibility) {
+        return defaultColumnVisibility
+      }
 
       return storedColumnVisibility ? storedColumnVisibility : {}
     })
@@ -210,7 +213,7 @@ const createHubTable = <T,>() => {
       }
     }, [columnVisibility, storageKey])
 
-    const dataQuery = {}
+    const dataQuery = { data: { pageCount: undefined } }
 
     const manualPagination = false
 
@@ -300,7 +303,7 @@ const createHubTable = <T,>() => {
                     <tbody className="flex w-full flex-wrap divide-y divide-gray-200 bg-white lg:table-row-group">
                       {table.getRowModel().rows.map((row) => (
                         <tr key={row.id} className="flex w-full even:bg-gray-50 lg:table-row">
-                          {row.getVisibleCells().map((cell, index) => (
+                          {row.getVisibleCells().map((cell) => (
                             <td
                               key={cell.id}
                               className={clsx(

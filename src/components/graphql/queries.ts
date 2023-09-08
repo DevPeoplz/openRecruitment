@@ -142,3 +142,30 @@ export const get_recently_work_on_variables = (userEmail?: string | null) => {
     },
   }
 }
+
+export const GET_HUB_CANDIDATES = gql`
+  query GET_HUB_CANDIDATES($where: CandidateWhereInput) {
+    findManyCandidate(where: $where) {
+      name: name
+      averageScore: name
+      job: name
+      stage: name
+      jobFitScore: name
+      dateCreated: name
+      source: name
+      tag: name
+      talentPool: name
+      disqualifiedBy: name
+      disqualifyDate: name
+      integrations: name
+      lastActivity: name
+      hireDate: name
+      startDate: name
+      autoFitEnabled: name
+    }
+  }
+`
+
+export const get_hub_candidates_variables = () => {
+  return {}
+}
