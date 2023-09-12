@@ -1,4 +1,4 @@
-import React, { useMemo, useReducer, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { LayoutSideMenu } from '@/components/layout/main/layout-side-menu'
 import { ColumnDef } from '@tanstack/react-table'
 
@@ -6,8 +6,8 @@ import { makeData, Person } from './makeData'
 import createHubTable from '@/components/table/hub-table'
 import { useQuery } from '@apollo/client'
 import { GET_HUB_CANDIDATES, get_hub_candidates_variables } from '@/components/graphql/queries'
-import { useRouter } from 'next/router'
-import { useFilterQueryParams } from '@/hooks/queryparams'
+import CheckboxFilter from '@/components/table/filters/checkbox-filter'
+import SelectFilter from '@/components/table/filters/select-filter'
 
 type defaultColumnsProps = ColumnDef<Person> & { show?: boolean }
 
@@ -117,204 +117,79 @@ const defaultColumns: defaultColumnsProps[] = [
   },
 ]
 
-const SidebarProvisional = (
-  <nav className="flex flex-1 flex-col">
-    <ul>
-      <div className="max-w-[100] border-t border-gray-200 p-5">
-        <h2 className="text-lg font-medium text-gray-900">Filters Placeholder...</h2>
-
-        <div className="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
-          <div>
-            <label htmlFor="first-name" className="block text-sm font-medium text-gray-700">
-              First name
-            </label>
-            <div className="mt-1">
-              <input
-                type="text"
-                id="first-name"
-                name="first-name"
-                autoComplete="given-name"
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label htmlFor="last-name" className="block text-sm font-medium text-gray-700">
-              Last name
-            </label>
-            <div className="mt-1">
-              <input
-                type="text"
-                id="last-name"
-                name="last-name"
-                autoComplete="family-name"
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-              />
-            </div>
-          </div>
-
-          <div className="sm:col-span-2">
-            <label htmlFor="company" className="block text-sm font-medium text-gray-700">
-              Company
-            </label>
-            <div className="mt-1">
-              <input
-                type="text"
-                name="company"
-                id="company"
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-              />
-            </div>
-          </div>
-
-          <div className="sm:col-span-2">
-            <label htmlFor="address" className="block text-sm font-medium text-gray-700">
-              Address
-            </label>
-            <div className="mt-1">
-              <input
-                type="text"
-                name="address"
-                id="address"
-                autoComplete="street-address"
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-              />
-            </div>
-          </div>
-
-          <div className="sm:col-span-2">
-            <label htmlFor="apartment" className="block text-sm font-medium text-gray-700">
-              Apartment, suite, etc.
-            </label>
-            <div className="mt-1">
-              <input
-                type="text"
-                name="apartment"
-                id="apartment"
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label htmlFor="city" className="block text-sm font-medium text-gray-700">
-              City
-            </label>
-            <div className="mt-1">
-              <input
-                type="text"
-                name="city"
-                id="city"
-                autoComplete="address-level2"
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label htmlFor="country" className="block text-sm font-medium text-gray-700">
-              Country
-            </label>
-            <div className="mt-1">
-              <select
-                id="country"
-                name="country"
-                autoComplete="country-name"
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-              >
-                <option>United States</option>
-                <option>Canada</option>
-                <option>Mexico</option>
-              </select>
-            </div>
-          </div>
-
-          <div>
-            <label htmlFor="region" className="block text-sm font-medium text-gray-700">
-              State / Province
-            </label>
-            <div className="mt-1">
-              <input
-                type="text"
-                name="region"
-                id="region"
-                autoComplete="address-level1"
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label htmlFor="postal-code" className="block text-sm font-medium text-gray-700">
-              Postal code
-            </label>
-            <div className="mt-1">
-              <input
-                type="text"
-                name="postal-code"
-                id="postal-code"
-                autoComplete="postal-code"
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-              />
-            </div>
-          </div>
-
-          <div className="sm:col-span-2">
-            <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-              Phone
-            </label>
-            <div className="mt-1">
-              <input
-                type="text"
-                name="phone"
-                id="phone"
-                autoComplete="tel"
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </ul>
-  </nav>
-)
-
-interface filtersProps {
-  name?: string
-  score?: number
-}
-
-const filterDef = {
-  name: {
-    type: 'text',
-    label: 'Name',
-    param: 'name_search',
-  },
-  score: {
-    type: 'text',
-    label: 'Score',
-    param: 'average_score',
-  },
-}
-
 const Page = () => {
-  const {
-    filtersState,
-    dispatchFiltersState,
-    data: dataHubCandidates,
-    loading: loadingHubCandidates,
-  } = useFilterQueryParams(filterDef, GET_HUB_CANDIDATES, get_hub_candidates_variables)
-
+  const [filters, setfilters] = useState({
+    CheckboxFilter: {
+      label: 'Candidate Status',
+      show: true,
+      options: [
+        { label: 'Qualified', value: 'qualified', count: 10, checked: true },
+        { label: 'Disqualified', value: 'disqualified', count: 1, checked: true },
+        { label: 'New', value: 'new', count: 2, checked: false },
+        { label: 'Overdue', value: 'overdue', count: 0, checked: false },
+      ],
+    },
+    SelectFilter: {
+      id: 'job-filter',
+      show: true,
+      label: 'In Job',
+      placeholder: 'add a job',
+      options: [
+        {
+          label: 'Job 1',
+          value: 'job1',
+          count: 10,
+          selected: true,
+        },
+        {
+          label: 'Job 2',
+          value: 'job2',
+          count: 10,
+          selected: true,
+        },
+        {
+          label: 'Job 3',
+          value: 'job3',
+          count: 10,
+          selected: false,
+        },
+      ],
+    },
+  })
   const sidebar = (
     <div className="flex grow flex-col gap-y-5 overflow-y-auto  border-gray-200 bg-white pt-3">
-      {SidebarProvisional}
+      <CheckboxFilter
+        label={filters.CheckboxFilter.label}
+        options={filters.CheckboxFilter.options}
+        show={filters.CheckboxFilter.show}
+        setShow={() =>
+          setfilters({ ...filters, CheckboxFilter: { ...filters.CheckboxFilter, show: false } })
+        }
+        setOptions={(
+          options: { label: string; value: string; count: number; checked: boolean }[]
+        ) => setfilters({ ...filters, CheckboxFilter: { ...filters.CheckboxFilter, options } })}
+      />
+      <SelectFilter
+        label={filters.SelectFilter.label}
+        options={filters.SelectFilter.options}
+        show={filters.SelectFilter.show}
+        setShow={() =>
+          setfilters({ ...filters, SelectFilter: { ...filters.SelectFilter, show: false } })
+        }
+        placeholder={filters.SelectFilter.placeholder}
+        setOption={setfilters}
+      />
     </div>
   )
 
   const [data, setData] = useState(() => makeData(20))
-
-  console.log('data', dataHubCandidates)
+  const {
+    data: dataHubCandidates,
+    loading: loadingHubCandidates,
+    refetch,
+  } = useQuery(GET_HUB_CANDIDATES, {
+    variables: get_hub_candidates_variables(),
+  })
 
   const HubTableComponent = createHubTable<Person>()
 
@@ -330,29 +205,6 @@ const Page = () => {
   return (
     <LayoutSideMenu sidebar={sidebar}>
       <h1>Candidates</h1>
-      <button
-        onClick={() => {
-          dispatchFiltersState({ type: 'update', key: 'name', value: 'testingName' })
-        }}
-      >
-        NAME
-      </button>
-      <button
-        onClick={() => {
-          dispatchFiltersState({ type: 'update', key: 'name', value: '' })
-        }}
-      >
-        DELETE NAME
-      </button>
-      <button
-        onClick={() => {
-          dispatchFiltersState({ type: 'update', key: 'score', value: 'testingName' })
-        }}
-      >
-        SCORE
-      </button>
-      <h2>{filtersState.name}</h2>
-      <h2>{filtersState.score}</h2>
       <HubTableComponent
         data={loadingHubCandidates ? [] : dataHubCandidates?.findManyCandidate ?? []}
         defaultColumns={defaultColumns}

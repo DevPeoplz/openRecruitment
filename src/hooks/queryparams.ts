@@ -12,7 +12,7 @@ interface Action {
 }
 
 export const useFilterQueryParams = (
-  filterDef: any,
+  filtersDef: any,
   gqlQuery: DocumentNode,
   getVariables: (x: FiltersProps) => OperationVariables
 ) => {
@@ -31,7 +31,7 @@ export const useFilterQueryParams = (
           const filteredQuery: ParsedUrlQuery = {}
 
           for (const queryKey in query) {
-            if (queryKey in filterDef) {
+            if (queryKey in filtersDef) {
               filteredQuery[queryKey] = query[queryKey]
             }
           }
@@ -46,7 +46,7 @@ export const useFilterQueryParams = (
             updatedQuery = restQuery
             updatedState = restState
           } else {
-            if (key in filterDef) {
+            if (key in filtersDef) {
               updatedState = { ...state, [key]: value }
               updatedQuery = {
                 ...filteredQuery,
@@ -69,17 +69,17 @@ export const useFilterQueryParams = (
           return state
       }
     },
-    [filterDef, query, router]
+    [filtersDef, query, router]
   )
 
   const syncStateWithQueryParams = useCallback(
     (query: ParsedUrlQuery) => {
       const updatedState: FiltersProps = {}
 
-      Object.keys(filterDef).forEach((key) => {
+      Object.keys(filtersDef).forEach((key) => {
         const value = query[key]
         if (value !== undefined && value !== '') {
-          const type = filterDef[key]['type'] ?? 'string'
+          const type = filtersDef[key]['type'] ?? 'string'
           let parsedValue
 
           if (type) {
@@ -89,6 +89,10 @@ export const useFilterQueryParams = (
                   ? value.map((e) => parseInt(e as string))
                   : parseInt(value as string)
                 break
+              case 'float':
+                parsedValue = Array.isArray(value)
+                  ? value.map((e) => parseFloat(e as string))
+                  : parseFloat(value as string)
             }
           }
 
@@ -98,17 +102,14 @@ export const useFilterQueryParams = (
 
       return updatedState
     },
-    [filterDef]
+    [filtersDef]
   )
 
-  const [filtersState, dispatchFiltersState] = useReducer(
-    filtersReducer,
-    syncStateWithQueryParams(query)
-  )
+  const [filters, dispatchFilters] = useReducer(filtersReducer, syncStateWithQueryParams(query))
 
   const { data, loading } = useQuery(gqlQuery, {
-    variables: getVariables(filtersState),
+    variables: getVariables(filters),
   })
 
-  return { filtersState, dispatchFiltersState, data, loading }
+  return { filters, dispatchFilters, data, loading }
 }
