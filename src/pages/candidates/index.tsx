@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useReducer, useState } from 'react'
 import { LayoutSideMenu } from '@/components/layout/main/layout-side-menu'
 import { ColumnDef } from '@tanstack/react-table'
 
@@ -6,6 +6,8 @@ import { makeData, Person } from './makeData'
 import createHubTable from '@/components/table/hub-table'
 import { useQuery } from '@apollo/client'
 import { GET_HUB_CANDIDATES, get_hub_candidates_variables } from '@/components/graphql/queries'
+import { useRouter } from 'next/router'
+import { useFilterQueryParams } from '@/hooks/queryparams'
 
 type defaultColumnsProps = ColumnDef<Person> & { show?: boolean }
 
@@ -278,7 +280,32 @@ const SidebarProvisional = (
   </nav>
 )
 
+interface filtersProps {
+  name?: string
+  score?: number
+}
+
+const filterDef = {
+  name: {
+    type: 'text',
+    label: 'Name',
+    param: 'name_search',
+  },
+  score: {
+    type: 'text',
+    label: 'Score',
+    param: 'average_score',
+  },
+}
+
 const Page = () => {
+  const {
+    filtersState,
+    dispatchFiltersState,
+    data: dataHubCandidates,
+    loading: loadingHubCandidates,
+  } = useFilterQueryParams(filterDef, GET_HUB_CANDIDATES, get_hub_candidates_variables)
+
   const sidebar = (
     <div className="flex grow flex-col gap-y-5 overflow-y-auto  border-gray-200 bg-white pt-3">
       {SidebarProvisional}
@@ -286,13 +313,6 @@ const Page = () => {
   )
 
   const [data, setData] = useState(() => makeData(20))
-  const {
-    data: dataHubCandidates,
-    loading: loadingHubCandidates,
-    refetch,
-  } = useQuery(GET_HUB_CANDIDATES, {
-    variables: get_hub_candidates_variables(),
-  })
 
   console.log('data', dataHubCandidates)
 
@@ -310,6 +330,29 @@ const Page = () => {
   return (
     <LayoutSideMenu sidebar={sidebar}>
       <h1>Candidates</h1>
+      <button
+        onClick={() => {
+          dispatchFiltersState({ type: 'update', key: 'name', value: 'testingName' })
+        }}
+      >
+        NAME
+      </button>
+      <button
+        onClick={() => {
+          dispatchFiltersState({ type: 'update', key: 'name', value: '' })
+        }}
+      >
+        DELETE NAME
+      </button>
+      <button
+        onClick={() => {
+          dispatchFiltersState({ type: 'update', key: 'score', value: 'testingName' })
+        }}
+      >
+        SCORE
+      </button>
+      <h2>{filtersState.name}</h2>
+      <h2>{filtersState.score}</h2>
       <HubTableComponent
         data={loadingHubCandidates ? [] : dataHubCandidates?.findManyCandidate ?? []}
         defaultColumns={defaultColumns}

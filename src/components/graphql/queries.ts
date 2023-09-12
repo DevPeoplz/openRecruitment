@@ -1,5 +1,6 @@
 import { gql } from '@apollo/client'
 import { subDays } from 'date-fns'
+import { FiltersProps } from '@/hooks/queryparams'
 
 export const GET_ME_DATA_AND_COMPANIES = gql`
   query GET_ME_DATA_AND_COMPANIES {
@@ -166,6 +167,8 @@ export const GET_HUB_CANDIDATES = gql`
   }
 `
 
-export const get_hub_candidates_variables = () => {
-  return {}
+export const get_hub_candidates_variables = (variables: FiltersProps) => {
+  console.log('variables')
+  console.log(variables)
+  return { where: { firstName: { contains: variables.name ?? '' } } }
 }
