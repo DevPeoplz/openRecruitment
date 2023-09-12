@@ -5,10 +5,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import { makeData, Person } from './makeData'
 import createHubTable from '@/components/table/hub-table'
 import { useQuery } from '@apollo/client'
-import {
-  GET_HUB_CANDIDATES,
-  get_hub_candidates_variables,
-} from '@/components/graphql/queries'
+import { GET_HUB_CANDIDATES, get_hub_candidates_variables } from '@/components/graphql/queries'
 import { useRouter } from 'next/router'
 import { useFilterQueryParams } from '@/hooks/queryparams'
 import CheckboxFilter from '@/components/table/filters/checkbox-filter'
@@ -235,16 +232,9 @@ const Page = () => {
     dispatchFilters,
     data: dataHubCandidates,
     loading: loadingHubCandidates,
-  } = useFilterQueryParams(
-    filtersDef,
-    GET_HUB_CANDIDATES,
-    get_hub_candidates_variables
-  )
+  } = useFilterQueryParams(filtersDef, GET_HUB_CANDIDATES, get_hub_candidates_variables)
 
-  const [componentsStatus, dispatchComponentsStatus] = useReducer(
-    componentsReducer,
-    ComponentDef
-  )
+  const [componentsStatus, dispatchComponentsStatus] = useReducer(componentsReducer, ComponentDef)
 
   const sidebar = (
     <div className="flex grow flex-col gap-y-5 overflow-y-auto  border-gray-200 bg-white pt-3">
@@ -312,9 +302,7 @@ const Page = () => {
       <h2>{filters.name}</h2>
       <h2>{filters.score}</h2>
       <HubTableComponent
-        data={
-          loadingHubCandidates ? [] : dataHubCandidates?.findManyCandidate ?? []
-        }
+        data={loadingHubCandidates ? [] : dataHubCandidates?.findManyCandidate ?? []}
         defaultColumns={defaultColumns}
         {...(defaultColumnVisibility ? { defaultColumnVisibility } : {})}
       />
