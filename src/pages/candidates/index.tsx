@@ -1,11 +1,16 @@
-import React, { useMemo, useState } from 'react'
+import React, { ReactNode, useMemo, useReducer, useState } from 'react'
 import { LayoutSideMenu } from '@/components/layout/main/layout-side-menu'
 import { ColumnDef } from '@tanstack/react-table'
 
 import { makeData, Person } from './makeData'
 import createHubTable from '@/components/table/hub-table'
 import { useQuery } from '@apollo/client'
-import { GET_HUB_CANDIDATES, get_hub_candidates_variables } from '@/components/graphql/queries'
+import {
+  GET_HUB_CANDIDATES,
+  get_hub_candidates_variables,
+} from '@/components/graphql/queries'
+import { useRouter } from 'next/router'
+import { useFilterQueryParams } from '@/hooks/queryparams'
 import CheckboxFilter from '@/components/table/filters/checkbox-filter'
 import SelectFilter from '@/components/table/filters/select-filter'
 
@@ -117,23 +122,77 @@ const defaultColumns: defaultColumnsProps[] = [
   },
 ]
 
-const Page = () => {
-  const [filters, setfilters] = useState({
-    CheckboxFilter: {
+interface checkboxFilterType {
+  stateKey: string
+  show: boolean
+  options: { label: string; value: string; count: number; checked: boolean }[]
+}
+
+interface selectFilterType {
+  show: boolean
+  placeholder: string
+  options: {
+    label: string
+    value: string
+    count: number
+    selected: boolean
+  }[]
+}
+
+interface filterDefType {
+  [key: string]: {
+    type: string
+    param?: string
+  }
+}
+
+interface ComponentDefType {
+  [key: string]: {
+    type: string
+    props: { label: string } & (checkboxFilterType | selectFilterType)
+  }
+}
+
+const filtersComponents: Record<string, React.FC<any>> = {
+  checkbox: CheckboxFilter,
+  select: SelectFilter,
+}
+
+const filtersDef: filterDefType = {
+  status: {
+    type: 'string',
+  },
+  score: {
+    type: 'number',
+  },
+}
+
+const ComponentDef: ComponentDefType = {
+  status: {
+    type: 'checkbox',
+    props: {
+      stateKey: 'status',
       label: 'Candidate Status',
-      show: true,
       options: [
-        { label: 'Qualified', value: 'qualified', count: 10, checked: true },
-        { label: 'Disqualified', value: 'disqualified', count: 1, checked: true },
+        { label: 'Qualified', value: 'qualified', count: 10, checked: false },
+        {
+          label: 'Disqualified',
+          value: 'disqualified',
+          count: 1,
+          checked: false,
+        },
         { label: 'New', value: 'new', count: 2, checked: false },
         { label: 'Overdue', value: 'overdue', count: 0, checked: false },
       ],
-    },
-    SelectFilter: {
-      id: 'job-filter',
       show: true,
+    },
+  },
+  job: {
+    type: 'select2',
+    props: {
       label: 'In Job',
       placeholder: 'add a job',
+      show: true,
       options: [
         {
           label: 'Job 1',
@@ -155,41 +214,57 @@ const Page = () => {
         },
       ],
     },
-  })
+  },
+}
+
+const componentsReducer = (
+  state: ComponentDefType,
+  action: { type: string; component: string; key: string; value: string }
+) => {
+  switch (action.type) {
+    case 'updateCounts':
+      return state
+  }
+
+  return state
+}
+
+const Page = () => {
+  const {
+    filters,
+    dispatchFilters,
+    data: dataHubCandidates,
+    loading: loadingHubCandidates,
+  } = useFilterQueryParams(
+    filtersDef,
+    GET_HUB_CANDIDATES,
+    get_hub_candidates_variables
+  )
+
+  const [componentsStatus, dispatchComponentsStatus] = useReducer(
+    componentsReducer,
+    ComponentDef
+  )
+
   const sidebar = (
     <div className="flex grow flex-col gap-y-5 overflow-y-auto  border-gray-200 bg-white pt-3">
-      <CheckboxFilter
-        label={filters.CheckboxFilter.label}
-        options={filters.CheckboxFilter.options}
-        show={filters.CheckboxFilter.show}
-        setShow={() =>
-          setfilters({ ...filters, CheckboxFilter: { ...filters.CheckboxFilter, show: false } })
-        }
-        setOptions={(
-          options: { label: string; value: string; count: number; checked: boolean }[]
-        ) => setfilters({ ...filters, CheckboxFilter: { ...filters.CheckboxFilter, options } })}
-      />
-      <SelectFilter
-        label={filters.SelectFilter.label}
-        options={filters.SelectFilter.options}
-        show={filters.SelectFilter.show}
-        setShow={() =>
-          setfilters({ ...filters, SelectFilter: { ...filters.SelectFilter, show: false } })
-        }
-        placeholder={filters.SelectFilter.placeholder}
-        setOption={setfilters}
-      />
+      {Object.entries(componentsStatus).map(([key, options]) => {
+        const Component = filtersComponents[options.type]
+        return (
+          Component && (
+            <Component
+              key={key}
+              {...options.props}
+              dispatchQueryParams={dispatchFilters}
+              dispatchComponentsStatus={dispatchComponentsStatus}
+            />
+          )
+        )
+      })}
     </div>
   )
 
   const [data, setData] = useState(() => makeData(20))
-  const {
-    data: dataHubCandidates,
-    loading: loadingHubCandidates,
-    refetch,
-  } = useQuery(GET_HUB_CANDIDATES, {
-    variables: get_hub_candidates_variables(),
-  })
 
   const HubTableComponent = createHubTable<Person>()
 
@@ -205,8 +280,41 @@ const Page = () => {
   return (
     <LayoutSideMenu sidebar={sidebar}>
       <h1>Candidates</h1>
+      <button
+        onClick={() => {
+          dispatchFilters({
+            type: 'update',
+            key: 'name',
+            value: ['testingName', 'asdfasdfasdf'],
+          })
+        }}
+      >
+        NAME
+      </button>
+      <button
+        onClick={() => {
+          dispatchFilters({ type: 'update', key: 'name', value: '' })
+        }}
+      >
+        DELETE NAME
+      </button>
+      <button
+        onClick={() => {
+          dispatchFilters({
+            type: 'update',
+            key: 'score',
+            value: 'testingName',
+          })
+        }}
+      >
+        SCORE
+      </button>
+      <h2>{filters.name}</h2>
+      <h2>{filters.score}</h2>
       <HubTableComponent
-        data={loadingHubCandidates ? [] : dataHubCandidates?.findManyCandidate ?? []}
+        data={
+          loadingHubCandidates ? [] : dataHubCandidates?.findManyCandidate ?? []
+        }
         defaultColumns={defaultColumns}
         {...(defaultColumnVisibility ? { defaultColumnVisibility } : {})}
       />

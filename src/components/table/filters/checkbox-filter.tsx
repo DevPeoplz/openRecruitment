@@ -53,8 +53,16 @@ const CheckboxFilter: React.FC<{
   )
 
   useEffect(() => {
-    dispatchQueryParams({ type: 'update', key: stateKey, value: checkboxValues })
-    dispatchComponentsStatus({ type: 'update', key: stateKey, value: checkboxValues })
+    dispatchQueryParams({
+      type: 'update',
+      key: stateKey,
+      value: checkboxValues,
+    })
+    dispatchComponentsStatus({
+      type: 'update',
+      key: stateKey,
+      value: checkboxValues,
+    })
   }, [checkboxValues, dispatchComponentsStatus, dispatchQueryParams, stateKey])
 
   return show ? (
@@ -82,7 +90,9 @@ const CheckboxFilter: React.FC<{
             <div className=" rounded border px-1">
               <p
                 className={clsx(
-                  `${option.count == 0 ? 'text-gray-300' : 'text-gray-700'} text-right text-xs`
+                  `${
+                    option.count == 0 ? 'text-gray-300' : 'text-gray-700'
+                  } text-right text-xs`
                 )}
               >
                 {option.count}

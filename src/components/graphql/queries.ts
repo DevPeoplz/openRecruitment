@@ -52,7 +52,11 @@ export const GET_TAGSOURCES = gql`
         candidateId
       }
     }
-    sources: findManyTagSource(where: $where2, take: $take, orderBy: $orderBy2) {
+    sources: findManyTagSource(
+      where: $where2
+      take: $take
+      orderBy: $orderBy2
+    ) {
       id
       name
       count: candidateReferrer {
