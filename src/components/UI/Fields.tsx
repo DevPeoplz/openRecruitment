@@ -39,6 +39,7 @@ interface SelectFieldProps {
   required?: boolean
   name?: string
   options: option[]
+  setOption?: any
 }
 
 interface PhoneFieldProps {
@@ -62,6 +63,12 @@ interface UploadFileProps {
   className?: string
 }
 
+interface CheckboxFieldProps {
+  option: { value: string; label: string; checked: boolean; count: number }
+  setOption: any
+  className?: string
+}
+
 function Label({ id, children }: LabelProps) {
   return (
     <label htmlFor={id} className="mb-2 block text-sm font-semibold text-gray-900">
@@ -79,11 +86,19 @@ export function TextField({ id, label, type = 'text', className, ...props }: Tex
   )
 }
 
-export function SelectField({ id, label, className, ...props }: SelectFieldProps) {
+export function SelectField({
+  id,
+  label,
+  className,
+  setOption,
+  placeholder,
+  ...props
+}: SelectFieldProps) {
   return (
     <div className={className}>
       {label && <Label id={id}>{label}</Label>}
       <select id={id} {...props} className={clsx(formClasses, 'pr-8')}>
+        {placeholder && <option value={props.options[0].value}>{placeholder}</option>}
         {props.options.map((option: option) => (
           <option key={option.value} value={option.value}>
             {option.label}
@@ -186,4 +201,27 @@ export function TimezoneSelect({ id, className }: { id: string; className?: stri
   ]
 
   return <SelectField id={id} className={className} options={timeZones} label="Select Time Zone" />
+}
+
+export function CheckboxFieldWithCount({ option, setOption, className }: CheckboxFieldProps) {
+  return (
+    <div className={clsx(`${className} `)}>
+      <label htmlFor={option.value} className="flex items-center">
+        <input
+          checked={option.checked}
+          disabled={option.count === 0}
+          name={option.value}
+          type="checkbox"
+          className="h-4 w-4 rounded border-gray-300 focus:ring-primary-500"
+          id={option.value}
+          onChange={(e) => setOption({ ...option, checked: e.target.checked })}
+        />
+        <span
+          className={clsx(`ml-2 text-sm ${option.count == 0 ? 'text-gray-300' : 'text-gray-700'}`)}
+        >
+          {option.label}
+        </span>
+      </label>
+    </div>
+  )
 }
