@@ -54,7 +54,9 @@ const Sidebar: React.FC = () => {
             <Link href={item.href} data-tooltip-id="my-tooltip" data-tooltip-content={item.name}>
               <item.icon
                 className={clsx(
-                  router.asPath === item.href ? 'text-primary-500 drop-shadow-lg' : '',
+                  router.asPath.split('?')[0] === item.href
+                    ? 'text-primary-500 drop-shadow-lg'
+                    : '',
                   'h-8 w-8 text-gray-500 hover:text-black'
                 )}
               ></item.icon>
@@ -68,7 +70,7 @@ const Sidebar: React.FC = () => {
       <Link href="/settings" data-tooltip-id="my-tooltip" data-tooltip-content="settings">
         <IoMdSettings
           className={clsx(
-            router.asPath === '/settings' ? 'text-primary-500 drop-shadow-lg' : '',
+            router.asPath.split('?')[0] === '/settings' ? 'text-primary-500 drop-shadow-lg' : '',
             'h-8 w-8 text-gray-500 hover:text-black'
           )}
         />

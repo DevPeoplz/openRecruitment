@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Button } from '../UI/Button'
-import { TextField } from '../UI/Fields'
+import { TextField } from '../UI/fields'
 import Link from 'next/link'
 import BackgroundIllustration from '../layout/BackgroundIlustration'
 import { signIn } from 'next-auth/react'

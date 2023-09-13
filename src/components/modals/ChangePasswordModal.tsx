@@ -1,6 +1,6 @@
 import React from 'react'
 import ModalContainner from './ModalContainner'
-import { TextField } from '../UI/Fields'
+import { TextField } from '../UI/fields'
 import { Button } from '../UI/Button'
 
 type props = {

@@ -10,6 +10,7 @@ import { useRouter } from 'next/router'
 import { useFilterQueryParams } from '@/hooks/queryparams'
 import CheckboxFilter from '@/components/table/filters/checkbox-filter'
 import SelectFilter from '@/components/table/filters/select-filter'
+import { ComponentDefType, Filters } from '@/components/filters/filters'
 
 type defaultColumnsProps = ColumnDef<Person> & { show?: boolean }
 
@@ -119,23 +120,6 @@ const defaultColumns: defaultColumnsProps[] = [
   },
 ]
 
-interface checkboxFilterType {
-  stateKey: string
-  show: boolean
-  options: { label: string; value: string; count: number; checked: boolean }[]
-}
-
-interface selectFilterType {
-  show: boolean
-  placeholder: string
-  options: {
-    label: string
-    value: string
-    count: number
-    selected: boolean
-  }[]
-}
-
 interface filterDefType {
   [key: string]: {
     type: string
@@ -143,32 +127,20 @@ interface filterDefType {
   }
 }
 
-interface ComponentDefType {
-  [key: string]: {
-    type: string
-    props: { label: string } & (checkboxFilterType | selectFilterType)
-  }
-}
-
-const filtersComponents: Record<string, React.FC<any>> = {
-  checkbox: CheckboxFilter,
-  select: SelectFilter,
-}
-
 const filtersDef: filterDefType = {
   status: {
     type: 'string',
   },
-  score: {
-    type: 'number',
+  name: {
+    type: 'string',
   },
 }
 
-const ComponentDef: ComponentDefType = {
+const componentsDef: ComponentDefType = {
   status: {
     type: 'checkbox',
     props: {
-      stateKey: 'status',
+      stateKey: 'name',
       label: 'Candidate Status',
       options: [
         { label: 'Qualified', value: 'qualified', count: 10, checked: false },
@@ -214,18 +186,6 @@ const ComponentDef: ComponentDefType = {
   },
 }
 
-const componentsReducer = (
-  state: ComponentDefType,
-  action: { type: string; component: string; key: string; value: string }
-) => {
-  switch (action.type) {
-    case 'updateCounts':
-      return state
-  }
-
-  return state
-}
-
 const Page = () => {
   const {
     filters,
@@ -234,23 +194,9 @@ const Page = () => {
     loading: loadingHubCandidates,
   } = useFilterQueryParams(filtersDef, GET_HUB_CANDIDATES, get_hub_candidates_variables)
 
-  const [componentsStatus, dispatchComponentsStatus] = useReducer(componentsReducer, ComponentDef)
-
   const sidebar = (
     <div className="flex grow flex-col gap-y-5 overflow-y-auto  border-gray-200 bg-white pt-3">
-      {Object.entries(componentsStatus).map(([key, options]) => {
-        const Component = filtersComponents[options.type]
-        return (
-          Component && (
-            <Component
-              key={key}
-              {...options.props}
-              dispatchQueryParams={dispatchFilters}
-              dispatchComponentsStatus={dispatchComponentsStatus}
-            />
-          )
-        )
-      })}
+      <Filters componentsDef={componentsDef} queryParams={[filters, dispatchFilters]} />
     </div>
   )
 

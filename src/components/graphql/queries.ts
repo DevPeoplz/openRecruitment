@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql, OperationVariables } from '@apollo/client'
 import { subDays } from 'date-fns'
 
 export const GET_ME_DATA_AND_COMPANIES = gql`
@@ -52,11 +52,7 @@ export const GET_TAGSOURCES = gql`
         candidateId
       }
     }
-    sources: findManyTagSource(
-      where: $where2
-      take: $take
-      orderBy: $orderBy2
-    ) {
+    sources: findManyTagSource(where: $where2, take: $take, orderBy: $orderBy2) {
       id
       name
       count: candidateReferrer {
@@ -170,6 +166,6 @@ export const GET_HUB_CANDIDATES = gql`
   }
 `
 
-export const get_hub_candidates_variables = () => {
-  return {}
+export const get_hub_candidates_variables = (variables: OperationVariables) => {
+  return { where: {} }
 }

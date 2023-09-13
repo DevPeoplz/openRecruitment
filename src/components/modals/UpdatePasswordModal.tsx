@@ -1,7 +1,7 @@
 import React from 'react'
 import ModalContainner from './ModalContainner'
 import UserCard from '../UI/cards/UserCard'
-import { TextField } from '../UI/Fields'
+import { TextField } from '../UI/fields'
 import { Button } from '../UI/Button'
 import Alert from '@/components/alert'
 

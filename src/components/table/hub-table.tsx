@@ -241,9 +241,9 @@ const createHubTable = <T,>() => {
       getSortedRowModel: getSortedRowModel(),
       getFilteredRowModel: getFilteredRowModel(),
       ...(!manualPagination ? { getPaginationRowModel: getPaginationRowModel() } : {}),
-      debugTable: true,
-      debugHeaders: true,
-      debugColumns: true,
+      //debugTable: true,
+      //debugHeaders: true,
+      //debugColumns: true,
     })
 
     return (

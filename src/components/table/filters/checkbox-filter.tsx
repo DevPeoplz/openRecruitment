@@ -4,8 +4,12 @@ import { XMarkIcon } from '@heroicons/react/20/solid'
 import clsx from 'clsx'
 
 const optionsReducer = (state, action) => {
-  const newState = [...state]
+  const newState = [...new Set(state)]
   const index = newState.indexOf(action.key)
+
+  console.log(newState)
+  console.log(index)
+  console.log(action)
 
   if (index > -1 && !action.value) {
     newState.splice(index, 1)
@@ -17,6 +21,7 @@ const optionsReducer = (state, action) => {
 }
 
 const CheckboxFilter: React.FC<{
+  componentKey: string
   stateKey: string
   label: string
   options: {
@@ -35,30 +40,28 @@ const CheckboxFilter: React.FC<{
       checked: boolean
     }[]
   ) => void
-  dispatchQueryParams: React.Dispatch<any>
+  filterQueryParams: [any, any]
   dispatchComponentsStatus: React.Dispatch<any>
 }> = ({
+  componentKey,
   stateKey,
   label,
   options,
   show,
   setShow,
   setOptions,
-  dispatchQueryParams,
+  filterQueryParams,
   dispatchComponentsStatus,
 }) => {
+  const [filters, dispatchQueryParams] = filterQueryParams
   const [checkboxValues, dispatchCheckboxValues] = useReducer(
     optionsReducer,
-    options.map((option) => option.checked)
+    options.map((option) => option.checked).filter((checked) => checked)
   )
 
+  console.log(componentKey)
   useEffect(() => {
     dispatchQueryParams({
-      type: 'update',
-      key: stateKey,
-      value: checkboxValues,
-    })
-    dispatchComponentsStatus({
       type: 'update',
       key: stateKey,
       value: checkboxValues,
@@ -83,16 +86,21 @@ const CheckboxFilter: React.FC<{
             <CheckboxFieldWithCount
               key={option.value}
               option={option}
-              setOption={(checked) => {
+              setOption={(checked: boolean) => {
                 dispatchCheckboxValues({ key: option.value, value: checked })
+                dispatchComponentsStatus({
+                  type: 'updatePropsOptions',
+                  component: componentKey,
+                  key: 'checked',
+                  value: checked,
+                  extra: { value: option.value },
+                })
               }}
             />
             <div className=" rounded border px-1">
               <p
                 className={clsx(
-                  `${
-                    option.count == 0 ? 'text-gray-300' : 'text-gray-700'
-                  } text-right text-xs`
+                  `${option.count == 0 ? 'text-gray-300' : 'text-gray-700'} text-right text-xs`
                 )}
               >
                 {option.count}

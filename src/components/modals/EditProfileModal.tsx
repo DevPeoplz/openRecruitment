@@ -1,6 +1,6 @@
 import React from 'react'
 import ModalContainner from './ModalContainner'
-import { PhoneField, SelectField, TextField, TimezoneSelect, UploadFile } from '../UI/Fields'
+import { PhoneField, SelectField, TextField, TimezoneSelect, UploadFile } from '../UI/fields'
 import { languages, days } from '@/utils/mockdata'
 import { Button } from '../UI/Button'
 import { GoTrash } from 'react-icons/go'
