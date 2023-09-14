@@ -200,8 +200,6 @@ const Page = () => {
     </div>
   )
 
-  const [data, setData] = useState(() => makeData(20))
-
   const HubTableComponent = createHubTable<Person>()
 
   const defaultColumnVisibility = useMemo(() => {
