@@ -1,5 +1,5 @@
 import React from 'react'
-import ModalContainner from './ModalContainner'
+import ModalContainner from './modal-container'
 import { PhoneField, SelectField, TextField, TimezoneSelect, UploadFile } from '../UI/fields'
 import { languages, days } from '@/utils/mockdata'
 import { Button } from '../UI/Button'

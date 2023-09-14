@@ -11,8 +11,63 @@ import { useFilterQueryParams } from '@/hooks/queryparams'
 import CheckboxFilter from '@/components/table/filters/checkbox-filter'
 import SelectFilter from '@/components/table/filters/select-filter'
 import { ComponentDefType, Filters } from '@/components/filters/filters'
+import CandidateModal from '@/components/modals/candidate-modal'
 
 type defaultColumnsProps = ColumnDef<Person> & { show?: boolean }
+
+const CANDIDATE = {
+  id: 1,
+  name: 'John Doe',
+  email: 'email@email.com',
+  phone: '+13001234',
+  tagSource: {
+    tag: [
+      {
+        id: 1,
+        name: 'Senior',
+      },
+    ],
+    source: [
+      {
+        id: 1,
+        name: 'Linkedin',
+      },
+    ],
+  },
+}
+
+const AUDIT_LOGS = [
+  {
+    id: 1,
+    type: 'candidate',
+    description: 'Created candidate',
+    createdAt: '2021-08-10T00:00:00.000Z',
+    author: {
+      id: 1,
+      name: 'Mr X',
+    },
+  },
+  {
+    id: 2,
+    type: 'candidate',
+    description: 'Created candidate',
+    createdAt: '2021-08-10T00:00:00.000Z',
+    author: {
+      id: 1,
+      name: 'Mr X',
+    },
+  },
+  {
+    id: 3,
+    type: 'candidate',
+    description: 'Created candidate',
+    createdAt: '2021-08-10T00:00:00.000Z',
+    author: {
+      id: 1,
+      name: 'Mr X',
+    },
+  },
+]
 
 const defaultColumns: defaultColumnsProps[] = [
   {
@@ -157,7 +212,7 @@ const componentsDef: ComponentDefType = {
     },
   },
   job: {
-    type: 'select2',
+    type: 'select',
     props: {
       label: 'In Job',
       placeholder: 'add a job',
@@ -193,6 +248,7 @@ const Page = () => {
     data: dataHubCandidates,
     loading: loadingHubCandidates,
   } = useFilterQueryParams(filtersDef, GET_HUB_CANDIDATES, get_hub_candidates_variables)
+  const [seeCandidate, setSeeCandidate] = useState(false)
 
   const sidebar = (
     <div className="flex grow flex-col gap-y-5 overflow-y-auto  border-gray-200 bg-white pt-3">
@@ -245,6 +301,13 @@ const Page = () => {
       >
         SCORE
       </button>
+      <button onClick={() => setSeeCandidate(true)}>SEE CANDIDATE</button>
+      <CandidateModal
+        isOpen={seeCandidate}
+        setIsOpen={setSeeCandidate}
+        candidate={CANDIDATE}
+        logs={AUDIT_LOGS}
+      />
       <h2>{filters.name}</h2>
       <h2>{filters.score}</h2>
       <HubTableComponent

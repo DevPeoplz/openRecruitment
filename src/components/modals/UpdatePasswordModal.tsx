@@ -1,5 +1,5 @@
 import React from 'react'
-import ModalContainner from './ModalContainner'
+import ModalContainner from './modal-container'
 import UserCard from '../UI/cards/UserCard'
 import { TextField } from '../UI/fields'
 import { Button } from '../UI/Button'
