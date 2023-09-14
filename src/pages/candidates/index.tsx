@@ -2,7 +2,7 @@ import React, { ReactNode, useMemo, useReducer, useState } from 'react'
 import { LayoutSideMenu } from '@/components/layout/main/layout-side-menu'
 import { ColumnDef } from '@tanstack/react-table'
 
-import { makeData, Person } from './makeData'
+import { makeData, Person } from '../../utils/makeData'
 import createHubTable from '@/components/table/hub-table'
 import { useQuery } from '@apollo/client'
 import { GET_HUB_CANDIDATES, get_hub_candidates_variables } from '@/components/graphql/queries'
