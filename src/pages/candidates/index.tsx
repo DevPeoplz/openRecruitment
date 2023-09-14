@@ -2,7 +2,6 @@ import React, { ReactNode, useMemo, useReducer, useState } from 'react'
 import { LayoutSideMenu } from '@/components/layout/main/layout-side-menu'
 import { ColumnDef } from '@tanstack/react-table'
 
-import { makeData, Person } from '../../utils/makeData'
 import createHubTable from '@/components/table/hub-table'
 import { useQuery } from '@apollo/client'
 import { GET_HUB_CANDIDATES, get_hub_candidates_variables } from '@/components/graphql/queries'
@@ -14,6 +13,16 @@ import { ComponentDefType, Filters } from '@/components/filters/filters'
 import CandidateModal from '@/components/modals/candidate-modal'
 
 type defaultColumnsProps = ColumnDef<Person> & { show?: boolean }
+
+export type Person = {
+  firstName: string
+  lastName: string
+  age: number
+  visits: number
+  progress: number
+  status: 'relationship' | 'complicated' | 'single'
+  subRows?: Person[]
+}
 
 const CANDIDATE = {
   id: 1,
@@ -255,8 +264,6 @@ const Page = () => {
       <Filters componentsDef={componentsDef} queryParams={[filters, dispatchFilters]} />
     </div>
   )
-
-  const [data, setData] = useState(() => makeData(20))
 
   const HubTableComponent = createHubTable<Person>()
 
