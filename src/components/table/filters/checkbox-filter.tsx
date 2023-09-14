@@ -3,7 +3,8 @@ import React, { useEffect, useReducer } from 'react'
 import { XMarkIcon } from '@heroicons/react/20/solid'
 import clsx from 'clsx'
 
-const optionsReducer = (state, action) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const optionsReducer = (state: any, action: any) => {
   const newState = [...new Set(state)]
   const index = newState.indexOf(action.key)
 
