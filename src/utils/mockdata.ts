@@ -149,3 +149,57 @@ export const appliesData = [
     number: 0,
   },
 ]
+
+export const CANDIDATE = {
+  id: 1,
+  name: 'John Doe',
+  email: 'email@email.com',
+  phone: '+13001234',
+  tagSource: {
+    tag: [
+      {
+        id: 1,
+        name: 'Senior',
+      },
+    ],
+    source: [
+      {
+        id: 1,
+        name: 'Linkedin',
+      },
+    ],
+  },
+}
+
+export const AUDIT_LOGS = [
+  {
+    id: 1,
+    type: 'candidate',
+    description: 'Created candidate',
+    createdAt: '2021-08-10T00:00:00.000Z',
+    author: {
+      id: 1,
+      name: 'Mr X',
+    },
+  },
+  {
+    id: 2,
+    type: 'candidate',
+    description: 'Created candidate',
+    createdAt: '2021-08-10T00:00:00.000Z',
+    author: {
+      id: 1,
+      name: 'Mr X',
+    },
+  },
+  {
+    id: 3,
+    type: 'candidate',
+    description: 'Created candidate',
+    createdAt: '2021-08-10T00:00:00.000Z',
+    author: {
+      id: 1,
+      name: 'Mr X',
+    },
+  },
+]

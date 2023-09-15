@@ -1,10 +1,14 @@
 import { CheckboxFieldWithCount } from '@/components/UI/fields'
-import React, { useEffect, useReducer } from 'react'
+import React, { useEffect, useMemo, useReducer } from 'react'
 import { XMarkIcon } from '@heroicons/react/20/solid'
 import clsx from 'clsx'
+import { Table } from '@tanstack/react-table'
+import { useRouter } from 'next/router'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const optionsReducer = (state: any, action: any) => {
+const optionsReducer = (
+  state: Iterable<unknown> | null | undefined,
+  action: { key: unknown; value: any }
+) => {
   const newState = [...new Set(state)]
   const index = newState.indexOf(action.key)
 
@@ -22,6 +26,7 @@ const optionsReducer = (state: any, action: any) => {
 }
 
 const CheckboxFilter: React.FC<{
+  table: Table<any>
   componentKey: string
   stateKey: string
   label: string
@@ -44,6 +49,7 @@ const CheckboxFilter: React.FC<{
   filterQueryParams: [any, any]
   dispatchComponentsStatus: React.Dispatch<any>
 }> = ({
+  table,
   componentKey,
   stateKey,
   label,
@@ -68,6 +74,30 @@ const CheckboxFilter: React.FC<{
       value: checkboxValues,
     })
   }, [checkboxValues, dispatchComponentsStatus, dispatchQueryParams, stateKey])
+  const router = useRouter()
+  const { query } = router
+
+  const column = table.getColumn(stateKey)
+  const columnFacetedKeys = column ? column.getFacetedUniqueValues().keys() : []
+  const columnFilterValue = (column?.getFilterValue() as string[]) ?? []
+
+  const sortedUniqueValues = useMemo(
+    () => Array.from(columnFacetedKeys).sort(),
+    [columnFacetedKeys]
+  )
+
+  const getOptions = sortedUniqueValues.map((option) => {
+    return {
+      label: option,
+      value: option,
+      count:
+        column?.getFacetedRowModel().flatRows.filter((row, index) => {
+          const value = row.getValue<string | number>(stateKey).toString()
+          return !!(value && value.includes(option))
+        }).length ?? 0,
+      checked: columnFilterValue.includes(option),
+    }
+  })
 
   return show ? (
     <div className="flex flex-col p-2">
@@ -82,20 +112,32 @@ const CheckboxFilter: React.FC<{
         </button>
       </div>
       <div className="mt-1 flex flex-col gap-1">
-        {options?.map((option, index) => (
+        {getOptions?.map((option, index) => (
           <div className="flex items-center justify-between" key={index}>
             <CheckboxFieldWithCount
               key={option.value}
               option={option}
               setOption={(checked: boolean) => {
-                dispatchCheckboxValues({ key: option.value, value: checked })
-                dispatchComponentsStatus({
-                  type: 'updatePropsOptions',
-                  component: componentKey,
-                  key: 'checked',
-                  value: checked,
-                  extra: { value: option.value },
-                })
+                if (column) {
+                  column.setFilterValue((prevState: string[]) => {
+                    const newState = [...new Set(prevState)]
+                    const index = newState.indexOf(option.value)
+
+                    if (index > -1 && !checked) {
+                      newState.splice(index, 1)
+                    } else {
+                      newState.push(option.value)
+                    }
+
+                    router
+                      .replace({
+                        query: { ...query, [stateKey]: newState },
+                      })
+                      .then()
+
+                    return newState
+                  })
+                }
               }}
             />
             <div className=" rounded border px-1">
