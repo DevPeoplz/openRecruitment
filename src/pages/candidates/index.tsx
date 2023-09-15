@@ -3,7 +3,7 @@ import { LayoutSideMenu } from '@/components/layout/main/layout-side-menu'
 import { ColumnDef } from '@tanstack/react-table'
 
 import { makeData, Person } from './makeData'
-import createHubTable from '@/components/table/hub-table'
+import HubTable, { createHubTable, useHubTable } from '@/components/table/hub-table'
 import { useQuery } from '@apollo/client'
 import { GET_HUB_CANDIDATES, get_hub_candidates_variables } from '@/components/graphql/queries'
 import { useRouter } from 'next/router'
@@ -11,6 +11,7 @@ import { useFilterQueryParams } from '@/hooks/queryparams'
 import CheckboxFilter from '@/components/table/filters/checkbox-filter'
 import SelectFilter from '@/components/table/filters/select-filter'
 import { ComponentDefType, Filters } from '@/components/filters/filters'
+import { HubTableFilters } from '@/components/table/filters'
 
 type defaultColumnsProps = ColumnDef<Person> & { show?: boolean }
 
@@ -21,6 +22,7 @@ const defaultColumns: defaultColumnsProps[] = [
     header: 'Name',
     cell: (info) => info.getValue(),
     show: true,
+    filterFn: 'arrIncludesSome',
   },
   {
     accessorKey: 'averageScore',
@@ -35,6 +37,7 @@ const defaultColumns: defaultColumnsProps[] = [
     header: 'Job',
     cell: (info) => info.getValue(),
     show: true,
+    filterFn: 'arrIncludesSome',
   },
   {
     accessorKey: 'stage',
@@ -75,6 +78,7 @@ const defaultColumns: defaultColumnsProps[] = [
     header: 'Talent Pool',
     cell: (info) => info.getValue(),
     show: true,
+    filterFn: 'arrIncludesSome',
   },
   {
     accessorKey: 'disqualifiedBy',
@@ -137,11 +141,11 @@ const filtersDef: filterDefType = {
 }
 
 const componentsDef: ComponentDefType = {
-  status: {
+  job: {
     type: 'checkbox',
     props: {
-      stateKey: 'name',
-      label: 'Candidate Status',
+      stateKey: 'job',
+      label: 'Job',
       options: [
         { label: 'Qualified', value: 'qualified', count: 10, checked: false },
         {
@@ -156,7 +160,45 @@ const componentsDef: ComponentDefType = {
       show: true,
     },
   },
-  job: {
+  talentPool: {
+    type: 'checkbox',
+    props: {
+      stateKey: 'talentPool',
+      label: 'Talent Pool',
+      options: [
+        { label: 'Qualified', value: 'qualified', count: 10, checked: false },
+        {
+          label: 'Disqualified',
+          value: 'disqualified',
+          count: 1,
+          checked: false,
+        },
+        { label: 'New', value: 'new', count: 2, checked: false },
+        { label: 'Overdue', value: 'overdue', count: 0, checked: false },
+      ],
+      show: true,
+    },
+  },
+  jobFitScore: {
+    type: 'checkbox',
+    props: {
+      stateKey: 'jobFitScore',
+      label: 'Job Fit Score',
+      options: [
+        { label: 'Qualified', value: 'qualified', count: 10, checked: false },
+        {
+          label: 'Disqualified',
+          value: 'disqualified',
+          count: 1,
+          checked: false,
+        },
+        { label: 'New', value: 'new', count: 2, checked: false },
+        { label: 'Overdue', value: 'overdue', count: 0, checked: false },
+      ],
+      show: true,
+    },
+  },
+  job2: {
     type: 'select2',
     props: {
       label: 'In Job',
@@ -187,20 +229,13 @@ const componentsDef: ComponentDefType = {
 }
 
 const Page = () => {
+  const { useHubTable, HubTable } = createHubTable<Person>()
   const {
     filters,
     dispatchFilters,
     data: dataHubCandidates,
     loading: loadingHubCandidates,
   } = useFilterQueryParams(filtersDef, GET_HUB_CANDIDATES, get_hub_candidates_variables)
-
-  const sidebar = (
-    <div className="flex grow flex-col gap-y-5 overflow-y-auto  border-gray-200 bg-white pt-3">
-      <Filters componentsDef={componentsDef} queryParams={[filters, dispatchFilters]} />
-    </div>
-  )
-
-  const HubTableComponent = createHubTable<Person>()
 
   const defaultColumnVisibility = useMemo(() => {
     return defaultColumns.reduce((acc, col) => {
@@ -211,45 +246,28 @@ const Page = () => {
     }, {} as Record<string, boolean>)
   }, [])
 
+  const { table, tableStates } = useHubTable(
+    'candidate-hub',
+    loadingHubCandidates ? [] : dataHubCandidates?.findManyCandidate ?? [],
+    defaultColumns,
+    defaultColumnVisibility
+  )
+
+  //           <HubTableFilters table={table} tableStates={tableStates} />
+  const sidebar = (
+    <div className="flex grow flex-col gap-y-5 overflow-y-auto  border-gray-200 bg-white pt-3">
+      <Filters
+        componentsDef={componentsDef}
+        queryParams={[filters, dispatchFilters]}
+        table={table}
+      />
+    </div>
+  )
+
   return (
     <LayoutSideMenu sidebar={sidebar}>
       <h1>Candidates</h1>
-      <button
-        onClick={() => {
-          dispatchFilters({
-            type: 'update',
-            key: 'name',
-            value: ['testingName', 'asdfasdfasdf'],
-          })
-        }}
-      >
-        NAME
-      </button>
-      <button
-        onClick={() => {
-          dispatchFilters({ type: 'update', key: 'name', value: '' })
-        }}
-      >
-        DELETE NAME
-      </button>
-      <button
-        onClick={() => {
-          dispatchFilters({
-            type: 'update',
-            key: 'score',
-            value: 'testingName',
-          })
-        }}
-      >
-        SCORE
-      </button>
-      <h2>{filters.name}</h2>
-      <h2>{filters.score}</h2>
-      <HubTableComponent
-        data={loadingHubCandidates ? [] : dataHubCandidates?.findManyCandidate ?? []}
-        defaultColumns={defaultColumns}
-        {...(defaultColumnVisibility ? { defaultColumnVisibility } : {})}
-      />
+      <HubTable table={table} tableStates={tableStates} />
     </LayoutSideMenu>
   )
 }

@@ -1,11 +1,15 @@
-import React, { FC, useCallback, useEffect, useState } from 'react'
+import React, { PropsWithChildren, useCallback, useEffect, useState } from 'react'
 import {
   Column,
   ColumnDef,
+  ColumnFiltersState,
   ColumnOrderState,
   FilterFn,
   flexRender,
   getCoreRowModel,
+  getFacetedMinMaxValues,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
@@ -22,19 +26,21 @@ import { DndProvider, useDrag, useDrop } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import clsx from 'clsx'
 import {
+  ArrowDownCircleIcon,
   ArrowsRightLeftIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
+  ArrowUpCircleIcon,
   ChevronDoubleLeftIcon,
   ChevronDoubleRightIcon,
-  MagnifyingGlassIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
 } from '@heroicons/react/20/solid'
-import { ArrowDownCircleIcon, ArrowUpCircleIcon } from '@heroicons/react/20/solid'
 import { Select } from '@/components/UI/select'
 import { useSession } from 'next-auth/react'
 import { getLocalStorageKey } from '@/components/utils'
 import DropdownWithChecks from '@/components/UI/dropdown-with-checks'
 import { ArrowPathIcon, ViewColumnsIcon } from '@heroicons/react/24/outline'
+import { DebouncedInput } from '@/components/table/debounced-input'
+import { HubTableFilters } from '@/components/table/filters'
 
 declare module '@tanstack/table-core' {
   interface FilterMeta {
@@ -68,8 +74,73 @@ const reorderColumn = (
   return [...columnOrder]
 }
 
-const createDraggableColumnHeader = <T,>() => {
-  const DraggableColumnHeader: FC<{
+//const DraggableColumnHeader: React.FC<{
+//  header: Header<T, unknown>
+//  table: Table<T>
+//}> = ({ header, table }) => {
+
+interface DraggableColumnHeaderProps<T> {
+  header: Header<T, unknown>
+  table: Table<T>
+}
+
+const DraggableColumnHeader: <T>(
+  props: PropsWithChildren<DraggableColumnHeaderProps<T>>
+) => React.ReactElement<PropsWithChildren<DraggableColumnHeaderProps<T>>> = ({ table, header }) => {
+  const { getState, setColumnOrder } = table
+  const { columnOrder } = getState()
+  const { column } = header
+
+  const [, dropRef] = useDrop({
+    accept: 'column',
+    drop: (draggedColumn: typeof column) => {
+      const newColumnOrder = reorderColumn(draggedColumn.id, column.id, columnOrder)
+      setColumnOrder(newColumnOrder)
+    },
+  })
+
+  const [{ isDragging }, dragRef, previewRef] = useDrag({
+    collect: (monitor: { isDragging: () => any }) => ({
+      isDragging: monitor.isDragging(),
+    }),
+    item: () => column,
+    type: 'column',
+  })
+
+  return (
+    <th
+      ref={dropRef}
+      colSpan={header.colSpan}
+      style={{ opacity: isDragging ? 0.5 : 1 }}
+      className={clsx('px-3 py-3.5 text-left text-sm font-semibold text-gray-900')}
+    >
+      <div ref={previewRef} className="flex flex-wrap items-center">
+        {header.isPlaceholder ? null : (
+          <div
+            {...{
+              className: header.column.getCanSort()
+                ? 'cursor-pointer select-none flex items-center'
+                : '',
+              onClick: header.column.getToggleSortingHandler(),
+            }}
+          >
+            {flexRender(header.column.columnDef.header, header.getContext())}
+            {{
+              asc: <ArrowUpCircleIcon className="ml-1 h-4 w-4" />,
+              desc: <ArrowDownCircleIcon className="ml-1 h-4 w-4" />,
+            }[header.column.getIsSorted() as string] ?? null}
+          </div>
+        )}
+        <button ref={dragRef}>
+          <ArrowsRightLeftIcon className="ml-1 h-5 w-5" />
+        </button>
+      </div>
+    </th>
+  )
+}
+
+/*const createDragableColumnHeader = <T,>() => {
+  const DraggableColumnHeader: React.FC<{
     header: Header<T, unknown>
     table: Table<T>
   }> = ({ header, table }) => {
@@ -124,135 +195,166 @@ const createDraggableColumnHeader = <T,>() => {
       </th>
     )
   }
+
   return DraggableColumnHeader
-}
+}*/
+export const useHubTable = <T,>(
+  localStorageKey: string,
+  data: T[],
+  defaultColumns: ColumnDef<T>[],
+  defaultColumnVisibility?: Record<string, boolean>
+): { table: Table<T>; tableStates: TableStatesType } => {
+  const { data: session } = useSession()
+  const [columns] = useState(() => [...defaultColumns])
+  const [sorting, setSorting] = useState<SortingState>([])
+  const [globalFilter, setGlobalFilter] = useState('')
 
-const createHubTable = <T,>() => {
-  const HubTable: React.FC<{
-    data: T[]
-    defaultColumns: ColumnDef<T>[]
-    defaultColumnVisibility?: Record<string, boolean>
-  }> = ({ data, defaultColumns, defaultColumnVisibility }) => {
-    const { data: session } = useSession()
-    const [columns] = useState(() => [...defaultColumns])
-    const [sorting, setSorting] = useState<SortingState>([])
-    const [globalFilter, setGlobalFilter] = useState('')
+  const storageKey = useCallback(
+    (key: string) => {
+      if (!session?.user?.email || !session?.user?.selectedCompany) return ''
 
-    const storageKey = useCallback(
-      (key: string) => {
-        if (!session?.user?.email || !session?.user?.selectedCompany) return ''
+      return getLocalStorageKey(
+        `${session?.user?.email}//${session?.user?.selectedCompany}`,
+        localStorageKey,
+        key
+      )
+    },
+    [localStorageKey, session?.user?.email, session?.user?.selectedCompany]
+  )
 
-        return getLocalStorageKey(
-          `${session?.user?.email}//${session?.user?.selectedCompany}`,
-          'candidate-hub',
-          key
-        )
-      },
-      [session?.user?.email, session?.user?.selectedCompany]
+  const [columnVisibility, setColumnVisibility] = useState(() => {
+    const storedColumnVisibility = JSON.parse(
+      localStorage.getItem(storageKey('columnVisibility')) as string
     )
 
-    const [columnVisibility, setColumnVisibility] = useState(() => {
-      const storedColumnVisibility = JSON.parse(
-        localStorage.getItem(storageKey('columnVisibility')) as string
-      )
+    if (!storedColumnVisibility && defaultColumnVisibility) {
+      return defaultColumnVisibility
+    }
 
-      console.log(storedColumnVisibility)
-      console.log(defaultColumnVisibility)
+    return storedColumnVisibility ? storedColumnVisibility : {}
+  })
 
-      if (!storedColumnVisibility && defaultColumnVisibility) {
-        return defaultColumnVisibility
-      }
+  const [columnOrder, setColumnOrder] = React.useState<ColumnOrderState>(() => {
+    const storedColumnOrder = JSON.parse(localStorage.getItem(storageKey('columnOrder')) as string)
 
-      return storedColumnVisibility ? storedColumnVisibility : {}
-    })
+    return storedColumnOrder ? storedColumnOrder : columns.map((column) => column.id as string)
+  })
 
-    const [columnOrder, setColumnOrder] = React.useState<ColumnOrderState>(() => {
-      const storedColumnOrder = JSON.parse(
-        localStorage.getItem(storageKey('columnOrder')) as string
-      )
+  const pageSizeOptions = [10, 20, 30, 50]
 
-      return storedColumnOrder ? storedColumnOrder : columns.map((column) => column.id as string)
-    })
+  const [{ pageIndex, pageSize }, setPagination] = React.useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: pageSizeOptions[0],
+  })
 
-    const pageSizeOptions = [10, 20, 30, 50]
+  const fetchDataOptions = {
+    pageIndex,
+    pageSize,
+  }
 
-    const [{ pageIndex, pageSize }, setPagination] = React.useState<PaginationState>({
-      pageIndex: 0,
-      pageSize: pageSizeOptions[0],
-    })
-
-    const fetchDataOptions = {
+  const pagination = React.useMemo(
+    () => ({
       pageIndex,
       pageSize,
+    }),
+    [pageIndex, pageSize]
+  )
+
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
+
+  const resetOrder = () => {
+    localStorage.removeItem(storageKey('columnOrder'))
+    setColumnOrder(columns.map((column) => column.id as string))
+  }
+
+  useEffect(() => {
+    // store the column order in local storage
+    if (storageKey('columnOrder') !== '') {
+      localStorage.setItem(storageKey('columnOrder'), JSON.stringify(columnOrder))
     }
+  }, [columnOrder, storageKey])
 
-    const pagination = React.useMemo(
-      () => ({
-        pageIndex,
-        pageSize,
-      }),
-      [pageIndex, pageSize]
-    )
-
-    const resetOrder = () => {
-      localStorage.removeItem(storageKey('columnOrder'))
-      setColumnOrder(columns.map((column) => column.id as string))
+  useEffect(() => {
+    // store the column order in local storage
+    if (storageKey('columnVisibility') !== '') {
+      localStorage.setItem(storageKey('columnVisibility'), JSON.stringify(columnVisibility))
     }
+  }, [columnVisibility, storageKey])
 
-    useEffect(() => {
-      // store the column order in local storage
-      if (storageKey('columnOrder') !== '') {
-        localStorage.setItem(storageKey('columnOrder'), JSON.stringify(columnOrder))
-      }
-    }, [columnOrder, storageKey])
+  const dataQuery = { data: { pageCount: undefined } }
 
-    useEffect(() => {
-      // store the column order in local storage
-      if (storageKey('columnVisibility') !== '') {
-        localStorage.setItem(storageKey('columnVisibility'), JSON.stringify(columnVisibility))
-      }
-    }, [columnVisibility, storageKey])
+  const manualPagination = false
 
-    const dataQuery = { data: { pageCount: undefined } }
+  const table = useReactTable({
+    data,
+    columns,
+    state: {
+      pagination,
+      columnVisibility,
+      columnOrder,
+      sorting,
+      columnFilters,
+      globalFilter,
+    },
+    onColumnVisibilityChange: setColumnVisibility,
+    onPaginationChange: setPagination,
+    manualPagination: manualPagination,
+    pageCount: dataQuery?.data?.pageCount ?? -1,
+    onSortingChange: setSorting,
+    onColumnOrderChange: setColumnOrder,
+    onGlobalFilterChange: setGlobalFilter,
+    globalFilterFn: fuzzyFilter,
+    onColumnFiltersChange: setColumnFilters,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    ...(!manualPagination ? { getPaginationRowModel: getPaginationRowModel() } : {}),
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
+    getFacetedMinMaxValues: getFacetedMinMaxValues(),
+    //debugTable: true,
+    //debugHeaders: true,
+    //debugColumns: true,
+  })
 
-    const manualPagination = false
+  return {
+    table,
+    tableStates: {
+      columnVisibility,
+      columnOrder,
+      sorting,
+      resetOrder,
+      columnFilters,
+      globalFilter,
+      setGlobalFilter,
+      pageSizeOptions,
+    },
+  }
+}
 
-    const DraggableColumnHeader = createDraggableColumnHeader<T>()
+export interface TableStatesType {
+  columnVisibility: Record<string, boolean>
+  columnOrder: ColumnOrderState
+  sorting: SortingState
+  resetOrder: () => void
+  columnFilters: ColumnFiltersState
+  globalFilter: string
+  setGlobalFilter: React.Dispatch<React.SetStateAction<string>>
+  pageSizeOptions: number[]
+}
 
-    const table = useReactTable({
-      data,
-      columns,
-      state: {
-        pagination,
-        columnVisibility,
-        columnOrder,
-        sorting,
-        globalFilter,
-      },
-      onColumnVisibilityChange: setColumnVisibility,
-      onPaginationChange: setPagination,
-      manualPagination: manualPagination,
-      pageCount: dataQuery?.data?.pageCount ?? -1,
-      onSortingChange: setSorting,
-      onColumnOrderChange: setColumnOrder,
-      onGlobalFilterChange: setGlobalFilter,
-      globalFilterFn: fuzzyFilter,
-      getCoreRowModel: getCoreRowModel(),
-      getSortedRowModel: getSortedRowModel(),
-      getFilteredRowModel: getFilteredRowModel(),
-      ...(!manualPagination ? { getPaginationRowModel: getPaginationRowModel() } : {}),
-      //debugTable: true,
-      //debugHeaders: true,
-      //debugColumns: true,
-    })
-
+const createHubTableComponent = <T,>() => {
+  const HubTable: React.FC<{ table: Table<T>; tableStates: TableStatesType }> = ({
+    table,
+    tableStates,
+  }) => {
     return (
       <DndProvider backend={HTML5Backend}>
         <div className="w-full p-4">
           <div className="flex flex-wrap items-center justify-between gap-1">
             <DebouncedInput
-              value={globalFilter ?? ''}
-              onChange={(value) => setGlobalFilter(String(value))}
+              value={tableStates.globalFilter ?? ''}
+              onChange={(value) => tableStates.setGlobalFilter(String(value))}
               placeholder="Search all columns..."
             />
             <div className="flex flex-wrap gap-2">
@@ -279,7 +381,7 @@ const createHubTable = <T,>() => {
               />
               <button
                 type="button"
-                onClick={() => resetOrder()}
+                onClick={() => tableStates.resetOrder()}
                 className="relative rounded-md bg-white p-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
               >
                 <ArrowPathIcon className="h-5 w-5" />
@@ -295,7 +397,11 @@ const createHubTable = <T,>() => {
                       {table.getHeaderGroups().map((headerGroup, index) => (
                         <tr key={headerGroup.id}>
                           {headerGroup.headers.map((header) => (
-                            <DraggableColumnHeader key={header.id} header={header} table={table} />
+                            <DraggableColumnHeader<T>
+                              key={header.id}
+                              header={header}
+                              table={table}
+                            />
                           ))}
                         </tr>
                       ))}
@@ -380,7 +486,10 @@ const createHubTable = <T,>() => {
               />
               <Select
                 selected={table.getState().pagination.pageSize}
-                list={pageSizeOptions.map((size) => ({ value: size, label: size.toString() }))}
+                list={tableStates.pageSizeOptions.map((size) => ({
+                  value: size,
+                  label: size.toString(),
+                }))}
                 onChange={(value: string | number) => table.setPageSize(Number(value))}
                 defaultSize="w-auto"
                 label="Page Size"
@@ -395,45 +504,12 @@ const createHubTable = <T,>() => {
   return HubTable
 }
 
-function DebouncedInput({
-  value: initialValue,
-  onChange,
-  debounce = 500,
-  ...props
-}: {
-  value: string | number
-  onChange: (value: string | number) => void
-  debounce?: number
-} & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>) {
-  const [value, setValue] = React.useState(initialValue)
-
-  React.useEffect(() => {
-    setValue(initialValue)
-  }, [initialValue])
-
-  React.useEffect(() => {
-    const timeout = setTimeout(() => {
-      onChange(value)
-    }, debounce)
-
-    return () => clearTimeout(timeout)
-  }, [debounce, onChange, value])
-
-  return (
-    <div className="relative w-full min-w-[200px] rounded-md shadow-sm sm:w-4/12">
-      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-        <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-      </div>
-      {
-        <input
-          className="block w-full rounded-md border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-          {...props}
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-        />
-      }
-    </div>
-  )
+export const createHubTable = <T,>() => {
+  return {
+    useHubTable: useHubTable<T>,
+    HubTable: createHubTableComponent<T>(),
+    HubTableFilters: HubTableFilters<T>,
+  }
 }
 
 export default createHubTable

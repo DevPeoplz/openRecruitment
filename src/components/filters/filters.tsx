@@ -1,6 +1,7 @@
-import React, { useReducer } from 'react'
+import React, { ReactElement, ReactNode, useReducer } from 'react'
 import CheckboxFilter from '@/components/table/filters/checkbox-filter'
 import SelectFilter from '@/components/table/filters/select-filter'
+import { Table } from '@tanstack/react-table'
 
 export interface ComponentDefType {
   [key: string]: {
@@ -72,10 +73,11 @@ const componentsReducer = (
 
   return state
 }
-export const Filters: React.FC<{ componentsDef: ComponentDefType; queryParams: [any, any] }> = ({
-  componentsDef,
-  queryParams,
-}) => {
+export const Filters: React.FC<{
+  componentsDef: ComponentDefType
+  queryParams: [any, any]
+  table: Table<any>
+}> = ({ componentsDef, queryParams, table }) => {
   const [componentsStatus, dispatchComponentsStatus] = useReducer(componentsReducer, componentsDef)
 
   return (
@@ -90,6 +92,7 @@ export const Filters: React.FC<{ componentsDef: ComponentDefType; queryParams: [
               {...settings.props}
               filterQueryParams={queryParams}
               dispatchComponentsStatus={dispatchComponentsStatus}
+              table={table}
             />
           )
         )
