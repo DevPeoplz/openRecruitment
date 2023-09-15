@@ -1,7 +1,8 @@
-import React, { ReactElement, ReactNode, useReducer } from 'react'
-import CheckboxFilter from '@/components/table/filters/checkbox-filter'
-import SelectFilter from '@/components/table/filters/select-filter'
+import React, { ReactElement, ReactNode, useMemo, useReducer, useState } from 'react'
+import CheckboxFilter, { CheckboxFilterProps } from '@/components/table/filters/checkbox-filter'
+import SelectFilter, { SelectFilterProps } from '@/components/table/filters/select-filter'
 import { Table } from '@tanstack/react-table'
+import { DefaultColumnsExtendedProps, TableStatesType } from '@/components/table/hub-table'
 
 export interface ComponentDefType {
   [key: string]: {
@@ -35,64 +36,45 @@ const filtersComponents: Record<string, React.FC<any>> = {
   select: SelectFilter,
 }
 
-const componentsReducer = (
-  state: ComponentDefType,
-  action: {
-    type: string
-    component: string
-    key: string
-    value: string | number | boolean | undefined
-    extra?: any
-  }
-) => {
-  switch (action.type) {
-    case 'updateCounts':
-      return state
-    case 'updateProps':
-      return {
-        ...state,
-        [action.component]: {
-          ...state[action.component],
-          props: {
-            ...state[action.component].props,
-            [action.key]: action.value,
-          },
-        },
-      }
-    case 'updatePropsOptions': {
-      const newState = state
-      newState[action.component].props.options.map((option, index) => {
-        if (action.extra.value && option.value === action.extra.value) {
-          newState[action.component].props.options[index][action.key] = action.value
-        }
-      })
-
-      return newState
-    }
-  }
-
-  return state
-}
-export const Filters: React.FC<{
-  componentsDef: ComponentDefType
-  queryParams: [any, any]
+export interface FilterProps {
+  key: string
+  columnKey: string
   table: Table<any>
-}> = ({ componentsDef, queryParams, table }) => {
-  const [componentsStatus, dispatchComponentsStatus] = useReducer(componentsReducer, componentsDef)
+}
 
+export const Filters: React.FC<{
+  table: Table<any>
+  tableStates: TableStatesType
+  defaultColumns: DefaultColumnsExtendedProps<any>
+}> = ({ table, tableStates, defaultColumns }) => {
   return (
     <>
-      {Object.entries(componentsStatus).map(([key, settings]) => {
-        const Component = filtersComponents[settings.type]
+      {defaultColumns.map((column) => {
+        if (!column.filterComponent) return null
+
+        const filterComponent = column.filterComponent
+        const Component = filtersComponents[filterComponent]
+        const settings: Record<string, any> = {}
+
+        switch (filterComponent) {
+          case 'checkbox':
+            settings.label = column.header ?? column.id
+            settings.options = column.defaultCheckboxOptions ?? []
+            break
+          case 'select':
+            settings.label = column.header ?? column.id
+            settings.placeholder = `Select a ${column.header ?? column.id}`
+            break
+        }
+
+        /*!!tableStates.filtersVisibility[column.id] &&*/
         return (
           Component && (
             <Component
-              key={key}
-              componentKey={key}
-              {...settings.props}
-              filterQueryParams={queryParams}
-              dispatchComponentsStatus={dispatchComponentsStatus}
+              key={`filter ${column.id}`}
+              columnKey={column.id}
               table={table}
+              {...settings}
             />
           )
         )

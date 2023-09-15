@@ -2,7 +2,11 @@ import React, { ReactNode, useMemo, useReducer, useState } from 'react'
 import { LayoutSideMenu } from '@/components/layout/main/layout-side-menu'
 import { ColumnDef } from '@tanstack/react-table'
 
-import HubTable, { createHubTable, useHubTable } from '@/components/table/hub-table'
+import HubTable, {
+  createHubTable,
+  DefaultColumnsExtendedProps,
+  useHubTable,
+} from '@/components/table/hub-table'
 import { useQuery } from '@apollo/client'
 import { GET_HUB_CANDIDATES, get_hub_candidates_variables } from '@/components/graphql/queries'
 import { useRouter } from 'next/router'
@@ -14,8 +18,6 @@ import { HubTableFilters } from '@/components/table/filters'
 import CandidateModal from '@/components/modals/candidate-modal'
 import { CANDIDATE, AUDIT_LOGS } from '@/utils/mockdata'
 
-type defaultColumnsProps = ColumnDef<Person> & { show?: boolean }
-
 export type Person = {
   firstName: string
   lastName: string
@@ -26,7 +28,7 @@ export type Person = {
   subRows?: Person[]
 }
 
-const defaultColumns: defaultColumnsProps[] = [
+const defaultColumns: DefaultColumnsExtendedProps<Person> = [
   {
     accessorKey: 'name',
     id: 'name',
@@ -34,6 +36,7 @@ const defaultColumns: defaultColumnsProps[] = [
     cell: (info) => info.getValue(),
     show: true,
     filterFn: 'arrIncludesSome',
+    filterComponent: 'select',
   },
   {
     accessorKey: 'averageScore',
@@ -49,6 +52,7 @@ const defaultColumns: defaultColumnsProps[] = [
     cell: (info) => info.getValue(),
     show: true,
     filterFn: 'arrIncludesSome',
+    filterComponent: 'select',
   },
   {
     accessorKey: 'stage',
@@ -63,6 +67,8 @@ const defaultColumns: defaultColumnsProps[] = [
     header: 'Job Fit Score',
     cell: (info) => info.getValue(),
     show: true,
+    filterFn: 'arrIncludesSome',
+    filterComponent: 'select',
   },
   {
     accessorKey: 'dateCreated',
@@ -133,24 +139,21 @@ const defaultColumns: defaultColumnsProps[] = [
     header: 'Auto Fit Enabled',
     cell: (info) => info.getValue(),
   },
+  {
+    accessorKey: 'status',
+    id: 'status',
+    header: 'Status',
+    cell: (info) => info.getValue(),
+    filterFn: 'arrIncludesSome',
+    filterComponent: 'checkbox',
+    defaultCheckboxOptions: [
+      { label: 'Qualified', value: 'qualified' },
+      { label: 'Disqualified', value: 'disqualified' },
+      { label: 'New', value: 'new' },
+      { label: 'Overdue', value: 'overdue' },
+    ],
+  },
 ]
-
-interface filterDefType {
-  [key: string]: {
-    type: string
-    param?: string
-  }
-}
-
-const filtersDef: filterDefType = {
-  status: {
-    type: 'string',
-  },
-  name: {
-    type: 'string',
-  },
-}
-
 const componentsDef: ComponentDefType = {
   job: {
     type: 'checkbox',
@@ -241,38 +244,28 @@ const componentsDef: ComponentDefType = {
 
 const Page = () => {
   const { useHubTable, HubTable } = createHubTable<Person>()
-  const {
+  /*const {
     filters,
     dispatchFilters,
     data: dataHubCandidates,
     loading: loadingHubCandidates,
   } = useFilterQueryParams(filtersDef, GET_HUB_CANDIDATES, get_hub_candidates_variables)
-  const [seeCandidate, setSeeCandidate] = useState(false)
+*/
 
-  const defaultColumnVisibility = useMemo(() => {
-    return defaultColumns.reduce((acc, col) => {
-      if (col.id) {
-        acc[col.id] = !!col.show
-      }
-      return acc
-    }, {} as Record<string, boolean>)
-  }, [])
+  const { data: dataHubCandidates, loading: loadingHubCandidates } = useQuery(GET_HUB_CANDIDATES)
+
+  const [seeCandidate, setSeeCandidate] = useState(false)
 
   const { table, tableStates } = useHubTable(
     'candidate-hub',
     loadingHubCandidates ? [] : dataHubCandidates?.findManyCandidate ?? [],
-    defaultColumns,
-    defaultColumnVisibility
+    defaultColumns
   )
 
   //           <HubTableFilters table={table} tableStates={tableStates} />
   const sidebar = (
     <div className="flex grow flex-col gap-y-5 overflow-y-auto  border-gray-200 bg-white pt-3">
-      <Filters
-        componentsDef={componentsDef}
-        queryParams={[filters, dispatchFilters]}
-        table={table}
-      />
+      <Filters defaultColumns={defaultColumns} table={table} tableStates={tableStates} />
     </div>
   )
 

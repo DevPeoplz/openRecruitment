@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useCallback, useEffect, useState } from 'react'
+import React, { PropsWithChildren, useCallback, useEffect, useMemo, useState } from 'react'
 import {
   Column,
   ColumnDef,
@@ -198,16 +198,31 @@ const DraggableColumnHeader: <T>(
 
   return DraggableColumnHeader
 }*/
+
+export type DefaultColumnsExtendedProps<T> = ({
+  show?: boolean
+  filterComponent?: 'checkbox' | 'select'
+  defaultCheckboxOptions?: { label: string; value: string }[]
+} & ColumnDef<T>)[]
+
 export const useHubTable = <T,>(
   localStorageKey: string,
   data: T[],
-  defaultColumns: ColumnDef<T>[],
-  defaultColumnVisibility?: Record<string, boolean>
+  defaultColumns: DefaultColumnsExtendedProps<T>
 ): { table: Table<T>; tableStates: TableStatesType } => {
   const { data: session } = useSession()
   const [columns] = useState(() => [...defaultColumns])
   const [sorting, setSorting] = useState<SortingState>([])
   const [globalFilter, setGlobalFilter] = useState('')
+
+  const defaultColumnVisibility = useMemo(() => {
+    return defaultColumns.reduce((acc, col) => {
+      if (col.id) {
+        acc[col.id] = !!col.show
+      }
+      return acc
+    }, {} as Record<string, boolean>)
+  }, [defaultColumns])
 
   const storageKey = useCallback(
     (key: string) => {
@@ -232,6 +247,27 @@ export const useHubTable = <T,>(
     }
 
     return storedColumnVisibility ? storedColumnVisibility : {}
+  })
+
+  const defaultFiltersVisibility = useMemo(() => {
+    return defaultColumns.reduce((acc, col) => {
+      if (col.id) {
+        acc[col.id] = !!col.show
+      }
+      return acc
+    }, {} as Record<string, boolean>)
+  }, [defaultColumns])
+
+  const [filtersVisibility, setFiltersVisibility] = useState(() => {
+    const storedFiltersVisibility = JSON.parse(
+      localStorage.getItem(storageKey('filtersVisibility')) as string
+    )
+
+    if (!storedFiltersVisibility && defaultFiltersVisibility) {
+      return defaultFiltersVisibility
+    }
+
+    return storedFiltersVisibility ? storedFiltersVisibility : {}
   })
 
   const [columnOrder, setColumnOrder] = React.useState<ColumnOrderState>(() => {
@@ -328,6 +364,8 @@ export const useHubTable = <T,>(
       globalFilter,
       setGlobalFilter,
       pageSizeOptions,
+      filtersVisibility,
+      setFiltersVisibility,
     },
   }
 }
@@ -341,6 +379,8 @@ export interface TableStatesType {
   globalFilter: string
   setGlobalFilter: React.Dispatch<React.SetStateAction<string>>
   pageSizeOptions: number[]
+  filtersVisibility: Record<string, boolean>
+  setFiltersVisibility: React.Dispatch<React.SetStateAction<string>>
 }
 
 const createHubTableComponent = <T,>() => {

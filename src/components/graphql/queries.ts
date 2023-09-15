@@ -162,6 +162,7 @@ export const GET_HUB_CANDIDATES = gql`
       hireDate: createdAt
       startDate: name
       autoFitEnabled: name
+      status: lastName
     }
   }
 `
