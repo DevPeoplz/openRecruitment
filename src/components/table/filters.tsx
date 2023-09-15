@@ -23,8 +23,10 @@ export const HubTableFilters: <T>(
       <button
         onClick={(value) => {
           console.log('click')
-          column.setFilterValue(() => ['number 1', 'number 2'])
-          column?.getFilterValue()
+          if (column) {
+            column.setFilterValue(() => ['number 1', 'number 2'])
+            column?.getFilterValue()
+          }
         }}
         className="w-36 rounded border shadow"
       >

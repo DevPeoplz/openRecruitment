@@ -5,7 +5,10 @@ import clsx from 'clsx'
 import { Table } from '@tanstack/react-table'
 import { useRouter } from 'next/router'
 
-const optionsReducer = (state, action) => {
+const optionsReducer = (
+  state: Iterable<unknown> | null | undefined,
+  action: { key: unknown; value: any }
+) => {
   const newState = [...new Set(state)]
   const index = newState.indexOf(action.key)
 
