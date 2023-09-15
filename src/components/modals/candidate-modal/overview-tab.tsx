@@ -94,7 +94,9 @@ const overviewTab: FC<Props> = ({ candidate, logs }) => {
       </table>
       <div className="flex items-center justify-between border px-1 py-4">
         <p>Cover letter</p>
-        <button className="rounded-sm border p-2">Add cover letter</button>
+        <button className="rounded-md border bg-primary-500 p-2 text-white">
+          Add cover letter
+        </button>
       </div>
     </div>
   )

@@ -3,6 +3,8 @@ import Avatar from '@/components/UI/Avatar'
 import { CandidateType, LogType } from '.'
 import OverviewTab from './overview-tab'
 import EvaluationCandidate from './evaluation'
+import EvaluationTab from './evaluation-tab'
+import EmailTab from './email-tab'
 
 type Props = {
   candidate: CandidateType
@@ -37,7 +39,7 @@ const CandidateView: FC<Props> = ({ candidate, logs }) => {
 
   return (
     <div className="flex h-full gap-2">
-      <div className="p-2">
+      <div className="w-100 p-2">
         <div className="flex items-center justify-between gap-16">
           <div className="flex items-center gap-2">
             <Avatar name={candidate.name} />
@@ -62,15 +64,15 @@ const CandidateView: FC<Props> = ({ candidate, logs }) => {
         {
           {
             overview: <OverviewTab candidate={candidate} logs={logs} />,
-            email: <p>Email</p>,
-            evaluation: <p>Evaluation</p>,
+            email: <EmailTab />,
+            evaluation: <EvaluationTab />,
             file: <p>File</p>,
             activity: <p>Activity</p>,
           }[tabSelected]
         }
       </div>
 
-      <div className="min-w-[320px] bg-gray-300 p-2">
+      <div className="w-[320px] bg-gray-300 p-2">
         <EvaluationCandidate />
       </div>
     </div>
