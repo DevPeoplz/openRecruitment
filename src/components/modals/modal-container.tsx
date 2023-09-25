@@ -20,7 +20,7 @@ const ModalContainer: React.FC<props> = ({ isOpen, setIsOpen, children, title, c
             `mx-auto max-h-[90vh]  min-h-[200px] min-w-[400px] overflow-y-auto overflow-x-hidden scroll-smooth rounded-xl bg-white p-4 ${className}`
           )}
         >
-          <Dialog.Title className="text-2xl font-bold">{title}</Dialog.Title>
+          <Dialog.Title className="p-2 text-2xl font-bold">{title}</Dialog.Title>
           {children}
         </Dialog.Panel>
       </div>

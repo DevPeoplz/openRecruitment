@@ -1,11 +1,11 @@
 import React from 'react'
-import ModalContainer from '../modal-container'
-import CandidateView from './candidate-view'
+import ModalContainer from './modal-container'
+import CandidateView from '../views/candidate/candidate-view'
 
 type Props = {
   isOpen: boolean
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
-  candidate: CandidateType
+  candidate: CandidateType | null
   logs: LogType[]
 }
 
@@ -21,23 +21,23 @@ export type LogType = {
 }
 
 export type CandidateType = {
-  id: number
+  id: string
   name: string
   email: string
   phone: string
   tagSource: {
     tag: {
-      id: number
+      id: string
       name: string
     }[]
     source: {
-      id: number
+      id: string
       name: string
     }[]
   }
 }
 
-const CandidateModal: React.FC<Props> = ({ isOpen, setIsOpen, candidate, logs }) => {
+const ViewCandidateModal: React.FC<Props> = ({ isOpen, setIsOpen, candidate, logs }) => {
   return (
     <ModalContainer isOpen={isOpen} setIsOpen={setIsOpen} className="h-full py-0 pr-0">
       <CandidateView candidate={candidate} logs={logs} />
@@ -45,4 +45,4 @@ const CandidateModal: React.FC<Props> = ({ isOpen, setIsOpen, candidate, logs })
   )
 }
 
-export default CandidateModal
+export default ViewCandidateModal

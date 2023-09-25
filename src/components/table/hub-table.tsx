@@ -1,4 +1,11 @@
-import React, { PropsWithChildren, useCallback, useEffect, useMemo, useState } from 'react'
+import React, {
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  ReactNode,
+} from 'react'
 import {
   Column,
   ColumnDef,
@@ -15,6 +22,7 @@ import {
   getSortedRowModel,
   Header,
   PaginationState,
+  Row,
   SortingState,
   Table,
   useReactTable,
@@ -387,8 +395,9 @@ const createHubTableComponent = <T,>() => {
   const HubTable: React.FC<{
     table: Table<T>
     tableStates: TableStatesType
-    rowOnClick: () => void
-  }> = ({ table, tableStates, rowOnClick }) => {
+    rowOnClick: (x: Row<T>) => void
+    actions?: React.ReactNode[]
+  }> = ({ table, tableStates, rowOnClick, actions }) => {
     return (
       <DndProvider backend={HTML5Backend}>
         <div className="w-full p-4">
@@ -399,6 +408,7 @@ const createHubTableComponent = <T,>() => {
               placeholder="Search all columns..."
             />
             <div className="flex flex-wrap gap-2">
+              {actions && actions.map((action: ReactNode) => action)}
               <DropdownWithChecks
                 icon={ViewColumnsIcon}
                 columns={[
@@ -450,7 +460,7 @@ const createHubTableComponent = <T,>() => {
                     <tbody className="flex w-full flex-wrap divide-y divide-gray-200 bg-white lg:table-row-group">
                       {table.getRowModel().rows.map((row) => (
                         <tr
-                          onClick={rowOnClick}
+                          onClick={() => rowOnClick(row)}
                           key={row.id}
                           className="flex w-full cursor-pointer even:bg-gray-50 lg:table-row"
                         >

@@ -61,7 +61,7 @@ const Sidebar: React.FC = () => {
                 )}
               ></item.icon>
             </Link>
-            <Tooltip place="right" content={item.name} id="my-tooltip" className="capitalize">
+            <Tooltip place="right" content={item.name} id="my-tooltip" className="z-50 capitalize">
               <span className="text-xs ">{item.name}</span>
             </Tooltip>
           </li>
@@ -74,7 +74,7 @@ const Sidebar: React.FC = () => {
             'h-8 w-8 text-gray-500 hover:text-black'
           )}
         />
-        <Tooltip place="right" content="settings" id="my-tooltip" className="capitalize">
+        <Tooltip place="right" content="settings" id="my-tooltip" className="z-50 capitalize">
           <span className="text-xs ">settings</span>
         </Tooltip>
       </Link>

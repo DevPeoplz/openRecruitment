@@ -1,13 +1,13 @@
 import React, { FC, useState } from 'react'
 import Avatar from '@/components/UI/Avatar'
-import { CandidateType, LogType } from '.'
+import { CandidateType, LogType } from '../../modals/view-candidate-modal'
 import OverviewTab from './overview-tab'
 import EvaluationCandidate from './evaluation'
 import EvaluationTab from './evaluation-tab'
 import EmailTab from './email-tab'
 
 type Props = {
-  candidate: CandidateType
+  candidate: CandidateType | null
   logs: LogType[]
 }
 
@@ -36,6 +36,7 @@ const tabs = [
 
 const CandidateView: FC<Props> = ({ candidate, logs }) => {
   const [tabSelected, setTabSelected] = useState('overview')
+  if (!candidate) return null
 
   return (
     <div className="flex h-full gap-2">

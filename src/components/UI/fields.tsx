@@ -225,3 +225,32 @@ export function CheckboxFieldWithCount({ option, setOption, className }: Checkbo
     </div>
   )
 }
+
+export function UploadAvatar({ id, label }: UploadFileProps) {
+  return (
+    <div className="flex  cursor-pointer flex-col items-center gap-4 rounded-lg border-2 border-dashed border-gray-400 p-4">
+      <p className="text-lg font-semibold text-gray-800">{label}</p>
+      <label
+        htmlFor={id}
+        className="flex items-center gap-2 rounded-md bg-gray-200 px-3 py-2 font-medium text-gray-800 transition duration-300 hover:bg-gray-300"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+          />
+        </svg>
+        Upload Photo
+      </label>
+      <input type="file" id={id} className="hidden" accept="image/*" />
+    </div>
+  )
+}

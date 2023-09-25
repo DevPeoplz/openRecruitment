@@ -1,22 +1,28 @@
 import React, { ReactNode, useMemo, useReducer, useState } from 'react'
 import { LayoutSideMenu } from '@/components/layout/main/layout-side-menu'
-import { ColumnDef } from '@tanstack/react-table'
+import { ColumnDef, Row } from '@tanstack/react-table'
 
 import HubTable, {
   createHubTable,
   DefaultColumnsExtendedProps,
   useHubTable,
 } from '@/components/table/hub-table'
-import { useQuery } from '@apollo/client'
-import { GET_HUB_CANDIDATES, get_hub_candidates_variables } from '@/components/graphql/queries'
+import { useLazyQuery, useQuery } from '@apollo/client'
+import {
+  GET_CANDIDATE_BY_ID,
+  get_candidate_by_id_variables,
+  GET_HUB_CANDIDATES,
+  get_hub_candidates_variables,
+} from '@/components/graphql/queries'
 import { useRouter } from 'next/router'
 import { useFilterQueryParams } from '@/hooks/queryparams'
 import CheckboxFilter from '@/components/table/filters/checkbox-filter'
 import SelectFilter from '@/components/table/filters/select-filter'
 import { ComponentDefType, Filters } from '@/components/filters/filters'
 import { HubTableFilters } from '@/components/table/filters'
-import CandidateModal from '@/components/modals/candidate-modal'
+import ViewCandidateModal, { CandidateType } from '@/components/modals/view-candidate-modal'
 import { CANDIDATE, AUDIT_LOGS } from '@/utils/mockdata'
+import AddCandidate from '@/components/table/actions/add-candidate'
 
 export type Person = {
   firstName: string
@@ -29,6 +35,9 @@ export type Person = {
 }
 
 const defaultColumns: DefaultColumnsExtendedProps<Person> = [
+  {
+    accessorKey: 'id',
+  },
   {
     accessorKey: 'name',
     id: 'name',
@@ -269,18 +278,68 @@ const Page = () => {
     </div>
   )
 
+  const [currentCandidate, setCurrentCandidate] = useState<CandidateType | null>(null)
+  const [
+    loadCandidate,
+    {
+      called: calledCandidate,
+      loading: loadingCandidate,
+      data: dataCandidate,
+      refetch: refetchCandidate,
+    },
+  ] = useLazyQuery(GET_CANDIDATE_BY_ID, { variables: { where: { id: { equals: 1 } } } })
+
   return (
     <LayoutSideMenu sidebar={sidebar}>
       <h1>Candidates</h1>
-      <HubTable table={table} tableStates={tableStates} rowOnClick={() => setSeeCandidate(true)} />
-      <CandidateModal
+      <HubTable
+        table={table}
+        tableStates={tableStates}
+        rowOnClick={async (row) => {
+          if (!calledCandidate) {
+            await loadCandidate({
+              variables: get_candidate_by_id_variables(parseInt(row.getValue<number>('id'))),
+            })
+          } else {
+            await refetchCandidate(
+              get_candidate_by_id_variables(parseInt(row.getValue<number>('id')))
+            )
+          }
+          console.log('dataCandidate', dataCandidate)
+          setCurrentCandidate(rowToCandidate(row, dataCandidate))
+          setSeeCandidate(true)
+        }}
+        actions={[<AddCandidate key="add-candidate" />]}
+      />
+      <ViewCandidateModal
         isOpen={seeCandidate}
         setIsOpen={setSeeCandidate}
-        candidate={CANDIDATE}
+        candidate={currentCandidate}
         logs={AUDIT_LOGS}
       />
     </LayoutSideMenu>
   )
+}
+
+const rowToCandidate = (row: Row<Person>, data: any): CandidateType => {
+  const candidate = {
+    id: parseInt(row.id),
+    name: row.getValue<string>('name'),
+    email: data?.findManyCandidate[0]?.email,
+    phone: data?.findManyCandidate[0]?.phone,
+    tagSource: {
+      tag: [
+        { id: 'tag1', name: 'tag1' },
+        { id: 'tag2', name: 'tag2' },
+      ],
+      source: [
+        { id: 'source1', name: 'source1' },
+        { id: 'source2', name: 'source2' },
+      ],
+    },
+  }
+
+  return candidate
 }
 
 Page.auth = {}

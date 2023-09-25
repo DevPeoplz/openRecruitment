@@ -146,6 +146,7 @@ export const get_recently_work_on_variables = (userEmail?: string | null) => {
 export const GET_HUB_CANDIDATES = gql`
   query GET_HUB_CANDIDATES($where: CandidateWhereInput) {
     findManyCandidate(where: $where) {
+      id: id
       name: name
       averageScore: id
       job: lastName
@@ -169,4 +170,23 @@ export const GET_HUB_CANDIDATES = gql`
 
 export const get_hub_candidates_variables = (variables: OperationVariables) => {
   return { where: {} }
+}
+
+export const GET_CANDIDATE_BY_ID = gql`
+  query GET_CANDIDATE_BY_ID($where: CandidateWhereInput!) {
+    findManyCandidate(where: $where) {
+      email
+      phone
+    }
+  }
+`
+
+export const get_candidate_by_id_variables = (id?: number | string) => {
+  return {
+    where: {
+      id: {
+        equals: id,
+      },
+    },
+  }
 }

@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { CandidateType, LogType } from '.'
+import { CandidateType, LogType } from '../../modals/view-candidate-modal'
 import { PhoneIcon, XMarkIcon, EnvelopeIcon } from '@heroicons/react/24/outline'
 import { PlusIcon } from '@heroicons/react/20/solid'
 import { log } from 'console'
@@ -12,7 +12,6 @@ type Props = {
 }
 
 const overviewTab: FC<Props> = ({ candidate, logs }) => {
-  const currentDate = new Date()
   return (
     <div className="flex flex-col gap-4 ">
       <div className="flex items-center gap-2">
