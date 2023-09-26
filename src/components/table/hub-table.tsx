@@ -44,11 +44,12 @@ import {
 } from '@heroicons/react/20/solid'
 import { Select } from '@/components/UI/select'
 import { useSession } from 'next-auth/react'
-import { getLocalStorageKey } from '@/components/utils'
+import { getChildrenOnDisplayName, getLocalStorageKey } from '@/components/utils'
 import DropdownWithChecks from '@/components/UI/dropdown-with-checks'
 import { ArrowPathIcon, ViewColumnsIcon } from '@heroicons/react/24/outline'
 import { DebouncedInput } from '@/components/table/debounced-input'
 import { HubTableFilters } from '@/components/table/filters'
+import { BurgerMenu } from '@/components/UI/menu/burger-menu'
 
 declare module '@tanstack/table-core' {
   interface FilterMeta {
@@ -391,13 +392,26 @@ export interface TableStatesType {
   setFiltersVisibility: React.Dispatch<React.SetStateAction<string>>
 }
 
+type HubTableSubComponents = {
+  Toolbar?: typeof HubTableToolbar
+}
+
+const HubTableToolbar: React.FC<{ children: ReactNode }> = ({ children }) => {
+  return <>{children}</>
+}
+HubTableToolbar.displayName = 'HubTable.Toolbar'
+
 const createHubTableComponent = <T,>() => {
-  const HubTable: React.FC<{
+  type HubTableProps = {
     table: Table<T>
     tableStates: TableStatesType
     rowOnClick: (x: Row<T>) => void
-    actions?: React.ReactNode[]
-  }> = ({ table, tableStates, rowOnClick, actions }) => {
+    children?: ReactNode
+  }
+  const HubTable: HubTableSubComponents & React.FC<HubTableProps> = (props: HubTableProps) => {
+    const { table, tableStates, rowOnClick, children } = props
+    const filteredToolbar = getChildrenOnDisplayName(children, 'HubTable.Toolbar')
+
     return (
       <DndProvider backend={HTML5Backend}>
         <div className="w-full p-4">
@@ -408,7 +422,7 @@ const createHubTableComponent = <T,>() => {
               placeholder="Search all columns..."
             />
             <div className="flex flex-wrap gap-2">
-              {actions && actions.map((action: ReactNode) => action)}
+              {filteredToolbar ?? null}
               <DropdownWithChecks
                 icon={ViewColumnsIcon}
                 columns={[
@@ -445,7 +459,7 @@ const createHubTableComponent = <T,>() => {
                 <div className="overflow-hidden shadow ring-1 ring-black/5 sm:rounded-lg">
                   <table className="flex min-w-full flex-wrap divide-y divide-gray-300 lg:table">
                     <thead className="bg-gray-50">
-                      {table.getHeaderGroups().map((headerGroup, index) => (
+                      {table.getHeaderGroups().map((headerGroup) => (
                         <tr key={headerGroup.id}>
                           {headerGroup.headers.map((header) => (
                             <DraggableColumnHeader<T>
@@ -555,6 +569,8 @@ const createHubTableComponent = <T,>() => {
       </DndProvider>
     )
   }
+
+  HubTable.Toolbar = HubTableToolbar
 
   return HubTable
 }

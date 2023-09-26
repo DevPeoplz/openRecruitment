@@ -1,4 +1,4 @@
-import React, { ReactNode, useMemo, useReducer, useState } from 'react'
+import React, { ReactNode, useEffect, useMemo, useReducer, useState } from 'react'
 import { LayoutSideMenu } from '@/components/layout/main/layout-side-menu'
 import { ColumnDef, Row } from '@tanstack/react-table'
 
@@ -25,6 +25,8 @@ import { CANDIDATE, AUDIT_LOGS } from '@/utils/mockdata'
 import AddCandidate from '@/components/table/actions/add-candidate'
 
 export type Person = {
+  id: string
+  name: string
   firstName: string
   lastName: string
   age: number
@@ -35,9 +37,6 @@ export type Person = {
 }
 
 const defaultColumns: DefaultColumnsExtendedProps<Person> = [
-  {
-    accessorKey: 'id',
-  },
   {
     accessorKey: 'name',
     id: 'name',
@@ -163,106 +162,10 @@ const defaultColumns: DefaultColumnsExtendedProps<Person> = [
     ],
   },
 ]
-const componentsDef: ComponentDefType = {
-  job: {
-    type: 'checkbox',
-    props: {
-      stateKey: 'job',
-      label: 'Job',
-      options: [
-        { label: 'Qualified', value: 'qualified', count: 10, checked: false },
-        {
-          label: 'Disqualified',
-          value: 'disqualified',
-          count: 1,
-          checked: false,
-        },
-        { label: 'New', value: 'new', count: 2, checked: false },
-        { label: 'Overdue', value: 'overdue', count: 0, checked: false },
-      ],
-      show: true,
-    },
-  },
-  talentPool: {
-    type: 'checkbox',
-    props: {
-      stateKey: 'talentPool',
-      label: 'Talent Pool',
-      options: [
-        { label: 'Qualified', value: 'qualified', count: 10, checked: false },
-        {
-          label: 'Disqualified',
-          value: 'disqualified',
-          count: 1,
-          checked: false,
-        },
-        { label: 'New', value: 'new', count: 2, checked: false },
-        { label: 'Overdue', value: 'overdue', count: 0, checked: false },
-      ],
-      show: true,
-    },
-  },
-  jobFitScore: {
-    type: 'checkbox',
-    props: {
-      stateKey: 'jobFitScore',
-      label: 'Job Fit Score',
-      options: [
-        { label: 'Qualified', value: 'qualified', count: 10, checked: false },
-        {
-          label: 'Disqualified',
-          value: 'disqualified',
-          count: 1,
-          checked: false,
-        },
-        { label: 'New', value: 'new', count: 2, checked: false },
-        { label: 'Overdue', value: 'overdue', count: 0, checked: false },
-      ],
-      show: true,
-    },
-  },
-  job2: {
-    type: 'select2',
-    props: {
-      label: 'In Job',
-      placeholder: 'add a job',
-      show: true,
-      options: [
-        {
-          label: 'Job 1',
-          value: 'job1',
-          count: 10,
-          selected: true,
-        },
-        {
-          label: 'Job 2',
-          value: 'job2',
-          count: 10,
-          selected: true,
-        },
-        {
-          label: 'Job 3',
-          value: 'job3',
-          count: 10,
-          selected: false,
-        },
-      ],
-    },
-  },
-}
 
 const Page = () => {
   const { useHubTable, HubTable } = createHubTable<Person>()
-  /*const {
-    filters,
-    dispatchFilters,
-    data: dataHubCandidates,
-    loading: loadingHubCandidates,
-  } = useFilterQueryParams(filtersDef, GET_HUB_CANDIDATES, get_hub_candidates_variables)
-*/
-
   const { data: dataHubCandidates, loading: loadingHubCandidates } = useQuery(GET_HUB_CANDIDATES)
-
   const [seeCandidate, setSeeCandidate] = useState(false)
 
   const { table, tableStates } = useHubTable(
@@ -279,6 +182,7 @@ const Page = () => {
   )
 
   const [currentCandidate, setCurrentCandidate] = useState<CandidateType | null>(null)
+  const [currentRow, setCurrentRow] = useState<Person | null>(null)
   const [
     loadCandidate,
     {
@@ -287,7 +191,19 @@ const Page = () => {
       data: dataCandidate,
       refetch: refetchCandidate,
     },
-  ] = useLazyQuery(GET_CANDIDATE_BY_ID, { variables: { where: { id: { equals: 1 } } } })
+  ] = useLazyQuery(GET_CANDIDATE_BY_ID, {
+    fetchPolicy: 'cache-and-network',
+    variables: { where: { id: { equals: currentRow ? parseInt(currentRow?.id) : 0 } } },
+  })
+
+  useEffect(() => {
+    const action = !calledCandidate ? loadCandidate : refetchCandidate
+    if (currentRow && currentRow?.id != '') {
+      action().then(() => {
+        setCurrentCandidate(rowToCandidate(currentRow, dataCandidate))
+      })
+    }
+  }, [calledCandidate, currentRow, currentRow?.id, dataCandidate, loadCandidate, refetchCandidate])
 
   return (
     <LayoutSideMenu sidebar={sidebar}>
@@ -296,21 +212,14 @@ const Page = () => {
         table={table}
         tableStates={tableStates}
         rowOnClick={async (row) => {
-          if (!calledCandidate) {
-            await loadCandidate({
-              variables: get_candidate_by_id_variables(parseInt(row.getValue<number>('id'))),
-            })
-          } else {
-            await refetchCandidate(
-              get_candidate_by_id_variables(parseInt(row.getValue<number>('id')))
-            )
-          }
-          console.log('dataCandidate', dataCandidate)
-          setCurrentCandidate(rowToCandidate(row, dataCandidate))
+          setCurrentRow(row.original)
           setSeeCandidate(true)
         }}
-        actions={[<AddCandidate key="add-candidate" />]}
-      />
+      >
+        <HubTable.Toolbar>
+          <AddCandidate key="add-candidate" />
+        </HubTable.Toolbar>
+      </HubTable>
       <ViewCandidateModal
         isOpen={seeCandidate}
         setIsOpen={setSeeCandidate}
@@ -321,10 +230,10 @@ const Page = () => {
   )
 }
 
-const rowToCandidate = (row: Row<Person>, data: any): CandidateType => {
+const rowToCandidate = (row: Person, data: any): CandidateType => {
   const candidate = {
     id: parseInt(row.id),
-    name: row.getValue<string>('name'),
+    name: row.name,
     email: data?.findManyCandidate[0]?.email,
     phone: data?.findManyCandidate[0]?.phone,
     tagSource: {

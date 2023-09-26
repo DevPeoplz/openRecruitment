@@ -21,7 +21,7 @@ export type LogType = {
 }
 
 export type CandidateType = {
-  id: string
+  id: number
   name: string
   email: string
   phone: string
