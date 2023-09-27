@@ -8,12 +8,12 @@ const AddCandidate = () => {
   return (
     <div data-tooltip-id="button-tooltip" data-tooltip-content="add candidates">
       <button
-        className=" relative cursor-pointer rounded-md bg-secondary-200 p-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+        className="relative cursor-pointer rounded-md bg-secondary-400 p-2 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-secondary-200"
         data-tooltip-content="Add candidates"
         id="button-tooltip"
         onClick={() => setOpenModal(true)}
       >
-        <PlusIcon className="h-5 w-5" />
+        <PlusIcon className="h-5 w-5 text-white" />
       </button>
       <Tooltip place="top" content="add candidates" id="button-tooltip" className="capitalize">
         <span>Add candidates</span>

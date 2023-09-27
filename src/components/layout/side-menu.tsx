@@ -38,7 +38,7 @@ type Navigation = Record<string, NavigationItem[]>
 const navigation: Navigation = {
   dashboard: [
     { name: 'Overview', href: '/dashboard', icon: HomeIcon },
-    { name: 'Calendar', href: '/', icon: CalendarIcon },
+    { name: 'Calendar', href: '/calendar', icon: CalendarIcon },
     { name: 'Events', href: '/', icon: ChartPieIcon },
     { name: 'Evaluations', href: '/', icon: DocumentDuplicateIcon },
     { name: 'Tasks', href: '/', icon: FolderIcon },

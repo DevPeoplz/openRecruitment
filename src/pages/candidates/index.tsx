@@ -25,7 +25,7 @@ import { CANDIDATE, AUDIT_LOGS } from '@/utils/mockdata'
 import AddCandidate from '@/components/table/actions/add-candidate'
 
 export type Person = {
-  id: string
+  id: number
   name: string
   firstName: string
   lastName: string
@@ -193,12 +193,12 @@ const Page = () => {
     },
   ] = useLazyQuery(GET_CANDIDATE_BY_ID, {
     fetchPolicy: 'cache-and-network',
-    variables: { where: { id: { equals: currentRow ? parseInt(currentRow?.id) : 0 } } },
+    variables: { where: { id: { equals: currentRow ? Number(currentRow.id) : 0 } } },
   })
 
   useEffect(() => {
     const action = !calledCandidate ? loadCandidate : refetchCandidate
-    if (currentRow && currentRow?.id != '') {
+    if (currentRow && currentRow?.id) {
       action().then(() => {
         setCurrentCandidate(rowToCandidate(currentRow, dataCandidate))
       })
@@ -213,6 +213,9 @@ const Page = () => {
         tableStates={tableStates}
         rowOnClick={async (row) => {
           setCurrentRow(row.original)
+          if (row.original.id !== currentCandidate?.id) {
+            setCurrentCandidate(null)
+          }
           setSeeCandidate(true)
         }}
       >
@@ -232,7 +235,7 @@ const Page = () => {
 
 const rowToCandidate = (row: Person, data: any): CandidateType => {
   const candidate = {
-    id: parseInt(row.id),
+    id: row.id,
     name: row.name,
     email: data?.findManyCandidate[0]?.email,
     phone: data?.findManyCandidate[0]?.phone,

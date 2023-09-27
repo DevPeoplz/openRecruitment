@@ -393,7 +393,7 @@ export interface TableStatesType {
 }
 
 type HubTableSubComponents = {
-  Toolbar?: typeof HubTableToolbar
+  Toolbar: typeof HubTableToolbar
 }
 
 const HubTableToolbar: React.FC<{ children: ReactNode }> = ({ children }) => {

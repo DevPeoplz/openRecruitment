@@ -5,6 +5,7 @@ import OverviewTab from './overview-tab'
 import EvaluationCandidate from './evaluation'
 import EvaluationTab from './evaluation-tab'
 import EmailTab from './email-tab'
+import Loader from '@/components/UI/loader'
 
 type Props = {
   candidate: CandidateType | null
@@ -36,7 +37,7 @@ const tabs = [
 
 const CandidateView: FC<Props> = ({ candidate, logs }) => {
   const [tabSelected, setTabSelected] = useState('overview')
-  if (!candidate) return null
+  if (!candidate) return <Loader />
 
   return (
     <div className="flex h-full gap-2">
