@@ -1,6 +1,6 @@
 import React from 'react'
-import ModalContainer from '../modal-container'
-import AddCandidateView from './add-candidate-view'
+import ModalContainer from './modal-container'
+import AddCandidateView from '../views/candidate/add-candidate-view'
 
 type Props = {
   isOpen: boolean

@@ -932,7 +932,7 @@ export default interface PrismaTypes {
         ListRelations: "matches" | "visibility" | "metadata";
         Relations: {
             template: {
-                Shape: Template;
+                Shape: Template | null;
                 Name: "Template";
             };
             matches: {

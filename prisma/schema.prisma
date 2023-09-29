@@ -409,7 +409,7 @@ model Match {
   candidateId        Int
   stage              Stage?            @relation(fields: [stageId], references: [id]) // Status
   stageId            Int?
-  isHired            Boolean
+  isHired            Boolean           @default(false)
   disqualifyReason   DisqualifyReason? @relation(fields: [disqualifyReasonId], references: [id])
   disqualifyReasonId Int?
 }
@@ -488,15 +488,16 @@ model Template {
   evaluations                Evaluation[]
 }
 
+//TODO: Fix optional values
 model Stage {
   id          Int               @id @default(autoincrement())
-  position    Int
+  position    Int?
   category    String
-  inputType   String
-  value       String
-  template    Template          @relation(fields: [templateId], references: [id])
-  templateId  Int
-  isProtected Boolean           @default(false)
+  inputType   String?
+  value       String?
+  template    Template?         @relation(fields: [templateId], references: [id])
+  templateId  Int?
+  isProtected Boolean?          @default(false)
   matches     Match[]
   visibility  StageVisibility[]
   metadata    StageMetadata[]

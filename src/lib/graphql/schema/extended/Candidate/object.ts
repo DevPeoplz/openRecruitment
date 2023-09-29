@@ -26,7 +26,14 @@ export const CandidateObject = definePrismaObject('Candidate', {
         type: 'Float',
         resolve: async (parent, args, ctx) => {
           // TODO: Implement proper evaluation scores
-          return 0.5
+          return parseFloat((50 + Math.random() * 50).toFixed(2))
+        },
+      }),
+      jobFitScore: t.field({
+        type: 'Float',
+        resolve: async (parent, args, ctx) => {
+          // TODO: Implement proper evaluation scores
+          return parseFloat((Math.random() * 100).toFixed(2))
         },
       }),
     }

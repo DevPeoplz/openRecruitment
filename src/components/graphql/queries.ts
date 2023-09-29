@@ -148,14 +148,28 @@ export const GET_HUB_CANDIDATES = gql`
     findManyCandidate(where: $where) {
       id: id
       name: name
-      averageScore: id
-      job: lastName
-      stage: id
-      jobFitScore: referrerId
+      averageScore: averageScore
+      jobFitScore
+      job: offers {
+        id
+        stage {
+          id
+          category
+        }
+        offer {
+          id
+          name
+        }
+      }
       dateCreated: createdAt
       source: name
       tag: name
-      talentPool: firstName
+      talentPool: talentPools {
+        talentPool {
+          id
+          name
+        }
+      }
       disqualifiedBy: name
       disqualifyDate: name
       integrations: name

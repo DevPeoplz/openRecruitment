@@ -13,7 +13,10 @@ const QuickActionsToolbar = () => {
     <div className="fixed bottom-5 right-5 z-10">
       <Menu as="div" className="relative inline-block text-left">
         <div>
-          <Menu.Button className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-secondary-400 px-3 py-2 text-sm font-semibold text-white shadow-xl ring-1 ring-inset ring-gray-300 hover:bg-secondary-200" onClick={() => setOpenModal(false)}>
+          <Menu.Button
+            className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-secondary-400 px-3 py-2 text-sm font-semibold text-white shadow-xl ring-1 ring-inset ring-gray-300 hover:bg-secondary-200"
+            onClick={() => setOpenModal(false)}
+          >
             Quick Actions
             <ChevronDownIcon className="-mr-1 h-5 w-5 text-white" aria-hidden="true" />
           </Menu.Button>
@@ -38,7 +41,7 @@ const QuickActionsToolbar = () => {
                         active ? 'bg-gray-100 text-gray-900' : 'text-white',
                         'flex cursor-pointer px-4 py-2 text-sm'
                       )}
-                      onClick={() => setOpenModal(!openModal)}
+                      onClick={() => setOpenModal(true)}
                     >
                       <PlusCircleIcon
                         className="mr-2 h-5 w-5 text-white hover:text-gray-900"
@@ -46,7 +49,6 @@ const QuickActionsToolbar = () => {
                       />
                       Add Candidate
                     </div>
-                    <AddCandidateModal isOpen={openModal} setIsOpen={setOpenModal} />
                   </>
                 )}
               </Menu.Item>
@@ -54,6 +56,7 @@ const QuickActionsToolbar = () => {
           </Menu.Items>
         </Transition>
       </Menu>
+      <AddCandidateModal isOpen={openModal} setIsOpen={setOpenModal} />
     </div>
   )
 }

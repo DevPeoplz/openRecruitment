@@ -35,7 +35,7 @@ export const StageIdFieldObject = defineFieldObject('Stage', {
 export const StagePositionFieldObject = defineFieldObject('Stage', {
   type: "Int",
   description: undefined,
-  nullable: false,
+  nullable: true,
   resolve: (parent) => parent.position,
 });
 
@@ -49,20 +49,20 @@ export const StageCategoryFieldObject = defineFieldObject('Stage', {
 export const StageInputTypeFieldObject = defineFieldObject('Stage', {
   type: "String",
   description: undefined,
-  nullable: false,
+  nullable: true,
   resolve: (parent) => parent.inputType,
 });
 
 export const StageValueFieldObject = defineFieldObject('Stage', {
   type: "String",
   description: undefined,
-  nullable: false,
+  nullable: true,
   resolve: (parent) => parent.value,
 });
 
 export const StageTemplateFieldObject = defineRelationObject('Stage', 'template', {
   description: undefined,
-  nullable: false,
+  nullable: true,
   args: undefined,
   query: undefined,
 });
@@ -70,14 +70,14 @@ export const StageTemplateFieldObject = defineRelationObject('Stage', 'template'
 export const StageTemplateIdFieldObject = defineFieldObject('Stage', {
   type: "Int",
   description: undefined,
-  nullable: false,
+  nullable: true,
   resolve: (parent) => parent.templateId,
 });
 
 export const StageIsProtectedFieldObject = defineFieldObject('Stage', {
   type: "Boolean",
   description: undefined,
-  nullable: false,
+  nullable: true,
   resolve: (parent) => parent.isProtected,
 });
 

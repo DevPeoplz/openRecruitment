@@ -50,30 +50,50 @@ const defaultColumns: DefaultColumnsExtendedProps<Person> = [
     accessorKey: 'averageScore',
     id: 'averageScore',
     header: 'Average Score',
-    cell: (info) => info.getValue(),
+    cell: (info) => {
+      return `${info.getValue()}%`
+    },
     show: true,
   },
   {
     accessorKey: 'job',
     id: 'job',
     header: 'Job',
-    cell: (info) => info.getValue(),
+    cell: (info) => {
+      return (
+        <ul className="list-disc">
+          {info.getValue()?.map((job) => {
+            return <li key={job?.id + job?.offer?.name}>{job?.offer?.name}</li>
+          })}
+        </ul>
+      )
+    },
     show: true,
     filterFn: 'arrIncludesSome',
     filterComponent: 'select',
   },
   {
-    accessorKey: 'stage',
+    accessorKey: 'job',
     id: 'stage',
     header: 'Stage',
-    cell: (info) => info.getValue(),
+    cell: (info) => {
+      return (
+        <ul className="list-disc">
+          {info.getValue()?.map((job) => {
+            return <li key={job?.id + job?.stage?.category}>{job?.stage?.category}</li>
+          })}
+        </ul>
+      )
+    },
     show: true,
   },
   {
     accessorKey: 'jobFitScore',
     id: 'jobFitScore',
     header: 'Job Fit Score',
-    cell: (info) => info.getValue(),
+    cell: (info) => {
+      return `${info.getValue()}%`
+    },
     show: true,
     filterFn: 'arrIncludesSome',
     filterComponent: 'select',
@@ -82,7 +102,11 @@ const defaultColumns: DefaultColumnsExtendedProps<Person> = [
     accessorKey: 'dateCreated',
     id: 'dateCreated',
     header: 'Date Created',
-    cell: (info) => info.getValue(),
+    cell: (info) => {
+      // convert iso string to date on local time with date-fns
+      const date = new Date(info.getValue<string>())
+      return date.toLocaleString()
+    },
     show: true,
   },
   {
@@ -101,7 +125,15 @@ const defaultColumns: DefaultColumnsExtendedProps<Person> = [
     accessorKey: 'talentPool',
     id: 'talentPool',
     header: 'Talent Pool',
-    cell: (info) => info.getValue(),
+    cell: (info) => {
+      return (
+        <ul className="list-[square]">
+          {info.getValue()?.map((job) => {
+            return <li key={job?.id + job?.talentPool?.name}>{job?.talentPool?.name}</li>
+          })}
+        </ul>
+      )
+    },
     show: true,
     filterFn: 'arrIncludesSome',
   },

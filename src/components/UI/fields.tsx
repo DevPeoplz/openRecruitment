@@ -39,7 +39,7 @@ interface SelectFieldProps {
   required?: boolean
   name?: string
   options: option[]
-  setOption?: any
+  setOption?: (option: option) => void
 }
 
 interface PhoneFieldProps {
@@ -50,6 +50,7 @@ interface PhoneFieldProps {
   autoComplete?: string
   required?: boolean
   name?: string
+  onChange?: any
 }
 
 interface Company {
@@ -175,12 +176,12 @@ export function UploadFile({ label, id }: UploadFileProps) {
 export function LanguageSelect({ languages }: { languages: option[] }) {
   return (
     <div className="flex flex-col items-center">
-      <label htmlFor="languaje" className="mr-2">
+      <label htmlFor="language" className="mr-2">
         Select Language
       </label>
       <select
-        id="languaje"
-        name="languaje"
+        id="language"
+        name="language"
         className="block h-10 rounded-md bg-transparent  text-base focus:outline-none focus:ring-cyan-500"
         defaultValue="0"
       >

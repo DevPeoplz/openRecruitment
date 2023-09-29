@@ -4,14 +4,28 @@ import { LayoutSideMenu } from '@/components/layout/main/layout-side-menu'
 import { useRedirectionFlag } from '@/hooks/redirection'
 import LayoutAuthenticated from '@/components/layout/layout-authenticated'
 import Loader from '@/components/UI/loader'
-import moment from 'moment'
-import { Calendar, momentLocalizer } from 'react-big-calendar'
+import { Calendar, dateFnsLocalizer } from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
+import format from 'date-fns/format'
+import parse from 'date-fns/parse'
+import startOfWeek from 'date-fns/startOfWeek'
+import getDay from 'date-fns/getDay'
+import enUS from 'date-fns/locale/en-US'
 
 const CalendarView: NextPageWithLayout = () => {
   useRedirectionFlag()
 
-  const localizer = momentLocalizer(moment)
+  const locales = {
+    'en-US': enUS,
+  }
+
+  const localizer = dateFnsLocalizer({
+    format,
+    parse,
+    startOfWeek,
+    getDay,
+    locales,
+  })
 
   return (
     <LayoutSideMenu>
@@ -21,7 +35,7 @@ const CalendarView: NextPageWithLayout = () => {
           events={[]}
           startAccessor="start"
           endAccessor="end"
-          style={{ height: 500 }}
+          style={{ height: 500, width: 1000 }}
         />
       </div>
     </LayoutSideMenu>

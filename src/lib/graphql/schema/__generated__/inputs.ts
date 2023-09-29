@@ -3033,12 +3033,12 @@ export const StageWhereInputFields = (t: any) => ({
   OR: t.field({"required":false,"type":[StageWhereInput]}),
   NOT: t.field({"required":false,"type":[StageWhereInput]}),
   id: t.field({"required":false,"type":IntFilter}),
-  position: t.field({"required":false,"type":IntFilter}),
+  position: t.field({"required":false,"type":IntNullableFilter}),
   category: t.field({"required":false,"type":StringFilter}),
-  inputType: t.field({"required":false,"type":StringFilter}),
-  value: t.field({"required":false,"type":StringFilter}),
-  templateId: t.field({"required":false,"type":IntFilter}),
-  isProtected: t.field({"required":false,"type":BoolFilter}),
+  inputType: t.field({"required":false,"type":StringNullableFilter}),
+  value: t.field({"required":false,"type":StringNullableFilter}),
+  templateId: t.field({"required":false,"type":IntNullableFilter}),
+  isProtected: t.field({"required":false,"type":BoolNullableFilter}),
   template: t.field({"required":false,"type":TemplateWhereInput}),
   matches: t.field({"required":false,"type":MatchListRelationFilter}),
   visibility: t.field({"required":false,"type":StageVisibilityListRelationFilter}),
@@ -3070,12 +3070,12 @@ export const StageWhereUniqueInputFields = (t: any) => ({
   AND: t.field({"required":false,"type":[StageWhereInput]}),
   OR: t.field({"required":false,"type":[StageWhereInput]}),
   NOT: t.field({"required":false,"type":[StageWhereInput]}),
-  position: t.field({"required":false,"type":IntFilter}),
+  position: t.field({"required":false,"type":IntNullableFilter}),
   category: t.field({"required":false,"type":StringFilter}),
-  inputType: t.field({"required":false,"type":StringFilter}),
-  value: t.field({"required":false,"type":StringFilter}),
-  templateId: t.field({"required":false,"type":IntFilter}),
-  isProtected: t.field({"required":false,"type":BoolFilter}),
+  inputType: t.field({"required":false,"type":StringNullableFilter}),
+  value: t.field({"required":false,"type":StringNullableFilter}),
+  templateId: t.field({"required":false,"type":IntNullableFilter}),
+  isProtected: t.field({"required":false,"type":BoolNullableFilter}),
   template: t.field({"required":false,"type":TemplateWhereInput}),
   matches: t.field({"required":false,"type":MatchListRelationFilter}),
   visibility: t.field({"required":false,"type":StageVisibilityListRelationFilter}),
@@ -3108,12 +3108,12 @@ export const StageScalarWhereWithAggregatesInputFields = (t: any) => ({
   OR: t.field({"required":false,"type":[StageScalarWhereWithAggregatesInput]}),
   NOT: t.field({"required":false,"type":[StageScalarWhereWithAggregatesInput]}),
   id: t.field({"required":false,"type":IntWithAggregatesFilter}),
-  position: t.field({"required":false,"type":IntWithAggregatesFilter}),
+  position: t.field({"required":false,"type":IntNullableWithAggregatesFilter}),
   category: t.field({"required":false,"type":StringWithAggregatesFilter}),
-  inputType: t.field({"required":false,"type":StringWithAggregatesFilter}),
-  value: t.field({"required":false,"type":StringWithAggregatesFilter}),
-  templateId: t.field({"required":false,"type":IntWithAggregatesFilter}),
-  isProtected: t.field({"required":false,"type":BoolWithAggregatesFilter}),
+  inputType: t.field({"required":false,"type":StringNullableWithAggregatesFilter}),
+  value: t.field({"required":false,"type":StringNullableWithAggregatesFilter}),
+  templateId: t.field({"required":false,"type":IntNullableWithAggregatesFilter}),
+  isProtected: t.field({"required":false,"type":BoolNullableWithAggregatesFilter}),
 });
 export const StageScalarWhereWithAggregatesInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.StageScalarWhereWithAggregatesInput>>('StageScalarWhereWithAggregatesInput').implement({
   fields: StageScalarWhereWithAggregatesInputFields,
@@ -5413,7 +5413,7 @@ export const OfferFileUpdateManyMutationInput = builder.inputRef<PrismaUpdateOpe
 });
 
 export const MatchCreateInputFields = (t: any) => ({
-  isHired: t.boolean({"required":true}),
+  isHired: t.boolean({"required":false}),
   offer: t.field({"required":true,"type":OfferCreateNestedOneWithoutMatchesInput}),
   candidate: t.field({"required":true,"type":CandidateCreateNestedOneWithoutOffersInput}),
   stage: t.field({"required":false,"type":StageCreateNestedOneWithoutMatchesInput}),
@@ -5439,7 +5439,7 @@ export const MatchCreateManyInputFields = (t: any) => ({
   offerId: t.int({"required":true}),
   candidateId: t.int({"required":true}),
   stageId: t.int({"required":false}),
-  isHired: t.boolean({"required":true}),
+  isHired: t.boolean({"required":false}),
   disqualifyReasonId: t.int({"required":false}),
 });
 export const MatchCreateManyInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.MatchCreateManyInput>>('MatchCreateManyInput').implement({
@@ -5684,12 +5684,12 @@ export const TemplateUpdateManyMutationInput = builder.inputRef<PrismaUpdateOper
 });
 
 export const StageCreateInputFields = (t: any) => ({
-  position: t.int({"required":true}),
+  position: t.int({"required":false}),
   category: t.string({"required":true}),
-  inputType: t.string({"required":true}),
-  value: t.string({"required":true}),
+  inputType: t.string({"required":false}),
+  value: t.string({"required":false}),
   isProtected: t.boolean({"required":false}),
-  template: t.field({"required":true,"type":TemplateCreateNestedOneWithoutStagesInput}),
+  template: t.field({"required":false,"type":TemplateCreateNestedOneWithoutStagesInput}),
   matches: t.field({"required":false,"type":MatchCreateNestedManyWithoutStageInput}),
   visibility: t.field({"required":false,"type":StageVisibilityCreateNestedManyWithoutStageInput}),
   metadata: t.field({"required":false,"type":StageMetadataCreateNestedManyWithoutStageInput}),
@@ -5699,12 +5699,12 @@ export const StageCreateInput = builder.inputRef<PrismaUpdateOperationsInputFilt
 });
 
 export const StageUpdateInputFields = (t: any) => ({
-  position: t.field({"required":false,"type":IntFieldUpdateOperationsInput}),
+  position: t.field({"required":false,"type":NullableIntFieldUpdateOperationsInput}),
   category: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
-  inputType: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
-  value: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
-  isProtected: t.field({"required":false,"type":BoolFieldUpdateOperationsInput}),
-  template: t.field({"required":false,"type":TemplateUpdateOneRequiredWithoutStagesNestedInput}),
+  inputType: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  value: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  isProtected: t.field({"required":false,"type":NullableBoolFieldUpdateOperationsInput}),
+  template: t.field({"required":false,"type":TemplateUpdateOneWithoutStagesNestedInput}),
   matches: t.field({"required":false,"type":MatchUpdateManyWithoutStageNestedInput}),
   visibility: t.field({"required":false,"type":StageVisibilityUpdateManyWithoutStageNestedInput}),
   metadata: t.field({"required":false,"type":StageMetadataUpdateManyWithoutStageNestedInput}),
@@ -5715,11 +5715,11 @@ export const StageUpdateInput = builder.inputRef<PrismaUpdateOperationsInputFilt
 
 export const StageCreateManyInputFields = (t: any) => ({
   id: t.int({"required":false}),
-  position: t.int({"required":true}),
+  position: t.int({"required":false}),
   category: t.string({"required":true}),
-  inputType: t.string({"required":true}),
-  value: t.string({"required":true}),
-  templateId: t.int({"required":true}),
+  inputType: t.string({"required":false}),
+  value: t.string({"required":false}),
+  templateId: t.int({"required":false}),
   isProtected: t.boolean({"required":false}),
 });
 export const StageCreateManyInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.StageCreateManyInput>>('StageCreateManyInput').implement({
@@ -5727,11 +5727,11 @@ export const StageCreateManyInput = builder.inputRef<PrismaUpdateOperationsInput
 });
 
 export const StageUpdateManyMutationInputFields = (t: any) => ({
-  position: t.field({"required":false,"type":IntFieldUpdateOperationsInput}),
+  position: t.field({"required":false,"type":NullableIntFieldUpdateOperationsInput}),
   category: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
-  inputType: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
-  value: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
-  isProtected: t.field({"required":false,"type":BoolFieldUpdateOperationsInput}),
+  inputType: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  value: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  isProtected: t.field({"required":false,"type":NullableBoolFieldUpdateOperationsInput}),
 });
 export const StageUpdateManyMutationInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.StageUpdateManyMutationInput>>('StageUpdateManyMutationInput').implement({
   fields: StageUpdateManyMutationInputFields,
@@ -9152,14 +9152,6 @@ export const EnumTemplateTypesWithAggregatesFilter = builder.inputRef<PrismaUpda
   fields: EnumTemplateTypesWithAggregatesFilterFields,
 });
 
-export const TemplateRelationFilterFields = (t: any) => ({
-  is: t.field({"required":false,"type":TemplateWhereInput}),
-  isNot: t.field({"required":false,"type":TemplateWhereInput}),
-});
-export const TemplateRelationFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.TemplateRelationFilter>>('TemplateRelationFilter').implement({
-  fields: TemplateRelationFilterFields,
-});
-
 export const StageMetadataListRelationFilterFields = (t: any) => ({
   every: t.field({"required":false,"type":StageMetadataWhereInput}),
   some: t.field({"required":false,"type":StageMetadataWhereInput}),
@@ -9598,6 +9590,14 @@ export const CandidateCustomFieldsSumOrderByAggregateInputFields = (t: any) => (
 });
 export const CandidateCustomFieldsSumOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateCustomFieldsSumOrderByAggregateInput>>('CandidateCustomFieldsSumOrderByAggregateInput').implement({
   fields: CandidateCustomFieldsSumOrderByAggregateInputFields,
+});
+
+export const TemplateRelationFilterFields = (t: any) => ({
+  is: t.field({"required":false,"type":TemplateWhereInput}),
+  isNot: t.field({"required":false,"type":TemplateWhereInput}),
+});
+export const TemplateRelationFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.TemplateRelationFilter>>('TemplateRelationFilter').implement({
+  fields: TemplateRelationFilterFields,
 });
 
 export const EvaluationCountOrderByAggregateInputFields = (t: any) => ({
@@ -12917,15 +12917,17 @@ export const StageMetadataCreateNestedManyWithoutStageInput = builder.inputRef<P
   fields: StageMetadataCreateNestedManyWithoutStageInputFields,
 });
 
-export const TemplateUpdateOneRequiredWithoutStagesNestedInputFields = (t: any) => ({
+export const TemplateUpdateOneWithoutStagesNestedInputFields = (t: any) => ({
   create: t.field({"required":false,"type":TemplateCreateWithoutStagesInput}),
   connectOrCreate: t.field({"required":false,"type":TemplateCreateOrConnectWithoutStagesInput}),
   upsert: t.field({"required":false,"type":TemplateUpsertWithoutStagesInput}),
+  disconnect: t.field({"required":false,"type":TemplateWhereInput}),
+  delete: t.field({"required":false,"type":TemplateWhereInput}),
   connect: t.field({"required":false,"type":TemplateWhereUniqueInput}),
   update: t.field({"required":false,"type":TemplateUpdateToOneWithWhereWithoutStagesInput}),
 });
-export const TemplateUpdateOneRequiredWithoutStagesNestedInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.TemplateUpdateOneRequiredWithoutStagesNestedInput>>('TemplateUpdateOneRequiredWithoutStagesNestedInput').implement({
-  fields: TemplateUpdateOneRequiredWithoutStagesNestedInputFields,
+export const TemplateUpdateOneWithoutStagesNestedInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.TemplateUpdateOneWithoutStagesNestedInput>>('TemplateUpdateOneWithoutStagesNestedInput').implement({
+  fields: TemplateUpdateOneWithoutStagesNestedInputFields,
 });
 
 export const MatchUpdateManyWithoutStageNestedInputFields = (t: any) => ({
@@ -18410,7 +18412,7 @@ export const CompanyCreateOrConnectWithoutDisqualifyReasonsInput = builder.input
 });
 
 export const MatchCreateWithoutDisqualifyReasonInputFields = (t: any) => ({
-  isHired: t.boolean({"required":true}),
+  isHired: t.boolean({"required":false}),
   offer: t.field({"required":true,"type":OfferCreateNestedOneWithoutMatchesInput}),
   candidate: t.field({"required":true,"type":CandidateCreateNestedOneWithoutOffersInput}),
   stage: t.field({"required":false,"type":StageCreateNestedOneWithoutMatchesInput}),
@@ -20514,7 +20516,7 @@ export const MembershipCreateManyOfferInputEnvelope = builder.inputRef<PrismaUpd
 });
 
 export const MatchCreateWithoutOfferInputFields = (t: any) => ({
-  isHired: t.boolean({"required":true}),
+  isHired: t.boolean({"required":false}),
   candidate: t.field({"required":true,"type":CandidateCreateNestedOneWithoutOffersInput}),
   stage: t.field({"required":false,"type":StageCreateNestedOneWithoutMatchesInput}),
   disqualifyReason: t.field({"required":false,"type":DisqualifyReasonCreateNestedOneWithoutMatchesInput}),
@@ -21365,12 +21367,12 @@ export const CandidateCreateOrConnectWithoutOffersInput = builder.inputRef<Prism
 });
 
 export const StageCreateWithoutMatchesInputFields = (t: any) => ({
-  position: t.int({"required":true}),
+  position: t.int({"required":false}),
   category: t.string({"required":true}),
-  inputType: t.string({"required":true}),
-  value: t.string({"required":true}),
+  inputType: t.string({"required":false}),
+  value: t.string({"required":false}),
   isProtected: t.boolean({"required":false}),
-  template: t.field({"required":true,"type":TemplateCreateNestedOneWithoutStagesInput}),
+  template: t.field({"required":false,"type":TemplateCreateNestedOneWithoutStagesInput}),
   visibility: t.field({"required":false,"type":StageVisibilityCreateNestedManyWithoutStageInput}),
   metadata: t.field({"required":false,"type":StageMetadataCreateNestedManyWithoutStageInput}),
 });
@@ -21534,12 +21536,12 @@ export const StageUpdateToOneWithWhereWithoutMatchesInput = builder.inputRef<Pri
 });
 
 export const StageUpdateWithoutMatchesInputFields = (t: any) => ({
-  position: t.field({"required":false,"type":IntFieldUpdateOperationsInput}),
+  position: t.field({"required":false,"type":NullableIntFieldUpdateOperationsInput}),
   category: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
-  inputType: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
-  value: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
-  isProtected: t.field({"required":false,"type":BoolFieldUpdateOperationsInput}),
-  template: t.field({"required":false,"type":TemplateUpdateOneRequiredWithoutStagesNestedInput}),
+  inputType: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  value: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  isProtected: t.field({"required":false,"type":NullableBoolFieldUpdateOperationsInput}),
+  template: t.field({"required":false,"type":TemplateUpdateOneWithoutStagesNestedInput}),
   visibility: t.field({"required":false,"type":StageVisibilityUpdateManyWithoutStageNestedInput}),
   metadata: t.field({"required":false,"type":StageMetadataUpdateManyWithoutStageNestedInput}),
 });
@@ -22671,10 +22673,10 @@ export const OfferCreateOrConnectWithoutAutoConfirmationEmailInput = builder.inp
 });
 
 export const StageCreateWithoutTemplateInputFields = (t: any) => ({
-  position: t.int({"required":true}),
+  position: t.int({"required":false}),
   category: t.string({"required":true}),
-  inputType: t.string({"required":true}),
-  value: t.string({"required":true}),
+  inputType: t.string({"required":false}),
+  value: t.string({"required":false}),
   isProtected: t.boolean({"required":false}),
   matches: t.field({"required":false,"type":MatchCreateNestedManyWithoutStageInput}),
   visibility: t.field({"required":false,"type":StageVisibilityCreateNestedManyWithoutStageInput}),
@@ -22998,12 +23000,12 @@ export const StageScalarWhereInputFields = (t: any) => ({
   OR: t.field({"required":false,"type":[StageScalarWhereInput]}),
   NOT: t.field({"required":false,"type":[StageScalarWhereInput]}),
   id: t.field({"required":false,"type":IntFilter}),
-  position: t.field({"required":false,"type":IntFilter}),
+  position: t.field({"required":false,"type":IntNullableFilter}),
   category: t.field({"required":false,"type":StringFilter}),
-  inputType: t.field({"required":false,"type":StringFilter}),
-  value: t.field({"required":false,"type":StringFilter}),
-  templateId: t.field({"required":false,"type":IntFilter}),
-  isProtected: t.field({"required":false,"type":BoolFilter}),
+  inputType: t.field({"required":false,"type":StringNullableFilter}),
+  value: t.field({"required":false,"type":StringNullableFilter}),
+  templateId: t.field({"required":false,"type":IntNullableFilter}),
+  isProtected: t.field({"required":false,"type":BoolNullableFilter}),
 });
 export const StageScalarWhereInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.StageScalarWhereInput>>('StageScalarWhereInput').implement({
   fields: StageScalarWhereInputFields,
@@ -23058,7 +23060,7 @@ export const TemplateCreateOrConnectWithoutStagesInput = builder.inputRef<Prisma
 });
 
 export const MatchCreateWithoutStageInputFields = (t: any) => ({
-  isHired: t.boolean({"required":true}),
+  isHired: t.boolean({"required":false}),
   offer: t.field({"required":true,"type":OfferCreateNestedOneWithoutMatchesInput}),
   candidate: t.field({"required":true,"type":CandidateCreateNestedOneWithoutOffersInput}),
   disqualifyReason: t.field({"required":false,"type":DisqualifyReasonCreateNestedOneWithoutMatchesInput}),
@@ -23305,12 +23307,12 @@ export const RoleCreateOrConnectWithoutStageVisibilityInput = builder.inputRef<P
 });
 
 export const StageCreateWithoutVisibilityInputFields = (t: any) => ({
-  position: t.int({"required":true}),
+  position: t.int({"required":false}),
   category: t.string({"required":true}),
-  inputType: t.string({"required":true}),
-  value: t.string({"required":true}),
+  inputType: t.string({"required":false}),
+  value: t.string({"required":false}),
   isProtected: t.boolean({"required":false}),
-  template: t.field({"required":true,"type":TemplateCreateNestedOneWithoutStagesInput}),
+  template: t.field({"required":false,"type":TemplateCreateNestedOneWithoutStagesInput}),
   matches: t.field({"required":false,"type":MatchCreateNestedManyWithoutStageInput}),
   metadata: t.field({"required":false,"type":StageMetadataCreateNestedManyWithoutStageInput}),
 });
@@ -23414,12 +23416,12 @@ export const StageUpdateToOneWithWhereWithoutVisibilityInput = builder.inputRef<
 });
 
 export const StageUpdateWithoutVisibilityInputFields = (t: any) => ({
-  position: t.field({"required":false,"type":IntFieldUpdateOperationsInput}),
+  position: t.field({"required":false,"type":NullableIntFieldUpdateOperationsInput}),
   category: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
-  inputType: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
-  value: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
-  isProtected: t.field({"required":false,"type":BoolFieldUpdateOperationsInput}),
-  template: t.field({"required":false,"type":TemplateUpdateOneRequiredWithoutStagesNestedInput}),
+  inputType: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  value: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  isProtected: t.field({"required":false,"type":NullableBoolFieldUpdateOperationsInput}),
+  template: t.field({"required":false,"type":TemplateUpdateOneWithoutStagesNestedInput}),
   matches: t.field({"required":false,"type":MatchUpdateManyWithoutStageNestedInput}),
   metadata: t.field({"required":false,"type":StageMetadataUpdateManyWithoutStageNestedInput}),
 });
@@ -23428,12 +23430,12 @@ export const StageUpdateWithoutVisibilityInput = builder.inputRef<PrismaUpdateOp
 });
 
 export const StageCreateWithoutMetadataInputFields = (t: any) => ({
-  position: t.int({"required":true}),
+  position: t.int({"required":false}),
   category: t.string({"required":true}),
-  inputType: t.string({"required":true}),
-  value: t.string({"required":true}),
+  inputType: t.string({"required":false}),
+  value: t.string({"required":false}),
   isProtected: t.boolean({"required":false}),
-  template: t.field({"required":true,"type":TemplateCreateNestedOneWithoutStagesInput}),
+  template: t.field({"required":false,"type":TemplateCreateNestedOneWithoutStagesInput}),
   matches: t.field({"required":false,"type":MatchCreateNestedManyWithoutStageInput}),
   visibility: t.field({"required":false,"type":StageVisibilityCreateNestedManyWithoutStageInput}),
 });
@@ -23467,12 +23469,12 @@ export const StageUpdateToOneWithWhereWithoutMetadataInput = builder.inputRef<Pr
 });
 
 export const StageUpdateWithoutMetadataInputFields = (t: any) => ({
-  position: t.field({"required":false,"type":IntFieldUpdateOperationsInput}),
+  position: t.field({"required":false,"type":NullableIntFieldUpdateOperationsInput}),
   category: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
-  inputType: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
-  value: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
-  isProtected: t.field({"required":false,"type":BoolFieldUpdateOperationsInput}),
-  template: t.field({"required":false,"type":TemplateUpdateOneRequiredWithoutStagesNestedInput}),
+  inputType: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  value: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  isProtected: t.field({"required":false,"type":NullableBoolFieldUpdateOperationsInput}),
+  template: t.field({"required":false,"type":TemplateUpdateOneWithoutStagesNestedInput}),
   matches: t.field({"required":false,"type":MatchUpdateManyWithoutStageNestedInput}),
   visibility: t.field({"required":false,"type":StageVisibilityUpdateManyWithoutStageNestedInput}),
 });
@@ -23637,7 +23639,7 @@ export const AuditLogCreateManyCandidateInputEnvelope = builder.inputRef<PrismaU
 });
 
 export const MatchCreateWithoutCandidateInputFields = (t: any) => ({
-  isHired: t.boolean({"required":true}),
+  isHired: t.boolean({"required":false}),
   offer: t.field({"required":true,"type":OfferCreateNestedOneWithoutMatchesInput}),
   stage: t.field({"required":false,"type":StageCreateNestedOneWithoutMatchesInput}),
   disqualifyReason: t.field({"required":false,"type":DisqualifyReasonCreateNestedOneWithoutMatchesInput}),
@@ -27075,7 +27077,7 @@ export const MatchCreateManyDisqualifyReasonInputFields = (t: any) => ({
   offerId: t.int({"required":true}),
   candidateId: t.int({"required":true}),
   stageId: t.int({"required":false}),
-  isHired: t.boolean({"required":true}),
+  isHired: t.boolean({"required":false}),
 });
 export const MatchCreateManyDisqualifyReasonInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.MatchCreateManyDisqualifyReasonInput>>('MatchCreateManyDisqualifyReasonInput').implement({
   fields: MatchCreateManyDisqualifyReasonInputFields,
@@ -27290,7 +27292,7 @@ export const MatchCreateManyOfferInputFields = (t: any) => ({
   id: t.int({"required":false}),
   candidateId: t.int({"required":true}),
   stageId: t.int({"required":false}),
-  isHired: t.boolean({"required":true}),
+  isHired: t.boolean({"required":false}),
   disqualifyReasonId: t.int({"required":false}),
 });
 export const MatchCreateManyOfferInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.MatchCreateManyOfferInput>>('MatchCreateManyOfferInput').implement({
@@ -27505,10 +27507,10 @@ export const FollowUpdateWithoutTalentPoolInput = builder.inputRef<PrismaUpdateO
 
 export const StageCreateManyTemplateInputFields = (t: any) => ({
   id: t.int({"required":false}),
-  position: t.int({"required":true}),
+  position: t.int({"required":false}),
   category: t.string({"required":true}),
-  inputType: t.string({"required":true}),
-  value: t.string({"required":true}),
+  inputType: t.string({"required":false}),
+  value: t.string({"required":false}),
   isProtected: t.boolean({"required":false}),
 });
 export const StageCreateManyTemplateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.StageCreateManyTemplateInput>>('StageCreateManyTemplateInput').implement({
@@ -27529,11 +27531,11 @@ export const EvaluationCreateManyTemplateInput = builder.inputRef<PrismaUpdateOp
 });
 
 export const StageUpdateWithoutTemplateInputFields = (t: any) => ({
-  position: t.field({"required":false,"type":IntFieldUpdateOperationsInput}),
+  position: t.field({"required":false,"type":NullableIntFieldUpdateOperationsInput}),
   category: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
-  inputType: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
-  value: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
-  isProtected: t.field({"required":false,"type":BoolFieldUpdateOperationsInput}),
+  inputType: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  value: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  isProtected: t.field({"required":false,"type":NullableBoolFieldUpdateOperationsInput}),
   matches: t.field({"required":false,"type":MatchUpdateManyWithoutStageNestedInput}),
   visibility: t.field({"required":false,"type":StageVisibilityUpdateManyWithoutStageNestedInput}),
   metadata: t.field({"required":false,"type":StageMetadataUpdateManyWithoutStageNestedInput}),
@@ -27561,7 +27563,7 @@ export const MatchCreateManyStageInputFields = (t: any) => ({
   id: t.int({"required":false}),
   offerId: t.int({"required":true}),
   candidateId: t.int({"required":true}),
-  isHired: t.boolean({"required":true}),
+  isHired: t.boolean({"required":false}),
   disqualifyReasonId: t.int({"required":false}),
 });
 export const MatchCreateManyStageInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.MatchCreateManyStageInput>>('MatchCreateManyStageInput').implement({
@@ -27634,7 +27636,7 @@ export const MatchCreateManyCandidateInputFields = (t: any) => ({
   id: t.int({"required":false}),
   offerId: t.int({"required":true}),
   stageId: t.int({"required":false}),
-  isHired: t.boolean({"required":true}),
+  isHired: t.boolean({"required":false}),
   disqualifyReasonId: t.int({"required":false}),
 });
 export const MatchCreateManyCandidateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.MatchCreateManyCandidateInput>>('MatchCreateManyCandidateInput').implement({
