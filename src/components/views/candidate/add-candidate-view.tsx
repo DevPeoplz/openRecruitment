@@ -4,29 +4,71 @@ import { PlusIcon } from '@heroicons/react/20/solid'
 import { Button } from '@/components/UI/Button'
 import { useMutation } from '@apollo/client'
 import { ADD_CANDIDATE_MUTATION } from '@/components/graphql/mutations'
+import Alert from '@/components/alert'
+import { useFileUpload } from '@/hooks/upload-files'
 
 const AddCandidateView = () => {
   const [formData, setFormData] = useState({
-    name: '',
+    firstName: '',
     lastName: '',
     email: '',
     phone: '',
+    avatar: null,
+    cv: null,
+    coverLetter: null,
   })
 
-  const [createEntity, { loading, error }] = useMutation(ADD_CANDIDATE_MUTATION)
+  const [createEntity, { loading, error, data }] = useMutation(ADD_CANDIDATE_MUTATION)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     console.log('Form data:', formData)
-    try {
-      const { data } = await createEntity({
-        variables: { input: formData },
-      })
 
-      // Handle the data or redirect as needed
-      console.log('Created entity:', data.createEntity)
-    } catch (err) {
-      console.error('Error creating entity:', err)
+    /*await createEntity({
+      variables: { input: formData },
+    })*/
+
+    if (true || (data && data.createEntity)) {
+      Alert({ type: 'success', message: 'Candidate created successfully' })
+
+      // upload files
+      const { id } = { id: 1 }
+      const formDataToUpload = new FormData()
+      const { avatar, cv, coverLetter } = formData
+      const files = ['avatar', 'cv', 'coverLetter']
+      // files.forEach((file) => {
+      //   if (formData[file]) {
+      //     formDataToUpload.append(file, formData[file])
+      //   }
+      // })
+      formDataToUpload.append('candidateId', '1')
+      formDataToUpload.append('name', 'avatar')
+
+      if (avatar) {
+        formDataToUpload.append('file', avatar)
+      }
+
+      console.log('Form data tpo upload:', formDataToUpload)
+
+      try {
+        const response = await fetch('/api/candidate/upload-files', {
+          method: 'POST',
+          body: formDataToUpload,
+        })
+
+        if (response.ok) {
+          alert('File uploaded successfully')
+        } else {
+          alert('File upload failed')
+        }
+        console.log('response')
+        console.log(response)
+      } catch (error) {
+        console.error('Error uploading file:', error)
+      }
+    }
+    if (error) {
+      Alert({ type: 'error', message: 'Something went wrong' })
     }
   }
 
@@ -35,11 +77,25 @@ const AddCandidateView = () => {
     setFormData({ ...formData, [id]: value })
   }
 
+  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // handle validations
+    e.preventDefault()
+    const { id } = e.target
+    const file = e.target.files?.[0]
+    console.log(file)
+    if (!file) Alert({ type: 'error', message: 'Please select a file' })
+    else if (file.size > 204800)
+      Alert({ type: 'error', message: 'File size cannot exceed more than 2MB' })
+    else {
+      setFormData({ ...formData, [id]: file })
+    }
+  }
+
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-2 p-2">
-      <UploadAvatar id="upload-avatar" />
+      <UploadAvatar id="avatar" onChange={handleFileInput} />
       <span className="flex gap-1">
-        <TextField id="name" label="Name" onChange={(e) => handleInputChange(e)} />
+        <TextField id="firstName" label="Name" onChange={(e) => handleInputChange(e)} />
         <TextField id="lastName" label="Last name" onChange={(e) => handleInputChange(e)} />
       </span>
       <TextField

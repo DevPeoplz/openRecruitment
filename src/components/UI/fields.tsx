@@ -62,6 +62,7 @@ interface UploadFileProps {
   id: string
   label?: string
   className?: string
+  onChange: (x: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 interface CheckboxFieldProps {
@@ -227,7 +228,7 @@ export function CheckboxFieldWithCount({ option, setOption, className }: Checkbo
   )
 }
 
-export function UploadAvatar({ id, label }: UploadFileProps) {
+export function UploadAvatar({ id, label, onChange }: UploadFileProps) {
   return (
     <div className="flex  cursor-pointer flex-col items-center gap-4 rounded-lg border-2 border-dashed border-gray-400 p-4">
       <p className="text-lg font-semibold text-gray-800">{label}</p>
@@ -251,7 +252,7 @@ export function UploadAvatar({ id, label }: UploadFileProps) {
         </svg>
         Upload Photo
       </label>
-      <input type="file" id={id} className="hidden" accept="image/*" />
+      <input type="file" id={id} className="hidden" accept="image/*" onChange={onChange} />
     </div>
   )
 }
