@@ -5,10 +5,10 @@ import { Button } from '@/components/UI/Button'
 import { useMutation } from '@apollo/client'
 import { ADD_CANDIDATE_MUTATION } from '@/components/graphql/mutations'
 import Alert from '@/components/alert'
-import { useFileUpload } from '@/hooks/upload-files'
+import { omit } from 'lodash'
 
 const AddCandidateView = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<Record<string, string | null | Blob>>({
     firstName: '',
     lastName: '',
     email: '',
@@ -22,54 +22,53 @@ const AddCandidateView = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('Form data:', formData)
 
-    /*await createEntity({
-      variables: { input: formData },
-    })*/
+    createEntity({
+      variables: { data: omit(formData, ['avatar', 'cv', 'coverLetter']) },
+    })
+      .then(async (res) => {
+        console.log('Candidate created successfully')
+        if (res.data.createOneCandidate?.id) {
+          //Alert({ type: 'success', message: 'Candidate created successfully' })
 
-    if (true || (data && data.createEntity)) {
-      Alert({ type: 'success', message: 'Candidate created successfully' })
+          // upload files
+          const formDataToUpload = new FormData()
+          const files = ['avatar', 'cv', 'coverLetter']
 
-      // upload files
-      const { id } = { id: 1 }
-      const formDataToUpload = new FormData()
-      const { avatar, cv, coverLetter } = formData
-      const files = ['avatar', 'cv', 'coverLetter']
-      // files.forEach((file) => {
-      //   if (formData[file]) {
-      //     formDataToUpload.append(file, formData[file])
-      //   }
-      // })
-      formDataToUpload.append('candidateId', '1')
-      formDataToUpload.append('name', 'avatar')
+          formDataToUpload.append('candidateId', res.data.createOneCandidate.id)
+          files.forEach((file) => {
+            const blob = formData[file]
+            if (blob) {
+              formDataToUpload.append('name', file)
+              formDataToUpload.append('file', blob)
+            }
+          })
 
-      if (avatar) {
-        formDataToUpload.append('file', avatar)
-      }
+          try {
+            const response = await fetch('/api/candidate/upload-files', {
+              method: 'POST',
+              body: formDataToUpload,
+            })
 
-      console.log('Form data tpo upload:', formDataToUpload)
+            console.log(response)
 
-      try {
-        const response = await fetch('/api/candidate/upload-files', {
-          method: 'POST',
-          body: formDataToUpload,
-        })
-
-        if (response.ok) {
-          alert('File uploaded successfully')
-        } else {
-          alert('File upload failed')
+            if (response.ok) {
+              await Alert({ type: 'success', message: 'Candidate created successfully' })
+            } else {
+              await Alert({
+                type: 'warning',
+                message: 'Candidate created but files were not uploaded',
+              })
+            }
+          } catch (error) {
+            console.error('Error uploading files:', error)
+          }
         }
-        console.log('response')
-        console.log(response)
-      } catch (error) {
-        console.error('Error uploading file:', error)
-      }
-    }
-    if (error) {
-      Alert({ type: 'error', message: 'Something went wrong' })
-    }
+      })
+      .catch((err) => {
+        console.log('Error creating candidate')
+        Alert({ type: 'error', message: 'Something went wrong' })
+      })
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,7 +81,7 @@ const AddCandidateView = () => {
     e.preventDefault()
     const { id } = e.target
     const file = e.target.files?.[0]
-    console.log(file)
+
     if (!file) Alert({ type: 'error', message: 'Please select a file' })
     else if (file.size > 204800)
       Alert({ type: 'error', message: 'File size cannot exceed more than 2MB' })
@@ -137,8 +136,8 @@ const AddCandidateView = () => {
         </button>
       </div>
 
-      <UploadFile label="CV or Resume:" id="upload-file" />
-      <UploadFile label="Cover Letter:" id="upload-file" />
+      <UploadFile label="CV or Resume:" id="upload-file" onChange={(e) => null} />
+      <UploadFile label="Cover Letter:" id="upload-file" onChange={(e) => null} />
       <div>
         <Button className="w-full " color="primary" type="submit">
           Add candidate

@@ -1,13 +1,18 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { prisma } from '@/lib/prisma'
-import { compare } from 'bcrypt'
-import { omit } from 'lodash'
 import { authOptions } from '@/pages/api/auth/[...nextauth]'
 import { getServerSession } from 'next-auth/next'
-import multer from 'multer'
-import path from 'path'
+import formidable from 'formidable'
+import { join } from 'path'
 import fs from 'fs'
+import { mkdir, readFile, unlink, writeFile } from 'fs/promises'
+import { v4 } from 'uuid'
+import { prisma } from '@/lib/prisma'
 
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+}
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     await handlePOST(res, req)
@@ -19,11 +24,6 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
 // POST /api/user
 async function handlePOST(res: NextApiResponse, req: NextApiRequest) {
   const session = await getServerSession(req, res, authOptions)
-  const data = await req.formData()
-
-  console.log('req.body')
-  console.log(JSON.stringify(req.body))
-  console.log(JSON.stringify(session))
 
   if (!session) {
     return res.status(401).json({ error: 'Unauthorized' })
@@ -35,45 +35,119 @@ async function handlePOST(res: NextApiResponse, req: NextApiRequest) {
     return res.status(401).json({ error: 'Unauthorized. No Company Found' })
   }
 
-  const id = await createItem(data)
-
-  if (!req.body) {
-    return res.status(401).json({ error: 'No Candidate found' })
-  }
-
-  const fileFolders = ['avatar', 'cv', 'cover-letter']
-
-  // fileFolders.map((folder) => {
-  //   if (!fs.existsSync(`assets/company-${companyId}/${folder}`)) {
-  //     fs.mkdirSync(`assets/company-${companyId}/${folder}`)
-  //   }
-  // })
-
-  if (req.body.name && !fileFolders.includes(req.body.name) && req.body.file) {
-    return res.status(400).json({ error: 'Invalid property to upload!' })
-  }
-
-  const storage = multer.diskStorage({
-    destination: `assets/company-${companyId}/${req.body.name}/`, // Change the destination folder as needed
-    filename: (req, file, cb) => {
-      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9)
-      const extension = path.extname(file.originalname)
-      cb(null, `${uniqueSuffix}${extension}`)
-    },
+  const form = formidable({
+    maxFiles: 3,
+    maxFileSize: 2048 * 1024, // 2mb
   })
 
-  const upload = multer({ storage })
+  form.parse(req, async function (err, fields, files) {
+    if (err) {
+      return res.status(401).json({ error: err })
+    }
 
-  try {
-    upload.single('file')(req, res, (err) => {
-      if (err) {
-        return res.status(400).json({ error: err.message })
+    const candidateId = fields.candidateId?.[0]
+
+    if (!candidateId) {
+      return res.status(401).json({ error: 'No Candidate found' })
+    }
+
+    const fileFolders = ['avatar', 'cv', 'coverLetter']
+
+    let filesUploaded
+
+    if (files.file && files.file.length > 0) {
+      const saveFiles = files.file.map(async (image, index) => {
+        if (!fields.name?.[index] || !fileFolders.includes(fields.name[index])) {
+          return {}
+        }
+
+        return saveFile(
+          `assets/company-${companyId}/${fields.name[index]}`,
+          fields.name[index],
+          image
+        )
+      })
+
+      filesUploaded = await Promise.all(saveFiles)
+        .then((uploaded) => {
+          console.log('All files saved successfully.')
+          return uploaded.reduce((result, obj) => ({ ...result, ...obj }), {})
+        })
+        .catch((error) => {
+          console.error('Error while saving files:', error)
+        })
+    }
+
+    if (filesUploaded) {
+      const saveAttachments = Object.entries(filesUploaded).map(async ([key, file]) => {
+        const attachmentType: Record<string, string> = {
+          avatar: 'candidateAvatar',
+          cv: 'candidateCv',
+          coverLetter: 'candidateCoverLetter',
+        }
+
+        if (key in attachmentType) {
+          return prisma.attachment.create({
+            data: {
+              contentType: file.contentType,
+              filename: file.filename,
+              path: file.path,
+              [attachmentType[key]]: { connect: { id: parseInt(candidateId) } },
+            },
+          })
+        }
+
+        return Promise.resolve()
+      })
+
+      const savedAttachments = await Promise.all(saveAttachments)
+        .then((attachments) => {
+          console.log('All attachments saved successfully.')
+          return attachments.map((e) => {
+            if (e) {
+              return e.id
+            }
+
+            return null
+          })
+        })
+        .catch((error) => {
+          console.error('Error while saving attachments:', error)
+          return null
+        })
+
+      if (savedAttachments) {
+        return res.status(200).send(savedAttachments)
       }
 
-      return res.status(200).json({ message: 'File uploaded successfully' })
-    })
-  } catch (error) {
-    console.error('Error uploading file:', error)
-    return res.status(500).json({ error: 'Server error' })
+      return res.status(400).json({ error: 'Failed attaching some files' })
+    }
+
+    return res.status(400).json({ error: 'No files uploaded' })
+  })
+}
+
+const saveFile = async (path: string, key: string, file: formidable.File) => {
+  const uploadDir = join(process.env.ROOT_DIR || process.cwd(), path)
+
+  if (!fs.existsSync(uploadDir)) {
+    await mkdir(uploadDir, { recursive: true })
   }
+
+  const data = await readFile(file.filepath)
+  const uniqueId = v4()
+  const extension = file.originalFilename?.split('.').pop()
+
+  return writeFile(`${uploadDir}/${uniqueId}.${extension}`, data)
+    .then(() => {
+      unlink(file.filepath)
+    })
+    .then(() => ({
+      [key]: {
+        contentType: key,
+        filename: `${uniqueId}.${extension}`,
+        path: path,
+      },
+    }))
+    .catch(() => ({}))
 }

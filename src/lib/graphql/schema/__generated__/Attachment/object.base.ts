@@ -16,7 +16,9 @@ export const AttachmentObject = definePrismaObject('Attachment', {
     filename: t.field(AttachmentFilenameFieldObject),
     path: t.field(AttachmentPathFieldObject),
     userProfilePhoto: t.relation('userProfilePhoto', AttachmentUserProfilePhotoFieldObject),
-    candidate: t.relation('candidate', AttachmentCandidateFieldObject),
+    candidateCv: t.relation('candidateCv', AttachmentCandidateCvFieldObject),
+    candidateAvatar: t.relation('candidateAvatar', AttachmentCandidateAvatarFieldObject),
+    candidateCoverLetter: t.relation('candidateCoverLetter', AttachmentCandidateCoverLetterFieldObject),
     uploader: t.relation('uploader', AttachmentUploaderFieldObject),
     uploaderId: t.field(AttachmentUploaderIdFieldObject),
     createdAt: t.field(AttachmentCreatedAtFieldObject),
@@ -61,7 +63,21 @@ export const AttachmentUserProfilePhotoFieldObject = defineRelationObject('Attac
   query: undefined,
 });
 
-export const AttachmentCandidateFieldObject = defineRelationObject('Attachment', 'candidate', {
+export const AttachmentCandidateCvFieldObject = defineRelationObject('Attachment', 'candidateCv', {
+  description: undefined,
+  nullable: true,
+  args: undefined,
+  query: undefined,
+});
+
+export const AttachmentCandidateAvatarFieldObject = defineRelationObject('Attachment', 'candidateAvatar', {
+  description: undefined,
+  nullable: true,
+  args: undefined,
+  query: undefined,
+});
+
+export const AttachmentCandidateCoverLetterFieldObject = defineRelationObject('Attachment', 'candidateCoverLetter', {
   description: undefined,
   nullable: true,
   args: undefined,

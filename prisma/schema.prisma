@@ -92,18 +92,20 @@ model VerificationToken {
 }
 
 model Attachment {
-  id               Int              @id @default(autoincrement())
-  contentType      String
-  filename         String
-  path             String
-  userProfilePhoto User?            @relation("profilePhoto")
-  candidate        Candidate?
-  uploader         HiringRole?      @relation(fields: [uploaderId], references: [id])
-  uploaderId       Int?
-  createdAt        DateTime         @default(now())
-  updatedAt        DateTime         @updatedAt
-  offerFiles       OfferFile[]
-  talentPoolFiles  TalentPoolFile[]
+  id                   Int              @id @default(autoincrement())
+  contentType          String
+  filename             String
+  path                 String
+  userProfilePhoto     User?            @relation("profilePhoto")
+  candidateCv          Candidate?       @relation("cv")
+  candidateAvatar      Candidate?       @relation("avatar")
+  candidateCoverLetter Candidate?       @relation("coverLetter")
+  uploader             HiringRole?      @relation(fields: [uploaderId], references: [id])
+  uploaderId           Int?
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+  offerFiles           OfferFile[]
+  talentPoolFiles      TalentPoolFile[]
 }
 
 model HiringRole {
@@ -488,7 +490,7 @@ model Template {
   evaluations                Evaluation[]
 }
 
-//TODO: Fix optional values
+// TODO: Fix optional values
 model Stage {
   id          Int               @id @default(autoincrement())
   position    Int?
@@ -532,12 +534,16 @@ model Candidate {
   skills              String[]
   mainLanguage        String                  @default("en")
   languages           String[]
-  coverLetter         String?
-  birthDate           DateTime
+  coverLetterText     String?
+  birthDate           DateTime?
   referrer            TagSource?              @relation("referrer", fields: [referrerId], references: [id])
   referrerId          Int?
-  cv                  Attachment?             @relation(fields: [cvId], references: [id])
+  cv                  Attachment?             @relation("cv", fields: [cvId], references: [id])
   cvId                Int?                    @unique
+  avatar              Attachment?             @relation("avatar", fields: [avatarId], references: [id])
+  avatarId            Int?                    @unique
+  coverLetter         Attachment?             @relation("coverLetter", fields: [coverLetterId], references: [id])
+  coverLetterId       Int?                    @unique
   educationLevel      String? // Should enum
   socials             String[]
   links               String[]

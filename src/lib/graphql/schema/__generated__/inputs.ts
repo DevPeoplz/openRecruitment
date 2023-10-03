@@ -193,7 +193,7 @@ export const StageMetadataScalarFieldEnum = builder.enumType('StageMetadataScala
 });
 
 export const CandidateScalarFieldEnum = builder.enumType('CandidateScalarFieldEnum', {
-  values: ["id","firstName","lastName","email","phone","skills","mainLanguage","languages","coverLetter","birthDate","referrerId","cvId","educationLevel","socials","links","salaryExpectation","isHired","hiredAtId","hiredById","companyId","createdAt","updatedAt"] as const,
+  values: ["id","firstName","lastName","email","phone","skills","mainLanguage","languages","coverLetterText","birthDate","referrerId","cvId","avatarId","coverLetterId","educationLevel","socials","links","salaryExpectation","isHired","hiredAtId","hiredById","companyId","createdAt","updatedAt"] as const,
 });
 
 export const CandidateTagScalarFieldEnum = builder.enumType('CandidateTagScalarFieldEnum', {
@@ -679,7 +679,9 @@ export const AttachmentWhereInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTimeFilter}),
   updatedAt: t.field({"required":false,"type":DateTimeFilter}),
   userProfilePhoto: t.field({"required":false,"type":UserWhereInput}),
-  candidate: t.field({"required":false,"type":CandidateWhereInput}),
+  candidateCv: t.field({"required":false,"type":CandidateWhereInput}),
+  candidateAvatar: t.field({"required":false,"type":CandidateWhereInput}),
+  candidateCoverLetter: t.field({"required":false,"type":CandidateWhereInput}),
   uploader: t.field({"required":false,"type":HiringRoleWhereInput}),
   offerFiles: t.field({"required":false,"type":OfferFileListRelationFilter}),
   talentPoolFiles: t.field({"required":false,"type":TalentPoolFileListRelationFilter}),
@@ -697,7 +699,9 @@ export const AttachmentOrderByWithRelationInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":SortOrder}),
   updatedAt: t.field({"required":false,"type":SortOrder}),
   userProfilePhoto: t.field({"required":false,"type":UserOrderByWithRelationInput}),
-  candidate: t.field({"required":false,"type":CandidateOrderByWithRelationInput}),
+  candidateCv: t.field({"required":false,"type":CandidateOrderByWithRelationInput}),
+  candidateAvatar: t.field({"required":false,"type":CandidateOrderByWithRelationInput}),
+  candidateCoverLetter: t.field({"required":false,"type":CandidateOrderByWithRelationInput}),
   uploader: t.field({"required":false,"type":HiringRoleOrderByWithRelationInput}),
   offerFiles: t.field({"required":false,"type":OfferFileOrderByRelationAggregateInput}),
   talentPoolFiles: t.field({"required":false,"type":TalentPoolFileOrderByRelationAggregateInput}),
@@ -718,7 +722,9 @@ export const AttachmentWhereUniqueInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTimeFilter}),
   updatedAt: t.field({"required":false,"type":DateTimeFilter}),
   userProfilePhoto: t.field({"required":false,"type":UserWhereInput}),
-  candidate: t.field({"required":false,"type":CandidateWhereInput}),
+  candidateCv: t.field({"required":false,"type":CandidateWhereInput}),
+  candidateAvatar: t.field({"required":false,"type":CandidateWhereInput}),
+  candidateCoverLetter: t.field({"required":false,"type":CandidateWhereInput}),
   uploader: t.field({"required":false,"type":HiringRoleWhereInput}),
   offerFiles: t.field({"required":false,"type":OfferFileListRelationFilter}),
   talentPoolFiles: t.field({"required":false,"type":TalentPoolFileListRelationFilter}),
@@ -3276,10 +3282,12 @@ export const CandidateWhereInputFields = (t: any) => ({
   skills: t.field({"required":false,"type":StringNullableListFilter}),
   mainLanguage: t.field({"required":false,"type":StringFilter}),
   languages: t.field({"required":false,"type":StringNullableListFilter}),
-  coverLetter: t.field({"required":false,"type":StringNullableFilter}),
-  birthDate: t.field({"required":false,"type":DateTimeFilter}),
+  coverLetterText: t.field({"required":false,"type":StringNullableFilter}),
+  birthDate: t.field({"required":false,"type":DateTimeNullableFilter}),
   referrerId: t.field({"required":false,"type":IntNullableFilter}),
   cvId: t.field({"required":false,"type":IntNullableFilter}),
+  avatarId: t.field({"required":false,"type":IntNullableFilter}),
+  coverLetterId: t.field({"required":false,"type":IntNullableFilter}),
   educationLevel: t.field({"required":false,"type":StringNullableFilter}),
   socials: t.field({"required":false,"type":StringNullableListFilter}),
   links: t.field({"required":false,"type":StringNullableListFilter}),
@@ -3292,6 +3300,8 @@ export const CandidateWhereInputFields = (t: any) => ({
   updatedAt: t.field({"required":false,"type":DateTimeFilter}),
   referrer: t.field({"required":false,"type":TagSourceWhereInput}),
   cv: t.field({"required":false,"type":AttachmentWhereInput}),
+  avatar: t.field({"required":false,"type":AttachmentWhereInput}),
+  coverLetter: t.field({"required":false,"type":AttachmentWhereInput}),
   hiredAt: t.field({"required":false,"type":OfferWhereInput}),
   hiredBy: t.field({"required":false,"type":HiringRoleWhereInput}),
   auditLogs: t.field({"required":false,"type":AuditLogListRelationFilter}),
@@ -3318,10 +3328,12 @@ export const CandidateOrderByWithRelationInputFields = (t: any) => ({
   skills: t.field({"required":false,"type":SortOrder}),
   mainLanguage: t.field({"required":false,"type":SortOrder}),
   languages: t.field({"required":false,"type":SortOrder}),
-  coverLetter: t.field({"required":false,"type":SortOrder}),
+  coverLetterText: t.field({"required":false,"type":SortOrder}),
   birthDate: t.field({"required":false,"type":SortOrder}),
   referrerId: t.field({"required":false,"type":SortOrder}),
   cvId: t.field({"required":false,"type":SortOrder}),
+  avatarId: t.field({"required":false,"type":SortOrder}),
+  coverLetterId: t.field({"required":false,"type":SortOrder}),
   educationLevel: t.field({"required":false,"type":SortOrder}),
   socials: t.field({"required":false,"type":SortOrder}),
   links: t.field({"required":false,"type":SortOrder}),
@@ -3334,6 +3346,8 @@ export const CandidateOrderByWithRelationInputFields = (t: any) => ({
   updatedAt: t.field({"required":false,"type":SortOrder}),
   referrer: t.field({"required":false,"type":TagSourceOrderByWithRelationInput}),
   cv: t.field({"required":false,"type":AttachmentOrderByWithRelationInput}),
+  avatar: t.field({"required":false,"type":AttachmentOrderByWithRelationInput}),
+  coverLetter: t.field({"required":false,"type":AttachmentOrderByWithRelationInput}),
   hiredAt: t.field({"required":false,"type":OfferOrderByWithRelationInput}),
   hiredBy: t.field({"required":false,"type":HiringRoleOrderByWithRelationInput}),
   auditLogs: t.field({"required":false,"type":AuditLogOrderByRelationAggregateInput}),
@@ -3354,6 +3368,8 @@ export const CandidateOrderByWithRelationInput = builder.inputRef<PrismaUpdateOp
 export const CandidateWhereUniqueInputFields = (t: any) => ({
   id: t.int({"required":false}),
   cvId: t.int({"required":false}),
+  avatarId: t.int({"required":false}),
+  coverLetterId: t.int({"required":false}),
   email_companyId: t.field({"required":false,"type":CandidateEmailCompanyIdCompoundUniqueInput}),
   AND: t.field({"required":false,"type":[CandidateWhereInput]}),
   OR: t.field({"required":false,"type":[CandidateWhereInput]}),
@@ -3365,8 +3381,8 @@ export const CandidateWhereUniqueInputFields = (t: any) => ({
   skills: t.field({"required":false,"type":StringNullableListFilter}),
   mainLanguage: t.field({"required":false,"type":StringFilter}),
   languages: t.field({"required":false,"type":StringNullableListFilter}),
-  coverLetter: t.field({"required":false,"type":StringNullableFilter}),
-  birthDate: t.field({"required":false,"type":DateTimeFilter}),
+  coverLetterText: t.field({"required":false,"type":StringNullableFilter}),
+  birthDate: t.field({"required":false,"type":DateTimeNullableFilter}),
   referrerId: t.field({"required":false,"type":IntNullableFilter}),
   educationLevel: t.field({"required":false,"type":StringNullableFilter}),
   socials: t.field({"required":false,"type":StringNullableListFilter}),
@@ -3380,6 +3396,8 @@ export const CandidateWhereUniqueInputFields = (t: any) => ({
   updatedAt: t.field({"required":false,"type":DateTimeFilter}),
   referrer: t.field({"required":false,"type":TagSourceWhereInput}),
   cv: t.field({"required":false,"type":AttachmentWhereInput}),
+  avatar: t.field({"required":false,"type":AttachmentWhereInput}),
+  coverLetter: t.field({"required":false,"type":AttachmentWhereInput}),
   hiredAt: t.field({"required":false,"type":OfferWhereInput}),
   hiredBy: t.field({"required":false,"type":HiringRoleWhereInput}),
   auditLogs: t.field({"required":false,"type":AuditLogListRelationFilter}),
@@ -3406,10 +3424,12 @@ export const CandidateOrderByWithAggregationInputFields = (t: any) => ({
   skills: t.field({"required":false,"type":SortOrder}),
   mainLanguage: t.field({"required":false,"type":SortOrder}),
   languages: t.field({"required":false,"type":SortOrder}),
-  coverLetter: t.field({"required":false,"type":SortOrder}),
+  coverLetterText: t.field({"required":false,"type":SortOrder}),
   birthDate: t.field({"required":false,"type":SortOrder}),
   referrerId: t.field({"required":false,"type":SortOrder}),
   cvId: t.field({"required":false,"type":SortOrder}),
+  avatarId: t.field({"required":false,"type":SortOrder}),
+  coverLetterId: t.field({"required":false,"type":SortOrder}),
   educationLevel: t.field({"required":false,"type":SortOrder}),
   socials: t.field({"required":false,"type":SortOrder}),
   links: t.field({"required":false,"type":SortOrder}),
@@ -3442,10 +3462,12 @@ export const CandidateScalarWhereWithAggregatesInputFields = (t: any) => ({
   skills: t.field({"required":false,"type":StringNullableListFilter}),
   mainLanguage: t.field({"required":false,"type":StringWithAggregatesFilter}),
   languages: t.field({"required":false,"type":StringNullableListFilter}),
-  coverLetter: t.field({"required":false,"type":StringNullableWithAggregatesFilter}),
-  birthDate: t.field({"required":false,"type":DateTimeWithAggregatesFilter}),
+  coverLetterText: t.field({"required":false,"type":StringNullableWithAggregatesFilter}),
+  birthDate: t.field({"required":false,"type":DateTimeNullableWithAggregatesFilter}),
   referrerId: t.field({"required":false,"type":IntNullableWithAggregatesFilter}),
   cvId: t.field({"required":false,"type":IntNullableWithAggregatesFilter}),
+  avatarId: t.field({"required":false,"type":IntNullableWithAggregatesFilter}),
+  coverLetterId: t.field({"required":false,"type":IntNullableWithAggregatesFilter}),
   educationLevel: t.field({"required":false,"type":StringNullableWithAggregatesFilter}),
   socials: t.field({"required":false,"type":StringNullableListFilter}),
   links: t.field({"required":false,"type":StringNullableListFilter}),
@@ -4356,7 +4378,9 @@ export const AttachmentCreateInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTime}),
   updatedAt: t.field({"required":false,"type":DateTime}),
   userProfilePhoto: t.field({"required":false,"type":UserCreateNestedOneWithoutPhotoInput}),
-  candidate: t.field({"required":false,"type":CandidateCreateNestedOneWithoutCvInput}),
+  candidateCv: t.field({"required":false,"type":CandidateCreateNestedOneWithoutCvInput}),
+  candidateAvatar: t.field({"required":false,"type":CandidateCreateNestedOneWithoutAvatarInput}),
+  candidateCoverLetter: t.field({"required":false,"type":CandidateCreateNestedOneWithoutCoverLetterInput}),
   uploader: t.field({"required":false,"type":HiringRoleCreateNestedOneWithoutAttachmentsInput}),
   offerFiles: t.field({"required":false,"type":OfferFileCreateNestedManyWithoutAttachmentInput}),
   talentPoolFiles: t.field({"required":false,"type":TalentPoolFileCreateNestedManyWithoutAttachmentInput}),
@@ -4372,7 +4396,9 @@ export const AttachmentUpdateInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   userProfilePhoto: t.field({"required":false,"type":UserUpdateOneWithoutPhotoNestedInput}),
-  candidate: t.field({"required":false,"type":CandidateUpdateOneWithoutCvNestedInput}),
+  candidateCv: t.field({"required":false,"type":CandidateUpdateOneWithoutCvNestedInput}),
+  candidateAvatar: t.field({"required":false,"type":CandidateUpdateOneWithoutAvatarNestedInput}),
+  candidateCoverLetter: t.field({"required":false,"type":CandidateUpdateOneWithoutCoverLetterNestedInput}),
   uploader: t.field({"required":false,"type":HiringRoleUpdateOneWithoutAttachmentsNestedInput}),
   offerFiles: t.field({"required":false,"type":OfferFileUpdateManyWithoutAttachmentNestedInput}),
   talentPoolFiles: t.field({"required":false,"type":TalentPoolFileUpdateManyWithoutAttachmentNestedInput}),
@@ -5819,8 +5845,8 @@ export const CandidateCreateInputFields = (t: any) => ({
   skills: t.stringList({"required":false}),
   mainLanguage: t.string({"required":false}),
   languages: t.stringList({"required":false}),
-  coverLetter: t.string({"required":false}),
-  birthDate: t.field({"required":true,"type":DateTime}),
+  coverLetterText: t.string({"required":false}),
+  birthDate: t.field({"required":false,"type":DateTime}),
   educationLevel: t.string({"required":false}),
   socials: t.stringList({"required":false}),
   links: t.stringList({"required":false}),
@@ -5829,7 +5855,9 @@ export const CandidateCreateInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTime}),
   updatedAt: t.field({"required":false,"type":DateTime}),
   referrer: t.field({"required":false,"type":TagSourceCreateNestedOneWithoutCandidateReferrerInput}),
-  cv: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateInput}),
+  cv: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateCvInput}),
+  avatar: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateAvatarInput}),
+  coverLetter: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateCoverLetterInput}),
   hiredAt: t.field({"required":false,"type":OfferCreateNestedOneWithoutHiredInput}),
   hiredBy: t.field({"required":false,"type":HiringRoleCreateNestedOneWithoutHiredCandidatesInput}),
   auditLogs: t.field({"required":false,"type":AuditLogCreateNestedManyWithoutCandidateInput}),
@@ -5855,8 +5883,8 @@ export const CandidateUpdateInputFields = (t: any) => ({
   skills: t.stringList({"required":false}),
   mainLanguage: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   languages: t.stringList({"required":false}),
-  coverLetter: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
-  birthDate: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  coverLetterText: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  birthDate: t.field({"required":false,"type":NullableDateTimeFieldUpdateOperationsInput}),
   educationLevel: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
   socials: t.stringList({"required":false}),
   links: t.stringList({"required":false}),
@@ -5865,7 +5893,9 @@ export const CandidateUpdateInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   referrer: t.field({"required":false,"type":TagSourceUpdateOneWithoutCandidateReferrerNestedInput}),
-  cv: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateNestedInput}),
+  cv: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateCvNestedInput}),
+  avatar: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateAvatarNestedInput}),
+  coverLetter: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateCoverLetterNestedInput}),
   hiredAt: t.field({"required":false,"type":OfferUpdateOneWithoutHiredNestedInput}),
   hiredBy: t.field({"required":false,"type":HiringRoleUpdateOneWithoutHiredCandidatesNestedInput}),
   auditLogs: t.field({"required":false,"type":AuditLogUpdateManyWithoutCandidateNestedInput}),
@@ -5892,10 +5922,12 @@ export const CandidateCreateManyInputFields = (t: any) => ({
   skills: t.stringList({"required":false}),
   mainLanguage: t.string({"required":false}),
   languages: t.stringList({"required":false}),
-  coverLetter: t.string({"required":false}),
-  birthDate: t.field({"required":true,"type":DateTime}),
+  coverLetterText: t.string({"required":false}),
+  birthDate: t.field({"required":false,"type":DateTime}),
   referrerId: t.int({"required":false}),
   cvId: t.int({"required":false}),
+  avatarId: t.int({"required":false}),
+  coverLetterId: t.int({"required":false}),
   educationLevel: t.string({"required":false}),
   socials: t.stringList({"required":false}),
   links: t.stringList({"required":false}),
@@ -5919,8 +5951,8 @@ export const CandidateUpdateManyMutationInputFields = (t: any) => ({
   skills: t.stringList({"required":false}),
   mainLanguage: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   languages: t.stringList({"required":false}),
-  coverLetter: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
-  birthDate: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  coverLetterText: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  birthDate: t.field({"required":false,"type":NullableDateTimeFieldUpdateOperationsInput}),
   educationLevel: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
   socials: t.stringList({"required":false}),
   links: t.stringList({"required":false}),
@@ -9389,10 +9421,12 @@ export const CandidateCountOrderByAggregateInputFields = (t: any) => ({
   skills: t.field({"required":false,"type":SortOrder}),
   mainLanguage: t.field({"required":false,"type":SortOrder}),
   languages: t.field({"required":false,"type":SortOrder}),
-  coverLetter: t.field({"required":false,"type":SortOrder}),
+  coverLetterText: t.field({"required":false,"type":SortOrder}),
   birthDate: t.field({"required":false,"type":SortOrder}),
   referrerId: t.field({"required":false,"type":SortOrder}),
   cvId: t.field({"required":false,"type":SortOrder}),
+  avatarId: t.field({"required":false,"type":SortOrder}),
+  coverLetterId: t.field({"required":false,"type":SortOrder}),
   educationLevel: t.field({"required":false,"type":SortOrder}),
   socials: t.field({"required":false,"type":SortOrder}),
   links: t.field({"required":false,"type":SortOrder}),
@@ -9412,6 +9446,8 @@ export const CandidateAvgOrderByAggregateInputFields = (t: any) => ({
   id: t.field({"required":false,"type":SortOrder}),
   referrerId: t.field({"required":false,"type":SortOrder}),
   cvId: t.field({"required":false,"type":SortOrder}),
+  avatarId: t.field({"required":false,"type":SortOrder}),
+  coverLetterId: t.field({"required":false,"type":SortOrder}),
   hiredAtId: t.field({"required":false,"type":SortOrder}),
   hiredById: t.field({"required":false,"type":SortOrder}),
 });
@@ -9426,10 +9462,12 @@ export const CandidateMaxOrderByAggregateInputFields = (t: any) => ({
   email: t.field({"required":false,"type":SortOrder}),
   phone: t.field({"required":false,"type":SortOrder}),
   mainLanguage: t.field({"required":false,"type":SortOrder}),
-  coverLetter: t.field({"required":false,"type":SortOrder}),
+  coverLetterText: t.field({"required":false,"type":SortOrder}),
   birthDate: t.field({"required":false,"type":SortOrder}),
   referrerId: t.field({"required":false,"type":SortOrder}),
   cvId: t.field({"required":false,"type":SortOrder}),
+  avatarId: t.field({"required":false,"type":SortOrder}),
+  coverLetterId: t.field({"required":false,"type":SortOrder}),
   educationLevel: t.field({"required":false,"type":SortOrder}),
   salaryExpectation: t.field({"required":false,"type":SortOrder}),
   isHired: t.field({"required":false,"type":SortOrder}),
@@ -9450,10 +9488,12 @@ export const CandidateMinOrderByAggregateInputFields = (t: any) => ({
   email: t.field({"required":false,"type":SortOrder}),
   phone: t.field({"required":false,"type":SortOrder}),
   mainLanguage: t.field({"required":false,"type":SortOrder}),
-  coverLetter: t.field({"required":false,"type":SortOrder}),
+  coverLetterText: t.field({"required":false,"type":SortOrder}),
   birthDate: t.field({"required":false,"type":SortOrder}),
   referrerId: t.field({"required":false,"type":SortOrder}),
   cvId: t.field({"required":false,"type":SortOrder}),
+  avatarId: t.field({"required":false,"type":SortOrder}),
+  coverLetterId: t.field({"required":false,"type":SortOrder}),
   educationLevel: t.field({"required":false,"type":SortOrder}),
   salaryExpectation: t.field({"required":false,"type":SortOrder}),
   isHired: t.field({"required":false,"type":SortOrder}),
@@ -9471,6 +9511,8 @@ export const CandidateSumOrderByAggregateInputFields = (t: any) => ({
   id: t.field({"required":false,"type":SortOrder}),
   referrerId: t.field({"required":false,"type":SortOrder}),
   cvId: t.field({"required":false,"type":SortOrder}),
+  avatarId: t.field({"required":false,"type":SortOrder}),
+  coverLetterId: t.field({"required":false,"type":SortOrder}),
   hiredAtId: t.field({"required":false,"type":SortOrder}),
   hiredById: t.field({"required":false,"type":SortOrder}),
 });
@@ -10212,6 +10254,24 @@ export const CandidateCreateNestedOneWithoutCvInput = builder.inputRef<PrismaUpd
   fields: CandidateCreateNestedOneWithoutCvInputFields,
 });
 
+export const CandidateCreateNestedOneWithoutAvatarInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":CandidateCreateWithoutAvatarInput}),
+  connectOrCreate: t.field({"required":false,"type":CandidateCreateOrConnectWithoutAvatarInput}),
+  connect: t.field({"required":false,"type":CandidateWhereUniqueInput}),
+});
+export const CandidateCreateNestedOneWithoutAvatarInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateCreateNestedOneWithoutAvatarInput>>('CandidateCreateNestedOneWithoutAvatarInput').implement({
+  fields: CandidateCreateNestedOneWithoutAvatarInputFields,
+});
+
+export const CandidateCreateNestedOneWithoutCoverLetterInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":CandidateCreateWithoutCoverLetterInput}),
+  connectOrCreate: t.field({"required":false,"type":CandidateCreateOrConnectWithoutCoverLetterInput}),
+  connect: t.field({"required":false,"type":CandidateWhereUniqueInput}),
+});
+export const CandidateCreateNestedOneWithoutCoverLetterInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateCreateNestedOneWithoutCoverLetterInput>>('CandidateCreateNestedOneWithoutCoverLetterInput').implement({
+  fields: CandidateCreateNestedOneWithoutCoverLetterInputFields,
+});
+
 export const HiringRoleCreateNestedOneWithoutAttachmentsInputFields = (t: any) => ({
   create: t.field({"required":false,"type":HiringRoleCreateWithoutAttachmentsInput}),
   connectOrCreate: t.field({"required":false,"type":HiringRoleCreateOrConnectWithoutAttachmentsInput}),
@@ -10265,6 +10325,32 @@ export const CandidateUpdateOneWithoutCvNestedInputFields = (t: any) => ({
 });
 export const CandidateUpdateOneWithoutCvNestedInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateUpdateOneWithoutCvNestedInput>>('CandidateUpdateOneWithoutCvNestedInput').implement({
   fields: CandidateUpdateOneWithoutCvNestedInputFields,
+});
+
+export const CandidateUpdateOneWithoutAvatarNestedInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":CandidateCreateWithoutAvatarInput}),
+  connectOrCreate: t.field({"required":false,"type":CandidateCreateOrConnectWithoutAvatarInput}),
+  upsert: t.field({"required":false,"type":CandidateUpsertWithoutAvatarInput}),
+  disconnect: t.field({"required":false,"type":CandidateWhereInput}),
+  delete: t.field({"required":false,"type":CandidateWhereInput}),
+  connect: t.field({"required":false,"type":CandidateWhereUniqueInput}),
+  update: t.field({"required":false,"type":CandidateUpdateToOneWithWhereWithoutAvatarInput}),
+});
+export const CandidateUpdateOneWithoutAvatarNestedInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateUpdateOneWithoutAvatarNestedInput>>('CandidateUpdateOneWithoutAvatarNestedInput').implement({
+  fields: CandidateUpdateOneWithoutAvatarNestedInputFields,
+});
+
+export const CandidateUpdateOneWithoutCoverLetterNestedInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":CandidateCreateWithoutCoverLetterInput}),
+  connectOrCreate: t.field({"required":false,"type":CandidateCreateOrConnectWithoutCoverLetterInput}),
+  upsert: t.field({"required":false,"type":CandidateUpsertWithoutCoverLetterInput}),
+  disconnect: t.field({"required":false,"type":CandidateWhereInput}),
+  delete: t.field({"required":false,"type":CandidateWhereInput}),
+  connect: t.field({"required":false,"type":CandidateWhereUniqueInput}),
+  update: t.field({"required":false,"type":CandidateUpdateToOneWithWhereWithoutCoverLetterInput}),
+});
+export const CandidateUpdateOneWithoutCoverLetterNestedInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateUpdateOneWithoutCoverLetterNestedInput>>('CandidateUpdateOneWithoutCoverLetterNestedInput').implement({
+  fields: CandidateUpdateOneWithoutCoverLetterNestedInputFields,
 });
 
 export const HiringRoleUpdateOneWithoutAttachmentsNestedInputFields = (t: any) => ({
@@ -13102,13 +13188,31 @@ export const TagSourceCreateNestedOneWithoutCandidateReferrerInput = builder.inp
   fields: TagSourceCreateNestedOneWithoutCandidateReferrerInputFields,
 });
 
-export const AttachmentCreateNestedOneWithoutCandidateInputFields = (t: any) => ({
-  create: t.field({"required":false,"type":AttachmentCreateWithoutCandidateInput}),
-  connectOrCreate: t.field({"required":false,"type":AttachmentCreateOrConnectWithoutCandidateInput}),
+export const AttachmentCreateNestedOneWithoutCandidateCvInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":AttachmentCreateWithoutCandidateCvInput}),
+  connectOrCreate: t.field({"required":false,"type":AttachmentCreateOrConnectWithoutCandidateCvInput}),
   connect: t.field({"required":false,"type":AttachmentWhereUniqueInput}),
 });
-export const AttachmentCreateNestedOneWithoutCandidateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AttachmentCreateNestedOneWithoutCandidateInput>>('AttachmentCreateNestedOneWithoutCandidateInput').implement({
-  fields: AttachmentCreateNestedOneWithoutCandidateInputFields,
+export const AttachmentCreateNestedOneWithoutCandidateCvInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AttachmentCreateNestedOneWithoutCandidateCvInput>>('AttachmentCreateNestedOneWithoutCandidateCvInput').implement({
+  fields: AttachmentCreateNestedOneWithoutCandidateCvInputFields,
+});
+
+export const AttachmentCreateNestedOneWithoutCandidateAvatarInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":AttachmentCreateWithoutCandidateAvatarInput}),
+  connectOrCreate: t.field({"required":false,"type":AttachmentCreateOrConnectWithoutCandidateAvatarInput}),
+  connect: t.field({"required":false,"type":AttachmentWhereUniqueInput}),
+});
+export const AttachmentCreateNestedOneWithoutCandidateAvatarInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AttachmentCreateNestedOneWithoutCandidateAvatarInput>>('AttachmentCreateNestedOneWithoutCandidateAvatarInput').implement({
+  fields: AttachmentCreateNestedOneWithoutCandidateAvatarInputFields,
+});
+
+export const AttachmentCreateNestedOneWithoutCandidateCoverLetterInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":AttachmentCreateWithoutCandidateCoverLetterInput}),
+  connectOrCreate: t.field({"required":false,"type":AttachmentCreateOrConnectWithoutCandidateCoverLetterInput}),
+  connect: t.field({"required":false,"type":AttachmentWhereUniqueInput}),
+});
+export const AttachmentCreateNestedOneWithoutCandidateCoverLetterInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AttachmentCreateNestedOneWithoutCandidateCoverLetterInput>>('AttachmentCreateNestedOneWithoutCandidateCoverLetterInput').implement({
+  fields: AttachmentCreateNestedOneWithoutCandidateCoverLetterInputFields,
 });
 
 export const OfferCreateNestedOneWithoutHiredInputFields = (t: any) => ({
@@ -13273,17 +13377,43 @@ export const TagSourceUpdateOneWithoutCandidateReferrerNestedInput = builder.inp
   fields: TagSourceUpdateOneWithoutCandidateReferrerNestedInputFields,
 });
 
-export const AttachmentUpdateOneWithoutCandidateNestedInputFields = (t: any) => ({
-  create: t.field({"required":false,"type":AttachmentCreateWithoutCandidateInput}),
-  connectOrCreate: t.field({"required":false,"type":AttachmentCreateOrConnectWithoutCandidateInput}),
-  upsert: t.field({"required":false,"type":AttachmentUpsertWithoutCandidateInput}),
+export const AttachmentUpdateOneWithoutCandidateCvNestedInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":AttachmentCreateWithoutCandidateCvInput}),
+  connectOrCreate: t.field({"required":false,"type":AttachmentCreateOrConnectWithoutCandidateCvInput}),
+  upsert: t.field({"required":false,"type":AttachmentUpsertWithoutCandidateCvInput}),
   disconnect: t.field({"required":false,"type":AttachmentWhereInput}),
   delete: t.field({"required":false,"type":AttachmentWhereInput}),
   connect: t.field({"required":false,"type":AttachmentWhereUniqueInput}),
-  update: t.field({"required":false,"type":AttachmentUpdateToOneWithWhereWithoutCandidateInput}),
+  update: t.field({"required":false,"type":AttachmentUpdateToOneWithWhereWithoutCandidateCvInput}),
 });
-export const AttachmentUpdateOneWithoutCandidateNestedInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AttachmentUpdateOneWithoutCandidateNestedInput>>('AttachmentUpdateOneWithoutCandidateNestedInput').implement({
-  fields: AttachmentUpdateOneWithoutCandidateNestedInputFields,
+export const AttachmentUpdateOneWithoutCandidateCvNestedInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AttachmentUpdateOneWithoutCandidateCvNestedInput>>('AttachmentUpdateOneWithoutCandidateCvNestedInput').implement({
+  fields: AttachmentUpdateOneWithoutCandidateCvNestedInputFields,
+});
+
+export const AttachmentUpdateOneWithoutCandidateAvatarNestedInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":AttachmentCreateWithoutCandidateAvatarInput}),
+  connectOrCreate: t.field({"required":false,"type":AttachmentCreateOrConnectWithoutCandidateAvatarInput}),
+  upsert: t.field({"required":false,"type":AttachmentUpsertWithoutCandidateAvatarInput}),
+  disconnect: t.field({"required":false,"type":AttachmentWhereInput}),
+  delete: t.field({"required":false,"type":AttachmentWhereInput}),
+  connect: t.field({"required":false,"type":AttachmentWhereUniqueInput}),
+  update: t.field({"required":false,"type":AttachmentUpdateToOneWithWhereWithoutCandidateAvatarInput}),
+});
+export const AttachmentUpdateOneWithoutCandidateAvatarNestedInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AttachmentUpdateOneWithoutCandidateAvatarNestedInput>>('AttachmentUpdateOneWithoutCandidateAvatarNestedInput').implement({
+  fields: AttachmentUpdateOneWithoutCandidateAvatarNestedInputFields,
+});
+
+export const AttachmentUpdateOneWithoutCandidateCoverLetterNestedInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":AttachmentCreateWithoutCandidateCoverLetterInput}),
+  connectOrCreate: t.field({"required":false,"type":AttachmentCreateOrConnectWithoutCandidateCoverLetterInput}),
+  upsert: t.field({"required":false,"type":AttachmentUpsertWithoutCandidateCoverLetterInput}),
+  disconnect: t.field({"required":false,"type":AttachmentWhereInput}),
+  delete: t.field({"required":false,"type":AttachmentWhereInput}),
+  connect: t.field({"required":false,"type":AttachmentWhereUniqueInput}),
+  update: t.field({"required":false,"type":AttachmentUpdateToOneWithWhereWithoutCandidateCoverLetterInput}),
+});
+export const AttachmentUpdateOneWithoutCandidateCoverLetterNestedInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AttachmentUpdateOneWithoutCandidateCoverLetterNestedInput>>('AttachmentUpdateOneWithoutCandidateCoverLetterNestedInput').implement({
+  fields: AttachmentUpdateOneWithoutCandidateCoverLetterNestedInputFields,
 });
 
 export const OfferUpdateOneWithoutHiredNestedInputFields = (t: any) => ({
@@ -14438,7 +14568,9 @@ export const AttachmentCreateWithoutUserProfilePhotoInputFields = (t: any) => ({
   path: t.string({"required":true}),
   createdAt: t.field({"required":false,"type":DateTime}),
   updatedAt: t.field({"required":false,"type":DateTime}),
-  candidate: t.field({"required":false,"type":CandidateCreateNestedOneWithoutCvInput}),
+  candidateCv: t.field({"required":false,"type":CandidateCreateNestedOneWithoutCvInput}),
+  candidateAvatar: t.field({"required":false,"type":CandidateCreateNestedOneWithoutAvatarInput}),
+  candidateCoverLetter: t.field({"required":false,"type":CandidateCreateNestedOneWithoutCoverLetterInput}),
   uploader: t.field({"required":false,"type":HiringRoleCreateNestedOneWithoutAttachmentsInput}),
   offerFiles: t.field({"required":false,"type":OfferFileCreateNestedManyWithoutAttachmentInput}),
   talentPoolFiles: t.field({"required":false,"type":TalentPoolFileCreateNestedManyWithoutAttachmentInput}),
@@ -14628,7 +14760,9 @@ export const AttachmentUpdateWithoutUserProfilePhotoInputFields = (t: any) => ({
   path: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
-  candidate: t.field({"required":false,"type":CandidateUpdateOneWithoutCvNestedInput}),
+  candidateCv: t.field({"required":false,"type":CandidateUpdateOneWithoutCvNestedInput}),
+  candidateAvatar: t.field({"required":false,"type":CandidateUpdateOneWithoutAvatarNestedInput}),
+  candidateCoverLetter: t.field({"required":false,"type":CandidateUpdateOneWithoutCoverLetterNestedInput}),
   uploader: t.field({"required":false,"type":HiringRoleUpdateOneWithoutAttachmentsNestedInput}),
   offerFiles: t.field({"required":false,"type":OfferFileUpdateManyWithoutAttachmentNestedInput}),
   talentPoolFiles: t.field({"required":false,"type":TalentPoolFileUpdateManyWithoutAttachmentNestedInput}),
@@ -15028,8 +15162,8 @@ export const CandidateCreateWithoutCvInputFields = (t: any) => ({
   skills: t.stringList({"required":false}),
   mainLanguage: t.string({"required":false}),
   languages: t.stringList({"required":false}),
-  coverLetter: t.string({"required":false}),
-  birthDate: t.field({"required":true,"type":DateTime}),
+  coverLetterText: t.string({"required":false}),
+  birthDate: t.field({"required":false,"type":DateTime}),
   educationLevel: t.string({"required":false}),
   socials: t.stringList({"required":false}),
   links: t.stringList({"required":false}),
@@ -15038,6 +15172,8 @@ export const CandidateCreateWithoutCvInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTime}),
   updatedAt: t.field({"required":false,"type":DateTime}),
   referrer: t.field({"required":false,"type":TagSourceCreateNestedOneWithoutCandidateReferrerInput}),
+  avatar: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateAvatarInput}),
+  coverLetter: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateCoverLetterInput}),
   hiredAt: t.field({"required":false,"type":OfferCreateNestedOneWithoutHiredInput}),
   hiredBy: t.field({"required":false,"type":HiringRoleCreateNestedOneWithoutHiredCandidatesInput}),
   auditLogs: t.field({"required":false,"type":AuditLogCreateNestedManyWithoutCandidateInput}),
@@ -15061,6 +15197,96 @@ export const CandidateCreateOrConnectWithoutCvInputFields = (t: any) => ({
 });
 export const CandidateCreateOrConnectWithoutCvInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateCreateOrConnectWithoutCvInput>>('CandidateCreateOrConnectWithoutCvInput').implement({
   fields: CandidateCreateOrConnectWithoutCvInputFields,
+});
+
+export const CandidateCreateWithoutAvatarInputFields = (t: any) => ({
+  firstName: t.string({"required":true}),
+  lastName: t.string({"required":true}),
+  email: t.string({"required":true}),
+  phone: t.string({"required":false}),
+  skills: t.stringList({"required":false}),
+  mainLanguage: t.string({"required":false}),
+  languages: t.stringList({"required":false}),
+  coverLetterText: t.string({"required":false}),
+  birthDate: t.field({"required":false,"type":DateTime}),
+  educationLevel: t.string({"required":false}),
+  socials: t.stringList({"required":false}),
+  links: t.stringList({"required":false}),
+  salaryExpectation: t.string({"required":false}),
+  isHired: t.boolean({"required":false}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+  updatedAt: t.field({"required":false,"type":DateTime}),
+  referrer: t.field({"required":false,"type":TagSourceCreateNestedOneWithoutCandidateReferrerInput}),
+  cv: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateCvInput}),
+  coverLetter: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateCoverLetterInput}),
+  hiredAt: t.field({"required":false,"type":OfferCreateNestedOneWithoutHiredInput}),
+  hiredBy: t.field({"required":false,"type":HiringRoleCreateNestedOneWithoutHiredCandidatesInput}),
+  auditLogs: t.field({"required":false,"type":AuditLogCreateNestedManyWithoutCandidateInput}),
+  offers: t.field({"required":false,"type":MatchCreateNestedManyWithoutCandidateInput}),
+  talentPools: t.field({"required":false,"type":TalentPoolMatchCreateNestedManyWithoutCandidateInput}),
+  candidateTags: t.field({"required":false,"type":CandidateTagCreateNestedManyWithoutCandidateInput}),
+  customFields: t.field({"required":false,"type":CandidateCustomFieldsCreateNestedManyWithoutCandidateInput}),
+  evaluation: t.field({"required":false,"type":EvaluationCreateNestedManyWithoutCandidateInput}),
+  tasks: t.field({"required":false,"type":TaskCreateNestedManyWithoutCandidateInput}),
+  follows: t.field({"required":false,"type":FollowCreateNestedManyWithoutCandidateInput}),
+  SharedCandidateLink: t.field({"required":false,"type":SharedCandidateLinkCreateNestedManyWithoutCandidateInput}),
+  company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutCandidatesInput}),
+});
+export const CandidateCreateWithoutAvatarInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateCreateWithoutAvatarInput>>('CandidateCreateWithoutAvatarInput').implement({
+  fields: CandidateCreateWithoutAvatarInputFields,
+});
+
+export const CandidateCreateOrConnectWithoutAvatarInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":CandidateWhereUniqueInput}),
+  create: t.field({"required":true,"type":CandidateCreateWithoutAvatarInput}),
+});
+export const CandidateCreateOrConnectWithoutAvatarInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateCreateOrConnectWithoutAvatarInput>>('CandidateCreateOrConnectWithoutAvatarInput').implement({
+  fields: CandidateCreateOrConnectWithoutAvatarInputFields,
+});
+
+export const CandidateCreateWithoutCoverLetterInputFields = (t: any) => ({
+  firstName: t.string({"required":true}),
+  lastName: t.string({"required":true}),
+  email: t.string({"required":true}),
+  phone: t.string({"required":false}),
+  skills: t.stringList({"required":false}),
+  mainLanguage: t.string({"required":false}),
+  languages: t.stringList({"required":false}),
+  coverLetterText: t.string({"required":false}),
+  birthDate: t.field({"required":false,"type":DateTime}),
+  educationLevel: t.string({"required":false}),
+  socials: t.stringList({"required":false}),
+  links: t.stringList({"required":false}),
+  salaryExpectation: t.string({"required":false}),
+  isHired: t.boolean({"required":false}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+  updatedAt: t.field({"required":false,"type":DateTime}),
+  referrer: t.field({"required":false,"type":TagSourceCreateNestedOneWithoutCandidateReferrerInput}),
+  cv: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateCvInput}),
+  avatar: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateAvatarInput}),
+  hiredAt: t.field({"required":false,"type":OfferCreateNestedOneWithoutHiredInput}),
+  hiredBy: t.field({"required":false,"type":HiringRoleCreateNestedOneWithoutHiredCandidatesInput}),
+  auditLogs: t.field({"required":false,"type":AuditLogCreateNestedManyWithoutCandidateInput}),
+  offers: t.field({"required":false,"type":MatchCreateNestedManyWithoutCandidateInput}),
+  talentPools: t.field({"required":false,"type":TalentPoolMatchCreateNestedManyWithoutCandidateInput}),
+  candidateTags: t.field({"required":false,"type":CandidateTagCreateNestedManyWithoutCandidateInput}),
+  customFields: t.field({"required":false,"type":CandidateCustomFieldsCreateNestedManyWithoutCandidateInput}),
+  evaluation: t.field({"required":false,"type":EvaluationCreateNestedManyWithoutCandidateInput}),
+  tasks: t.field({"required":false,"type":TaskCreateNestedManyWithoutCandidateInput}),
+  follows: t.field({"required":false,"type":FollowCreateNestedManyWithoutCandidateInput}),
+  SharedCandidateLink: t.field({"required":false,"type":SharedCandidateLinkCreateNestedManyWithoutCandidateInput}),
+  company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutCandidatesInput}),
+});
+export const CandidateCreateWithoutCoverLetterInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateCreateWithoutCoverLetterInput>>('CandidateCreateWithoutCoverLetterInput').implement({
+  fields: CandidateCreateWithoutCoverLetterInputFields,
+});
+
+export const CandidateCreateOrConnectWithoutCoverLetterInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":CandidateWhereUniqueInput}),
+  create: t.field({"required":true,"type":CandidateCreateWithoutCoverLetterInput}),
+});
+export const CandidateCreateOrConnectWithoutCoverLetterInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateCreateOrConnectWithoutCoverLetterInput>>('CandidateCreateOrConnectWithoutCoverLetterInput').implement({
+  fields: CandidateCreateOrConnectWithoutCoverLetterInputFields,
 });
 
 export const HiringRoleCreateWithoutAttachmentsInputFields = (t: any) => ({
@@ -15212,8 +15438,8 @@ export const CandidateUpdateWithoutCvInputFields = (t: any) => ({
   skills: t.stringList({"required":false}),
   mainLanguage: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   languages: t.stringList({"required":false}),
-  coverLetter: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
-  birthDate: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  coverLetterText: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  birthDate: t.field({"required":false,"type":NullableDateTimeFieldUpdateOperationsInput}),
   educationLevel: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
   socials: t.stringList({"required":false}),
   links: t.stringList({"required":false}),
@@ -15222,6 +15448,8 @@ export const CandidateUpdateWithoutCvInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   referrer: t.field({"required":false,"type":TagSourceUpdateOneWithoutCandidateReferrerNestedInput}),
+  avatar: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateAvatarNestedInput}),
+  coverLetter: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateCoverLetterNestedInput}),
   hiredAt: t.field({"required":false,"type":OfferUpdateOneWithoutHiredNestedInput}),
   hiredBy: t.field({"required":false,"type":HiringRoleUpdateOneWithoutHiredCandidatesNestedInput}),
   auditLogs: t.field({"required":false,"type":AuditLogUpdateManyWithoutCandidateNestedInput}),
@@ -15237,6 +15465,114 @@ export const CandidateUpdateWithoutCvInputFields = (t: any) => ({
 });
 export const CandidateUpdateWithoutCvInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateUpdateWithoutCvInput>>('CandidateUpdateWithoutCvInput').implement({
   fields: CandidateUpdateWithoutCvInputFields,
+});
+
+export const CandidateUpsertWithoutAvatarInputFields = (t: any) => ({
+  update: t.field({"required":true,"type":CandidateUpdateWithoutAvatarInput}),
+  create: t.field({"required":true,"type":CandidateCreateWithoutAvatarInput}),
+  where: t.field({"required":false,"type":CandidateWhereInput}),
+});
+export const CandidateUpsertWithoutAvatarInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateUpsertWithoutAvatarInput>>('CandidateUpsertWithoutAvatarInput').implement({
+  fields: CandidateUpsertWithoutAvatarInputFields,
+});
+
+export const CandidateUpdateToOneWithWhereWithoutAvatarInputFields = (t: any) => ({
+  where: t.field({"required":false,"type":CandidateWhereInput}),
+  data: t.field({"required":true,"type":CandidateUpdateWithoutAvatarInput}),
+});
+export const CandidateUpdateToOneWithWhereWithoutAvatarInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateUpdateToOneWithWhereWithoutAvatarInput>>('CandidateUpdateToOneWithWhereWithoutAvatarInput').implement({
+  fields: CandidateUpdateToOneWithWhereWithoutAvatarInputFields,
+});
+
+export const CandidateUpdateWithoutAvatarInputFields = (t: any) => ({
+  firstName: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  lastName: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  email: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  phone: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  skills: t.stringList({"required":false}),
+  mainLanguage: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  languages: t.stringList({"required":false}),
+  coverLetterText: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  birthDate: t.field({"required":false,"type":NullableDateTimeFieldUpdateOperationsInput}),
+  educationLevel: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  socials: t.stringList({"required":false}),
+  links: t.stringList({"required":false}),
+  salaryExpectation: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  isHired: t.field({"required":false,"type":NullableBoolFieldUpdateOperationsInput}),
+  createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  referrer: t.field({"required":false,"type":TagSourceUpdateOneWithoutCandidateReferrerNestedInput}),
+  cv: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateCvNestedInput}),
+  coverLetter: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateCoverLetterNestedInput}),
+  hiredAt: t.field({"required":false,"type":OfferUpdateOneWithoutHiredNestedInput}),
+  hiredBy: t.field({"required":false,"type":HiringRoleUpdateOneWithoutHiredCandidatesNestedInput}),
+  auditLogs: t.field({"required":false,"type":AuditLogUpdateManyWithoutCandidateNestedInput}),
+  offers: t.field({"required":false,"type":MatchUpdateManyWithoutCandidateNestedInput}),
+  talentPools: t.field({"required":false,"type":TalentPoolMatchUpdateManyWithoutCandidateNestedInput}),
+  candidateTags: t.field({"required":false,"type":CandidateTagUpdateManyWithoutCandidateNestedInput}),
+  customFields: t.field({"required":false,"type":CandidateCustomFieldsUpdateManyWithoutCandidateNestedInput}),
+  evaluation: t.field({"required":false,"type":EvaluationUpdateManyWithoutCandidateNestedInput}),
+  tasks: t.field({"required":false,"type":TaskUpdateManyWithoutCandidateNestedInput}),
+  follows: t.field({"required":false,"type":FollowUpdateManyWithoutCandidateNestedInput}),
+  SharedCandidateLink: t.field({"required":false,"type":SharedCandidateLinkUpdateManyWithoutCandidateNestedInput}),
+  company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutCandidatesNestedInput}),
+});
+export const CandidateUpdateWithoutAvatarInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateUpdateWithoutAvatarInput>>('CandidateUpdateWithoutAvatarInput').implement({
+  fields: CandidateUpdateWithoutAvatarInputFields,
+});
+
+export const CandidateUpsertWithoutCoverLetterInputFields = (t: any) => ({
+  update: t.field({"required":true,"type":CandidateUpdateWithoutCoverLetterInput}),
+  create: t.field({"required":true,"type":CandidateCreateWithoutCoverLetterInput}),
+  where: t.field({"required":false,"type":CandidateWhereInput}),
+});
+export const CandidateUpsertWithoutCoverLetterInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateUpsertWithoutCoverLetterInput>>('CandidateUpsertWithoutCoverLetterInput').implement({
+  fields: CandidateUpsertWithoutCoverLetterInputFields,
+});
+
+export const CandidateUpdateToOneWithWhereWithoutCoverLetterInputFields = (t: any) => ({
+  where: t.field({"required":false,"type":CandidateWhereInput}),
+  data: t.field({"required":true,"type":CandidateUpdateWithoutCoverLetterInput}),
+});
+export const CandidateUpdateToOneWithWhereWithoutCoverLetterInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateUpdateToOneWithWhereWithoutCoverLetterInput>>('CandidateUpdateToOneWithWhereWithoutCoverLetterInput').implement({
+  fields: CandidateUpdateToOneWithWhereWithoutCoverLetterInputFields,
+});
+
+export const CandidateUpdateWithoutCoverLetterInputFields = (t: any) => ({
+  firstName: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  lastName: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  email: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  phone: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  skills: t.stringList({"required":false}),
+  mainLanguage: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  languages: t.stringList({"required":false}),
+  coverLetterText: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  birthDate: t.field({"required":false,"type":NullableDateTimeFieldUpdateOperationsInput}),
+  educationLevel: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  socials: t.stringList({"required":false}),
+  links: t.stringList({"required":false}),
+  salaryExpectation: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  isHired: t.field({"required":false,"type":NullableBoolFieldUpdateOperationsInput}),
+  createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  referrer: t.field({"required":false,"type":TagSourceUpdateOneWithoutCandidateReferrerNestedInput}),
+  cv: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateCvNestedInput}),
+  avatar: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateAvatarNestedInput}),
+  hiredAt: t.field({"required":false,"type":OfferUpdateOneWithoutHiredNestedInput}),
+  hiredBy: t.field({"required":false,"type":HiringRoleUpdateOneWithoutHiredCandidatesNestedInput}),
+  auditLogs: t.field({"required":false,"type":AuditLogUpdateManyWithoutCandidateNestedInput}),
+  offers: t.field({"required":false,"type":MatchUpdateManyWithoutCandidateNestedInput}),
+  talentPools: t.field({"required":false,"type":TalentPoolMatchUpdateManyWithoutCandidateNestedInput}),
+  candidateTags: t.field({"required":false,"type":CandidateTagUpdateManyWithoutCandidateNestedInput}),
+  customFields: t.field({"required":false,"type":CandidateCustomFieldsUpdateManyWithoutCandidateNestedInput}),
+  evaluation: t.field({"required":false,"type":EvaluationUpdateManyWithoutCandidateNestedInput}),
+  tasks: t.field({"required":false,"type":TaskUpdateManyWithoutCandidateNestedInput}),
+  follows: t.field({"required":false,"type":FollowUpdateManyWithoutCandidateNestedInput}),
+  SharedCandidateLink: t.field({"required":false,"type":SharedCandidateLinkUpdateManyWithoutCandidateNestedInput}),
+  company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutCandidatesNestedInput}),
+});
+export const CandidateUpdateWithoutCoverLetterInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateUpdateWithoutCoverLetterInput>>('CandidateUpdateWithoutCoverLetterInput').implement({
+  fields: CandidateUpdateWithoutCoverLetterInputFields,
 });
 
 export const HiringRoleUpsertWithoutAttachmentsInputFields = (t: any) => ({
@@ -15464,7 +15800,9 @@ export const AttachmentCreateWithoutUploaderInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTime}),
   updatedAt: t.field({"required":false,"type":DateTime}),
   userProfilePhoto: t.field({"required":false,"type":UserCreateNestedOneWithoutPhotoInput}),
-  candidate: t.field({"required":false,"type":CandidateCreateNestedOneWithoutCvInput}),
+  candidateCv: t.field({"required":false,"type":CandidateCreateNestedOneWithoutCvInput}),
+  candidateAvatar: t.field({"required":false,"type":CandidateCreateNestedOneWithoutAvatarInput}),
+  candidateCoverLetter: t.field({"required":false,"type":CandidateCreateNestedOneWithoutCoverLetterInput}),
   offerFiles: t.field({"required":false,"type":OfferFileCreateNestedManyWithoutAttachmentInput}),
   talentPoolFiles: t.field({"required":false,"type":TalentPoolFileCreateNestedManyWithoutAttachmentInput}),
 });
@@ -15728,8 +16066,8 @@ export const CandidateCreateWithoutHiredByInputFields = (t: any) => ({
   skills: t.stringList({"required":false}),
   mainLanguage: t.string({"required":false}),
   languages: t.stringList({"required":false}),
-  coverLetter: t.string({"required":false}),
-  birthDate: t.field({"required":true,"type":DateTime}),
+  coverLetterText: t.string({"required":false}),
+  birthDate: t.field({"required":false,"type":DateTime}),
   educationLevel: t.string({"required":false}),
   socials: t.stringList({"required":false}),
   links: t.stringList({"required":false}),
@@ -15738,7 +16076,9 @@ export const CandidateCreateWithoutHiredByInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTime}),
   updatedAt: t.field({"required":false,"type":DateTime}),
   referrer: t.field({"required":false,"type":TagSourceCreateNestedOneWithoutCandidateReferrerInput}),
-  cv: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateInput}),
+  cv: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateCvInput}),
+  avatar: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateAvatarInput}),
+  coverLetter: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateCoverLetterInput}),
   hiredAt: t.field({"required":false,"type":OfferCreateNestedOneWithoutHiredInput}),
   auditLogs: t.field({"required":false,"type":AuditLogCreateNestedManyWithoutCandidateInput}),
   offers: t.field({"required":false,"type":MatchCreateNestedManyWithoutCandidateInput}),
@@ -16379,10 +16719,12 @@ export const CandidateScalarWhereInputFields = (t: any) => ({
   skills: t.field({"required":false,"type":StringNullableListFilter}),
   mainLanguage: t.field({"required":false,"type":StringFilter}),
   languages: t.field({"required":false,"type":StringNullableListFilter}),
-  coverLetter: t.field({"required":false,"type":StringNullableFilter}),
-  birthDate: t.field({"required":false,"type":DateTimeFilter}),
+  coverLetterText: t.field({"required":false,"type":StringNullableFilter}),
+  birthDate: t.field({"required":false,"type":DateTimeNullableFilter}),
   referrerId: t.field({"required":false,"type":IntNullableFilter}),
   cvId: t.field({"required":false,"type":IntNullableFilter}),
+  avatarId: t.field({"required":false,"type":IntNullableFilter}),
+  coverLetterId: t.field({"required":false,"type":IntNullableFilter}),
   educationLevel: t.field({"required":false,"type":StringNullableFilter}),
   socials: t.field({"required":false,"type":StringNullableListFilter}),
   links: t.field({"required":false,"type":StringNullableListFilter}),
@@ -17256,8 +17598,8 @@ export const CandidateCreateWithoutCompanyInputFields = (t: any) => ({
   skills: t.stringList({"required":false}),
   mainLanguage: t.string({"required":false}),
   languages: t.stringList({"required":false}),
-  coverLetter: t.string({"required":false}),
-  birthDate: t.field({"required":true,"type":DateTime}),
+  coverLetterText: t.string({"required":false}),
+  birthDate: t.field({"required":false,"type":DateTime}),
   educationLevel: t.string({"required":false}),
   socials: t.stringList({"required":false}),
   links: t.stringList({"required":false}),
@@ -17266,7 +17608,9 @@ export const CandidateCreateWithoutCompanyInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTime}),
   updatedAt: t.field({"required":false,"type":DateTime}),
   referrer: t.field({"required":false,"type":TagSourceCreateNestedOneWithoutCandidateReferrerInput}),
-  cv: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateInput}),
+  cv: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateCvInput}),
+  avatar: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateAvatarInput}),
+  coverLetter: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateCoverLetterInput}),
   hiredAt: t.field({"required":false,"type":OfferCreateNestedOneWithoutHiredInput}),
   hiredBy: t.field({"required":false,"type":HiringRoleCreateNestedOneWithoutHiredCandidatesInput}),
   auditLogs: t.field({"required":false,"type":AuditLogCreateNestedManyWithoutCandidateInput}),
@@ -18607,8 +18951,8 @@ export const CandidateCreateWithoutReferrerInputFields = (t: any) => ({
   skills: t.stringList({"required":false}),
   mainLanguage: t.string({"required":false}),
   languages: t.stringList({"required":false}),
-  coverLetter: t.string({"required":false}),
-  birthDate: t.field({"required":true,"type":DateTime}),
+  coverLetterText: t.string({"required":false}),
+  birthDate: t.field({"required":false,"type":DateTime}),
   educationLevel: t.string({"required":false}),
   socials: t.stringList({"required":false}),
   links: t.stringList({"required":false}),
@@ -18616,7 +18960,9 @@ export const CandidateCreateWithoutReferrerInputFields = (t: any) => ({
   isHired: t.boolean({"required":false}),
   createdAt: t.field({"required":false,"type":DateTime}),
   updatedAt: t.field({"required":false,"type":DateTime}),
-  cv: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateInput}),
+  cv: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateCvInput}),
+  avatar: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateAvatarInput}),
+  coverLetter: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateCoverLetterInput}),
   hiredAt: t.field({"required":false,"type":OfferCreateNestedOneWithoutHiredInput}),
   hiredBy: t.field({"required":false,"type":HiringRoleCreateNestedOneWithoutHiredCandidatesInput}),
   auditLogs: t.field({"required":false,"type":AuditLogCreateNestedManyWithoutCandidateInput}),
@@ -18961,8 +19307,8 @@ export const CandidateCreateWithoutAuditLogsInputFields = (t: any) => ({
   skills: t.stringList({"required":false}),
   mainLanguage: t.string({"required":false}),
   languages: t.stringList({"required":false}),
-  coverLetter: t.string({"required":false}),
-  birthDate: t.field({"required":true,"type":DateTime}),
+  coverLetterText: t.string({"required":false}),
+  birthDate: t.field({"required":false,"type":DateTime}),
   educationLevel: t.string({"required":false}),
   socials: t.stringList({"required":false}),
   links: t.stringList({"required":false}),
@@ -18971,7 +19317,9 @@ export const CandidateCreateWithoutAuditLogsInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTime}),
   updatedAt: t.field({"required":false,"type":DateTime}),
   referrer: t.field({"required":false,"type":TagSourceCreateNestedOneWithoutCandidateReferrerInput}),
-  cv: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateInput}),
+  cv: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateCvInput}),
+  avatar: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateAvatarInput}),
+  coverLetter: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateCoverLetterInput}),
   hiredAt: t.field({"required":false,"type":OfferCreateNestedOneWithoutHiredInput}),
   hiredBy: t.field({"required":false,"type":HiringRoleCreateNestedOneWithoutHiredCandidatesInput}),
   offers: t.field({"required":false,"type":MatchCreateNestedManyWithoutCandidateInput}),
@@ -19176,8 +19524,8 @@ export const CandidateUpdateWithoutAuditLogsInputFields = (t: any) => ({
   skills: t.stringList({"required":false}),
   mainLanguage: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   languages: t.stringList({"required":false}),
-  coverLetter: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
-  birthDate: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  coverLetterText: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  birthDate: t.field({"required":false,"type":NullableDateTimeFieldUpdateOperationsInput}),
   educationLevel: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
   socials: t.stringList({"required":false}),
   links: t.stringList({"required":false}),
@@ -19186,7 +19534,9 @@ export const CandidateUpdateWithoutAuditLogsInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   referrer: t.field({"required":false,"type":TagSourceUpdateOneWithoutCandidateReferrerNestedInput}),
-  cv: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateNestedInput}),
+  cv: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateCvNestedInput}),
+  avatar: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateAvatarNestedInput}),
+  coverLetter: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateCoverLetterNestedInput}),
   hiredAt: t.field({"required":false,"type":OfferUpdateOneWithoutHiredNestedInput}),
   hiredBy: t.field({"required":false,"type":HiringRoleUpdateOneWithoutHiredCandidatesNestedInput}),
   offers: t.field({"required":false,"type":MatchUpdateManyWithoutCandidateNestedInput}),
@@ -20549,8 +20899,8 @@ export const CandidateCreateWithoutHiredAtInputFields = (t: any) => ({
   skills: t.stringList({"required":false}),
   mainLanguage: t.string({"required":false}),
   languages: t.stringList({"required":false}),
-  coverLetter: t.string({"required":false}),
-  birthDate: t.field({"required":true,"type":DateTime}),
+  coverLetterText: t.string({"required":false}),
+  birthDate: t.field({"required":false,"type":DateTime}),
   educationLevel: t.string({"required":false}),
   socials: t.stringList({"required":false}),
   links: t.stringList({"required":false}),
@@ -20559,7 +20909,9 @@ export const CandidateCreateWithoutHiredAtInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTime}),
   updatedAt: t.field({"required":false,"type":DateTime}),
   referrer: t.field({"required":false,"type":TagSourceCreateNestedOneWithoutCandidateReferrerInput}),
-  cv: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateInput}),
+  cv: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateCvInput}),
+  avatar: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateAvatarInput}),
+  coverLetter: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateCoverLetterInput}),
   hiredBy: t.field({"required":false,"type":HiringRoleCreateNestedOneWithoutHiredCandidatesInput}),
   auditLogs: t.field({"required":false,"type":AuditLogCreateNestedManyWithoutCandidateInput}),
   offers: t.field({"required":false,"type":MatchCreateNestedManyWithoutCandidateInput}),
@@ -21162,7 +21514,9 @@ export const AttachmentCreateWithoutOfferFilesInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTime}),
   updatedAt: t.field({"required":false,"type":DateTime}),
   userProfilePhoto: t.field({"required":false,"type":UserCreateNestedOneWithoutPhotoInput}),
-  candidate: t.field({"required":false,"type":CandidateCreateNestedOneWithoutCvInput}),
+  candidateCv: t.field({"required":false,"type":CandidateCreateNestedOneWithoutCvInput}),
+  candidateAvatar: t.field({"required":false,"type":CandidateCreateNestedOneWithoutAvatarInput}),
+  candidateCoverLetter: t.field({"required":false,"type":CandidateCreateNestedOneWithoutCoverLetterInput}),
   uploader: t.field({"required":false,"type":HiringRoleCreateNestedOneWithoutAttachmentsInput}),
   talentPoolFiles: t.field({"required":false,"type":TalentPoolFileCreateNestedManyWithoutAttachmentInput}),
 });
@@ -21263,7 +21617,9 @@ export const AttachmentUpdateWithoutOfferFilesInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   userProfilePhoto: t.field({"required":false,"type":UserUpdateOneWithoutPhotoNestedInput}),
-  candidate: t.field({"required":false,"type":CandidateUpdateOneWithoutCvNestedInput}),
+  candidateCv: t.field({"required":false,"type":CandidateUpdateOneWithoutCvNestedInput}),
+  candidateAvatar: t.field({"required":false,"type":CandidateUpdateOneWithoutAvatarNestedInput}),
+  candidateCoverLetter: t.field({"required":false,"type":CandidateUpdateOneWithoutCoverLetterNestedInput}),
   uploader: t.field({"required":false,"type":HiringRoleUpdateOneWithoutAttachmentsNestedInput}),
   talentPoolFiles: t.field({"required":false,"type":TalentPoolFileUpdateManyWithoutAttachmentNestedInput}),
 });
@@ -21331,8 +21687,8 @@ export const CandidateCreateWithoutOffersInputFields = (t: any) => ({
   skills: t.stringList({"required":false}),
   mainLanguage: t.string({"required":false}),
   languages: t.stringList({"required":false}),
-  coverLetter: t.string({"required":false}),
-  birthDate: t.field({"required":true,"type":DateTime}),
+  coverLetterText: t.string({"required":false}),
+  birthDate: t.field({"required":false,"type":DateTime}),
   educationLevel: t.string({"required":false}),
   socials: t.stringList({"required":false}),
   links: t.stringList({"required":false}),
@@ -21341,7 +21697,9 @@ export const CandidateCreateWithoutOffersInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTime}),
   updatedAt: t.field({"required":false,"type":DateTime}),
   referrer: t.field({"required":false,"type":TagSourceCreateNestedOneWithoutCandidateReferrerInput}),
-  cv: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateInput}),
+  cv: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateCvInput}),
+  avatar: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateAvatarInput}),
+  coverLetter: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateCoverLetterInput}),
   hiredAt: t.field({"required":false,"type":OfferCreateNestedOneWithoutHiredInput}),
   hiredBy: t.field({"required":false,"type":HiringRoleCreateNestedOneWithoutHiredCandidatesInput}),
   auditLogs: t.field({"required":false,"type":AuditLogCreateNestedManyWithoutCandidateInput}),
@@ -21491,8 +21849,8 @@ export const CandidateUpdateWithoutOffersInputFields = (t: any) => ({
   skills: t.stringList({"required":false}),
   mainLanguage: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   languages: t.stringList({"required":false}),
-  coverLetter: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
-  birthDate: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  coverLetterText: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  birthDate: t.field({"required":false,"type":NullableDateTimeFieldUpdateOperationsInput}),
   educationLevel: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
   socials: t.stringList({"required":false}),
   links: t.stringList({"required":false}),
@@ -21501,7 +21859,9 @@ export const CandidateUpdateWithoutOffersInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   referrer: t.field({"required":false,"type":TagSourceUpdateOneWithoutCandidateReferrerNestedInput}),
-  cv: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateNestedInput}),
+  cv: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateCvNestedInput}),
+  avatar: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateAvatarNestedInput}),
+  coverLetter: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateCoverLetterNestedInput}),
   hiredAt: t.field({"required":false,"type":OfferUpdateOneWithoutHiredNestedInput}),
   hiredBy: t.field({"required":false,"type":HiringRoleUpdateOneWithoutHiredCandidatesNestedInput}),
   auditLogs: t.field({"required":false,"type":AuditLogUpdateManyWithoutCandidateNestedInput}),
@@ -22253,7 +22613,9 @@ export const AttachmentCreateWithoutTalentPoolFilesInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTime}),
   updatedAt: t.field({"required":false,"type":DateTime}),
   userProfilePhoto: t.field({"required":false,"type":UserCreateNestedOneWithoutPhotoInput}),
-  candidate: t.field({"required":false,"type":CandidateCreateNestedOneWithoutCvInput}),
+  candidateCv: t.field({"required":false,"type":CandidateCreateNestedOneWithoutCvInput}),
+  candidateAvatar: t.field({"required":false,"type":CandidateCreateNestedOneWithoutAvatarInput}),
+  candidateCoverLetter: t.field({"required":false,"type":CandidateCreateNestedOneWithoutCoverLetterInput}),
   uploader: t.field({"required":false,"type":HiringRoleCreateNestedOneWithoutAttachmentsInput}),
   offerFiles: t.field({"required":false,"type":OfferFileCreateNestedManyWithoutAttachmentInput}),
 });
@@ -22321,7 +22683,9 @@ export const AttachmentUpdateWithoutTalentPoolFilesInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   userProfilePhoto: t.field({"required":false,"type":UserUpdateOneWithoutPhotoNestedInput}),
-  candidate: t.field({"required":false,"type":CandidateUpdateOneWithoutCvNestedInput}),
+  candidateCv: t.field({"required":false,"type":CandidateUpdateOneWithoutCvNestedInput}),
+  candidateAvatar: t.field({"required":false,"type":CandidateUpdateOneWithoutAvatarNestedInput}),
+  candidateCoverLetter: t.field({"required":false,"type":CandidateUpdateOneWithoutCoverLetterNestedInput}),
   uploader: t.field({"required":false,"type":HiringRoleUpdateOneWithoutAttachmentsNestedInput}),
   offerFiles: t.field({"required":false,"type":OfferFileUpdateManyWithoutAttachmentNestedInput}),
 });
@@ -22356,8 +22720,8 @@ export const CandidateCreateWithoutTalentPoolsInputFields = (t: any) => ({
   skills: t.stringList({"required":false}),
   mainLanguage: t.string({"required":false}),
   languages: t.stringList({"required":false}),
-  coverLetter: t.string({"required":false}),
-  birthDate: t.field({"required":true,"type":DateTime}),
+  coverLetterText: t.string({"required":false}),
+  birthDate: t.field({"required":false,"type":DateTime}),
   educationLevel: t.string({"required":false}),
   socials: t.stringList({"required":false}),
   links: t.stringList({"required":false}),
@@ -22366,7 +22730,9 @@ export const CandidateCreateWithoutTalentPoolsInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTime}),
   updatedAt: t.field({"required":false,"type":DateTime}),
   referrer: t.field({"required":false,"type":TagSourceCreateNestedOneWithoutCandidateReferrerInput}),
-  cv: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateInput}),
+  cv: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateCvInput}),
+  avatar: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateAvatarInput}),
+  coverLetter: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateCoverLetterInput}),
   hiredAt: t.field({"required":false,"type":OfferCreateNestedOneWithoutHiredInput}),
   hiredBy: t.field({"required":false,"type":HiringRoleCreateNestedOneWithoutHiredCandidatesInput}),
   auditLogs: t.field({"required":false,"type":AuditLogCreateNestedManyWithoutCandidateInput}),
@@ -22444,8 +22810,8 @@ export const CandidateUpdateWithoutTalentPoolsInputFields = (t: any) => ({
   skills: t.stringList({"required":false}),
   mainLanguage: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   languages: t.stringList({"required":false}),
-  coverLetter: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
-  birthDate: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  coverLetterText: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  birthDate: t.field({"required":false,"type":NullableDateTimeFieldUpdateOperationsInput}),
   educationLevel: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
   socials: t.stringList({"required":false}),
   links: t.stringList({"required":false}),
@@ -22454,7 +22820,9 @@ export const CandidateUpdateWithoutTalentPoolsInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   referrer: t.field({"required":false,"type":TagSourceUpdateOneWithoutCandidateReferrerNestedInput}),
-  cv: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateNestedInput}),
+  cv: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateCvNestedInput}),
+  avatar: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateAvatarNestedInput}),
+  coverLetter: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateCoverLetterNestedInput}),
   hiredAt: t.field({"required":false,"type":OfferUpdateOneWithoutHiredNestedInput}),
   hiredBy: t.field({"required":false,"type":HiringRoleUpdateOneWithoutHiredCandidatesNestedInput}),
   auditLogs: t.field({"required":false,"type":AuditLogUpdateManyWithoutCandidateNestedInput}),
@@ -23501,27 +23869,79 @@ export const TagSourceCreateOrConnectWithoutCandidateReferrerInput = builder.inp
   fields: TagSourceCreateOrConnectWithoutCandidateReferrerInputFields,
 });
 
-export const AttachmentCreateWithoutCandidateInputFields = (t: any) => ({
+export const AttachmentCreateWithoutCandidateCvInputFields = (t: any) => ({
   contentType: t.string({"required":true}),
   filename: t.string({"required":true}),
   path: t.string({"required":true}),
   createdAt: t.field({"required":false,"type":DateTime}),
   updatedAt: t.field({"required":false,"type":DateTime}),
   userProfilePhoto: t.field({"required":false,"type":UserCreateNestedOneWithoutPhotoInput}),
+  candidateAvatar: t.field({"required":false,"type":CandidateCreateNestedOneWithoutAvatarInput}),
+  candidateCoverLetter: t.field({"required":false,"type":CandidateCreateNestedOneWithoutCoverLetterInput}),
   uploader: t.field({"required":false,"type":HiringRoleCreateNestedOneWithoutAttachmentsInput}),
   offerFiles: t.field({"required":false,"type":OfferFileCreateNestedManyWithoutAttachmentInput}),
   talentPoolFiles: t.field({"required":false,"type":TalentPoolFileCreateNestedManyWithoutAttachmentInput}),
 });
-export const AttachmentCreateWithoutCandidateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AttachmentCreateWithoutCandidateInput>>('AttachmentCreateWithoutCandidateInput').implement({
-  fields: AttachmentCreateWithoutCandidateInputFields,
+export const AttachmentCreateWithoutCandidateCvInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AttachmentCreateWithoutCandidateCvInput>>('AttachmentCreateWithoutCandidateCvInput').implement({
+  fields: AttachmentCreateWithoutCandidateCvInputFields,
 });
 
-export const AttachmentCreateOrConnectWithoutCandidateInputFields = (t: any) => ({
+export const AttachmentCreateOrConnectWithoutCandidateCvInputFields = (t: any) => ({
   where: t.field({"required":true,"type":AttachmentWhereUniqueInput}),
-  create: t.field({"required":true,"type":AttachmentCreateWithoutCandidateInput}),
+  create: t.field({"required":true,"type":AttachmentCreateWithoutCandidateCvInput}),
 });
-export const AttachmentCreateOrConnectWithoutCandidateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AttachmentCreateOrConnectWithoutCandidateInput>>('AttachmentCreateOrConnectWithoutCandidateInput').implement({
-  fields: AttachmentCreateOrConnectWithoutCandidateInputFields,
+export const AttachmentCreateOrConnectWithoutCandidateCvInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AttachmentCreateOrConnectWithoutCandidateCvInput>>('AttachmentCreateOrConnectWithoutCandidateCvInput').implement({
+  fields: AttachmentCreateOrConnectWithoutCandidateCvInputFields,
+});
+
+export const AttachmentCreateWithoutCandidateAvatarInputFields = (t: any) => ({
+  contentType: t.string({"required":true}),
+  filename: t.string({"required":true}),
+  path: t.string({"required":true}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+  updatedAt: t.field({"required":false,"type":DateTime}),
+  userProfilePhoto: t.field({"required":false,"type":UserCreateNestedOneWithoutPhotoInput}),
+  candidateCv: t.field({"required":false,"type":CandidateCreateNestedOneWithoutCvInput}),
+  candidateCoverLetter: t.field({"required":false,"type":CandidateCreateNestedOneWithoutCoverLetterInput}),
+  uploader: t.field({"required":false,"type":HiringRoleCreateNestedOneWithoutAttachmentsInput}),
+  offerFiles: t.field({"required":false,"type":OfferFileCreateNestedManyWithoutAttachmentInput}),
+  talentPoolFiles: t.field({"required":false,"type":TalentPoolFileCreateNestedManyWithoutAttachmentInput}),
+});
+export const AttachmentCreateWithoutCandidateAvatarInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AttachmentCreateWithoutCandidateAvatarInput>>('AttachmentCreateWithoutCandidateAvatarInput').implement({
+  fields: AttachmentCreateWithoutCandidateAvatarInputFields,
+});
+
+export const AttachmentCreateOrConnectWithoutCandidateAvatarInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":AttachmentWhereUniqueInput}),
+  create: t.field({"required":true,"type":AttachmentCreateWithoutCandidateAvatarInput}),
+});
+export const AttachmentCreateOrConnectWithoutCandidateAvatarInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AttachmentCreateOrConnectWithoutCandidateAvatarInput>>('AttachmentCreateOrConnectWithoutCandidateAvatarInput').implement({
+  fields: AttachmentCreateOrConnectWithoutCandidateAvatarInputFields,
+});
+
+export const AttachmentCreateWithoutCandidateCoverLetterInputFields = (t: any) => ({
+  contentType: t.string({"required":true}),
+  filename: t.string({"required":true}),
+  path: t.string({"required":true}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+  updatedAt: t.field({"required":false,"type":DateTime}),
+  userProfilePhoto: t.field({"required":false,"type":UserCreateNestedOneWithoutPhotoInput}),
+  candidateCv: t.field({"required":false,"type":CandidateCreateNestedOneWithoutCvInput}),
+  candidateAvatar: t.field({"required":false,"type":CandidateCreateNestedOneWithoutAvatarInput}),
+  uploader: t.field({"required":false,"type":HiringRoleCreateNestedOneWithoutAttachmentsInput}),
+  offerFiles: t.field({"required":false,"type":OfferFileCreateNestedManyWithoutAttachmentInput}),
+  talentPoolFiles: t.field({"required":false,"type":TalentPoolFileCreateNestedManyWithoutAttachmentInput}),
+});
+export const AttachmentCreateWithoutCandidateCoverLetterInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AttachmentCreateWithoutCandidateCoverLetterInput>>('AttachmentCreateWithoutCandidateCoverLetterInput').implement({
+  fields: AttachmentCreateWithoutCandidateCoverLetterInputFields,
+});
+
+export const AttachmentCreateOrConnectWithoutCandidateCoverLetterInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":AttachmentWhereUniqueInput}),
+  create: t.field({"required":true,"type":AttachmentCreateWithoutCandidateCoverLetterInput}),
+});
+export const AttachmentCreateOrConnectWithoutCandidateCoverLetterInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AttachmentCreateOrConnectWithoutCandidateCoverLetterInput>>('AttachmentCreateOrConnectWithoutCandidateCoverLetterInput').implement({
+  fields: AttachmentCreateOrConnectWithoutCandidateCoverLetterInputFields,
 });
 
 export const OfferCreateWithoutHiredInputFields = (t: any) => ({
@@ -23921,36 +24341,106 @@ export const TagSourceUpdateWithoutCandidateReferrerInput = builder.inputRef<Pri
   fields: TagSourceUpdateWithoutCandidateReferrerInputFields,
 });
 
-export const AttachmentUpsertWithoutCandidateInputFields = (t: any) => ({
-  update: t.field({"required":true,"type":AttachmentUpdateWithoutCandidateInput}),
-  create: t.field({"required":true,"type":AttachmentCreateWithoutCandidateInput}),
+export const AttachmentUpsertWithoutCandidateCvInputFields = (t: any) => ({
+  update: t.field({"required":true,"type":AttachmentUpdateWithoutCandidateCvInput}),
+  create: t.field({"required":true,"type":AttachmentCreateWithoutCandidateCvInput}),
   where: t.field({"required":false,"type":AttachmentWhereInput}),
 });
-export const AttachmentUpsertWithoutCandidateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AttachmentUpsertWithoutCandidateInput>>('AttachmentUpsertWithoutCandidateInput').implement({
-  fields: AttachmentUpsertWithoutCandidateInputFields,
+export const AttachmentUpsertWithoutCandidateCvInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AttachmentUpsertWithoutCandidateCvInput>>('AttachmentUpsertWithoutCandidateCvInput').implement({
+  fields: AttachmentUpsertWithoutCandidateCvInputFields,
 });
 
-export const AttachmentUpdateToOneWithWhereWithoutCandidateInputFields = (t: any) => ({
+export const AttachmentUpdateToOneWithWhereWithoutCandidateCvInputFields = (t: any) => ({
   where: t.field({"required":false,"type":AttachmentWhereInput}),
-  data: t.field({"required":true,"type":AttachmentUpdateWithoutCandidateInput}),
+  data: t.field({"required":true,"type":AttachmentUpdateWithoutCandidateCvInput}),
 });
-export const AttachmentUpdateToOneWithWhereWithoutCandidateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AttachmentUpdateToOneWithWhereWithoutCandidateInput>>('AttachmentUpdateToOneWithWhereWithoutCandidateInput').implement({
-  fields: AttachmentUpdateToOneWithWhereWithoutCandidateInputFields,
+export const AttachmentUpdateToOneWithWhereWithoutCandidateCvInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AttachmentUpdateToOneWithWhereWithoutCandidateCvInput>>('AttachmentUpdateToOneWithWhereWithoutCandidateCvInput').implement({
+  fields: AttachmentUpdateToOneWithWhereWithoutCandidateCvInputFields,
 });
 
-export const AttachmentUpdateWithoutCandidateInputFields = (t: any) => ({
+export const AttachmentUpdateWithoutCandidateCvInputFields = (t: any) => ({
   contentType: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   filename: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   path: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   userProfilePhoto: t.field({"required":false,"type":UserUpdateOneWithoutPhotoNestedInput}),
+  candidateAvatar: t.field({"required":false,"type":CandidateUpdateOneWithoutAvatarNestedInput}),
+  candidateCoverLetter: t.field({"required":false,"type":CandidateUpdateOneWithoutCoverLetterNestedInput}),
   uploader: t.field({"required":false,"type":HiringRoleUpdateOneWithoutAttachmentsNestedInput}),
   offerFiles: t.field({"required":false,"type":OfferFileUpdateManyWithoutAttachmentNestedInput}),
   talentPoolFiles: t.field({"required":false,"type":TalentPoolFileUpdateManyWithoutAttachmentNestedInput}),
 });
-export const AttachmentUpdateWithoutCandidateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AttachmentUpdateWithoutCandidateInput>>('AttachmentUpdateWithoutCandidateInput').implement({
-  fields: AttachmentUpdateWithoutCandidateInputFields,
+export const AttachmentUpdateWithoutCandidateCvInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AttachmentUpdateWithoutCandidateCvInput>>('AttachmentUpdateWithoutCandidateCvInput').implement({
+  fields: AttachmentUpdateWithoutCandidateCvInputFields,
+});
+
+export const AttachmentUpsertWithoutCandidateAvatarInputFields = (t: any) => ({
+  update: t.field({"required":true,"type":AttachmentUpdateWithoutCandidateAvatarInput}),
+  create: t.field({"required":true,"type":AttachmentCreateWithoutCandidateAvatarInput}),
+  where: t.field({"required":false,"type":AttachmentWhereInput}),
+});
+export const AttachmentUpsertWithoutCandidateAvatarInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AttachmentUpsertWithoutCandidateAvatarInput>>('AttachmentUpsertWithoutCandidateAvatarInput').implement({
+  fields: AttachmentUpsertWithoutCandidateAvatarInputFields,
+});
+
+export const AttachmentUpdateToOneWithWhereWithoutCandidateAvatarInputFields = (t: any) => ({
+  where: t.field({"required":false,"type":AttachmentWhereInput}),
+  data: t.field({"required":true,"type":AttachmentUpdateWithoutCandidateAvatarInput}),
+});
+export const AttachmentUpdateToOneWithWhereWithoutCandidateAvatarInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AttachmentUpdateToOneWithWhereWithoutCandidateAvatarInput>>('AttachmentUpdateToOneWithWhereWithoutCandidateAvatarInput').implement({
+  fields: AttachmentUpdateToOneWithWhereWithoutCandidateAvatarInputFields,
+});
+
+export const AttachmentUpdateWithoutCandidateAvatarInputFields = (t: any) => ({
+  contentType: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  filename: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  path: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  userProfilePhoto: t.field({"required":false,"type":UserUpdateOneWithoutPhotoNestedInput}),
+  candidateCv: t.field({"required":false,"type":CandidateUpdateOneWithoutCvNestedInput}),
+  candidateCoverLetter: t.field({"required":false,"type":CandidateUpdateOneWithoutCoverLetterNestedInput}),
+  uploader: t.field({"required":false,"type":HiringRoleUpdateOneWithoutAttachmentsNestedInput}),
+  offerFiles: t.field({"required":false,"type":OfferFileUpdateManyWithoutAttachmentNestedInput}),
+  talentPoolFiles: t.field({"required":false,"type":TalentPoolFileUpdateManyWithoutAttachmentNestedInput}),
+});
+export const AttachmentUpdateWithoutCandidateAvatarInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AttachmentUpdateWithoutCandidateAvatarInput>>('AttachmentUpdateWithoutCandidateAvatarInput').implement({
+  fields: AttachmentUpdateWithoutCandidateAvatarInputFields,
+});
+
+export const AttachmentUpsertWithoutCandidateCoverLetterInputFields = (t: any) => ({
+  update: t.field({"required":true,"type":AttachmentUpdateWithoutCandidateCoverLetterInput}),
+  create: t.field({"required":true,"type":AttachmentCreateWithoutCandidateCoverLetterInput}),
+  where: t.field({"required":false,"type":AttachmentWhereInput}),
+});
+export const AttachmentUpsertWithoutCandidateCoverLetterInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AttachmentUpsertWithoutCandidateCoverLetterInput>>('AttachmentUpsertWithoutCandidateCoverLetterInput').implement({
+  fields: AttachmentUpsertWithoutCandidateCoverLetterInputFields,
+});
+
+export const AttachmentUpdateToOneWithWhereWithoutCandidateCoverLetterInputFields = (t: any) => ({
+  where: t.field({"required":false,"type":AttachmentWhereInput}),
+  data: t.field({"required":true,"type":AttachmentUpdateWithoutCandidateCoverLetterInput}),
+});
+export const AttachmentUpdateToOneWithWhereWithoutCandidateCoverLetterInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AttachmentUpdateToOneWithWhereWithoutCandidateCoverLetterInput>>('AttachmentUpdateToOneWithWhereWithoutCandidateCoverLetterInput').implement({
+  fields: AttachmentUpdateToOneWithWhereWithoutCandidateCoverLetterInputFields,
+});
+
+export const AttachmentUpdateWithoutCandidateCoverLetterInputFields = (t: any) => ({
+  contentType: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  filename: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  path: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  userProfilePhoto: t.field({"required":false,"type":UserUpdateOneWithoutPhotoNestedInput}),
+  candidateCv: t.field({"required":false,"type":CandidateUpdateOneWithoutCvNestedInput}),
+  candidateAvatar: t.field({"required":false,"type":CandidateUpdateOneWithoutAvatarNestedInput}),
+  uploader: t.field({"required":false,"type":HiringRoleUpdateOneWithoutAttachmentsNestedInput}),
+  offerFiles: t.field({"required":false,"type":OfferFileUpdateManyWithoutAttachmentNestedInput}),
+  talentPoolFiles: t.field({"required":false,"type":TalentPoolFileUpdateManyWithoutAttachmentNestedInput}),
+});
+export const AttachmentUpdateWithoutCandidateCoverLetterInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.AttachmentUpdateWithoutCandidateCoverLetterInput>>('AttachmentUpdateWithoutCandidateCoverLetterInput').implement({
+  fields: AttachmentUpdateWithoutCandidateCoverLetterInputFields,
 });
 
 export const OfferUpsertWithoutHiredInputFields = (t: any) => ({
@@ -24372,8 +24862,8 @@ export const CandidateCreateWithoutCandidateTagsInputFields = (t: any) => ({
   skills: t.stringList({"required":false}),
   mainLanguage: t.string({"required":false}),
   languages: t.stringList({"required":false}),
-  coverLetter: t.string({"required":false}),
-  birthDate: t.field({"required":true,"type":DateTime}),
+  coverLetterText: t.string({"required":false}),
+  birthDate: t.field({"required":false,"type":DateTime}),
   educationLevel: t.string({"required":false}),
   socials: t.stringList({"required":false}),
   links: t.stringList({"required":false}),
@@ -24382,7 +24872,9 @@ export const CandidateCreateWithoutCandidateTagsInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTime}),
   updatedAt: t.field({"required":false,"type":DateTime}),
   referrer: t.field({"required":false,"type":TagSourceCreateNestedOneWithoutCandidateReferrerInput}),
-  cv: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateInput}),
+  cv: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateCvInput}),
+  avatar: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateAvatarInput}),
+  coverLetter: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateCoverLetterInput}),
   hiredAt: t.field({"required":false,"type":OfferCreateNestedOneWithoutHiredInput}),
   hiredBy: t.field({"required":false,"type":HiringRoleCreateNestedOneWithoutHiredCandidatesInput}),
   auditLogs: t.field({"required":false,"type":AuditLogCreateNestedManyWithoutCandidateInput}),
@@ -24451,8 +24943,8 @@ export const CandidateUpdateWithoutCandidateTagsInputFields = (t: any) => ({
   skills: t.stringList({"required":false}),
   mainLanguage: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   languages: t.stringList({"required":false}),
-  coverLetter: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
-  birthDate: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  coverLetterText: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  birthDate: t.field({"required":false,"type":NullableDateTimeFieldUpdateOperationsInput}),
   educationLevel: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
   socials: t.stringList({"required":false}),
   links: t.stringList({"required":false}),
@@ -24461,7 +24953,9 @@ export const CandidateUpdateWithoutCandidateTagsInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   referrer: t.field({"required":false,"type":TagSourceUpdateOneWithoutCandidateReferrerNestedInput}),
-  cv: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateNestedInput}),
+  cv: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateCvNestedInput}),
+  avatar: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateAvatarNestedInput}),
+  coverLetter: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateCoverLetterNestedInput}),
   hiredAt: t.field({"required":false,"type":OfferUpdateOneWithoutHiredNestedInput}),
   hiredBy: t.field({"required":false,"type":HiringRoleUpdateOneWithoutHiredCandidatesNestedInput}),
   auditLogs: t.field({"required":false,"type":AuditLogUpdateManyWithoutCandidateNestedInput}),
@@ -24514,8 +25008,8 @@ export const CandidateCreateWithoutCustomFieldsInputFields = (t: any) => ({
   skills: t.stringList({"required":false}),
   mainLanguage: t.string({"required":false}),
   languages: t.stringList({"required":false}),
-  coverLetter: t.string({"required":false}),
-  birthDate: t.field({"required":true,"type":DateTime}),
+  coverLetterText: t.string({"required":false}),
+  birthDate: t.field({"required":false,"type":DateTime}),
   educationLevel: t.string({"required":false}),
   socials: t.stringList({"required":false}),
   links: t.stringList({"required":false}),
@@ -24524,7 +25018,9 @@ export const CandidateCreateWithoutCustomFieldsInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTime}),
   updatedAt: t.field({"required":false,"type":DateTime}),
   referrer: t.field({"required":false,"type":TagSourceCreateNestedOneWithoutCandidateReferrerInput}),
-  cv: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateInput}),
+  cv: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateCvInput}),
+  avatar: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateAvatarInput}),
+  coverLetter: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateCoverLetterInput}),
   hiredAt: t.field({"required":false,"type":OfferCreateNestedOneWithoutHiredInput}),
   hiredBy: t.field({"required":false,"type":HiringRoleCreateNestedOneWithoutHiredCandidatesInput}),
   auditLogs: t.field({"required":false,"type":AuditLogCreateNestedManyWithoutCandidateInput}),
@@ -24597,8 +25093,8 @@ export const CandidateUpdateWithoutCustomFieldsInputFields = (t: any) => ({
   skills: t.stringList({"required":false}),
   mainLanguage: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   languages: t.stringList({"required":false}),
-  coverLetter: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
-  birthDate: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  coverLetterText: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  birthDate: t.field({"required":false,"type":NullableDateTimeFieldUpdateOperationsInput}),
   educationLevel: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
   socials: t.stringList({"required":false}),
   links: t.stringList({"required":false}),
@@ -24607,7 +25103,9 @@ export const CandidateUpdateWithoutCustomFieldsInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   referrer: t.field({"required":false,"type":TagSourceUpdateOneWithoutCandidateReferrerNestedInput}),
-  cv: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateNestedInput}),
+  cv: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateCvNestedInput}),
+  avatar: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateAvatarNestedInput}),
+  coverLetter: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateCoverLetterNestedInput}),
   hiredAt: t.field({"required":false,"type":OfferUpdateOneWithoutHiredNestedInput}),
   hiredBy: t.field({"required":false,"type":HiringRoleUpdateOneWithoutHiredCandidatesNestedInput}),
   auditLogs: t.field({"required":false,"type":AuditLogUpdateManyWithoutCandidateNestedInput}),
@@ -24744,8 +25242,8 @@ export const CandidateCreateWithoutEvaluationInputFields = (t: any) => ({
   skills: t.stringList({"required":false}),
   mainLanguage: t.string({"required":false}),
   languages: t.stringList({"required":false}),
-  coverLetter: t.string({"required":false}),
-  birthDate: t.field({"required":true,"type":DateTime}),
+  coverLetterText: t.string({"required":false}),
+  birthDate: t.field({"required":false,"type":DateTime}),
   educationLevel: t.string({"required":false}),
   socials: t.stringList({"required":false}),
   links: t.stringList({"required":false}),
@@ -24754,7 +25252,9 @@ export const CandidateCreateWithoutEvaluationInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTime}),
   updatedAt: t.field({"required":false,"type":DateTime}),
   referrer: t.field({"required":false,"type":TagSourceCreateNestedOneWithoutCandidateReferrerInput}),
-  cv: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateInput}),
+  cv: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateCvInput}),
+  avatar: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateAvatarInput}),
+  coverLetter: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateCoverLetterInput}),
   hiredAt: t.field({"required":false,"type":OfferCreateNestedOneWithoutHiredInput}),
   hiredBy: t.field({"required":false,"type":HiringRoleCreateNestedOneWithoutHiredCandidatesInput}),
   auditLogs: t.field({"required":false,"type":AuditLogCreateNestedManyWithoutCandidateInput}),
@@ -24997,8 +25497,8 @@ export const CandidateUpdateWithoutEvaluationInputFields = (t: any) => ({
   skills: t.stringList({"required":false}),
   mainLanguage: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   languages: t.stringList({"required":false}),
-  coverLetter: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
-  birthDate: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  coverLetterText: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  birthDate: t.field({"required":false,"type":NullableDateTimeFieldUpdateOperationsInput}),
   educationLevel: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
   socials: t.stringList({"required":false}),
   links: t.stringList({"required":false}),
@@ -25007,7 +25507,9 @@ export const CandidateUpdateWithoutEvaluationInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   referrer: t.field({"required":false,"type":TagSourceUpdateOneWithoutCandidateReferrerNestedInput}),
-  cv: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateNestedInput}),
+  cv: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateCvNestedInput}),
+  avatar: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateAvatarNestedInput}),
+  coverLetter: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateCoverLetterNestedInput}),
   hiredAt: t.field({"required":false,"type":OfferUpdateOneWithoutHiredNestedInput}),
   hiredBy: t.field({"required":false,"type":HiringRoleUpdateOneWithoutHiredCandidatesNestedInput}),
   auditLogs: t.field({"required":false,"type":AuditLogUpdateManyWithoutCandidateNestedInput}),
@@ -25249,8 +25751,8 @@ export const CandidateCreateWithoutSharedCandidateLinkInputFields = (t: any) => 
   skills: t.stringList({"required":false}),
   mainLanguage: t.string({"required":false}),
   languages: t.stringList({"required":false}),
-  coverLetter: t.string({"required":false}),
-  birthDate: t.field({"required":true,"type":DateTime}),
+  coverLetterText: t.string({"required":false}),
+  birthDate: t.field({"required":false,"type":DateTime}),
   educationLevel: t.string({"required":false}),
   socials: t.stringList({"required":false}),
   links: t.stringList({"required":false}),
@@ -25259,7 +25761,9 @@ export const CandidateCreateWithoutSharedCandidateLinkInputFields = (t: any) => 
   createdAt: t.field({"required":false,"type":DateTime}),
   updatedAt: t.field({"required":false,"type":DateTime}),
   referrer: t.field({"required":false,"type":TagSourceCreateNestedOneWithoutCandidateReferrerInput}),
-  cv: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateInput}),
+  cv: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateCvInput}),
+  avatar: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateAvatarInput}),
+  coverLetter: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateCoverLetterInput}),
   hiredAt: t.field({"required":false,"type":OfferCreateNestedOneWithoutHiredInput}),
   hiredBy: t.field({"required":false,"type":HiringRoleCreateNestedOneWithoutHiredCandidatesInput}),
   auditLogs: t.field({"required":false,"type":AuditLogCreateNestedManyWithoutCandidateInput}),
@@ -25309,8 +25813,8 @@ export const CandidateUpdateWithoutSharedCandidateLinkInputFields = (t: any) => 
   skills: t.stringList({"required":false}),
   mainLanguage: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   languages: t.stringList({"required":false}),
-  coverLetter: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
-  birthDate: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  coverLetterText: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  birthDate: t.field({"required":false,"type":NullableDateTimeFieldUpdateOperationsInput}),
   educationLevel: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
   socials: t.stringList({"required":false}),
   links: t.stringList({"required":false}),
@@ -25319,7 +25823,9 @@ export const CandidateUpdateWithoutSharedCandidateLinkInputFields = (t: any) => 
   createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   referrer: t.field({"required":false,"type":TagSourceUpdateOneWithoutCandidateReferrerNestedInput}),
-  cv: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateNestedInput}),
+  cv: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateCvNestedInput}),
+  avatar: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateAvatarNestedInput}),
+  coverLetter: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateCoverLetterNestedInput}),
   hiredAt: t.field({"required":false,"type":OfferUpdateOneWithoutHiredNestedInput}),
   hiredBy: t.field({"required":false,"type":HiringRoleUpdateOneWithoutHiredCandidatesNestedInput}),
   auditLogs: t.field({"required":false,"type":AuditLogUpdateManyWithoutCandidateNestedInput}),
@@ -25412,8 +25918,8 @@ export const CandidateCreateWithoutTasksInputFields = (t: any) => ({
   skills: t.stringList({"required":false}),
   mainLanguage: t.string({"required":false}),
   languages: t.stringList({"required":false}),
-  coverLetter: t.string({"required":false}),
-  birthDate: t.field({"required":true,"type":DateTime}),
+  coverLetterText: t.string({"required":false}),
+  birthDate: t.field({"required":false,"type":DateTime}),
   educationLevel: t.string({"required":false}),
   socials: t.stringList({"required":false}),
   links: t.stringList({"required":false}),
@@ -25422,7 +25928,9 @@ export const CandidateCreateWithoutTasksInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTime}),
   updatedAt: t.field({"required":false,"type":DateTime}),
   referrer: t.field({"required":false,"type":TagSourceCreateNestedOneWithoutCandidateReferrerInput}),
-  cv: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateInput}),
+  cv: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateCvInput}),
+  avatar: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateAvatarInput}),
+  coverLetter: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateCoverLetterInput}),
   hiredAt: t.field({"required":false,"type":OfferCreateNestedOneWithoutHiredInput}),
   hiredBy: t.field({"required":false,"type":HiringRoleCreateNestedOneWithoutHiredCandidatesInput}),
   auditLogs: t.field({"required":false,"type":AuditLogCreateNestedManyWithoutCandidateInput}),
@@ -25551,8 +26059,8 @@ export const CandidateUpdateWithoutTasksInputFields = (t: any) => ({
   skills: t.stringList({"required":false}),
   mainLanguage: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   languages: t.stringList({"required":false}),
-  coverLetter: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
-  birthDate: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  coverLetterText: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  birthDate: t.field({"required":false,"type":NullableDateTimeFieldUpdateOperationsInput}),
   educationLevel: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
   socials: t.stringList({"required":false}),
   links: t.stringList({"required":false}),
@@ -25561,7 +26069,9 @@ export const CandidateUpdateWithoutTasksInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   referrer: t.field({"required":false,"type":TagSourceUpdateOneWithoutCandidateReferrerNestedInput}),
-  cv: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateNestedInput}),
+  cv: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateCvNestedInput}),
+  avatar: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateAvatarNestedInput}),
+  coverLetter: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateCoverLetterNestedInput}),
   hiredAt: t.field({"required":false,"type":OfferUpdateOneWithoutHiredNestedInput}),
   hiredBy: t.field({"required":false,"type":HiringRoleUpdateOneWithoutHiredCandidatesNestedInput}),
   auditLogs: t.field({"required":false,"type":AuditLogUpdateManyWithoutCandidateNestedInput}),
@@ -25758,8 +26268,8 @@ export const CandidateCreateWithoutFollowsInputFields = (t: any) => ({
   skills: t.stringList({"required":false}),
   mainLanguage: t.string({"required":false}),
   languages: t.stringList({"required":false}),
-  coverLetter: t.string({"required":false}),
-  birthDate: t.field({"required":true,"type":DateTime}),
+  coverLetterText: t.string({"required":false}),
+  birthDate: t.field({"required":false,"type":DateTime}),
   educationLevel: t.string({"required":false}),
   socials: t.stringList({"required":false}),
   links: t.stringList({"required":false}),
@@ -25768,7 +26278,9 @@ export const CandidateCreateWithoutFollowsInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTime}),
   updatedAt: t.field({"required":false,"type":DateTime}),
   referrer: t.field({"required":false,"type":TagSourceCreateNestedOneWithoutCandidateReferrerInput}),
-  cv: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateInput}),
+  cv: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateCvInput}),
+  avatar: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateAvatarInput}),
+  coverLetter: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateCoverLetterInput}),
   hiredAt: t.field({"required":false,"type":OfferCreateNestedOneWithoutHiredInput}),
   hiredBy: t.field({"required":false,"type":HiringRoleCreateNestedOneWithoutHiredCandidatesInput}),
   auditLogs: t.field({"required":false,"type":AuditLogCreateNestedManyWithoutCandidateInput}),
@@ -25929,8 +26441,8 @@ export const CandidateUpdateWithoutFollowsInputFields = (t: any) => ({
   skills: t.stringList({"required":false}),
   mainLanguage: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   languages: t.stringList({"required":false}),
-  coverLetter: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
-  birthDate: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  coverLetterText: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  birthDate: t.field({"required":false,"type":NullableDateTimeFieldUpdateOperationsInput}),
   educationLevel: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
   socials: t.stringList({"required":false}),
   links: t.stringList({"required":false}),
@@ -25939,7 +26451,9 @@ export const CandidateUpdateWithoutFollowsInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   referrer: t.field({"required":false,"type":TagSourceUpdateOneWithoutCandidateReferrerNestedInput}),
-  cv: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateNestedInput}),
+  cv: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateCvNestedInput}),
+  avatar: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateAvatarNestedInput}),
+  coverLetter: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateCoverLetterNestedInput}),
   hiredAt: t.field({"required":false,"type":OfferUpdateOneWithoutHiredNestedInput}),
   hiredBy: t.field({"required":false,"type":HiringRoleUpdateOneWithoutHiredCandidatesNestedInput}),
   auditLogs: t.field({"required":false,"type":AuditLogUpdateManyWithoutCandidateNestedInput}),
@@ -26273,10 +26787,12 @@ export const CandidateCreateManyHiredByInputFields = (t: any) => ({
   skills: t.stringList({"required":false}),
   mainLanguage: t.string({"required":false}),
   languages: t.stringList({"required":false}),
-  coverLetter: t.string({"required":false}),
-  birthDate: t.field({"required":true,"type":DateTime}),
+  coverLetterText: t.string({"required":false}),
+  birthDate: t.field({"required":false,"type":DateTime}),
   referrerId: t.int({"required":false}),
   cvId: t.int({"required":false}),
+  avatarId: t.int({"required":false}),
+  coverLetterId: t.int({"required":false}),
   educationLevel: t.string({"required":false}),
   socials: t.stringList({"required":false}),
   links: t.stringList({"required":false}),
@@ -26329,7 +26845,9 @@ export const AttachmentUpdateWithoutUploaderInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   userProfilePhoto: t.field({"required":false,"type":UserUpdateOneWithoutPhotoNestedInput}),
-  candidate: t.field({"required":false,"type":CandidateUpdateOneWithoutCvNestedInput}),
+  candidateCv: t.field({"required":false,"type":CandidateUpdateOneWithoutCvNestedInput}),
+  candidateAvatar: t.field({"required":false,"type":CandidateUpdateOneWithoutAvatarNestedInput}),
+  candidateCoverLetter: t.field({"required":false,"type":CandidateUpdateOneWithoutCoverLetterNestedInput}),
   offerFiles: t.field({"required":false,"type":OfferFileUpdateManyWithoutAttachmentNestedInput}),
   talentPoolFiles: t.field({"required":false,"type":TalentPoolFileUpdateManyWithoutAttachmentNestedInput}),
 });
@@ -26393,8 +26911,8 @@ export const CandidateUpdateWithoutHiredByInputFields = (t: any) => ({
   skills: t.stringList({"required":false}),
   mainLanguage: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   languages: t.stringList({"required":false}),
-  coverLetter: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
-  birthDate: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  coverLetterText: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  birthDate: t.field({"required":false,"type":NullableDateTimeFieldUpdateOperationsInput}),
   educationLevel: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
   socials: t.stringList({"required":false}),
   links: t.stringList({"required":false}),
@@ -26403,7 +26921,9 @@ export const CandidateUpdateWithoutHiredByInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   referrer: t.field({"required":false,"type":TagSourceUpdateOneWithoutCandidateReferrerNestedInput}),
-  cv: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateNestedInput}),
+  cv: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateCvNestedInput}),
+  avatar: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateAvatarNestedInput}),
+  coverLetter: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateCoverLetterNestedInput}),
   hiredAt: t.field({"required":false,"type":OfferUpdateOneWithoutHiredNestedInput}),
   auditLogs: t.field({"required":false,"type":AuditLogUpdateManyWithoutCandidateNestedInput}),
   offers: t.field({"required":false,"type":MatchUpdateManyWithoutCandidateNestedInput}),
@@ -26713,10 +27233,12 @@ export const CandidateCreateManyCompanyInputFields = (t: any) => ({
   skills: t.stringList({"required":false}),
   mainLanguage: t.string({"required":false}),
   languages: t.stringList({"required":false}),
-  coverLetter: t.string({"required":false}),
-  birthDate: t.field({"required":true,"type":DateTime}),
+  coverLetterText: t.string({"required":false}),
+  birthDate: t.field({"required":false,"type":DateTime}),
   referrerId: t.int({"required":false}),
   cvId: t.int({"required":false}),
+  avatarId: t.int({"required":false}),
+  coverLetterId: t.int({"required":false}),
   educationLevel: t.string({"required":false}),
   socials: t.stringList({"required":false}),
   links: t.stringList({"required":false}),
@@ -26953,8 +27475,8 @@ export const CandidateUpdateWithoutCompanyInputFields = (t: any) => ({
   skills: t.stringList({"required":false}),
   mainLanguage: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   languages: t.stringList({"required":false}),
-  coverLetter: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
-  birthDate: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  coverLetterText: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  birthDate: t.field({"required":false,"type":NullableDateTimeFieldUpdateOperationsInput}),
   educationLevel: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
   socials: t.stringList({"required":false}),
   links: t.stringList({"required":false}),
@@ -26963,7 +27485,9 @@ export const CandidateUpdateWithoutCompanyInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   referrer: t.field({"required":false,"type":TagSourceUpdateOneWithoutCandidateReferrerNestedInput}),
-  cv: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateNestedInput}),
+  cv: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateCvNestedInput}),
+  avatar: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateAvatarNestedInput}),
+  coverLetter: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateCoverLetterNestedInput}),
   hiredAt: t.field({"required":false,"type":OfferUpdateOneWithoutHiredNestedInput}),
   hiredBy: t.field({"required":false,"type":HiringRoleUpdateOneWithoutHiredCandidatesNestedInput}),
   auditLogs: t.field({"required":false,"type":AuditLogUpdateManyWithoutCandidateNestedInput}),
@@ -27110,9 +27634,11 @@ export const CandidateCreateManyReferrerInputFields = (t: any) => ({
   skills: t.stringList({"required":false}),
   mainLanguage: t.string({"required":false}),
   languages: t.stringList({"required":false}),
-  coverLetter: t.string({"required":false}),
-  birthDate: t.field({"required":true,"type":DateTime}),
+  coverLetterText: t.string({"required":false}),
+  birthDate: t.field({"required":false,"type":DateTime}),
   cvId: t.int({"required":false}),
+  avatarId: t.int({"required":false}),
+  coverLetterId: t.int({"required":false}),
   educationLevel: t.string({"required":false}),
   socials: t.stringList({"required":false}),
   links: t.stringList({"required":false}),
@@ -27150,8 +27676,8 @@ export const CandidateUpdateWithoutReferrerInputFields = (t: any) => ({
   skills: t.stringList({"required":false}),
   mainLanguage: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   languages: t.stringList({"required":false}),
-  coverLetter: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
-  birthDate: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  coverLetterText: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  birthDate: t.field({"required":false,"type":NullableDateTimeFieldUpdateOperationsInput}),
   educationLevel: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
   socials: t.stringList({"required":false}),
   links: t.stringList({"required":false}),
@@ -27159,7 +27685,9 @@ export const CandidateUpdateWithoutReferrerInputFields = (t: any) => ({
   isHired: t.field({"required":false,"type":NullableBoolFieldUpdateOperationsInput}),
   createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
-  cv: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateNestedInput}),
+  cv: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateCvNestedInput}),
+  avatar: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateAvatarNestedInput}),
+  coverLetter: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateCoverLetterNestedInput}),
   hiredAt: t.field({"required":false,"type":OfferUpdateOneWithoutHiredNestedInput}),
   hiredBy: t.field({"required":false,"type":HiringRoleUpdateOneWithoutHiredCandidatesNestedInput}),
   auditLogs: t.field({"required":false,"type":AuditLogUpdateManyWithoutCandidateNestedInput}),
@@ -27308,10 +27836,12 @@ export const CandidateCreateManyHiredAtInputFields = (t: any) => ({
   skills: t.stringList({"required":false}),
   mainLanguage: t.string({"required":false}),
   languages: t.stringList({"required":false}),
-  coverLetter: t.string({"required":false}),
-  birthDate: t.field({"required":true,"type":DateTime}),
+  coverLetterText: t.string({"required":false}),
+  birthDate: t.field({"required":false,"type":DateTime}),
   referrerId: t.int({"required":false}),
   cvId: t.int({"required":false}),
+  avatarId: t.int({"required":false}),
+  coverLetterId: t.int({"required":false}),
   educationLevel: t.string({"required":false}),
   socials: t.stringList({"required":false}),
   links: t.stringList({"required":false}),
@@ -27405,8 +27935,8 @@ export const CandidateUpdateWithoutHiredAtInputFields = (t: any) => ({
   skills: t.stringList({"required":false}),
   mainLanguage: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   languages: t.stringList({"required":false}),
-  coverLetter: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
-  birthDate: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  coverLetterText: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  birthDate: t.field({"required":false,"type":NullableDateTimeFieldUpdateOperationsInput}),
   educationLevel: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
   socials: t.stringList({"required":false}),
   links: t.stringList({"required":false}),
@@ -27415,7 +27945,9 @@ export const CandidateUpdateWithoutHiredAtInputFields = (t: any) => ({
   createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   referrer: t.field({"required":false,"type":TagSourceUpdateOneWithoutCandidateReferrerNestedInput}),
-  cv: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateNestedInput}),
+  cv: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateCvNestedInput}),
+  avatar: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateAvatarNestedInput}),
+  coverLetter: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateCoverLetterNestedInput}),
   hiredBy: t.field({"required":false,"type":HiringRoleUpdateOneWithoutHiredCandidatesNestedInput}),
   auditLogs: t.field({"required":false,"type":AuditLogUpdateManyWithoutCandidateNestedInput}),
   offers: t.field({"required":false,"type":MatchUpdateManyWithoutCandidateNestedInput}),

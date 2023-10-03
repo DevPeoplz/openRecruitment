@@ -98,14 +98,22 @@ export default interface PrismaTypes {
         Where: Prisma.AttachmentWhereInput;
         Create: {};
         Update: {};
-        RelationName: "userProfilePhoto" | "candidate" | "uploader" | "offerFiles" | "talentPoolFiles";
+        RelationName: "userProfilePhoto" | "candidateCv" | "candidateAvatar" | "candidateCoverLetter" | "uploader" | "offerFiles" | "talentPoolFiles";
         ListRelations: "offerFiles" | "talentPoolFiles";
         Relations: {
             userProfilePhoto: {
                 Shape: User | null;
                 Name: "User";
             };
-            candidate: {
+            candidateCv: {
+                Shape: Candidate | null;
+                Name: "Candidate";
+            };
+            candidateAvatar: {
+                Shape: Candidate | null;
+                Name: "Candidate";
+            };
+            candidateCoverLetter: {
                 Shape: Candidate | null;
                 Name: "Candidate";
             };
@@ -1005,7 +1013,7 @@ export default interface PrismaTypes {
         Where: Prisma.CandidateWhereInput;
         Create: {};
         Update: {};
-        RelationName: "referrer" | "cv" | "hiredAt" | "hiredBy" | "auditLogs" | "offers" | "talentPools" | "candidateTags" | "customFields" | "evaluation" | "tasks" | "follows" | "SharedCandidateLink" | "company";
+        RelationName: "referrer" | "cv" | "avatar" | "coverLetter" | "hiredAt" | "hiredBy" | "auditLogs" | "offers" | "talentPools" | "candidateTags" | "customFields" | "evaluation" | "tasks" | "follows" | "SharedCandidateLink" | "company";
         ListRelations: "auditLogs" | "offers" | "talentPools" | "candidateTags" | "customFields" | "evaluation" | "tasks" | "follows" | "SharedCandidateLink";
         Relations: {
             referrer: {
@@ -1013,6 +1021,14 @@ export default interface PrismaTypes {
                 Name: "TagSource";
             };
             cv: {
+                Shape: Attachment | null;
+                Name: "Attachment";
+            };
+            avatar: {
+                Shape: Attachment | null;
+                Name: "Attachment";
+            };
+            coverLetter: {
                 Shape: Attachment | null;
                 Name: "Attachment";
             };

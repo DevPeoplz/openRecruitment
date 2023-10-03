@@ -13,13 +13,9 @@ export const SIGNUP_MUTATION = gql`
 `
 
 export const ADD_CANDIDATE_MUTATION = gql`
-  mutation createUserAndCompany($input: UserSignUpInput!) {
-    signUpUser(data: $input) {
+  mutation CreateOneCandidate($data: CandidateCreateInputExtended!) {
+    createOneCandidate(data: $data) {
       id
-      email
-      companies {
-        id
-      }
     }
   }
 `
