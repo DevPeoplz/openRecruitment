@@ -14,10 +14,6 @@ export const HubTableFilters: <T>(
   const column = table.getColumn('name')
   const columnFilterValue = column?.getFilterValue() ?? ''
 
-  console.log(column)
-  console.log(columnFilterValue)
-  console.log(column?.getCanFilter())
-
   return (
     <>
       <button
