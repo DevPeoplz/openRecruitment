@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react'
 import { AsideAuthenticated } from '@/components/layout/aside-authenticated'
 import { HeaderAuthenticated } from '@/components/layout/header/header-authenticated'
 import { MainAuthenticated } from '@/components/layout/main/main-authenticated'
-import QuickActionsToolbar from './toolbars/quick-actions'
+import QuickActionsToolbar from '../quick-actions/quick-actions'
 
 interface Props {
   children: ReactNode

@@ -79,7 +79,10 @@ export const Cruds: Record<
       count: Candidate.countCandidateQueryObject,
       findMany: Candidate.findManyCandidateQueryObject,
     },
-    mutations: AutoCruds.Candidate.mutations,
+    mutations: {
+      ...AutoCruds.Candidate.mutations,
+      createOne: Candidate.createOneCandidateMutationObject,
+    },
   },
   Offer: {
     Object: AutoCruds.Offer.Object,

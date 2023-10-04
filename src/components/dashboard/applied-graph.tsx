@@ -102,7 +102,7 @@ const filterTagSourceDataByReferrer = (candidatesData: { referrer: { name: strin
   if (!candidatesData) return Array.from(filterTags.values())
 
   for (const candidate of candidatesData) {
-    const referrerName = candidate.referrer.name
+    const referrerName = candidate.referrer?.name ?? 'Resume Sent'
     const type = referrerName.toLowerCase()
 
     if (!filterTags.has(type)) {

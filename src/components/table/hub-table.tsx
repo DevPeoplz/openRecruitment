@@ -292,11 +292,6 @@ export const useHubTable = <T,>(
     pageSize: pageSizeOptions[0],
   })
 
-  const fetchDataOptions = {
-    pageIndex,
-    pageSize,
-  }
-
   const pagination = React.useMemo(
     () => ({
       pageIndex,
@@ -326,8 +321,6 @@ export const useHubTable = <T,>(
     }
   }, [columnVisibility, storageKey])
 
-  const dataQuery = { data: { pageCount: undefined } }
-
   const manualPagination = false
 
   const table = useReactTable({
@@ -344,7 +337,6 @@ export const useHubTable = <T,>(
     onColumnVisibilityChange: setColumnVisibility,
     onPaginationChange: setPagination,
     manualPagination: manualPagination,
-    pageCount: dataQuery?.data?.pageCount ?? -1,
     onSortingChange: setSorting,
     onColumnOrderChange: setColumnOrder,
     onGlobalFilterChange: setGlobalFilter,

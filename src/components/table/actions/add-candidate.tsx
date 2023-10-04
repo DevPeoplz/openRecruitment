@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { Dispatch, SetStateAction, createContext, useState } from 'react'
 import { PlusIcon } from '@heroicons/react/20/solid'
 import { Tooltip } from 'react-tooltip'
 import AddCandidateModal from '@/components/modals/add-candidate-modal'
+import { ModalControlContext } from '@/hooks/contexts'
 
 const AddCandidate = () => {
   const [openModal, setOpenModal] = useState(false)
@@ -18,7 +19,9 @@ const AddCandidate = () => {
       <Tooltip place="top" content="add candidates" id="button-tooltip" className="capitalize">
         <span>Add candidates</span>
       </Tooltip>
-      <AddCandidateModal isOpen={openModal} setIsOpen={setOpenModal} />
+      <ModalControlContext.Provider value={[openModal, setOpenModal]}>
+        <AddCandidateModal />
+      </ModalControlContext.Provider>
     </div>
   )
 }

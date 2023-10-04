@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useMemo, useReducer, useState } from 'react'
+import React, { createContext, ReactNode, useEffect, useMemo, useReducer, useState } from 'react'
 import { LayoutSideMenu } from '@/components/layout/main/layout-side-menu'
 import { ColumnDef, Row } from '@tanstack/react-table'
 
@@ -7,7 +7,7 @@ import HubTable, {
   DefaultColumnsExtendedProps,
   useHubTable,
 } from '@/components/table/hub-table'
-import { useLazyQuery, useQuery } from '@apollo/client'
+import { ApolloQueryResult, OperationVariables, useLazyQuery, useQuery } from '@apollo/client'
 import {
   GET_CANDIDATE_BY_ID,
   get_candidate_by_id_variables,
@@ -197,7 +197,11 @@ const defaultColumns: DefaultColumnsExtendedProps<Person> = [
 
 const Page = () => {
   const { useHubTable, HubTable } = createHubTable<Person>()
-  const { data: dataHubCandidates, loading: loadingHubCandidates } = useQuery(GET_HUB_CANDIDATES)
+  const {
+    data: dataHubCandidates,
+    loading: loadingHubCandidates,
+    refetch: refetchCandidates,
+  } = useQuery(GET_HUB_CANDIDATES)
   const [seeCandidate, setSeeCandidate] = useState(false)
 
   const { table, tableStates } = useHubTable(

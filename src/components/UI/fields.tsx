@@ -158,7 +158,7 @@ export function SelectCompany({ companies }: { companies: Company[] }) {
   )
 }
 
-export function UploadFile({ label, id }: UploadFileProps) {
+export function UploadFile({ id, label, onChange }: UploadFileProps) {
   return (
     <div className="flex w-full items-center justify-between gap-2">
       <p>{label}</p>
@@ -169,7 +169,7 @@ export function UploadFile({ label, id }: UploadFileProps) {
         <GoUpload className="h-6 w-6" />
         <p>Select file</p>
       </label>
-      <input type="file" id={id} className="hidden" />
+      <input type="file" id={id} className="hidden" onChange={onChange} />
     </div>
   )
 }

@@ -19,12 +19,16 @@ export const CandidateObject = definePrismaObject('Candidate', {
     skills: t.field(CandidateSkillsFieldObject),
     mainLanguage: t.field(CandidateMainLanguageFieldObject),
     languages: t.field(CandidateLanguagesFieldObject),
-    coverLetter: t.field(CandidateCoverLetterFieldObject),
+    coverLetterText: t.field(CandidateCoverLetterTextFieldObject),
     birthDate: t.field(CandidateBirthDateFieldObject),
     referrer: t.relation('referrer', CandidateReferrerFieldObject),
     referrerId: t.field(CandidateReferrerIdFieldObject),
     cv: t.relation('cv', CandidateCvFieldObject),
     cvId: t.field(CandidateCvIdFieldObject),
+    avatar: t.relation('avatar', CandidateAvatarFieldObject),
+    avatarId: t.field(CandidateAvatarIdFieldObject),
+    coverLetter: t.relation('coverLetter', CandidateCoverLetterFieldObject),
+    coverLetterId: t.field(CandidateCoverLetterIdFieldObject),
     educationLevel: t.field(CandidateEducationLevelFieldObject),
     socials: t.field(CandidateSocialsFieldObject),
     links: t.field(CandidateLinksFieldObject),
@@ -106,17 +110,17 @@ export const CandidateLanguagesFieldObject = defineFieldObject('Candidate', {
   resolve: (parent) => parent.languages,
 });
 
-export const CandidateCoverLetterFieldObject = defineFieldObject('Candidate', {
+export const CandidateCoverLetterTextFieldObject = defineFieldObject('Candidate', {
   type: "String",
   description: undefined,
   nullable: true,
-  resolve: (parent) => parent.coverLetter,
+  resolve: (parent) => parent.coverLetterText,
 });
 
 export const CandidateBirthDateFieldObject = defineFieldObject('Candidate', {
   type: Inputs.DateTime,
   description: undefined,
-  nullable: false,
+  nullable: true,
   resolve: (parent) => parent.birthDate,
 });
 
@@ -146,6 +150,34 @@ export const CandidateCvIdFieldObject = defineFieldObject('Candidate', {
   description: undefined,
   nullable: true,
   resolve: (parent) => parent.cvId,
+});
+
+export const CandidateAvatarFieldObject = defineRelationObject('Candidate', 'avatar', {
+  description: undefined,
+  nullable: true,
+  args: undefined,
+  query: undefined,
+});
+
+export const CandidateAvatarIdFieldObject = defineFieldObject('Candidate', {
+  type: "Int",
+  description: undefined,
+  nullable: true,
+  resolve: (parent) => parent.avatarId,
+});
+
+export const CandidateCoverLetterFieldObject = defineRelationObject('Candidate', 'coverLetter', {
+  description: undefined,
+  nullable: true,
+  args: undefined,
+  query: undefined,
+});
+
+export const CandidateCoverLetterIdFieldObject = defineFieldObject('Candidate', {
+  type: "Int",
+  description: undefined,
+  nullable: true,
+  resolve: (parent) => parent.coverLetterId,
 });
 
 export const CandidateEducationLevelFieldObject = defineFieldObject('Candidate', {

@@ -1,5 +1,5 @@
 import React from 'react'
-import ModalContainner from './modal-container'
+import ModalContainer from './modal-container'
 import { TextField } from '../UI/fields'
 import { Button } from '../UI/Button'
 
@@ -10,7 +10,7 @@ type props = {
 
 const ChangePasswordModal: React.FC<props> = ({ isOpen, setIsOpen }) => {
   return (
-    <ModalContainner isOpen={isOpen} setIsOpen={setIsOpen} title="Change Password">
+    <ModalContainer isOpen={isOpen} setIsOpen={setIsOpen} title="Change Password">
       <div className="mt-4 flex flex-col gap-4">
         <p>Choose a new password</p>
         <TextField
@@ -39,7 +39,7 @@ const ChangePasswordModal: React.FC<props> = ({ isOpen, setIsOpen }) => {
           Continue
         </Button>
       </div>
-    </ModalContainner>
+    </ModalContainer>
   )
 }
 

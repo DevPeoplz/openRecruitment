@@ -1,0 +1,1 @@
+export { createOneCandidateMutationObject } from './createOne'

@@ -1,14 +1,19 @@
 import { TextField, UploadAvatar, PhoneField, UploadFile } from '@/components/UI/fields'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { PlusIcon } from '@heroicons/react/20/solid'
 import { Button } from '@/components/UI/Button'
-import { useMutation } from '@apollo/client'
+import { useApolloClient, useMutation } from '@apollo/client'
 import { ADD_CANDIDATE_MUTATION } from '@/components/graphql/mutations'
 import Alert from '@/components/alert'
-import { useFileUpload } from '@/hooks/upload-files'
+import { omit } from 'lodash'
+import Loader from '@/components/UI/loader'
+import { ModalControlContext } from '@/hooks/contexts'
 
 const AddCandidateView = () => {
-  const [formData, setFormData] = useState({
+  const [_, setIsOpen] = useContext(ModalControlContext)
+  const client = useApolloClient()
+
+  const [formData, setFormData] = useState<Record<string, string | null | Blob>>({
     firstName: '',
     lastName: '',
     email: '',
@@ -18,58 +23,69 @@ const AddCandidateView = () => {
     coverLetter: null,
   })
 
+  const [onSubmitLoading, setOnSubmitLoading] = useState(false)
+
   const [createEntity, { loading, error, data }] = useMutation(ADD_CANDIDATE_MUTATION)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('Form data:', formData)
 
-    /*await createEntity({
-      variables: { input: formData },
-    })*/
+    setOnSubmitLoading(true)
 
-    if (true || (data && data.createEntity)) {
-      Alert({ type: 'success', message: 'Candidate created successfully' })
+    createEntity({
+      variables: { data: omit(formData, ['avatar', 'cv', 'coverLetter']) },
+    })
+      .then(async (res) => {
+        console.log('Candidate created successfully')
+        if (res.data.createOneCandidate?.id) {
+          //Alert({ type: 'success', message: 'Candidate created successfully' })
 
-      // upload files
-      const { id } = { id: 1 }
-      const formDataToUpload = new FormData()
-      const { avatar, cv, coverLetter } = formData
-      const files = ['avatar', 'cv', 'coverLetter']
-      // files.forEach((file) => {
-      //   if (formData[file]) {
-      //     formDataToUpload.append(file, formData[file])
-      //   }
-      // })
-      formDataToUpload.append('candidateId', '1')
-      formDataToUpload.append('name', 'avatar')
+          // upload files
+          const formDataToUpload = new FormData()
+          const files = ['avatar', 'cv', 'coverLetter']
 
-      if (avatar) {
-        formDataToUpload.append('file', avatar)
-      }
+          formDataToUpload.append('candidateId', res.data.createOneCandidate.id)
+          files.forEach((file) => {
+            const blob = formData[file]
+            if (blob) {
+              formDataToUpload.append('name', file)
+              formDataToUpload.append('file', blob)
+            }
+          })
 
-      console.log('Form data tpo upload:', formDataToUpload)
+          try {
+            const response = await fetch('/api/candidate/upload-files', {
+              method: 'POST',
+              body: formDataToUpload,
+            })
 
-      try {
-        const response = await fetch('/api/candidate/upload-files', {
-          method: 'POST',
-          body: formDataToUpload,
-        })
+            console.log(response)
 
-        if (response.ok) {
-          alert('File uploaded successfully')
-        } else {
-          alert('File upload failed')
+            if (response.ok) {
+              Alert({ type: 'success', message: 'Candidate created successfully' })
+            } else {
+              Alert({
+                type: 'warning',
+                message: 'Candidate created but files were not uploaded',
+              })
+            }
+          } catch (error) {
+            console.error('Error uploading files:', error)
+          }
         }
-        console.log('response')
-        console.log(response)
-      } catch (error) {
-        console.error('Error uploading file:', error)
-      }
-    }
-    if (error) {
-      Alert({ type: 'error', message: 'Something went wrong' })
-    }
+      })
+      .catch((err) => {
+        console.error(err)
+        console.log('Error creating candidate')
+        Alert({ type: 'error', message: 'Something went wrong' })
+      })
+      .finally(async () => {
+        setOnSubmitLoading(false)
+        await client.refetchQueries({
+          include: ['GET_HUB_CANDIDATES'],
+        })
+        setIsOpen(false)
+      })
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,7 +98,7 @@ const AddCandidateView = () => {
     e.preventDefault()
     const { id } = e.target
     const file = e.target.files?.[0]
-    console.log(file)
+
     if (!file) Alert({ type: 'error', message: 'Please select a file' })
     else if (file.size > 204800)
       Alert({ type: 'error', message: 'File size cannot exceed more than 2MB' })
@@ -137,11 +153,11 @@ const AddCandidateView = () => {
         </button>
       </div>
 
-      <UploadFile label="CV or Resume:" id="upload-file" />
-      <UploadFile label="Cover Letter:" id="upload-file" />
+      <UploadFile label="CV or Resume:" id="cv" onChange={handleFileInput} />
+      <UploadFile label="Cover Letter:" id="coverLetter" onChange={handleFileInput} />
       <div>
         <Button className="w-full " color="primary" type="submit">
-          Add candidate
+          {onSubmitLoading ? <Loader size="h-4 w-4" fullScreen={false} /> : 'Add candidate'}
         </Button>
       </div>
     </form>

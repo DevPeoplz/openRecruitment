@@ -1,5 +1,5 @@
 import React from 'react'
-import ModalContainner from './modal-container'
+import ModalContainer from './modal-container'
 import UserCard from '../UI/cards/UserCard'
 import { TextField } from '../UI/fields'
 import { Button } from '../UI/Button'
@@ -31,7 +31,7 @@ const UpdatePasswordModal: React.FC<props> = ({ isOpen, setIsOpen }) => {
   }
 
   return (
-    <ModalContainner
+    <ModalContainer
       isOpen={isOpen}
       setIsOpen={setIsOpen}
       title={isVerified ? 'Update Password' : 'Verify your identity'}
@@ -103,7 +103,7 @@ const UpdatePasswordModal: React.FC<props> = ({ isOpen, setIsOpen }) => {
           </div>
         </div>
       )}
-    </ModalContainner>
+    </ModalContainer>
   )
 }
 

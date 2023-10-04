@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
 export const SIGNUP_MUTATION = gql`
-  mutation createUserAndCompany($data: UserSignUpInput!) {
+  mutation SIGNUP_MUTATION($data: UserSignUpInput!) {
     signUpUser(data: $data) {
       id
       email
@@ -13,13 +13,9 @@ export const SIGNUP_MUTATION = gql`
 `
 
 export const ADD_CANDIDATE_MUTATION = gql`
-  mutation createUserAndCompany($input: UserSignUpInput!) {
-    signUpUser(data: $input) {
+  mutation ADD_CANDIDATE_MUTATION($data: CandidateCreateInputExtended!) {
+    createOneCandidate(data: $data) {
       id
-      email
-      companies {
-        id
-      }
     }
   }
 `
