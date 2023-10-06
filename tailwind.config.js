@@ -1,4 +1,4 @@
-/** @type {import('tailwindcss').Config} */
+/**@type {import('tailwindcss').Config} */
 module.exports = {
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
@@ -32,6 +32,7 @@ module.exports = {
           800: '#0c0c0c',
           900: '#0a0a0a',
         },
+        success: '#4caf50',
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

@@ -15,7 +15,7 @@ const Avatar: React.FC<Props> = ({ src, name, className }) => {
       alt={altName}
       width={40}
       height={40}
-      className={`${className} rounded-full border border-black object-cover`}
+      className={`${className} h-16 w-16 rounded-full border border-black object-cover`}
     />
   ) : (
     <div

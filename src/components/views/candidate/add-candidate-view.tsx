@@ -127,7 +127,7 @@ const AddCandidateView = () => {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-2 p-2">
-      <UploadAvatar id="avatar" onChange={handleFileInput} />
+      <UploadAvatar id="avatar" onChange={handleFileInput} file={formData?.avatar as Blob} />
       <span className="flex gap-1">
         <TextField id="firstName" label="Name" onChange={(e) => handleInputChange(e)} />
         <TextField id="lastName" label="Last name" onChange={(e) => handleInputChange(e)} />
@@ -176,8 +176,18 @@ const AddCandidateView = () => {
           onSelectedOptionsChange={useHandleKeyOptionsChange('sources')}
         />
       </div>
-      <UploadFile label="CV or Resume:" id="cv" onChange={handleFileInput} />
-      <UploadFile label="Cover Letter:" id="coverLetter" onChange={handleFileInput} />
+      <UploadFile
+        label="CV or Resume:"
+        id="cv"
+        file={formData?.cv as Blob}
+        onChange={handleFileInput}
+      />
+      <UploadFile
+        label="Cover Letter:"
+        id="coverLetter"
+        file={formData?.coverLetter as Blob}
+        onChange={handleFileInput}
+      />
       <div>
         <Button className="w-full " color="primary" type="submit">
           {onSubmitLoading ? <Loader size="h-4 w-4" fullScreen={false} /> : 'Add candidate'}

@@ -4,6 +4,7 @@ import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 import { PiBuildingsBold } from 'react-icons/pi'
 import { GoUpload } from 'react-icons/go'
+import Avatar from './Avatar'
 
 const formClasses =
   'block w-full rounded-lg border border-gray-200 bg-white py-[calc(theme(spacing.2)-1px)] px-[calc(theme(spacing.3)-1px)] text-gray-900 placeholder:text-gray-400 focus:border-cyan-500 focus:outline-none focus:ring-cyan-500 sm:text-sm'
@@ -63,6 +64,7 @@ interface UploadFileProps {
   label?: string
   className?: string
   onChange: (x: React.ChangeEvent<HTMLInputElement>) => void
+  file: Blob | null
 }
 
 interface CheckboxFieldProps {
@@ -158,13 +160,21 @@ export function SelectCompany({ companies }: { companies: Company[] }) {
   )
 }
 
-export function UploadFile({ id, label, onChange }: UploadFileProps) {
+export function UploadFile({ id, label, onChange, file }: UploadFileProps) {
   return (
     <div className="flex w-full items-center justify-between gap-2">
       <p>{label}</p>
+      {file && (
+        <span className="w-28 border">
+          <p className="truncate text-success">{file?.name}</p>
+        </span>
+      )}
       <label
         htmlFor={id}
-        className="flex  cursor-pointer gap-2 rounded-md bg-gray-200 px-3 py-2 font-medium text-gray-800 hover:bg-gray-300"
+        className={clsx(
+          'flex  cursor-pointer gap-2 rounded-md bg-gray-200 px-2 py-1 font-medium text-gray-800 hover:bg-gray-300',
+          file && 'bg-success text-white'
+        )}
       >
         <GoUpload className="h-6 w-6" />
         <p>Select file</p>
@@ -228,13 +238,17 @@ export function CheckboxFieldWithCount({ option, setOption, className }: Checkbo
   )
 }
 
-export function UploadAvatar({ id, label, onChange }: UploadFileProps) {
+export function UploadAvatar({ id, label, onChange, file }: UploadFileProps) {
   return (
-    <div className="flex  cursor-pointer flex-col items-center gap-4 rounded-lg border-2 border-dashed border-gray-400 p-4">
+    <div className="flex cursor-pointer items-center justify-center gap-4 rounded-lg border-2 border-dashed border-gray-400 p-4">
+      {file && <Avatar src={URL.createObjectURL(file)} />}
       <p className="text-lg font-semibold text-gray-800">{label}</p>
       <label
         htmlFor={id}
-        className="flex items-center gap-2 rounded-md bg-gray-200 px-3 py-2 font-medium text-gray-800 transition duration-300 hover:bg-gray-300"
+        className={clsx(
+          'flex items-center gap-2 rounded-md bg-gray-200 px-3 py-2 font-medium text-gray-800 transition duration-300 hover:bg-gray-300',
+          file && 'bg-success text-white'
+        )}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
