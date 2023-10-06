@@ -165,7 +165,7 @@ export function UploadFile({ id, label, onChange, file }: UploadFileProps) {
     <div className="flex w-full items-center justify-between gap-2">
       <p>{label}</p>
       {file && (
-        <span className="w-28 border">
+        <span className="w-28">
           <p className="truncate text-success">{file?.name}</p>
         </span>
       )}
@@ -240,13 +240,13 @@ export function CheckboxFieldWithCount({ option, setOption, className }: Checkbo
 
 export function UploadAvatar({ id, label, onChange, file }: UploadFileProps) {
   return (
-    <div className="flex cursor-pointer items-center justify-center gap-4 rounded-lg border-2 border-dashed border-gray-400 p-4">
+    <div className="flex  items-center justify-center gap-4 rounded-lg border-2 border-dashed border-gray-400 p-4">
       {file && <Avatar src={URL.createObjectURL(file)} />}
       <p className="text-lg font-semibold text-gray-800">{label}</p>
       <label
         htmlFor={id}
         className={clsx(
-          'flex items-center gap-2 rounded-md bg-gray-200 px-3 py-2 font-medium text-gray-800 transition duration-300 hover:bg-gray-300',
+          'flex cursor-pointer items-center  gap-2 rounded-md bg-gray-200 px-3 py-2 font-medium text-gray-800 transition duration-300 hover:bg-gray-300',
           file && 'bg-success text-white'
         )}
       >
