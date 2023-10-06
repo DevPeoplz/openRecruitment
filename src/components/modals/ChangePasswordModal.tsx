@@ -1,7 +1,7 @@
 import React from 'react'
 import ModalContainer from './modal-container'
-import { TextField } from '../UI/fields'
-import { Button } from '../UI/Button'
+import { TextField } from '@/components/ui/fields'
+import { Button } from '@/components/ui/Button'
 
 type props = {
   isOpen: boolean

@@ -1,6 +1,6 @@
 import SideMenu from '@/components/layout/side-menu'
 import React, { ReactNode } from 'react'
-import NoSSR from '@/components/UI/nossr'
+import NoSSR from '@/components/ui/nossr'
 
 export const LayoutSideMenu: React.FC<{
   children: ReactNode

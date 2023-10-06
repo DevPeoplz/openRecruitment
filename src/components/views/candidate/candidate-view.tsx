@@ -1,11 +1,11 @@
 import React, { FC, useState } from 'react'
-import Avatar from '@/components/UI/Avatar'
+import Avatar from '@/components/ui/Avatar'
 import { CandidateType, LogType } from '../../modals/view-candidate-modal'
 import OverviewTab from './overview-tab'
 import EvaluationCandidate from './evaluation'
 import EvaluationTab from './evaluation-tab'
 import EmailTab from './email-tab'
-import Loader from '@/components/UI/loader'
+import Loader from '@/components/ui/loader'
 
 type Props = {
   candidate: CandidateType | null

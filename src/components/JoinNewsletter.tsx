@@ -1,6 +1,6 @@
 import React from 'react'
-import { Button } from './UI/Button'
-import { TextField } from './UI/fields'
+import { Button } from '@/components/ui/Button'
+import { TextField } from '@/components/ui/fields'
 
 const JoinNewsletter = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {

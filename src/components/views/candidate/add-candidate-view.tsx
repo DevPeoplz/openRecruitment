@@ -1,25 +1,18 @@
-import { PhoneField, TextField, UploadAvatar, UploadFile } from '@/components/UI/fields'
+import { PhoneField, TextField, UploadAvatar, UploadFile } from '@/components/ui/fields'
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { PlusIcon } from '@heroicons/react/20/solid'
-import { Button } from '@/components/UI/Button'
+import { Button } from '@/components/ui/Button'
 import { useApolloClient, useMutation } from '@apollo/client'
 import { ADD_CANDIDATE_MUTATION } from '@/components/graphql/mutations'
 import Alert from '@/components/alert'
 import { omit } from 'lodash'
-import Loader from '@/components/UI/loader'
+import Loader from '@/components/ui/loader'
 import { ModalControlContext } from '@/hooks/contexts'
-import ComboboxWithTags, { ComboboxWithTagsProps } from '@/components/UI/combobox-with-tags'
+import ComboboxWithTags, { ComboboxWithTagsProps } from '@/components/ui/combobox-with-tags'
 import clsx from 'clsx'
+import BtnPlusCombobox from '@/components/ui/btn-plus-combobox'
 
 const AddCandidateView = () => {
-  const tagBtnRef = useRef<HTMLButtonElement>(null)
-  const sourceBtnRef = useRef<HTMLButtonElement>(null)
-  const jobBtnRef = useRef<HTMLButtonElement>(null)
-  const [btnVisibility, setBtnVisibility] = useState({
-    jobBtn: true,
-    tagBtn: true,
-    sourceBtn: true,
-  })
   const [_, setIsOpen] = useContext(ModalControlContext)
   const client = useApolloClient()
 
@@ -120,57 +113,17 @@ const AddCandidateView = () => {
     }
   }
 
-  const handleBtnClick = (key: string) => {
-    return () => {
-      setBtnVisibility({ ...btnVisibility, [key]: false })
-    }
+  const useHandleKeyOptionsChange = (key: string) => {
+    return useCallback(
+      (selectedOptions: ComboboxWithTagsProps['options']) => {
+        setFormData((prev) => ({
+          ...prev,
+          [key]: selectedOptions.map((option) => option.value.toString()),
+        }))
+      },
+      [key]
+    )
   }
-
-  const handleOptionsChange = useCallback(
-    (key: string, selectedOptions: ComboboxWithTagsProps['options']) => {
-      setFormData((prev) => ({
-        ...prev,
-        [key]: selectedOptions.map((option) => option.value.toString()),
-      }))
-    },
-    [setFormData]
-  )
-
-  const handleTagOptionsChange = useCallback(
-    (selectedOptions: ComboboxWithTagsProps['options']) =>
-      handleOptionsChange('tags', selectedOptions),
-    [handleOptionsChange]
-  )
-
-  const handleSourceOptionsChange = useCallback(
-    (selectedOptions: ComboboxWithTagsProps['options']) =>
-      handleOptionsChange('sources', selectedOptions),
-    [handleOptionsChange]
-  )
-
-  const handleJobOptionsChange = useCallback(
-    (selectedOptions: ComboboxWithTagsProps['options']) =>
-      handleOptionsChange('jobs', selectedOptions),
-    [handleOptionsChange]
-  )
-
-  useEffect(() => {
-    if (!btnVisibility.tagBtn) {
-      tagBtnRef.current?.click()
-    }
-  }, [btnVisibility.tagBtn])
-
-  useEffect(() => {
-    if (!btnVisibility.sourceBtn) {
-      sourceBtnRef.current?.click()
-    }
-  }, [btnVisibility.sourceBtn])
-
-  useEffect(() => {
-    if (!btnVisibility.jobBtn) {
-      jobBtnRef.current?.click()
-    }
-  }, [btnVisibility.jobBtn])
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-2 p-2">
@@ -199,62 +152,29 @@ const AddCandidateView = () => {
         onChange={(e: React.FormEvent) => setFormData({ ...formData, phone: e.toString() })}
       />
       <p className="pl-2 font-bold">Jobs or Talent Pool:</p>
-      <button
-        type="button"
-        className={clsx('ml-2 mt-1', !btnVisibility.jobBtn && 'hidden')}
-        onClick={handleBtnClick('jobBtn')}
-      >
-        <span className="flex w-24 items-center gap-2 rounded border border-gray-400 p-1">
-          <PlusIcon className="h-4 w-4" />
-          <p>Assign</p>
-        </span>
-      </button>
-      {!btnVisibility.jobBtn && (
-        <ComboboxWithTags
-          options={[]}
-          comboBtnRef={jobBtnRef}
-          onSelectedOptionsChange={handleJobOptionsChange}
-          placeholder={'Select a Job or Talent Pool...'}
-        />
-      )}
+      <BtnPlusCombobox
+        options={[]}
+        btnText="Assign"
+        placeholderText="Select a Job or Talent Pool..."
+        btnClassName="ml-2 mt-1"
+        plusClassName="h-4 w-4"
+        onSelectedOptionsChange={useHandleKeyOptionsChange('jobs')}
+      />
       <div className="m-2 flex items-center gap-2">
         <p className={'w-16'}>Tags:</p>
-        <button
-          type="button"
-          className={clsx('rounded border border-gray-400 p-1', !btnVisibility.tagBtn && 'hidden')}
-          onClick={handleBtnClick('tagBtn')}
-        >
-          <PlusIcon className="h-3 w-3" />
-        </button>
-        {!btnVisibility.tagBtn && (
-          <ComboboxWithTags
-            options={[]}
-            comboBtnRef={tagBtnRef}
-            onSelectedOptionsChange={handleTagOptionsChange}
-            placeholder={'Select a Tag...'}
-          />
-        )}
+        <BtnPlusCombobox
+          options={[]}
+          placeholderText="Select a Tag..."
+          onSelectedOptionsChange={useHandleKeyOptionsChange('tags')}
+        />
       </div>
       <div className="m-2 flex items-center gap-2">
         <p className={'w-16'}>Source:</p>
-        <button
-          type="button"
-          className={clsx(
-            'rounded border border-gray-400 p-1',
-            !btnVisibility.sourceBtn && 'hidden'
-          )}
-          onClick={handleBtnClick('sourceBtn')}
-        >
-          <PlusIcon className="h-3 w-3" />
-        </button>
-        {!btnVisibility.sourceBtn && (
-          <ComboboxWithTags
-            options={[]}
-            comboBtnRef={sourceBtnRef}
-            onSelectedOptionsChange={handleSourceOptionsChange}
-            placeholder={'Select a Source...'}
-          />
-        )}
+        <BtnPlusCombobox
+          options={[]}
+          placeholderText="Select a Source..."
+          onSelectedOptionsChange={useHandleKeyOptionsChange('sources')}
+        />
       </div>
       <UploadFile label="CV or Resume:" id="cv" onChange={handleFileInput} />
       <UploadFile label="Cover Letter:" id="coverLetter" onChange={handleFileInput} />

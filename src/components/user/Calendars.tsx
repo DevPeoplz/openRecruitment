@@ -1,8 +1,8 @@
 import React from 'react'
 import { user } from '@/utils/mockdata'
-import { Button } from '../UI/Button'
+import { Button } from '@/components/ui/Button'
 import { GoCalendar, GoPlus } from 'react-icons/go'
-import CalendarConnectedCard from '../UI/cards/CalendarConnectedCard'
+import CalendarConnectedCard from '@/components/ui/cards/CalendarConnectedCard'
 
 const EmptyState = () => {
   return (

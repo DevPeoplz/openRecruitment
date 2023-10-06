@@ -42,14 +42,14 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from '@heroicons/react/20/solid'
-import { Select } from '@/components/UI/select'
+import { Select } from '@/components/ui/select'
 import { useSession } from 'next-auth/react'
 import { getChildrenOnDisplayName, getLocalStorageKey } from '@/components/utils'
-import DropdownWithChecks from '@/components/UI/dropdown-with-checks'
+import DropdownWithChecks from '@/components/ui/dropdown-with-checks'
 import { ArrowPathIcon, ViewColumnsIcon } from '@heroicons/react/24/outline'
 import { DebouncedInput } from '@/components/table/debounced-input'
 import { HubTableFilters } from '@/components/table/filters'
-import { BurgerMenu } from '@/components/UI/menu/burger-menu'
+import { BurgerMenu } from '@/components/ui/menu/burger-menu'
 
 declare module '@tanstack/table-core' {
   interface FilterMeta {

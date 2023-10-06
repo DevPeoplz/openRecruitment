@@ -21,7 +21,7 @@ export type ComboboxWithTagsProps = {
 
 const ComboboxWithTags: React.FC<ComboboxWithTagsProps> = ({
   comboBtnRef,
-  options,
+  options = optionsDefault,
   placeholder = 'Select an option...',
   width = 'w-[250px]',
   onSelectedOptionsChange,

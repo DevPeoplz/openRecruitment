@@ -1,7 +1,7 @@
 import React from 'react'
-import { Button } from '../../UI/Button'
-import { BurgerMenu } from '@/components/UI/menu/burger-menu'
-import { NavLinks } from '@/components/UI/menu/mobile-nav-links'
+import { Button } from '@/components/ui/Button'
+import { BurgerMenu } from '@/components/ui/menu/burger-menu'
+import { NavLinks } from '@/components/ui/menu/mobile-nav-links'
 import { HiChevronUp, HiMenu } from 'react-icons/hi'
 
 export function MenuLanding({

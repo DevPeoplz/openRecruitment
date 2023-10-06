@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useReducer, useState } from 'react'
-import { Select } from '../UI/select'
+import { Select } from '@/components/ui/select'
 import { Chart, GoogleChartOptions } from 'react-google-charts'
 import { endOfMonth, endOfWeek, startOfMonth, startOfWeek, subDays } from 'date-fns'
 import { useQuery } from '@apollo/client'
@@ -9,7 +9,7 @@ import {
 } from '../graphql/queries'
 import { countRecordsByDay } from '../utils/data-parsing'
 import Link from 'next/link'
-import Loader from '@/components/UI/loader'
+import Loader from '@/components/ui/loader'
 
 export const filterGraphOptions = [
   { label: 'Last 7 days', value: 'last7days' },

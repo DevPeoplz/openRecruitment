@@ -1,8 +1,8 @@
 import React from 'react'
-import { Button } from '../UI/Button'
+import { Button } from '@/components/ui/Button'
 import { GoPlus } from 'react-icons/go'
 import { user } from '@/utils/mockdata'
-import CompanyCard from '../UI/cards/CompanyCard'
+import CompanyCard from '@/components/ui/cards/CompanyCard'
 
 const Companies = () => {
   return (

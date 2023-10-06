@@ -1,8 +1,8 @@
 import React from 'react'
 import ModalContainer from './modal-container'
-import UserCard from '../UI/cards/UserCard'
-import { TextField } from '../UI/fields'
-import { Button } from '../UI/Button'
+import UserCard from '@/components/ui/cards/UserCard'
+import { TextField } from '@/components/ui/fields'
+import { Button } from '@/components/ui/Button'
 import Alert from '@/components/alert'
 
 type props = {

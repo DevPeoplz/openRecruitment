@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button } from '../UI/Button'
+import { Button } from '@/components/ui/Button'
 import { GoTrash, GoPencil } from 'react-icons/go'
 import UpdatePasswordModal from '../modals/UpdatePasswordModal'
 

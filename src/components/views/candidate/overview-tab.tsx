@@ -3,7 +3,7 @@ import { CandidateType, LogType } from '../../modals/view-candidate-modal'
 import { PhoneIcon, XMarkIcon, EnvelopeIcon } from '@heroicons/react/24/outline'
 import { PlusIcon } from '@heroicons/react/20/solid'
 import { log } from 'console'
-import Avatar from '@/components/UI/Avatar'
+import Avatar from '@/components/ui/Avatar'
 import { subDays } from 'date-fns'
 
 type Props = {

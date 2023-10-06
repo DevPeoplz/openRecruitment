@@ -1,7 +1,7 @@
 import React from 'react'
-import EmailSettingsCard from '../UI/cards/EmailSettingsCard'
+import EmailSettingsCard from '@/components/ui/cards/EmailSettingsCard'
 import { user } from '../../utils/mockdata'
-import { Button } from '../UI/Button'
+import { Button } from '@/components/ui/Button'
 import { GoPencil } from 'react-icons/go'
 
 const emailProviders = [

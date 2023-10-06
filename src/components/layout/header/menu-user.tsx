@@ -1,9 +1,9 @@
 import React from 'react'
-import Avatar from '../../UI/Avatar'
-import { Button } from '../../UI/Button'
+import Avatar from '@/components/ui/Avatar'
+import { Button } from '@/components/ui/Button'
 import { signOut, useSession } from 'next-auth/react'
-import { BurgerMenu } from '@/components/UI/menu/burger-menu'
-import { NavLinks } from '@/components/UI/menu/mobile-nav-links'
+import { BurgerMenu } from '@/components/ui/menu/burger-menu'
+import { NavLinks } from '@/components/ui/menu/mobile-nav-links'
 import { HiChevronUp } from 'react-icons/hi'
 
 export function MenuUser({ links }: NavLinks) {

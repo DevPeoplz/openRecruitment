@@ -1,7 +1,7 @@
 import React from 'react'
-import { Container } from '../UI/Container'
-import { NavLinks } from '../UI/NavLinks'
-import { Logo } from '../UI/Logo'
+import { Container } from '@/components/ui/Container'
+import { NavLinks } from '@/components/ui/NavLinks'
+import { Logo } from '@/components/ui/Logo'
 import JoinNewsletter from '../JoinNewsletter'
 import { useSession } from 'next-auth/react'
 

@@ -1,6 +1,6 @@
 import React, { Fragment, useMemo, useState } from 'react'
 import { CheckIcon, ChevronUpDownIcon, XMarkIcon } from '@heroicons/react/20/solid'
-import { SelectField } from '@/components/UI/fields'
+import { SelectField } from '@/components/ui/fields'
 import { useRouter } from 'next/router'
 import { FilterProps } from '@/components/filters/filters'
 import clsx from 'clsx'

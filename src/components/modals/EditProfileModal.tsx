@@ -1,8 +1,14 @@
 import React from 'react'
 import ModalContainer from './modal-container'
-import { PhoneField, SelectField, TextField, TimezoneSelect, UploadFile } from '../UI/fields'
+import {
+  PhoneField,
+  SelectField,
+  TextField,
+  TimezoneSelect,
+  UploadFile,
+} from '@/components/ui/fields'
 import { languages, days } from '@/utils/mockdata'
-import { Button } from '../UI/Button'
+import { Button } from '@/components/ui/Button'
 import { GoTrash } from 'react-icons/go'
 import { Tooltip } from 'react-tooltip'
 

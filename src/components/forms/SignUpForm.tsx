@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { Button } from '../UI/Button'
-import { PhoneField, SelectField, TextField } from '../UI/fields'
+import { Button } from '@/components/ui/Button'
+import { PhoneField, SelectField, TextField } from '@/components/ui/fields'
 import Link from 'next/link'
 import BackgroundIllustration from '../layout/BackgroundIlustration'
 import { useMutation } from '@apollo/client'

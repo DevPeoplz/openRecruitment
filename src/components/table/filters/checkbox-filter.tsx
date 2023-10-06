@@ -1,4 +1,4 @@
-import { CheckboxFieldWithCount } from '@/components/UI/fields'
+import { CheckboxFieldWithCount } from '@/components/ui/fields'
 import React, { useEffect, useMemo, useReducer } from 'react'
 import { XMarkIcon } from '@heroicons/react/20/solid'
 import clsx from 'clsx'
