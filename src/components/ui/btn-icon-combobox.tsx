@@ -3,7 +3,7 @@ import clsx from 'clsx'
 import { PlusIcon } from '@heroicons/react/20/solid'
 import ComboboxWithTags, { ComboboxWithTagsProps } from '@/components/ui/combobox-with-tags'
 
-type BtnPlusComboboxProps = {
+type BtnIconComboboxProps = {
   options: ComboboxWithTagsProps['options']
   onSelectedOptionsChange?: ComboboxWithTagsProps['onSelectedOptionsChange']
   hideBtnAfterClick?: boolean
@@ -12,9 +12,10 @@ type BtnPlusComboboxProps = {
   btnClassName?: string
   spanClassName?: string
   plusClassName?: string
+  icon?: React.ElementType
 }
 
-const BtnPlusCombobox: React.FC<BtnPlusComboboxProps> = ({
+const BtnIconCombobox: React.FC<BtnIconComboboxProps> = ({
   options,
   hideBtnAfterClick = true,
   onSelectedOptionsChange,
@@ -23,6 +24,7 @@ const BtnPlusCombobox: React.FC<BtnPlusComboboxProps> = ({
   btnClassName = 'rounded border border-gray-400 p-1',
   spanClassName = 'flex w-24 items-center gap-2 rounded border border-gray-400 p-1',
   plusClassName = 'h-3 w-3',
+  icon: Icon = PlusIcon,
 }) => {
   const [btnClicked, setBtnClicked] = useState(false)
   const comboBtnRef = useRef<HTMLButtonElement>(null)
@@ -37,7 +39,7 @@ const BtnPlusCombobox: React.FC<BtnPlusComboboxProps> = ({
     }
   }, [btnClicked])
 
-  let btnIconComponent = <PlusIcon className={plusClassName} />
+  let btnIconComponent = <Icon className={plusClassName} />
 
   if (btnText) {
     btnIconComponent = (
@@ -69,4 +71,4 @@ const BtnPlusCombobox: React.FC<BtnPlusComboboxProps> = ({
   )
 }
 
-export default BtnPlusCombobox
+export default BtnIconCombobox

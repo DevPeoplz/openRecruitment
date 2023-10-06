@@ -10,7 +10,7 @@ import Loader from '@/components/ui/loader'
 import { ModalControlContext } from '@/hooks/contexts'
 import ComboboxWithTags, { ComboboxWithTagsProps } from '@/components/ui/combobox-with-tags'
 import clsx from 'clsx'
-import BtnPlusCombobox from '@/components/ui/btn-plus-combobox'
+import BtnIconCombobox from '@/components/ui/btn-icon-combobox'
 
 const AddCandidateView = () => {
   const [_, setIsOpen] = useContext(ModalControlContext)
@@ -152,7 +152,7 @@ const AddCandidateView = () => {
         onChange={(e: React.FormEvent) => setFormData({ ...formData, phone: e.toString() })}
       />
       <p className="pl-2 font-bold">Jobs or Talent Pool:</p>
-      <BtnPlusCombobox
+      <BtnIconCombobox
         options={[]}
         btnText="Assign"
         placeholderText="Select a Job or Talent Pool..."
@@ -162,7 +162,7 @@ const AddCandidateView = () => {
       />
       <div className="m-2 flex items-center gap-2">
         <p className={'w-16'}>Tags:</p>
-        <BtnPlusCombobox
+        <BtnIconCombobox
           options={[]}
           placeholderText="Select a Tag..."
           onSelectedOptionsChange={useHandleKeyOptionsChange('tags')}
@@ -170,7 +170,7 @@ const AddCandidateView = () => {
       </div>
       <div className="m-2 flex items-center gap-2">
         <p className={'w-16'}>Source:</p>
-        <BtnPlusCombobox
+        <BtnIconCombobox
           options={[]}
           placeholderText="Select a Source..."
           onSelectedOptionsChange={useHandleKeyOptionsChange('sources')}
