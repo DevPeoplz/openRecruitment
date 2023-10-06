@@ -3,17 +3,9 @@ import { Combobox, Transition } from '@headlessui/react'
 import { ChevronUpDownIcon, XMarkIcon } from '@heroicons/react/20/solid'
 import clsx from 'clsx'
 
-const optionsDefault = [
-  { value: 1, label: 'Durward Reynolds' },
-  { value: 2, label: 'Kenton Towne' },
-  { value: 3, label: 'Therese Wunsch' },
-  { value: 4, label: 'Benedict Kessler' },
-  { value: 5, label: 'Katelyn Rohan' },
-]
-
 export type ComboboxWithTagsProps = {
   comboBtnRef?: React.RefObject<HTMLButtonElement>
-  options: ({ label: string; value: string | number } & Record<string, string | number>)[]
+  options: ({ label: string; value: string | number } & Record<string, any>)[]
   placeholder?: string
   width?: string
   onSelectedOptionsChange?: (options: ComboboxWithTagsProps['options']) => void
@@ -21,12 +13,11 @@ export type ComboboxWithTagsProps = {
 
 const ComboboxWithTags: React.FC<ComboboxWithTagsProps> = ({
   comboBtnRef,
-  options = optionsDefault,
+  options = [],
   placeholder = 'Select an option...',
   width = 'w-[250px]',
   onSelectedOptionsChange,
 }) => {
-  options = options.length > 0 ? options : optionsDefault
   const [selectedOptions, setSelectedOptions] = useState<ComboboxWithTagsProps['options']>([])
   const [query, setQuery] = useState('')
 
@@ -108,7 +99,9 @@ const ComboboxWithTags: React.FC<ComboboxWithTagsProps> = ({
               ) : (
                 <>
                   {filteredOptions
-                    .filter((option) => !selectedOptions.includes(option))
+                    .filter(
+                      (option) => !selectedOptions.map((op) => op.value).includes(option.value)
+                    )
                     .map((option) => (
                       <Combobox.Option
                         key={option.value}

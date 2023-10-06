@@ -54,7 +54,10 @@ const BtnIconCombobox: React.FC<BtnIconComboboxProps> = ({
     <>
       <button
         type="button"
-        className={clsx(btnClassName, btnClicked && hideBtnAfterClick && 'hidden')}
+        className={clsx(
+          btnClassName,
+          btnClicked && hideBtnAfterClick && options.length > 0 && 'hidden'
+        )}
         onClick={handleBtnClick()}
       >
         {btnIconComponent}

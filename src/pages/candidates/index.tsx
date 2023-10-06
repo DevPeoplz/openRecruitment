@@ -1,27 +1,11 @@
-import React, { createContext, ReactNode, useEffect, useMemo, useReducer, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { LayoutSideMenu } from '@/components/layout/main/layout-side-menu'
-import { ColumnDef, Row } from '@tanstack/react-table'
-
-import HubTable, {
-  createHubTable,
-  DefaultColumnsExtendedProps,
-  useHubTable,
-} from '@/components/table/hub-table'
-import { ApolloQueryResult, OperationVariables, useLazyQuery, useQuery } from '@apollo/client'
-import {
-  GET_CANDIDATE_BY_ID,
-  get_candidate_by_id_variables,
-  GET_HUB_CANDIDATES,
-  get_hub_candidates_variables,
-} from '@/components/graphql/queries'
-import { useRouter } from 'next/router'
-import { useFilterQueryParams } from '@/hooks/queryparams'
-import CheckboxFilter from '@/components/table/filters/checkbox-filter'
-import SelectFilter from '@/components/table/filters/select-filter'
-import { ComponentDefType, Filters } from '@/components/filters/filters'
-import { HubTableFilters } from '@/components/table/filters'
+import { createHubTable, DefaultColumnsExtendedProps } from '@/components/table/hub-table'
+import { useLazyQuery, useQuery } from '@apollo/client'
+import { GET_CANDIDATE_BY_ID, GET_HUB_CANDIDATES } from '@/components/graphql/queries'
+import { Filters } from '@/components/filters/filters'
 import ViewCandidateModal, { CandidateType } from '@/components/modals/view-candidate-modal'
-import { CANDIDATE, AUDIT_LOGS } from '@/utils/mockdata'
+import { AUDIT_LOGS } from '@/utils/mockdata'
 import AddCandidate from '@/components/table/actions/add-candidate'
 
 export type Person = {
@@ -34,6 +18,9 @@ export type Person = {
   progress: number
   status: 'relationship' | 'complicated' | 'single'
   subRows?: Person[]
+  job: { offer: { name: string }; stage: { category: string } }[]
+  talentPool: { talentPool: { name: string } }[]
+  jobFitScore: number
 }
 
 const defaultColumns: DefaultColumnsExtendedProps<Person> = [
@@ -56,15 +43,23 @@ const defaultColumns: DefaultColumnsExtendedProps<Person> = [
     show: true,
   },
   {
-    accessorKey: 'job',
+    accessorFn: (originalRow) => {
+      return originalRow.job
+        .map((job) => {
+          return job.offer.name
+        })
+        .filter((e) => e)
+    },
     id: 'job',
     header: 'Job',
     cell: (info) => {
+      const job = info.getValue() as string[]
+      const row = info.row.id
       return (
         <ul className="list-disc">
-          {info.getValue()?.map((job) => {
-            return <li key={job?.id + job?.offer?.name}>{job?.offer?.name}</li>
-          })}
+          {job?.map((job) => (
+            <li key={btoa(`${row}${job}`)}>{job}</li>
+          ))}
         </ul>
       )
     },
@@ -73,15 +68,23 @@ const defaultColumns: DefaultColumnsExtendedProps<Person> = [
     filterComponent: 'select',
   },
   {
-    accessorKey: 'job',
+    accessorFn: (originalRow) => {
+      return originalRow.job
+        .map((job) => {
+          return job.stage.category
+        })
+        .filter((e) => e)
+    },
     id: 'stage',
     header: 'Stage',
     cell: (info) => {
+      const stage = info.getValue() as string[]
+      const row = info.row.id
       return (
         <ul className="list-disc">
-          {info.getValue()?.map((job) => {
-            return <li key={job?.id + job?.stage?.category}>{job?.stage?.category}</li>
-          })}
+          {stage?.map((stage, index) => (
+            <li key={btoa(`${row}${stage}${index}`)}>{stage}</li>
+          ))}
         </ul>
       )
     },
@@ -89,6 +92,9 @@ const defaultColumns: DefaultColumnsExtendedProps<Person> = [
   },
   {
     accessorKey: 'jobFitScore',
+    accessorFn: (originalRow) => {
+      return originalRow.jobFitScore.toString()
+    },
     id: 'jobFitScore',
     header: 'Job Fit Score',
     cell: (info) => {
@@ -122,20 +128,29 @@ const defaultColumns: DefaultColumnsExtendedProps<Person> = [
     cell: (info) => info.getValue(),
   },
   {
-    accessorKey: 'talentPool',
+    accessorFn: (originalRow) => {
+      return originalRow.talentPool
+        .map((talentPool) => {
+          return talentPool.talentPool.name
+        })
+        .filter((e) => e)
+    },
     id: 'talentPool',
     header: 'Talent Pool',
     cell: (info) => {
+      const talentPool = info.getValue() as string[]
+      const row = info.row.id
       return (
         <ul className="list-[square]">
-          {info.getValue()?.map((job) => {
-            return <li key={job?.id + job?.talentPool?.name}>{job?.talentPool?.name}</li>
-          })}
+          {talentPool?.map((talentPool) => (
+            <li key={btoa(`${row}${talentPool}`)}>{talentPool}</li>
+          ))}
         </ul>
       )
     },
     show: true,
     filterFn: 'arrIncludesSome',
+    filterComponent: 'select',
   },
   {
     accessorKey: 'disqualifiedBy',
@@ -197,11 +212,7 @@ const defaultColumns: DefaultColumnsExtendedProps<Person> = [
 
 const Page = () => {
   const { useHubTable, HubTable } = createHubTable<Person>()
-  const {
-    data: dataHubCandidates,
-    loading: loadingHubCandidates,
-    refetch: refetchCandidates,
-  } = useQuery(GET_HUB_CANDIDATES)
+  const { data: dataHubCandidates, loading: loadingHubCandidates } = useQuery(GET_HUB_CANDIDATES)
   const [seeCandidate, setSeeCandidate] = useState(false)
 
   const { table, tableStates } = useHubTable(

@@ -9,7 +9,7 @@ const AddCandidate = () => {
   return (
     <div data-tooltip-id="button-tooltip" data-tooltip-content="add candidates">
       <button
-        className="relative cursor-pointer rounded-md bg-secondary-400 p-2 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-secondary-200"
+        className="relative cursor-pointer rounded-md bg-secondary-400 p-2 text-sm font-semibold text-white shadow-sm hover:bg-secondary-200"
         data-tooltip-content="Add candidates"
         id="button-tooltip"
         onClick={() => setOpenModal(true)}

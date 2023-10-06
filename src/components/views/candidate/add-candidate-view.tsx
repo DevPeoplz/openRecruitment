@@ -12,6 +12,14 @@ import ComboboxWithTags, { ComboboxWithTagsProps } from '@/components/ui/combobo
 import clsx from 'clsx'
 import BtnIconCombobox from '@/components/ui/btn-icon-combobox'
 
+const optionsDefault = [
+  { value: 1, label: 'Durward Reynolds' },
+  { value: 2, label: 'Kenton Towne' },
+  { value: 3, label: 'Therese Wunsch' },
+  { value: 4, label: 'Benedict Kessler' },
+  { value: 5, label: 'Katelyn Rohan' },
+]
+
 const AddCandidateView = () => {
   const [_, setIsOpen] = useContext(ModalControlContext)
   const client = useApolloClient()
@@ -153,7 +161,7 @@ const AddCandidateView = () => {
       />
       <p className="pl-2 font-bold">Jobs or Talent Pool:</p>
       <BtnIconCombobox
-        options={[]}
+        options={optionsDefault}
         btnText="Assign"
         placeholderText="Select a Job or Talent Pool..."
         btnClassName="ml-2 mt-1"
@@ -163,7 +171,7 @@ const AddCandidateView = () => {
       <div className="m-2 flex items-center gap-2">
         <p className={'w-16'}>Tags:</p>
         <BtnIconCombobox
-          options={[]}
+          options={optionsDefault}
           placeholderText="Select a Tag..."
           onSelectedOptionsChange={useHandleKeyOptionsChange('tags')}
         />
@@ -171,7 +179,7 @@ const AddCandidateView = () => {
       <div className="m-2 flex items-center gap-2">
         <p className={'w-16'}>Source:</p>
         <BtnIconCombobox
-          options={[]}
+          options={optionsDefault}
           placeholderText="Select a Source..."
           onSelectedOptionsChange={useHandleKeyOptionsChange('sources')}
         />

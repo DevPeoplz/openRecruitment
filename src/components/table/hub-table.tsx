@@ -537,6 +537,7 @@ const createHubTableComponent = <T,>() => {
             <span className="flex items-center gap-1">
               Go to page:
               <input
+                name={`paginator-goto`}
                 type="number"
                 defaultValue={table.getState().pagination.pageIndex + 1}
                 onChange={(e) => {

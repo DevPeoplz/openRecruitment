@@ -9,6 +9,8 @@ import client from '@/lib/apollo-client'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import Alert from '@/components/alert'
+import { QueryParamProvider } from 'use-query-params'
+import NextAdapterPages from 'next-query-params'
 
 export type NextPageWithLayout<P = Record<string, never>, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode
@@ -34,11 +36,13 @@ export default function App({
   return (
     <ApolloProvider client={client}>
       <SessionProvider session={session}>
-        {Component.auth ? (
-          <Auth options={Component.auth}>{getLayout(<Component {...pageProps} />)}</Auth>
-        ) : (
-          getLayout(<Component {...pageProps} />)
-        )}
+        <QueryParamProvider adapter={NextAdapterPages}>
+          {Component.auth ? (
+            <Auth options={Component.auth}>{getLayout(<Component {...pageProps} />)}</Auth>
+          ) : (
+            getLayout(<Component {...pageProps} />)
+          )}
+        </QueryParamProvider>
       </SessionProvider>
     </ApolloProvider>
   )
