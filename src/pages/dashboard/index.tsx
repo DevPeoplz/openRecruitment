@@ -101,6 +101,7 @@ const Dashboard: NextPageWithLayout = () => {
   const { data: counts, loading: loadingCounts } = useQuery(GET_DASHBOARD_COUNTS)
   const { data: tagSourceData } = useQuery(GET_TAGSOURCES, {
     variables: get_tagSources_variables(),
+    fetchPolicy: 'cache-and-network',
   })
   const { data: logData } = useQuery(GET_RECENTLY_WORK_ON, {
     variables: get_recently_work_on_variables(session?.user?.email),

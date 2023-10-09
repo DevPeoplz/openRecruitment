@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client'
+import { omit } from 'lodash'
 
 export const SIGNUP_MUTATION = gql`
   mutation SIGNUP_MUTATION($data: UserSignUpInput!) {

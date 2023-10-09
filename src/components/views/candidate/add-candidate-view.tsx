@@ -1,16 +1,19 @@
 import { PhoneField, TextField, UploadAvatar, UploadFile } from '@/components/ui/fields'
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
-import { PlusIcon } from '@heroicons/react/20/solid'
+import React, { useCallback, useContext, useState } from 'react'
 import { Button } from '@/components/ui/Button'
-import { useApolloClient, useMutation } from '@apollo/client'
+import { useApolloClient, useMutation, useQuery } from '@apollo/client'
 import { ADD_CANDIDATE_MUTATION } from '@/components/graphql/mutations'
 import Alert from '@/components/alert'
 import { omit } from 'lodash'
 import Loader from '@/components/ui/loader'
 import { ModalControlContext } from '@/hooks/contexts'
-import ComboboxWithTags, { ComboboxWithTagsProps } from '@/components/ui/combobox-with-tags'
-import clsx from 'clsx'
+import { ComboboxWithTagsProps } from '@/components/ui/combobox-with-tags'
 import BtnIconCombobox from '@/components/ui/btn-icon-combobox'
+import {
+  GET_ADD_CANDIDATE_DROPDOWNS,
+  GET_HUB_CANDIDATES,
+  GET_TAGSOURCES,
+} from '@/components/graphql/queries'
 
 const optionsDefault = [
   { value: 1, label: 'Durward Reynolds' },
@@ -20,8 +23,25 @@ const optionsDefault = [
   { value: 5, label: 'Katelyn Rohan' },
 ]
 
+const parseGQLData = (
+  data: { id: number | string; name: string }[] | undefined,
+  suffix?: string
+) => {
+  if (!Array.isArray(data)) return []
+
+  return data.map((item) => {
+    const extra = suffix ? ` ${suffix}` : ''
+    return {
+      value: `${item.id}${extra}`,
+      label: `${item.name}${extra}`,
+    }
+  })
+}
+
 const AddCandidateView = () => {
   const [_, setIsOpen] = useContext(ModalControlContext)
+  const { data: dataDropdown, loading: loadingDropdown } = useQuery(GET_ADD_CANDIDATE_DROPDOWNS)
+
   const client = useApolloClient()
 
   const [formData, setFormData] = useState<Record<string, string | string[] | null | Blob>>({
@@ -32,9 +52,9 @@ const AddCandidateView = () => {
     avatar: null,
     cv: null,
     coverLetter: null,
-    jobs: [],
-    tags: [],
-    sources: [],
+    jobsInput: [],
+    tagsInput: [],
+    sourcesInput: [],
   })
 
   const [onSubmitLoading, setOnSubmitLoading] = useState(false)
@@ -96,7 +116,7 @@ const AddCandidateView = () => {
       .finally(async () => {
         setOnSubmitLoading(false)
         await client.refetchQueries({
-          include: ['GET_HUB_CANDIDATES'],
+          include: ['GET_HUB_CANDIDATES', 'GET_TAGSOURCES'],
         })
         setIsOpen(false)
       })
@@ -113,10 +133,11 @@ const AddCandidateView = () => {
     const { id } = e.target
     const file = e.target.files?.[0]
 
-    if (!file) Alert({ type: 'error', message: 'Please select a file' })
-    else if (file.size > 204800)
+    if (!file) {
+      Alert({ type: 'error', message: 'Please select a file' })
+    } else if (file.size > 204800) {
       Alert({ type: 'error', message: 'File size cannot exceed more than 2MB' })
-    else {
+    } else {
       setFormData({ ...formData, [id]: file })
     }
   }
@@ -161,27 +182,30 @@ const AddCandidateView = () => {
       />
       <p className="pl-2 font-bold">Jobs or Talent Pool:</p>
       <BtnIconCombobox
-        options={optionsDefault}
+        options={[
+          ...parseGQLData(dataDropdown?.jobs),
+          ...parseGQLData(dataDropdown?.talentPools, ' (Talent Pool)'),
+        ]}
         btnText="Assign"
         placeholderText="Select a Job or Talent Pool..."
         btnClassName="ml-2 mt-1"
         plusClassName="h-4 w-4"
-        onSelectedOptionsChange={useHandleKeyOptionsChange('jobs')}
+        onSelectedOptionsChange={useHandleKeyOptionsChange('jobsInput')}
       />
       <div className="m-2 flex items-center gap-2">
         <p className={'w-16'}>Tags:</p>
         <BtnIconCombobox
-          options={optionsDefault}
+          options={parseGQLData(dataDropdown?.tags)}
           placeholderText="Select a Tag..."
-          onSelectedOptionsChange={useHandleKeyOptionsChange('tags')}
+          onSelectedOptionsChange={useHandleKeyOptionsChange('tagsInput')}
         />
       </div>
       <div className="m-2 flex items-center gap-2">
         <p className={'w-16'}>Source:</p>
         <BtnIconCombobox
-          options={optionsDefault}
+          options={parseGQLData(dataDropdown?.sources)}
           placeholderText="Select a Source..."
-          onSelectedOptionsChange={useHandleKeyOptionsChange('sources')}
+          onSelectedOptionsChange={useHandleKeyOptionsChange('sourcesInput')}
         />
       </div>
       <UploadFile

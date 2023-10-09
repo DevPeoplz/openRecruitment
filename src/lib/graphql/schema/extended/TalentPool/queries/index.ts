@@ -1,1 +1,1 @@
-export { countTalentPoolQueryObject } from './count.base'
+export { countTalentPoolQueryObject } from './count'

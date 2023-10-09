@@ -45,7 +45,7 @@ const defaultColumns: DefaultColumnsExtendedProps<Person> = [
     accessorFn: (originalRow) => {
       return originalRow.job
         .map((job) => {
-          return job.offer.name
+          return job.offer?.name
         })
         .filter((e) => e)
     },
@@ -70,7 +70,7 @@ const defaultColumns: DefaultColumnsExtendedProps<Person> = [
     accessorFn: (originalRow) => {
       return originalRow.job
         .map((job) => {
-          return job.stage.category
+          return job.stage?.category
         })
         .filter((e) => e)
     },
@@ -130,7 +130,7 @@ const defaultColumns: DefaultColumnsExtendedProps<Person> = [
     accessorFn: (originalRow) => {
       return originalRow.talentPool
         .map((talentPool) => {
-          return talentPool.talentPool.name
+          return talentPool.talentPool?.name
         })
         .filter((e) => e)
     },

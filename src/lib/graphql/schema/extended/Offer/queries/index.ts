@@ -1,1 +1,1 @@
-export { countOfferQueryObject } from './count.base'
+export { countOfferQueryObject } from './count'
