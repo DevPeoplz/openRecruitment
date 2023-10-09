@@ -3,8 +3,8 @@ import clsx from 'clsx'
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 import { PiBuildingsBold } from 'react-icons/pi'
-import { GoUpload } from 'react-icons/go'
 import Avatar from './Avatar'
+import { PencilSquareIcon, ArrowUpTrayIcon } from '@heroicons/react/24/outline'
 
 const formClasses =
   'block w-full rounded-lg border border-gray-200 bg-white py-[calc(theme(spacing.2)-1px)] px-[calc(theme(spacing.3)-1px)] text-gray-900 placeholder:text-gray-400 focus:border-cyan-500 focus:outline-none focus:ring-cyan-500 sm:text-sm'
@@ -176,8 +176,17 @@ export function UploadFile({ id, label, onChange, file }: UploadFileProps) {
           file && 'bg-success text-white'
         )}
       >
-        <GoUpload className="h-6 w-6" />
-        <p>Select file</p>
+        {file ? (
+          <span className="flex gap-1">
+            <PencilSquareIcon className="h-6 w-6" />
+            <p>Edit</p>
+          </span>
+        ) : (
+          <span className="flex gap-1">
+            <ArrowUpTrayIcon className="h-6 w-6" />
+            <p>Select file</p>
+          </span>
+        )}
       </label>
       <input type="file" id={id} className="hidden" onChange={onChange} />
     </div>
@@ -250,21 +259,17 @@ export function UploadAvatar({ id, label, onChange, file }: UploadFileProps) {
           file && 'bg-success text-white'
         )}
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-          />
-        </svg>
-        Upload Photo
+        {file ? (
+          <span className="flex gap-1">
+            <PencilSquareIcon className="h-6 w-6" />
+            <p>Edit</p>
+          </span>
+        ) : (
+          <span className="flex gap-1">
+            <ArrowUpTrayIcon className="h-6 w-6" />
+            <p>Upload photo</p>
+          </span>
+        )}
       </label>
       <input type="file" id={id} className="hidden" accept="image/*" onChange={onChange} />
     </div>
