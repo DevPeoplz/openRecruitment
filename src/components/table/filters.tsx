@@ -1,95 +1,63 @@
-import { Column, Table } from '@tanstack/react-table'
-import React, { PropsWithChildren, useMemo } from 'react'
-import { DebouncedInput } from '@/components/table/debounced-input'
-import { TableStatesType } from '@/components/table/hub-table'
+import React, { PropsWithChildren } from 'react'
+import CheckboxFilter from '@/components/table/filters/checkbox-filter'
+import SelectFilter from '@/components/table/filters/select-filter'
+import { Table } from '@tanstack/react-table'
+import { DefaultColumnsExtendedProps } from '@/components/table/hub-table'
+
+const filtersComponents: Record<string, React.FC<any>> = {
+  checkbox: CheckboxFilter,
+  select: SelectFilter,
+}
+
+export interface FilterProps {
+  key: string
+  columnKey: string
+  table: Table<never>
+}
 
 interface HubTableFiltersProps<T> {
   table: Table<T>
-  tableStates: TableStatesType
+  defaultColumns: DefaultColumnsExtendedProps<T>
 }
 
 export const HubTableFilters: <T>(
   props: PropsWithChildren<HubTableFiltersProps<T>>
-) => React.ReactElement<PropsWithChildren<HubTableFiltersProps<T>>> = ({ table, tableStates }) => {
-  const column = table.getColumn('name')
-  const columnFilterValue = column?.getFilterValue() ?? ''
-
+) => React.ReactElement<PropsWithChildren<HubTableFiltersProps<T>>> = ({
+  table,
+  defaultColumns,
+}) => {
   return (
     <>
-      <button
-        onClick={(value) => {
-          console.log('click')
-          if (column) {
-            column.setFilterValue(() => ['number 1', 'number 2'])
-            column?.getFilterValue()
-          }
-        }}
-        className="w-36 rounded border shadow"
-      >
-        {`Search... (${column?.getFacetedUniqueValues().size})`}
-        {JSON.stringify(columnFilterValue) ?? ''}
-      </button>
-    </>
-  )
-}
+      {defaultColumns.map((column) => {
+        if (!column.filterComponent) return null
 
-function Filter({ column, table }: { column: Column<any, unknown>; table: Table<any> }) {
-  const firstValue = table.getPreFilteredRowModel().flatRows[0]?.getValue(column.id)
+        const filterComponent = column.filterComponent
+        const Component = filtersComponents[filterComponent]
+        const settings: Record<string, unknown> = {}
 
-  const columnFilterValue = column.getFilterValue()
+        switch (filterComponent) {
+          case 'checkbox':
+            settings.label = column.header ?? column.id
+            settings.options = column.defaultCheckboxOptions ?? []
+            break
+          case 'select':
+            settings.label = column.header ?? column.id
+            settings.placeholder = `Select a ${column.header ?? column.id}`
+            break
+        }
 
-  const sortedUniqueValues = useMemo(
-    () =>
-      typeof firstValue === 'number'
-        ? []
-        : Array.from(column.getFacetedUniqueValues().keys()).sort(),
-    [column, firstValue]
-  )
-
-  return typeof firstValue === 'number' ? (
-    <div>
-      <div className="flex space-x-2">
-        <DebouncedInput
-          type="number"
-          min={Number(column.getFacetedMinMaxValues()?.[0] ?? '')}
-          max={Number(column.getFacetedMinMaxValues()?.[1] ?? '')}
-          value={(columnFilterValue as [number, number])?.[0] ?? ''}
-          onChange={(value) => column.setFilterValue((old: [number, number]) => [value, old?.[1]])}
-          placeholder={`Min ${
-            column.getFacetedMinMaxValues()?.[0] ? `(${column.getFacetedMinMaxValues()?.[0]})` : ''
-          }`}
-          className="w-24 rounded border shadow"
-        />
-        <DebouncedInput
-          type="number"
-          min={Number(column.getFacetedMinMaxValues()?.[0] ?? '')}
-          max={Number(column.getFacetedMinMaxValues()?.[1] ?? '')}
-          value={(columnFilterValue as [number, number])?.[1] ?? ''}
-          onChange={(value) => column.setFilterValue((old: [number, number]) => [old?.[0], value])}
-          placeholder={`Max ${
-            column.getFacetedMinMaxValues()?.[1] ? `(${column.getFacetedMinMaxValues()?.[1]})` : ''
-          }`}
-          className="w-24 rounded border shadow"
-        />
-      </div>
-      <div className="h-1" />
-    </div>
-  ) : (
-    <>
-      <datalist id={column.id + 'list'}>
-        {sortedUniqueValues.slice(0, 5000).map((value: any) => (
-          <option value={value} key={value} />
-        ))}
-      </datalist>
-      <DebouncedInput
-        type="text"
-        value={(columnFilterValue ?? '') as string}
-        onChange={(value) => column.setFilterValue(value)}
-        placeholder={`Search... (${column.getFacetedUniqueValues().size})`}
-        className="w-36 rounded border shadow"
-        list={column.id + 'list'}
-      />
-      <div className="h-1" />
+        /*!!tableStates.filtersVisibility[column.id] &&*/
+        return (
+          Component && (
+            <Component
+              key={`filter ${column.id}`}
+              columnKey={column.id}
+              table={table}
+              {...settings}
+            />
+          )
+        )
+      })}
     </>
   )
 }

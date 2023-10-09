@@ -1,10 +1,9 @@
 import { CheckboxFieldWithCount } from '@/components/ui/fields'
-import React, { useEffect, useMemo, useReducer } from 'react'
+import React from 'react'
 import { XMarkIcon } from '@heroicons/react/20/solid'
 import clsx from 'clsx'
-import { Table } from '@tanstack/react-table'
 import { useRouter } from 'next/router'
-import { FilterProps } from '@/components/filters/filters'
+import { FilterProps } from '@/components/table/filters'
 
 export interface CheckboxFilterProps {
   label: string

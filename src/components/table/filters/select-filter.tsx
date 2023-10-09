@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react'
 import { XMarkIcon } from '@heroicons/react/20/solid'
-import { FilterProps } from '@/components/filters/filters'
+import { FilterProps } from '@/components/table/filters'
 import ComboboxWithTags, { ComboboxWithTagsProps } from '@/components/ui/combobox-with-tags'
 import { flattenDeep, intersection } from 'lodash'
 import { ArrayParam, useQueryParam } from 'use-query-params'
@@ -23,7 +23,7 @@ const SelectFilter: React.FC<FilterProps & SelectFilterProps> = ({
   label,
   setShow,
 }) => {
-  const [_, setQueryString] = useQueryParam(columnKey, ArrayParam)
+  const [queryString, setQueryString] = useQueryParam(columnKey, ArrayParam)
   const column = table.getColumn(columnKey)
   const columnFacetedKeys = column ? column.getFacetedUniqueValues().keys() : []
 
@@ -51,6 +51,19 @@ const SelectFilter: React.FC<FilterProps & SelectFilterProps> = ({
     [column, setQueryString]
   )
 
+  const initialSelection = useMemo(() => {
+    return queryString
+      ?.map((option) => {
+        return option
+          ? {
+              label: option,
+              value: option,
+            }
+          : null
+      })
+      .filter((e) => e) as ComboboxWithTagsProps['options']
+  }, [getOptions])
+
   return (
     <div className="flex flex-col p-2">
       <div className="mb-2 flex items-center justify-between">
@@ -65,6 +78,7 @@ const SelectFilter: React.FC<FilterProps & SelectFilterProps> = ({
       </div>
       <ComboboxWithTags
         options={getOptions}
+        initialSelection={initialSelection ?? []}
         width="w-full"
         placeholder={`Select a ${column?.columnDef.header ?? columnKey}`}
         onSelectedOptionsChange={handleSelectUpdate}

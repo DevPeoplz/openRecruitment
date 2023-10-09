@@ -3,7 +3,6 @@ import { LayoutSideMenu } from '@/components/layout/main/layout-side-menu'
 import { createHubTable, DefaultColumnsExtendedProps } from '@/components/table/hub-table'
 import { useLazyQuery, useQuery } from '@apollo/client'
 import { GET_CANDIDATE_BY_ID, GET_HUB_CANDIDATES } from '@/components/graphql/queries'
-import { Filters } from '@/components/filters/filters'
 import ViewCandidateModal, { CandidateType } from '@/components/modals/view-candidate-modal'
 import { AUDIT_LOGS } from '@/utils/mockdata'
 import AddCandidate from '@/components/table/actions/add-candidate'
@@ -211,7 +210,7 @@ const defaultColumns: DefaultColumnsExtendedProps<Person> = [
 ]
 
 const Page = () => {
-  const { useHubTable, HubTable } = createHubTable<Person>()
+  const { useHubTable, HubTable, HubTableFilters } = createHubTable<Person>()
   const { data: dataHubCandidates, loading: loadingHubCandidates } = useQuery(GET_HUB_CANDIDATES)
   const [seeCandidate, setSeeCandidate] = useState(false)
 
@@ -219,13 +218,6 @@ const Page = () => {
     'candidate-hub',
     loadingHubCandidates ? [] : dataHubCandidates?.findManyCandidate ?? [],
     defaultColumns
-  )
-
-  //           <HubTableFilters table={table} tableStates={tableStates} />
-  const sidebar = (
-    <div className="flex grow flex-col gap-y-5 overflow-y-auto  border-gray-200 bg-white pt-3">
-      <Filters defaultColumns={defaultColumns} table={table} tableStates={tableStates} />
-    </div>
   )
 
   const [currentCandidate, setCurrentCandidate] = useState<CandidateType | null>(null)
@@ -253,7 +245,12 @@ const Page = () => {
   }, [calledCandidate, currentRow, currentRow?.id, dataCandidate, loadCandidate, refetchCandidate])
 
   return (
-    <LayoutSideMenu sidebar={sidebar}>
+    <LayoutSideMenu>
+      <LayoutSideMenu.Sidebar>
+        <div className="flex grow flex-col gap-y-5 overflow-y-auto  border-gray-200 bg-white pt-3">
+          <HubTableFilters defaultColumns={defaultColumns} table={table} />
+        </div>
+      </LayoutSideMenu.Sidebar>
       <h1>Candidates</h1>
       <HubTable
         table={table}

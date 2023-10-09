@@ -1,13 +1,12 @@
 import React, {
   PropsWithChildren,
+  ReactNode,
   useCallback,
   useEffect,
   useMemo,
   useState,
-  ReactNode,
 } from 'react'
 import {
-  Column,
   ColumnDef,
   ColumnFiltersState,
   ColumnOrderState,
@@ -49,7 +48,6 @@ import DropdownWithChecks from '@/components/ui/dropdown-with-checks'
 import { ArrowPathIcon, ViewColumnsIcon } from '@heroicons/react/24/outline'
 import { DebouncedInput } from '@/components/table/debounced-input'
 import { HubTableFilters } from '@/components/table/filters'
-import { BurgerMenu } from '@/components/ui/menu/burger-menu'
 
 declare module '@tanstack/table-core' {
   interface FilterMeta {
@@ -218,7 +216,10 @@ export const useHubTable = <T,>(
   localStorageKey: string,
   data: T[],
   defaultColumns: DefaultColumnsExtendedProps<T>
-): { table: Table<T>; tableStates: TableStatesType } => {
+): {
+  table: Table<T>
+  tableStates: TableStatesType
+} => {
   const { data: session } = useSession()
   const [columns] = useState(() => [...defaultColumns])
   const [sorting, setSorting] = useState<SortingState>([])
@@ -348,8 +349,7 @@ export const useHubTable = <T,>(
     ...(!manualPagination ? { getPaginationRowModel: getPaginationRowModel() } : {}),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
-    getFacetedMinMaxValues: getFacetedMinMaxValues(),
-    //debugTable: true,
+    getFacetedMinMaxValues: getFacetedMinMaxValues(), //debugTable: true,
     //debugHeaders: true,
     //debugColumns: true,
   })

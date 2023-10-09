@@ -9,6 +9,7 @@ export type ComboboxWithTagsProps = {
   placeholder?: string
   width?: string
   onSelectedOptionsChange?: (options: ComboboxWithTagsProps['options']) => void
+  initialSelection?: ComboboxWithTagsProps['options']
 }
 
 const ComboboxWithTags: React.FC<ComboboxWithTagsProps> = ({
@@ -17,8 +18,10 @@ const ComboboxWithTags: React.FC<ComboboxWithTagsProps> = ({
   placeholder = 'Select an option...',
   width = 'w-[250px]',
   onSelectedOptionsChange,
+  initialSelection = [],
 }) => {
-  const [selectedOptions, setSelectedOptions] = useState<ComboboxWithTagsProps['options']>([])
+  const [selectedOptions, setSelectedOptions] =
+    useState<ComboboxWithTagsProps['options']>(initialSelection)
   const [query, setQuery] = useState('')
 
   const filteredOptions: typeof options =
