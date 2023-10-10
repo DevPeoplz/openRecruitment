@@ -9,21 +9,13 @@ import {
 
 export const OfferTagObject = definePrismaObject('OfferTag', {
   description: undefined,
-  findUnique: ({ id }) => ({ id }),
+  findUnique: (fields) => ({ offerId_tagId: fields }),
   fields: (t) => ({
-    id: t.field(OfferTagIdFieldObject),
     offer: t.relation('offer', OfferTagOfferFieldObject),
     offerId: t.field(OfferTagOfferIdFieldObject),
     tag: t.relation('tag', OfferTagTagFieldObject),
     tagId: t.field(OfferTagTagIdFieldObject),
   }),
-});
-
-export const OfferTagIdFieldObject = defineFieldObject('OfferTag', {
-  type: "ID",
-  description: undefined,
-  nullable: false,
-  resolve: (parent) => String(parent.id),
 });
 
 export const OfferTagOfferFieldObject = defineRelationObject('OfferTag', 'offer', {

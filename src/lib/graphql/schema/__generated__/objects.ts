@@ -761,8 +761,8 @@ export {
   OfferNameFieldObject,
   OfferCompanyFieldObject,
   OfferCompanyIdFieldObject,
-  OfferDeparmentFieldObject,
-  OfferDeparmentIdFieldObject,
+  OfferDepartmentFieldObject,
+  OfferDepartmentIdFieldObject,
   OfferRecruiterFieldObject,
   OfferRecruiterIdFieldObject,
   OfferHiringManagerFieldObject,
@@ -804,6 +804,8 @@ export {
   OfferHiredFieldObject,
   OfferEvaluationsFieldObject,
   OfferFollowsFieldObject,
+  OfferCreatedAtFieldObject,
+  OfferUpdatedAtFieldObject,
   createManyOfferMutation,
   createOneOfferMutation,
   deleteManyOfferMutation,
@@ -894,7 +896,6 @@ export {
 } from './Match';
 export {
   OfferTagObject,
-  OfferTagIdFieldObject,
   OfferTagOfferFieldObject,
   OfferTagOfferIdFieldObject,
   OfferTagTagFieldObject,

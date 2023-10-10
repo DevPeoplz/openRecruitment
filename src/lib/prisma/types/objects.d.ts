@@ -641,14 +641,14 @@ export default interface PrismaTypes {
         Where: Prisma.OfferWhereInput;
         Create: {};
         Update: {};
-        RelationName: "company" | "deparment" | "recruiter" | "hiringManager" | "screeningQuestionsTemplate" | "pipelineTemplate" | "autoConfirmationEmail" | "auditLogs" | "files" | "offerTags" | "memberships" | "matches" | "hired" | "evaluations" | "follows";
+        RelationName: "company" | "department" | "recruiter" | "hiringManager" | "screeningQuestionsTemplate" | "pipelineTemplate" | "autoConfirmationEmail" | "auditLogs" | "files" | "offerTags" | "memberships" | "matches" | "hired" | "evaluations" | "follows";
         ListRelations: "auditLogs" | "files" | "offerTags" | "memberships" | "matches" | "hired" | "evaluations" | "follows";
         Relations: {
             company: {
                 Shape: Company;
                 Name: "Company";
             };
-            deparment: {
+            department: {
                 Shape: Department | null;
                 Name: "Department";
             };

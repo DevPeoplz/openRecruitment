@@ -109,7 +109,7 @@ const defaultColumns: DefaultColumnsExtendedProps<Person> = [
     header: 'Date Created',
     cell: (info) => {
       // convert iso string to date on local time with date-fns
-      const date = new Date(info.getValue<string>())
+      const date = new Date(info.getValue())
       return date.toLocaleString()
     },
     show: true,

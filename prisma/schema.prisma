@@ -344,8 +344,8 @@ model Offer {
   name                         String
   company                      Company            @relation(fields: [companyId], references: [id])
   companyId                    String
-  deparment                    Department?        @relation(fields: [deparmentId], references: [id])
-  deparmentId                  Int?
+  department                   Department?        @relation(fields: [departmentId], references: [id])
+  departmentId                 Int?
   recruiter                    HiringRole?        @relation("recruiter", fields: [recruiterId], references: [id])
   recruiterId                  Int?               @unique
   hiringManager                HiringRole?        @relation("hiringManager", fields: [hiringManagerId], references: [id])
@@ -387,6 +387,8 @@ model Offer {
   hired                        Candidate[]
   evaluations                  Evaluation[]
   follows                      Follow[]
+  createdAt                    DateTime           @default(now())
+  updatedAt                    DateTime           @updatedAt
 }
 
 enum OfferPersonalItems {
@@ -418,11 +420,12 @@ model Match {
 
 // Implicit
 model OfferTag {
-  id      Int       @id @default(autoincrement())
   offer   Offer     @relation(fields: [offerId], references: [id])
   offerId Int
   tag     TagSource @relation(fields: [tagId], references: [id])
   tagId   Int
+
+  @@id([offerId, tagId])
 }
 
 enum MembershipTypes {

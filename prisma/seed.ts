@@ -422,6 +422,29 @@ async function main() {
     },
   })
 
+  // Set relation offer - tag
+  await prisma.offer.update({
+    where: { id: offer1.id },
+    data: {
+      offerTags: {
+        connectOrCreate: [
+          {
+            create: { tagId: 1002 },
+            where: { offerId_tagId: { tagId: 1002, offerId: offer1.id } },
+          },
+          {
+            create: { tagId: 1003 },
+            where: { offerId_tagId: { tagId: 1003, offerId: offer1.id } },
+          },
+          {
+            create: { tagId: 1004 },
+            where: { offerId_tagId: { tagId: 1004, offerId: offer1.id } },
+          },
+        ],
+      },
+    },
+  })
+
   // Set relation source - candidate/referral
   await prisma.candidate.update({
     where: { id: 1 },

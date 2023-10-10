@@ -1,6 +1,5 @@
 export {
   OfferTagObject,
-  OfferTagIdFieldObject,
   OfferTagOfferFieldObject,
   OfferTagOfferIdFieldObject,
   OfferTagTagFieldObject,

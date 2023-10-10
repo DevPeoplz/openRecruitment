@@ -15,8 +15,8 @@ export const OfferObject = definePrismaObject('Offer', {
     name: t.field(OfferNameFieldObject),
     company: t.relation('company', OfferCompanyFieldObject),
     companyId: t.field(OfferCompanyIdFieldObject),
-    deparment: t.relation('deparment', OfferDeparmentFieldObject),
-    deparmentId: t.field(OfferDeparmentIdFieldObject),
+    department: t.relation('department', OfferDepartmentFieldObject),
+    departmentId: t.field(OfferDepartmentIdFieldObject),
     recruiter: t.relation('recruiter', OfferRecruiterFieldObject),
     recruiterId: t.field(OfferRecruiterIdFieldObject),
     hiringManager: t.relation('hiringManager', OfferHiringManagerFieldObject),
@@ -58,6 +58,8 @@ export const OfferObject = definePrismaObject('Offer', {
     hired: t.relation('hired', OfferHiredFieldObject(t)),
     evaluations: t.relation('evaluations', OfferEvaluationsFieldObject(t)),
     follows: t.relation('follows', OfferFollowsFieldObject(t)),
+    createdAt: t.field(OfferCreatedAtFieldObject),
+    updatedAt: t.field(OfferUpdatedAtFieldObject),
   }),
 });
 
@@ -89,18 +91,18 @@ export const OfferCompanyIdFieldObject = defineFieldObject('Offer', {
   resolve: (parent) => parent.companyId,
 });
 
-export const OfferDeparmentFieldObject = defineRelationObject('Offer', 'deparment', {
+export const OfferDepartmentFieldObject = defineRelationObject('Offer', 'department', {
   description: undefined,
   nullable: true,
   args: undefined,
   query: undefined,
 });
 
-export const OfferDeparmentIdFieldObject = defineFieldObject('Offer', {
+export const OfferDepartmentIdFieldObject = defineFieldObject('Offer', {
   type: "Int",
   description: undefined,
   nullable: true,
-  resolve: (parent) => parent.deparmentId,
+  resolve: (parent) => parent.departmentId,
 });
 
 export const OfferRecruiterFieldObject = defineRelationObject('Offer', 'recruiter', {
@@ -533,3 +535,17 @@ export const OfferFollowsFieldObject = defineRelationFunction('Offer', (t) =>
     }),
   }),
 );
+
+export const OfferCreatedAtFieldObject = defineFieldObject('Offer', {
+  type: Inputs.DateTime,
+  description: undefined,
+  nullable: false,
+  resolve: (parent) => parent.createdAt,
+});
+
+export const OfferUpdatedAtFieldObject = defineFieldObject('Offer', {
+  type: Inputs.DateTime,
+  description: undefined,
+  nullable: false,
+  resolve: (parent) => parent.updatedAt,
+});

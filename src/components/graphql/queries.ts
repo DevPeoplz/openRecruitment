@@ -227,3 +227,33 @@ export const GET_ADD_CANDIDATE_DROPDOWNS = gql`
     }
   }
 `
+
+export const GET_HUB_JOBS = gql`
+  query GET_HUB_JOBS {
+    findManyOffer(orderBy: { createdAt: desc }) {
+      id: id
+      name: name
+      candidates: matches {
+        candidate {
+          id
+          name
+        }
+        isHired
+      }
+      department: department {
+        id
+        name
+      }
+      location: locationCity
+      region: locationCountry
+      scheduledPublish: createdAt
+      scheduledClose: createdAt
+      tags: offerTags {
+        tag {
+          id
+          name
+        }
+      }
+    }
+  }
+`

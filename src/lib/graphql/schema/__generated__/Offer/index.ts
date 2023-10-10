@@ -4,8 +4,8 @@ export {
   OfferNameFieldObject,
   OfferCompanyFieldObject,
   OfferCompanyIdFieldObject,
-  OfferDeparmentFieldObject,
-  OfferDeparmentIdFieldObject,
+  OfferDepartmentFieldObject,
+  OfferDepartmentIdFieldObject,
   OfferRecruiterFieldObject,
   OfferRecruiterIdFieldObject,
   OfferHiringManagerFieldObject,
@@ -46,7 +46,9 @@ export {
   OfferMatchesFieldObject,
   OfferHiredFieldObject,
   OfferEvaluationsFieldObject,
-  OfferFollowsFieldObject
+  OfferFollowsFieldObject,
+  OfferCreatedAtFieldObject,
+  OfferUpdatedAtFieldObject
 } from './object.base';
 export {
   createManyOfferMutation,
