@@ -1,1 +1,1 @@
-export { countOfferQueryObject } from './queries'
+export { countOfferQueryObject, findManyOfferQueryObject } from './queries'

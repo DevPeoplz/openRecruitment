@@ -165,7 +165,7 @@ export const MembershipScalarFieldEnum = builder.enumType('MembershipScalarField
 });
 
 export const TalentPoolScalarFieldEnum = builder.enumType('TalentPoolScalarFieldEnum', {
-  values: ["id","name","description","companyId"] as const,
+  values: ["id","name","description","companyId","createdAt","updatedAt"] as const,
 });
 
 export const TalentPoolFileScalarFieldEnum = builder.enumType('TalentPoolFileScalarFieldEnum', {
@@ -2750,6 +2750,8 @@ export const TalentPoolWhereInputFields = (t: any) => ({
   name: t.field({"required":false,"type":StringFilter}),
   description: t.field({"required":false,"type":StringNullableFilter}),
   companyId: t.field({"required":false,"type":StringFilter}),
+  createdAt: t.field({"required":false,"type":DateTimeFilter}),
+  updatedAt: t.field({"required":false,"type":DateTimeFilter}),
   files: t.field({"required":false,"type":TalentPoolFileListRelationFilter}),
   matches: t.field({"required":false,"type":TalentPoolMatchListRelationFilter}),
   follows: t.field({"required":false,"type":FollowListRelationFilter}),
@@ -2764,6 +2766,8 @@ export const TalentPoolOrderByWithRelationInputFields = (t: any) => ({
   name: t.field({"required":false,"type":SortOrder}),
   description: t.field({"required":false,"type":SortOrder}),
   companyId: t.field({"required":false,"type":SortOrder}),
+  createdAt: t.field({"required":false,"type":SortOrder}),
+  updatedAt: t.field({"required":false,"type":SortOrder}),
   files: t.field({"required":false,"type":TalentPoolFileOrderByRelationAggregateInput}),
   matches: t.field({"required":false,"type":TalentPoolMatchOrderByRelationAggregateInput}),
   follows: t.field({"required":false,"type":FollowOrderByRelationAggregateInput}),
@@ -2781,6 +2785,8 @@ export const TalentPoolWhereUniqueInputFields = (t: any) => ({
   name: t.field({"required":false,"type":StringFilter}),
   description: t.field({"required":false,"type":StringNullableFilter}),
   companyId: t.field({"required":false,"type":StringFilter}),
+  createdAt: t.field({"required":false,"type":DateTimeFilter}),
+  updatedAt: t.field({"required":false,"type":DateTimeFilter}),
   files: t.field({"required":false,"type":TalentPoolFileListRelationFilter}),
   matches: t.field({"required":false,"type":TalentPoolMatchListRelationFilter}),
   follows: t.field({"required":false,"type":FollowListRelationFilter}),
@@ -2795,6 +2801,8 @@ export const TalentPoolOrderByWithAggregationInputFields = (t: any) => ({
   name: t.field({"required":false,"type":SortOrder}),
   description: t.field({"required":false,"type":SortOrder}),
   companyId: t.field({"required":false,"type":SortOrder}),
+  createdAt: t.field({"required":false,"type":SortOrder}),
+  updatedAt: t.field({"required":false,"type":SortOrder}),
   _count: t.field({"required":false,"type":TalentPoolCountOrderByAggregateInput}),
   _avg: t.field({"required":false,"type":TalentPoolAvgOrderByAggregateInput}),
   _max: t.field({"required":false,"type":TalentPoolMaxOrderByAggregateInput}),
@@ -2813,6 +2821,8 @@ export const TalentPoolScalarWhereWithAggregatesInputFields = (t: any) => ({
   name: t.field({"required":false,"type":StringWithAggregatesFilter}),
   description: t.field({"required":false,"type":StringNullableWithAggregatesFilter}),
   companyId: t.field({"required":false,"type":StringWithAggregatesFilter}),
+  createdAt: t.field({"required":false,"type":DateTimeWithAggregatesFilter}),
+  updatedAt: t.field({"required":false,"type":DateTimeWithAggregatesFilter}),
 });
 export const TalentPoolScalarWhereWithAggregatesInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.TalentPoolScalarWhereWithAggregatesInput>>('TalentPoolScalarWhereWithAggregatesInput').implement({
   fields: TalentPoolScalarWhereWithAggregatesInputFields,
@@ -5565,6 +5575,8 @@ export const MembershipUpdateManyMutationInput = builder.inputRef<PrismaUpdateOp
 export const TalentPoolCreateInputFields = (t: any) => ({
   name: t.string({"required":true}),
   description: t.string({"required":false}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+  updatedAt: t.field({"required":false,"type":DateTime}),
   files: t.field({"required":false,"type":TalentPoolFileCreateNestedManyWithoutTalentPoolInput}),
   matches: t.field({"required":false,"type":TalentPoolMatchCreateNestedManyWithoutTalentPoolInput}),
   follows: t.field({"required":false,"type":FollowCreateNestedManyWithoutTalentPoolInput}),
@@ -5577,6 +5589,8 @@ export const TalentPoolCreateInput = builder.inputRef<PrismaUpdateOperationsInpu
 export const TalentPoolUpdateInputFields = (t: any) => ({
   name: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   description: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   files: t.field({"required":false,"type":TalentPoolFileUpdateManyWithoutTalentPoolNestedInput}),
   matches: t.field({"required":false,"type":TalentPoolMatchUpdateManyWithoutTalentPoolNestedInput}),
   follows: t.field({"required":false,"type":FollowUpdateManyWithoutTalentPoolNestedInput}),
@@ -5591,6 +5605,8 @@ export const TalentPoolCreateManyInputFields = (t: any) => ({
   name: t.string({"required":true}),
   description: t.string({"required":false}),
   companyId: t.string({"required":true}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+  updatedAt: t.field({"required":false,"type":DateTime}),
 });
 export const TalentPoolCreateManyInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.TalentPoolCreateManyInput>>('TalentPoolCreateManyInput').implement({
   fields: TalentPoolCreateManyInputFields,
@@ -5599,6 +5615,8 @@ export const TalentPoolCreateManyInput = builder.inputRef<PrismaUpdateOperations
 export const TalentPoolUpdateManyMutationInputFields = (t: any) => ({
   name: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   description: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
 });
 export const TalentPoolUpdateManyMutationInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.TalentPoolUpdateManyMutationInput>>('TalentPoolUpdateManyMutationInput').implement({
   fields: TalentPoolUpdateManyMutationInputFields,
@@ -8980,6 +8998,8 @@ export const TalentPoolCountOrderByAggregateInputFields = (t: any) => ({
   name: t.field({"required":false,"type":SortOrder}),
   description: t.field({"required":false,"type":SortOrder}),
   companyId: t.field({"required":false,"type":SortOrder}),
+  createdAt: t.field({"required":false,"type":SortOrder}),
+  updatedAt: t.field({"required":false,"type":SortOrder}),
 });
 export const TalentPoolCountOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.TalentPoolCountOrderByAggregateInput>>('TalentPoolCountOrderByAggregateInput').implement({
   fields: TalentPoolCountOrderByAggregateInputFields,
@@ -8997,6 +9017,8 @@ export const TalentPoolMaxOrderByAggregateInputFields = (t: any) => ({
   name: t.field({"required":false,"type":SortOrder}),
   description: t.field({"required":false,"type":SortOrder}),
   companyId: t.field({"required":false,"type":SortOrder}),
+  createdAt: t.field({"required":false,"type":SortOrder}),
+  updatedAt: t.field({"required":false,"type":SortOrder}),
 });
 export const TalentPoolMaxOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.TalentPoolMaxOrderByAggregateInput>>('TalentPoolMaxOrderByAggregateInput').implement({
   fields: TalentPoolMaxOrderByAggregateInputFields,
@@ -9007,6 +9029,8 @@ export const TalentPoolMinOrderByAggregateInputFields = (t: any) => ({
   name: t.field({"required":false,"type":SortOrder}),
   description: t.field({"required":false,"type":SortOrder}),
   companyId: t.field({"required":false,"type":SortOrder}),
+  createdAt: t.field({"required":false,"type":SortOrder}),
+  updatedAt: t.field({"required":false,"type":SortOrder}),
 });
 export const TalentPoolMinOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.TalentPoolMinOrderByAggregateInput>>('TalentPoolMinOrderByAggregateInput').implement({
   fields: TalentPoolMinOrderByAggregateInputFields,
@@ -17678,6 +17702,8 @@ export const CandidateCreateManyCompanyInputEnvelope = builder.inputRef<PrismaUp
 export const TalentPoolCreateWithoutCompanyInputFields = (t: any) => ({
   name: t.string({"required":true}),
   description: t.string({"required":false}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+  updatedAt: t.field({"required":false,"type":DateTime}),
   files: t.field({"required":false,"type":TalentPoolFileCreateNestedManyWithoutTalentPoolInput}),
   matches: t.field({"required":false,"type":TalentPoolMatchCreateNestedManyWithoutTalentPoolInput}),
   follows: t.field({"required":false,"type":FollowCreateNestedManyWithoutTalentPoolInput}),
@@ -18357,6 +18383,8 @@ export const TalentPoolScalarWhereInputFields = (t: any) => ({
   name: t.field({"required":false,"type":StringFilter}),
   description: t.field({"required":false,"type":StringNullableFilter}),
   companyId: t.field({"required":false,"type":StringFilter}),
+  createdAt: t.field({"required":false,"type":DateTimeFilter}),
+  updatedAt: t.field({"required":false,"type":DateTimeFilter}),
 });
 export const TalentPoolScalarWhereInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.TalentPoolScalarWhereInput>>('TalentPoolScalarWhereInput').implement({
   fields: TalentPoolScalarWhereInputFields,
@@ -22645,6 +22673,8 @@ export const CompanyUpdateWithoutTalentPoolInput = builder.inputRef<PrismaUpdate
 export const TalentPoolCreateWithoutFilesInputFields = (t: any) => ({
   name: t.string({"required":true}),
   description: t.string({"required":false}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+  updatedAt: t.field({"required":false,"type":DateTime}),
   matches: t.field({"required":false,"type":TalentPoolMatchCreateNestedManyWithoutTalentPoolInput}),
   follows: t.field({"required":false,"type":FollowCreateNestedManyWithoutTalentPoolInput}),
   company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutTalentPoolInput}),
@@ -22706,6 +22736,8 @@ export const TalentPoolUpdateToOneWithWhereWithoutFilesInput = builder.inputRef<
 export const TalentPoolUpdateWithoutFilesInputFields = (t: any) => ({
   name: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   description: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   matches: t.field({"required":false,"type":TalentPoolMatchUpdateManyWithoutTalentPoolNestedInput}),
   follows: t.field({"required":false,"type":FollowUpdateManyWithoutTalentPoolNestedInput}),
   company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutTalentPoolNestedInput}),
@@ -22751,6 +22783,8 @@ export const AttachmentUpdateWithoutTalentPoolFilesInput = builder.inputRef<Pris
 export const TalentPoolCreateWithoutMatchesInputFields = (t: any) => ({
   name: t.string({"required":true}),
   description: t.string({"required":false}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+  updatedAt: t.field({"required":false,"type":DateTime}),
   files: t.field({"required":false,"type":TalentPoolFileCreateNestedManyWithoutTalentPoolInput}),
   follows: t.field({"required":false,"type":FollowCreateNestedManyWithoutTalentPoolInput}),
   company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutTalentPoolInput}),
@@ -22832,6 +22866,8 @@ export const TalentPoolUpdateToOneWithWhereWithoutMatchesInput = builder.inputRe
 export const TalentPoolUpdateWithoutMatchesInputFields = (t: any) => ({
   name: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   description: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   files: t.field({"required":false,"type":TalentPoolFileUpdateManyWithoutTalentPoolNestedInput}),
   follows: t.field({"required":false,"type":FollowUpdateManyWithoutTalentPoolNestedInput}),
   company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutTalentPoolNestedInput}),
@@ -26385,6 +26421,8 @@ export const CandidateCreateOrConnectWithoutFollowsInput = builder.inputRef<Pris
 export const TalentPoolCreateWithoutFollowsInputFields = (t: any) => ({
   name: t.string({"required":true}),
   description: t.string({"required":false}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+  updatedAt: t.field({"required":false,"type":DateTime}),
   files: t.field({"required":false,"type":TalentPoolFileCreateNestedManyWithoutTalentPoolInput}),
   matches: t.field({"required":false,"type":TalentPoolMatchCreateNestedManyWithoutTalentPoolInput}),
   company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutTalentPoolInput}),
@@ -26569,6 +26607,8 @@ export const TalentPoolUpdateToOneWithWhereWithoutFollowsInput = builder.inputRe
 export const TalentPoolUpdateWithoutFollowsInputFields = (t: any) => ({
   name: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   description: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   files: t.field({"required":false,"type":TalentPoolFileUpdateManyWithoutTalentPoolNestedInput}),
   matches: t.field({"required":false,"type":TalentPoolMatchUpdateManyWithoutTalentPoolNestedInput}),
   company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutTalentPoolNestedInput}),
@@ -27338,6 +27378,8 @@ export const TalentPoolCreateManyCompanyInputFields = (t: any) => ({
   id: t.int({"required":false}),
   name: t.string({"required":true}),
   description: t.string({"required":false}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+  updatedAt: t.field({"required":false,"type":DateTime}),
 });
 export const TalentPoolCreateManyCompanyInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.TalentPoolCreateManyCompanyInput>>('TalentPoolCreateManyCompanyInput').implement({
   fields: TalentPoolCreateManyCompanyInputFields,
@@ -27590,6 +27632,8 @@ export const CandidateUpdateWithoutCompanyInput = builder.inputRef<PrismaUpdateO
 export const TalentPoolUpdateWithoutCompanyInputFields = (t: any) => ({
   name: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
   description: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   files: t.field({"required":false,"type":TalentPoolFileUpdateManyWithoutTalentPoolNestedInput}),
   matches: t.field({"required":false,"type":TalentPoolMatchUpdateManyWithoutTalentPoolNestedInput}),
   follows: t.field({"required":false,"type":FollowUpdateManyWithoutTalentPoolNestedInput}),

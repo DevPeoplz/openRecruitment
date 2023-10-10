@@ -19,6 +19,8 @@ export const TalentPoolObject = definePrismaObject('TalentPool', {
     follows: t.relation('follows', TalentPoolFollowsFieldObject(t)),
     company: t.relation('company', TalentPoolCompanyFieldObject),
     companyId: t.field(TalentPoolCompanyIdFieldObject),
+    createdAt: t.field(TalentPoolCreatedAtFieldObject),
+    updatedAt: t.field(TalentPoolUpdatedAtFieldObject),
   }),
 });
 
@@ -130,4 +132,18 @@ export const TalentPoolCompanyIdFieldObject = defineFieldObject('TalentPool', {
   description: undefined,
   nullable: false,
   resolve: (parent) => parent.companyId,
+});
+
+export const TalentPoolCreatedAtFieldObject = defineFieldObject('TalentPool', {
+  type: Inputs.DateTime,
+  description: undefined,
+  nullable: false,
+  resolve: (parent) => parent.createdAt,
+});
+
+export const TalentPoolUpdatedAtFieldObject = defineFieldObject('TalentPool', {
+  type: Inputs.DateTime,
+  description: undefined,
+  nullable: false,
+  resolve: (parent) => parent.updatedAt,
 });

@@ -257,3 +257,19 @@ export const GET_HUB_JOBS = gql`
     }
   }
 `
+
+export const GET_HUB_POOLS = gql`
+  query GET_HUB_POOLS {
+    findManyTalentPool(orderBy: { createdAt: desc }) {
+      id: id
+      name: name
+      candidates: matches {
+        candidate {
+          id
+          name
+        }
+      }
+      createdAt: createdAt
+    }
+  }
+`

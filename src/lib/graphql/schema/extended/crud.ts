@@ -89,6 +89,7 @@ export const Cruds: Record<
     queries: {
       ...AutoCruds.Offer.queries,
       count: Offer.countOfferQueryObject,
+      findMany: Offer.findManyOfferQueryObject,
     },
     mutations: AutoCruds.Offer.mutations,
   },
@@ -97,6 +98,7 @@ export const Cruds: Record<
     queries: {
       ...AutoCruds.TalentPool.queries,
       count: TalentPool.countTalentPoolQueryObject,
+      findMany: TalentPool.findManyTalentPoolQueryObject,
     },
     mutations: AutoCruds.TalentPool.mutations,
   },

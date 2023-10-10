@@ -7,7 +7,9 @@ export {
   TalentPoolMatchesFieldObject,
   TalentPoolFollowsFieldObject,
   TalentPoolCompanyFieldObject,
-  TalentPoolCompanyIdFieldObject
+  TalentPoolCompanyIdFieldObject,
+  TalentPoolCreatedAtFieldObject,
+  TalentPoolUpdatedAtFieldObject
 } from './object.base';
 export {
   createManyTalentPoolMutation,

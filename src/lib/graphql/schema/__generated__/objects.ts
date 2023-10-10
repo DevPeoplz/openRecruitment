@@ -966,6 +966,8 @@ export {
   TalentPoolFollowsFieldObject,
   TalentPoolCompanyFieldObject,
   TalentPoolCompanyIdFieldObject,
+  TalentPoolCreatedAtFieldObject,
+  TalentPoolUpdatedAtFieldObject,
   createManyTalentPoolMutation,
   createOneTalentPoolMutation,
   deleteManyTalentPoolMutation,

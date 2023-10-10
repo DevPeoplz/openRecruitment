@@ -1,1 +1,1 @@
-export { countTalentPoolQueryObject } from './queries'
+export { countTalentPoolQueryObject, findManyTalentPoolQueryObject } from './queries'
