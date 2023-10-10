@@ -162,78 +162,80 @@ const AddCandidateView = () => {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-2 p-2">
-      <UploadAvatar
-        id="avatar"
-        onChange={handleFileInput}
-        deleteFilePreview={deleteFilePreview}
-        file={formData?.avatar as Blob}
-      />
-      <span className="flex gap-1">
-        <TextField id="firstName" label="Name" onChange={(e) => handleInputChange(e)} />
-        <TextField id="lastName" label="Last name" onChange={(e) => handleInputChange(e)} />
-      </span>
-      <TextField
-        className="col-span-full"
-        label="Email address"
-        id="email"
-        name="email"
-        type="email"
-        autoComplete="email"
-        required
-        onChange={(e) => handleInputChange(e)}
-      />
-      <PhoneField
-        className="col-span-full"
-        label="Phone number"
-        id="phone"
-        name="phone"
-        autoComplete="tel"
-        required
-        onChange={(e: React.FormEvent) => setFormData({ ...formData, phone: e.toString() })}
-      />
-      <p className="pl-2 font-bold">Jobs or Talent Pool:</p>
-      <BtnIconCombobox
-        options={[
-          ...parseGQLData(dataDropdown?.jobs),
-          ...parseGQLData(dataDropdown?.talentPools, ' (Talent Pool)'),
-        ]}
-        btnText="Assign"
-        placeholderText="Select a Job or Talent Pool..."
-        btnClassName="ml-2 mt-1"
-        plusClassName="h-4 w-4"
-        onSelectedOptionsChange={useHandleKeyOptionsChange('jobsInput')}
-      />
-      <div className="m-2 flex items-center gap-2">
-        <p className={'w-16'}>Tags:</p>
+      <div className="flex max-h-[65vh] flex-col gap-2 overflow-y-auto">
+        <UploadAvatar
+          id="avatar"
+          onChange={handleFileInput}
+          deleteFilePreview={deleteFilePreview}
+          file={formData?.avatar as Blob}
+        />
+        <span className="flex gap-1">
+          <TextField id="firstName" label="Name" onChange={(e) => handleInputChange(e)} />
+          <TextField id="lastName" label="Last name" onChange={(e) => handleInputChange(e)} />
+        </span>
+        <TextField
+          className="col-span-full"
+          label="Email address"
+          id="email"
+          name="email"
+          type="email"
+          autoComplete="email"
+          required
+          onChange={(e) => handleInputChange(e)}
+        />
+        <PhoneField
+          className="col-span-full"
+          label="Phone number"
+          id="phone"
+          name="phone"
+          autoComplete="tel"
+          required
+          onChange={(e: React.FormEvent) => setFormData({ ...formData, phone: e.toString() })}
+        />
+        <p className="pl-2 font-bold">Jobs or Talent Pool:</p>
         <BtnIconCombobox
-          options={parseGQLData(dataDropdown?.tags)}
-          placeholderText="Select a Tag..."
-          onSelectedOptionsChange={useHandleKeyOptionsChange('tagsInput')}
+          options={[
+            ...parseGQLData(dataDropdown?.jobs),
+            ...parseGQLData(dataDropdown?.talentPools, ' (Talent Pool)'),
+          ]}
+          btnText="Assign"
+          placeholderText="Select a Job or Talent Pool..."
+          btnClassName="ml-2 mt-1"
+          plusClassName="h-4 w-4"
+          onSelectedOptionsChange={useHandleKeyOptionsChange('jobsInput')}
+        />
+        <div className="m-2 flex items-center gap-2">
+          <p className={'w-16'}>Tags:</p>
+          <BtnIconCombobox
+            options={parseGQLData(dataDropdown?.tags)}
+            placeholderText="Select a Tag..."
+            onSelectedOptionsChange={useHandleKeyOptionsChange('tagsInput')}
+          />
+        </div>
+        <div className="m-2 flex items-center gap-2">
+          <p className={'w-16'}>Source:</p>
+          <BtnIconCombobox
+            options={parseGQLData(dataDropdown?.sources)}
+            placeholderText="Select a Source..."
+            onSelectedOptionsChange={useHandleKeyOptionsChange('sourcesInput')}
+          />
+        </div>
+        <UploadFile
+          label="CV or Resume:"
+          id="cv"
+          file={formData?.cv as Blob}
+          onChange={handleFileInput}
+          deleteFilePreview={deleteFilePreview}
+        />
+        <UploadFile
+          label="Cover Letter:"
+          id="coverLetter"
+          file={formData?.coverLetter as Blob}
+          onChange={handleFileInput}
+          deleteFilePreview={deleteFilePreview}
         />
       </div>
-      <div className="m-2 flex items-center gap-2">
-        <p className={'w-16'}>Source:</p>
-        <BtnIconCombobox
-          options={parseGQLData(dataDropdown?.sources)}
-          placeholderText="Select a Source..."
-          onSelectedOptionsChange={useHandleKeyOptionsChange('sourcesInput')}
-        />
-      </div>
-      <UploadFile
-        label="CV or Resume:"
-        id="cv"
-        file={formData?.cv as Blob}
-        onChange={handleFileInput}
-        deleteFilePreview={deleteFilePreview}
-      />
-      <UploadFile
-        label="Cover Letter:"
-        id="coverLetter"
-        file={formData?.coverLetter as Blob}
-        onChange={handleFileInput}
-        deleteFilePreview={deleteFilePreview}
-      />
-      <div>
+      <div className="">
         <Button className="w-full " color="primary" type="submit">
           {onSubmitLoading ? <Loader size="h-4 w-4" fullScreen={false} /> : 'Add candidate'}
         </Button>
