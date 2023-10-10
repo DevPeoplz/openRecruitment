@@ -54,7 +54,7 @@ const defaultColumns: DefaultColumnsExtendedProps<Job> = [
   {
     accessorFn: (originalRow) => {
       return originalRow.candidates
-        .map((candidate) => {
+        ?.map((candidate) => {
           return candidate.candidate?.name
         })
         .filter((e) => e)
@@ -77,7 +77,7 @@ const defaultColumns: DefaultColumnsExtendedProps<Job> = [
   {
     accessorFn: (originalRow) => {
       return originalRow.candidates
-        .map((candidate) => {
+        ?.map((candidate) => {
           return candidate.isHired ? candidate.candidate?.name : null
         })
         .filter((e) => e)
@@ -143,7 +143,7 @@ const defaultColumns: DefaultColumnsExtendedProps<Job> = [
   {
     accessorFn: (originalRow) => {
       return originalRow.tags
-        .map((tag) => {
+        ?.map((tag) => {
           return tag.tag?.name
         })
         .filter((e) => e)
