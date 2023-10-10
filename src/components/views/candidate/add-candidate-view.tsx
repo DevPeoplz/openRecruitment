@@ -142,6 +142,12 @@ const AddCandidateView = () => {
     }
   }
 
+  const deleteFilePreview = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault()
+    const { id } = e.target
+    setFormData({ ...formData, [id]: '' })
+  }
+
   const useHandleKeyOptionsChange = (key: string) => {
     return useCallback(
       (selectedOptions: ComboboxWithTagsProps['options']) => {
@@ -156,7 +162,12 @@ const AddCandidateView = () => {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-2 p-2">
-      <UploadAvatar id="avatar" onChange={handleFileInput} file={formData?.avatar as Blob} />
+      <UploadAvatar
+        id="avatar"
+        onChange={handleFileInput}
+        deleteFilePreview={deleteFilePreview}
+        file={formData?.avatar as Blob}
+      />
       <span className="flex gap-1">
         <TextField id="firstName" label="Name" onChange={(e) => handleInputChange(e)} />
         <TextField id="lastName" label="Last name" onChange={(e) => handleInputChange(e)} />
@@ -213,12 +224,14 @@ const AddCandidateView = () => {
         id="cv"
         file={formData?.cv as Blob}
         onChange={handleFileInput}
+        deleteFilePreview={deleteFilePreview}
       />
       <UploadFile
         label="Cover Letter:"
         id="coverLetter"
         file={formData?.coverLetter as Blob}
         onChange={handleFileInput}
+        deleteFilePreview={deleteFilePreview}
       />
       <div>
         <Button className="w-full " color="primary" type="submit">

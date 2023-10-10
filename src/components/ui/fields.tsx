@@ -4,7 +4,7 @@ import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 import { PiBuildingsBold } from 'react-icons/pi'
 import Avatar from './Avatar'
-import { PencilSquareIcon, ArrowUpTrayIcon } from '@heroicons/react/24/outline'
+import { PencilSquareIcon, ArrowUpTrayIcon, XMarkIcon } from '@heroicons/react/24/outline'
 
 const formClasses =
   'block w-full rounded-lg border border-gray-200 bg-white py-[calc(theme(spacing.2)-1px)] px-[calc(theme(spacing.3)-1px)] text-gray-900 placeholder:text-gray-400 focus:border-cyan-500 focus:outline-none focus:ring-cyan-500 sm:text-sm'
@@ -63,8 +63,9 @@ interface UploadFileProps {
   id: string
   label?: string
   className?: string
-  onChange: (x: React.ChangeEvent<HTMLInputElement>) => void
-  file: Blob | null
+  onChange?: (x: React.ChangeEvent<HTMLInputElement>) => void
+  file?: Blob | null
+  deleteFilePreview?: any
 }
 
 interface CheckboxFieldProps {
@@ -160,35 +161,45 @@ export function SelectCompany({ companies }: { companies: Company[] }) {
   )
 }
 
-export function UploadFile({ id, label, onChange, file }: UploadFileProps) {
+export function UploadFile({ id, label, onChange, file, deleteFilePreview }: UploadFileProps) {
   return (
-    <div className="flex w-full items-center justify-between gap-2">
+    <div className="flex w-full items-center justify-between gap-2 ">
       <p>{label}</p>
       {file && (
-        <span className="w-28">
+        <span className="w-36">
           <p className="truncate text-success">{file?.name}</p>
         </span>
       )}
       <label
         htmlFor={id}
         className={clsx(
-          'flex  cursor-pointer gap-2 rounded-md bg-gray-200 px-2 py-1 font-medium text-gray-800 hover:bg-gray-300',
-          file && 'bg-success text-white'
+          'flex cursor-pointer items-center  gap-2 rounded-md bg-gray-200  font-medium text-gray-800 transition duration-300',
+          file ? 'bg-success p-0 text-white ' : 'px-3 py-2 hover:bg-gray-300'
         )}
       >
         {file ? (
-          <span className="flex gap-1">
-            <PencilSquareIcon className="h-6 w-6" />
-            <p>Edit</p>
-          </span>
+          <div className="flex items-center justify-center gap-1 rounded-md border border-black p-2 hover:bg-gray-300 hover:text-black">
+            <PencilSquareIcon className="h-4 w-4" />
+          </div>
         ) : (
           <span className="flex gap-1">
-            <ArrowUpTrayIcon className="h-6 w-6" />
+            <ArrowUpTrayIcon className="h-4 w-4" />
             <p>Select file</p>
           </span>
         )}
       </label>
+
       <input type="file" id={id} className="hidden" onChange={onChange} />
+      {file && (
+        <button
+          className="flex items-center justify-center gap-1 rounded-md border border-black bg-success p-2 text-white hover:bg-gray-300 hover:text-black"
+          type="button"
+          id={id}
+          onClick={deleteFilePreview}
+        >
+          <XMarkIcon className="h-4 w-4 " id={id} />
+        </button>
+      )}
     </div>
   )
 }
@@ -247,7 +258,7 @@ export function CheckboxFieldWithCount({ option, setOption, className }: Checkbo
   )
 }
 
-export function UploadAvatar({ id, label, onChange, file }: UploadFileProps) {
+export function UploadAvatar({ id, label, onChange, file, deleteFilePreview }: UploadFileProps) {
   return (
     <div className="flex  items-center justify-center gap-4 rounded-lg border-2 border-dashed border-gray-400 p-4">
       {file && <Avatar src={URL.createObjectURL(file)} />}
@@ -255,8 +266,8 @@ export function UploadAvatar({ id, label, onChange, file }: UploadFileProps) {
       <label
         htmlFor={id}
         className={clsx(
-          'flex cursor-pointer items-center  gap-2 rounded-md bg-gray-200 px-3 py-2 font-medium text-gray-800 transition duration-300 hover:bg-gray-300',
-          file && 'bg-success text-white'
+          'flex cursor-pointer items-center  gap-2 rounded-md bg-gray-200 px-3 py-2 font-medium text-gray-800 transition duration-300',
+          file ? 'bg-success text-white ' : 'hover:bg-gray-300'
         )}
       >
         {file ? (
@@ -272,6 +283,16 @@ export function UploadAvatar({ id, label, onChange, file }: UploadFileProps) {
         )}
       </label>
       <input type="file" id={id} className="hidden" accept="image/*" onChange={onChange} />
+      {file && (
+        <button
+          className="flex gap-1 rounded-md border border-white bg-success p-2  text-white"
+          id={id}
+          onClick={deleteFilePreview}
+        >
+          <XMarkIcon className="h-6 w-6" id={id} />
+          <p id={id}>Remove</p>
+        </button>
+      )}
     </div>
   )
 }
