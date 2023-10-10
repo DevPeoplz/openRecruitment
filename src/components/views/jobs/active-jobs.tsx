@@ -21,6 +21,24 @@ import { useRouter } from 'next/router'
 type Job = {
   id: number
   name: string
+  department: {
+    name: string
+  }
+  location: string
+  region: string
+  scheduledPublish: string
+  scheduledClose: string
+  tags: {
+    tag: {
+      name: string
+    }
+  }[]
+  candidates: {
+    candidate: {
+      name: string
+    }
+    isHired: boolean
+  }[]
 }
 
 const defaultColumns: DefaultColumnsExtendedProps<Job> = [
@@ -106,7 +124,7 @@ const defaultColumns: DefaultColumnsExtendedProps<Job> = [
     header: 'Scheduled Publish',
     cell: (info) => {
       // convert iso string to date on local time with date-fns
-      const date = new Date(info.getValue())
+      const date = new Date(info.getValue() as string)
       return date.toLocaleString()
     },
     show: true,
@@ -117,7 +135,7 @@ const defaultColumns: DefaultColumnsExtendedProps<Job> = [
     header: 'Scheduled Close',
     cell: (info) => {
       // convert iso string to date on local time with date-fns
-      const date = new Date(info.getValue())
+      const date = new Date(info.getValue() as string)
       return date.toLocaleString()
     },
     show: true,
@@ -154,7 +172,7 @@ const defaultColumns: DefaultColumnsExtendedProps<Job> = [
 
 const ActiveJobs = () => {
   const router = useRouter()
-  const { useHubTable, HubTable } = createHubTable<Person>()
+  const { useHubTable, HubTable } = createHubTable<Job>()
   const { data: dataHubOffers, loading: loadingHubOffers } = useQuery(GET_HUB_JOBS)
 
   const { table, tableStates } = useHubTable(
