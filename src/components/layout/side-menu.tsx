@@ -39,7 +39,7 @@ const navigation: Navigation = {
   dashboard: [
     { name: 'Overview', href: '/dashboard', icon: HomeIcon },
     { name: 'Calendar', href: '/calendar', icon: CalendarIcon },
-    { name: 'Events', href: '/', icon: ChartPieIcon },
+    { name: 'Events', href: '/events', icon: ChartPieIcon },
     { name: 'Evaluations', href: '/', icon: DocumentDuplicateIcon },
     { name: 'Tasks', href: '/', icon: FolderIcon },
     { name: 'Activity', href: '/', icon: UsersIcon },
