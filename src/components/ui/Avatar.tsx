@@ -13,13 +13,13 @@ const Avatar: React.FC<Props> = ({ src, name, className }) => {
     <Image
       src={src}
       alt={altName}
-      width={40}
-      height={40}
-      className={`${className} h-16 w-16 rounded-full border border-black object-cover`}
+      width={100}
+      height={100}
+      className={`${className} h-12 w-12 rounded-full border border-black object-cover`}
     />
   ) : (
     <div
-      className={`${className} m-0.5 flex h-9 w-9 items-center justify-center rounded-full border border-black bg-primary-500 text-white`}
+      className={`${className} m-0.5 flex h-10 w-10 items-center justify-center rounded-full border border-black bg-primary-500 text-white`}
     >
       <p>{altName?.charAt(0)}</p>
     </div>

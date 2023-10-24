@@ -9,7 +9,7 @@ type EventTagsProps = {
 
 const EventsTags: FC<EventTagsProps> = ({ tabs, setCurrentTab, currentTab }) => {
   const handleTab = (e: any) => {
-    setCurrentTab(e.target.id)
+    setCurrentTab(e)
   }
   return (
     <div>

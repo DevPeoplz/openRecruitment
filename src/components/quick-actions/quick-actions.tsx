@@ -6,9 +6,11 @@ import clsx from 'clsx'
 import { PlusCircleIcon } from '@heroicons/react/24/outline'
 import AddCandidateModal from '@/components/modals/add-candidate-modal'
 import { ModalControlContext } from '@/hooks/contexts'
+import AddEventModal from '../modals/add-event-modal'
 
 const QuickActionsToolbar = () => {
   const [openModal, setOpenModal] = useState(false)
+  const [openAddEventModal, setOpenAddEventModal] = useState(false)
 
   return (
     <ModalControlContext.Provider value={[openModal, setOpenModal]}>
@@ -36,20 +38,39 @@ const QuickActionsToolbar = () => {
             <Menu.Items className="absolute bottom-full right-0 z-10 mb-2 w-56 origin-top-right rounded-md bg-secondary-400 text-white shadow-xl ring-1 ring-black/5 focus:outline-none">
               <div className="py-1">
                 <Menu.Item>
-                  {({ active }) => (
+                  {({ active, close }) => (
                     <>
                       <div
                         className={clsx(
                           active ? 'bg-gray-100 text-gray-900' : 'text-white',
                           'flex cursor-pointer px-4 py-2 text-sm'
                         )}
-                        onClick={() => setOpenModal(true)}
+                        onClick={() => {
+                          setOpenModal(true)
+                          close()
+                        }}
                       >
                         <PlusCircleIcon
                           className="mr-2 h-5 w-5 text-white hover:text-gray-900"
                           aria-hidden="true"
                         />
                         Add Candidate
+                      </div>
+                      <div
+                        className={clsx(
+                          active ? 'bg-gray-100 text-gray-900' : 'text-white',
+                          'flex cursor-pointer px-4 py-2 text-sm'
+                        )}
+                        onClick={() => {
+                          setOpenAddEventModal(true)
+                          close()
+                        }}
+                      >
+                        <PlusCircleIcon
+                          className="mr-2 h-5 w-5 text-white hover:text-gray-900"
+                          aria-hidden="true"
+                        />
+                        Add Event
                       </div>
                     </>
                   )}
@@ -59,6 +80,7 @@ const QuickActionsToolbar = () => {
           </Transition>
         </Menu>
         <AddCandidateModal />
+        <AddEventModal isOpen={openAddEventModal} setIsOpen={setOpenAddEventModal} />
       </div>
     </ModalControlContext.Provider>
   )

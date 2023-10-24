@@ -27,7 +27,7 @@ interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 type option = {
-  value: string
+  value: string | number
   label: string
 }
 
@@ -40,7 +40,7 @@ interface SelectFieldProps {
   required?: boolean
   name?: string
   options: option[]
-  setOption?: (option: option) => void
+  onChange?: any
 }
 
 interface PhoneFieldProps {
@@ -95,14 +95,14 @@ export function SelectField({
   id,
   label,
   className,
-  setOption,
+  onChange,
   placeholder,
   ...props
 }: SelectFieldProps) {
   return (
     <div className={className}>
       {label && <Label id={id}>{label}</Label>}
-      <select id={id} {...props} className={clsx(formClasses, 'pr-8')}>
+      <select id={id} {...props} className={clsx(formClasses, 'pr-8')} onChange={onChange}>
         {placeholder && <option value={props.options[0].value}>{placeholder}</option>}
         {props.options.map((option: option) => (
           <option key={option.value} value={option.value}>
@@ -293,6 +293,69 @@ export function UploadAvatar({ id, label, onChange, file, deleteFilePreview }: U
           <p id={id}>Remove</p>
         </button>
       )}
+    </div>
+  )
+}
+
+export function DatePicker({
+  className,
+  label,
+  onChange,
+}: {
+  className?: string
+  label?: string
+  onChange: any
+}) {
+  return (
+    <div className={className}>
+      {label ? <Label id="date">{label}</Label> : 'Date:'}
+      <input id="date" type="datetime-local" className={formClasses} onChange={onChange} />
+    </div>
+  )
+}
+
+export function TimeField({
+  className,
+  label,
+  min,
+  max,
+  onChange,
+}: {
+  className?: string
+  label?: string
+  min?: string
+  max?: string
+  onChange: any
+}) {
+  return (
+    <div className={className}>
+      {label ? <Label id="time">{label}</Label> : 'Time:'}
+      <input
+        id="time"
+        type="time"
+        className={formClasses}
+        min={min ?? min}
+        max={max ?? max}
+        onChange={onChange}
+      />
+    </div>
+  )
+}
+
+export function TextareaField({ id, label, className, placeholder, ...props }: any) {
+  return (
+    <div className={className}>
+      {label && <Label id={id}>{label}</Label>}
+      <textarea
+        id={id}
+        placeholder={placeholder}
+        {...props}
+        className={clsx(
+          formClasses,
+          'resize-none',
+          'px-[calc(theme(spacing.3)-1px)] py-[calc(theme(spacing.2)-1px)]'
+        )}
+      />
     </div>
   )
 }

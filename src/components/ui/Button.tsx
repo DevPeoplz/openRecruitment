@@ -4,7 +4,7 @@ import clsx from 'clsx'
 
 const baseStyles = {
   solid:
-    'inline-flex justify-center rounded-lg py-2 px-3 text-sm font-semibold outline-2 outline-offset-2 transition-colors cursor-pointer text-center border border-2 border-primary-500',
+    'inline-flex justify-center rounded-lg p-2 text-sm font-semibold outline-2 outline-offset-2 transition-colors cursor-pointer text-center border border-2 border-primary-500',
   outline:
     'inline-flex justify-center rounded-lg border border-2 py-[calc(theme(spacing.2)-1px)] px-[calc(theme(spacing.3)-1px)] text-sm outline-2 outline-offset-2 transition-colors text-center font-bold',
   noborder: '',
@@ -73,7 +73,7 @@ export const Button = ({
   ) : (
     <button className={mergedClassName} {...props}>
       <div className="flex items-center">
-        {icon && <span className="mr-2 text-lg">{icon}</span>}
+        {icon && <span className="mr-1 h-full w-5">{icon}</span>}
         {children}
       </div>
     </button>
