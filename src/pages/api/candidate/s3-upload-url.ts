@@ -65,7 +65,7 @@ const handlePOST = async (res: NextApiResponse, req: NextApiRequest) => {
     const extension = fileName.split('.').pop()
     const destination = fieldData?.destination ?? 'other'
 
-    const fullFileName = `company-${companyId}/${destination}/${uniqueId}.${extension}`
+    const fullFileName = `company-${companyId}/candidates/${destination}/${uniqueId}.${extension}`
 
     // PutObjectCommand: used to generate a pre-signed URL for uploading
     const putCommand = new PutObjectCommand({
