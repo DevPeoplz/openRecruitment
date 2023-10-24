@@ -20,7 +20,6 @@ export const EvaluationObject = definePrismaObject('Evaluation', {
     candidateId: t.field(EvaluationCandidateIdFieldObject),
     teamMember: t.relation('teamMember', EvaluationTeamMemberFieldObject),
     teamMemberId: t.field(EvaluationTeamMemberIdFieldObject),
-    note: t.field(EvaluationNoteFieldObject),
     isQuickEval: t.field(EvaluationIsQuickEvalFieldObject),
     score: t.field(EvaluationScoreFieldObject),
     eventScheduleEvaluations: t.relation('eventScheduleEvaluations', EvaluationEventScheduleEvaluationsFieldObject(t)),
@@ -38,7 +37,7 @@ export const EvaluationIdFieldObject = defineFieldObject('Evaluation', {
 
 export const EvaluationTemplateFieldObject = defineRelationObject('Evaluation', 'template', {
   description: undefined,
-  nullable: false,
+  nullable: true,
   args: undefined,
   query: undefined,
 });
@@ -46,7 +45,7 @@ export const EvaluationTemplateFieldObject = defineRelationObject('Evaluation', 
 export const EvaluationTemplateIdFieldObject = defineFieldObject('Evaluation', {
   type: "Int",
   description: undefined,
-  nullable: false,
+  nullable: true,
   resolve: (parent) => parent.templateId,
 });
 
@@ -92,13 +91,6 @@ export const EvaluationTeamMemberIdFieldObject = defineFieldObject('Evaluation',
   resolve: (parent) => parent.teamMemberId,
 });
 
-export const EvaluationNoteFieldObject = defineFieldObject('Evaluation', {
-  type: "String",
-  description: undefined,
-  nullable: false,
-  resolve: (parent) => parent.note,
-});
-
 export const EvaluationIsQuickEvalFieldObject = defineFieldObject('Evaluation', {
   type: "Boolean",
   description: undefined,
@@ -107,7 +99,7 @@ export const EvaluationIsQuickEvalFieldObject = defineFieldObject('Evaluation', 
 });
 
 export const EvaluationScoreFieldObject = defineFieldObject('Evaluation', {
-  type: "Int",
+  type: Inputs.SCORE_TYPES,
   description: undefined,
   nullable: false,
   resolve: (parent) => parent.score,
@@ -164,12 +156,12 @@ export const EvaluationEventEvaluationsFieldObject = defineRelationFunction('Eva
 );
 
 export const EvaluationAnswersFieldArgs = builder.args((t) => ({
-  where: t.field({ type: Inputs.EvaluationAnswerWhereInput, required: false }),
-  orderBy: t.field({ type: [Inputs.EvaluationAnswerOrderByWithRelationInput], required: false }),
-  cursor: t.field({ type: Inputs.EvaluationAnswerWhereUniqueInput, required: false }),
+  where: t.field({ type: Inputs.EvaluationQuestionWhereInput, required: false }),
+  orderBy: t.field({ type: [Inputs.EvaluationQuestionOrderByWithRelationInput], required: false }),
+  cursor: t.field({ type: Inputs.EvaluationQuestionWhereUniqueInput, required: false }),
   take: t.field({ type: 'Int', required: false }),
   skip: t.field({ type: 'Int', required: false }),
-  distinct: t.field({ type: [Inputs.EvaluationAnswerScalarFieldEnum], required: false }),
+  distinct: t.field({ type: [Inputs.EvaluationQuestionScalarFieldEnum], required: false }),
 }))
 
 export const EvaluationAnswersFieldObject = defineRelationFunction('Evaluation', (t) =>

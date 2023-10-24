@@ -5,9 +5,7 @@ export {
   CandidateCustomFieldsCandidateIdFieldObject,
   CandidateCustomFieldsInputTypeFieldObject,
   CandidateCustomFieldsFieldKeyFieldObject,
-  CandidateCustomFieldsFieldValueFieldObject,
-  CandidateCustomFieldsFieldSettingsFieldObject,
-  CandidateCustomFieldsEvaluationAnswersFieldObject
+  CandidateCustomFieldsFieldValueFieldObject
 } from './object.base';
 export {
   createManyCandidateCustomFieldsMutation,

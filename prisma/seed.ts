@@ -192,7 +192,7 @@ async function main() {
       socials: ['https://twitter.com/@candidate1'],
       salaryExpectation: '5000',
       companyId: company1.id,
-      birthDate: new Date('1993-01-01'),
+      birthday: new Date('1993-01-01'),
     },
   })
 
@@ -208,7 +208,7 @@ async function main() {
       socials: ['https://twitter.com/@candidate2'],
       salaryExpectation: '5000',
       companyId: company1.id,
-      birthDate: new Date('1993-01-01'),
+      birthday: new Date('1993-01-01'),
     },
   })
 
@@ -224,7 +224,7 @@ async function main() {
       socials: ['https://twitter.com/@candidate3'],
       salaryExpectation: '5000',
       companyId: company1.id,
-      birthDate: new Date('1993-01-01'),
+      birthday: new Date('1993-01-01'),
       createdAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000),
     },
   })
@@ -241,7 +241,7 @@ async function main() {
       socials: ['https://twitter.com/@candidate4'],
       salaryExpectation: '1500',
       companyId: company1.id,
-      birthDate: new Date('1994-01-01'),
+      birthday: new Date('1994-01-01'),
       createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
     },
   })
@@ -258,7 +258,7 @@ async function main() {
       socials: ['https://twitter.com/@candidate5'],
       salaryExpectation: '10000',
       companyId: company1.id,
-      birthDate: new Date('1995-01-01'),
+      birthday: new Date('1995-01-01'),
       createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
     },
   })

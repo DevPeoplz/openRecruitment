@@ -20,7 +20,7 @@ export const CandidateObject = definePrismaObject('Candidate', {
     mainLanguage: t.field(CandidateMainLanguageFieldObject),
     languages: t.field(CandidateLanguagesFieldObject),
     coverLetterText: t.field(CandidateCoverLetterTextFieldObject),
-    birthDate: t.field(CandidateBirthDateFieldObject),
+    birthday: t.field(CandidateBirthdayFieldObject),
     referrer: t.relation('referrer', CandidateReferrerFieldObject),
     referrerId: t.field(CandidateReferrerIdFieldObject),
     cv: t.relation('cv', CandidateCvFieldObject),
@@ -33,7 +33,6 @@ export const CandidateObject = definePrismaObject('Candidate', {
     socials: t.field(CandidateSocialsFieldObject),
     links: t.field(CandidateLinksFieldObject),
     salaryExpectation: t.field(CandidateSalaryExpectationFieldObject),
-    isHired: t.field(CandidateIsHiredFieldObject),
     hiredAt: t.relation('hiredAt', CandidateHiredAtFieldObject),
     hiredAtId: t.field(CandidateHiredAtIdFieldObject),
     hiredBy: t.relation('hiredBy', CandidateHiredByFieldObject),
@@ -117,11 +116,11 @@ export const CandidateCoverLetterTextFieldObject = defineFieldObject('Candidate'
   resolve: (parent) => parent.coverLetterText,
 });
 
-export const CandidateBirthDateFieldObject = defineFieldObject('Candidate', {
+export const CandidateBirthdayFieldObject = defineFieldObject('Candidate', {
   type: Inputs.DateTime,
   description: undefined,
   nullable: true,
-  resolve: (parent) => parent.birthDate,
+  resolve: (parent) => parent.birthday,
 });
 
 export const CandidateReferrerFieldObject = defineRelationObject('Candidate', 'referrer', {
@@ -206,13 +205,6 @@ export const CandidateSalaryExpectationFieldObject = defineFieldObject('Candidat
   description: undefined,
   nullable: true,
   resolve: (parent) => parent.salaryExpectation,
-});
-
-export const CandidateIsHiredFieldObject = defineFieldObject('Candidate', {
-  type: "Boolean",
-  description: undefined,
-  nullable: true,
-  resolve: (parent) => parent.isHired,
 });
 
 export const CandidateHiredAtFieldObject = defineRelationObject('Candidate', 'hiredAt', {

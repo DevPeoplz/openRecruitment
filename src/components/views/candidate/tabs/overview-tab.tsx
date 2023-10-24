@@ -1,17 +1,20 @@
-import React, { FC } from 'react'
+import React, { useContext } from 'react'
 import { LogType } from '../../../modals/view-candidate-modal'
 import { EnvelopeIcon, PhoneIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { PlusIcon } from '@heroicons/react/20/solid'
-import Avatar from '@/components/ui/Avatar'
-import { CandidateType } from '@/components/views/candidate/candidate-view'
+import Avatar from '@/components/ui/avatar'
+import { CandidateContext } from '@/components/views/candidate/candidate-view'
+import PDFViewer from '@/components/pdf-viewer'
 
 type Props = {
-  candidate?: CandidateType
   logs?: LogType[]
 }
 
-const overviewTab: FC<Props> = ({ candidate, logs }) => {
+const OverviewTab: React.FC<Props> = ({ logs }) => {
+  const candidate = useContext(CandidateContext)
+
   if (!candidate || !logs) return null
+
   return (
     <div className="flex flex-col gap-4 ">
       <div className="flex items-center gap-2">
@@ -41,14 +44,18 @@ const overviewTab: FC<Props> = ({ candidate, logs }) => {
         </thead>
         <tbody className="divide-y divide-gray-200 bg-white">
           <tr className="flex items-center gap-2 py-3.5 pl-4 pr-3">
-            <EnvelopeIcon className="h-5 w-5" />
-            <p>Email</p>
-            <p>{candidate.email}</p>
+            <td>
+              <EnvelopeIcon className="h-5 w-5" />
+              <p>Email</p>
+              <p>{candidate.email}</p>
+            </td>
           </tr>
           <tr className="flex items-center gap-2 py-3.5 pl-4 pr-3">
-            <PhoneIcon className="h-5 w-5" />
-            <p>Phone</p>
-            <p>{candidate.phone}</p>
+            <td>
+              <PhoneIcon className="h-5 w-5" />
+              <p>Phone</p>
+              <p>{candidate.phone}</p>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -80,25 +87,33 @@ const overviewTab: FC<Props> = ({ candidate, logs }) => {
         <tbody className="divide-y divide-gray-200 bg-white">
           {logs.map((log, index) => (
             <tr key={index} className="flex items-center justify-between gap-2 py-3.5 pl-4 pr-3">
-              <span className="flex items-center gap-1">
-                <Avatar name={log.author.name} />
-                <p>{log.author.name}</p>
-                <p>{log.description}</p>
-              </span>
-
-              <p>4d ago</p>
+              <td>
+                <span className="flex items-center gap-1">
+                  <Avatar name={log.author.name} />
+                  <p>{log.author.name}</p>
+                  <p>{log.description}</p>
+                </span>
+                <p>4d ago</p>
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
-      <div className="flex items-center justify-between border px-1 py-4">
-        <p>Cover letter</p>
-        <button className="rounded-md border bg-primary-500 p-2 text-white">
-          Add cover letter
-        </button>
+      <div className="section">
+        <h3 className="heading">Curriculum</h3>
+        <div className="body">
+          <PDFViewer file={candidate.cv}>
+            <PDFViewer.ToolbarItem>
+              <span>Edit</span>
+            </PDFViewer.ToolbarItem>
+          </PDFViewer>
+          <button className="mt-2 rounded-md border bg-primary-500 p-2 text-white">
+            Add cover letter
+          </button>
+        </div>
       </div>
     </div>
   )
 }
 
-export default overviewTab
+export default OverviewTab

@@ -15,6 +15,7 @@ export const AttachmentObject = definePrismaObject('Attachment', {
     contentType: t.field(AttachmentContentTypeFieldObject),
     filename: t.field(AttachmentFilenameFieldObject),
     path: t.field(AttachmentPathFieldObject),
+    size: t.field(AttachmentSizeFieldObject),
     userProfilePhoto: t.relation('userProfilePhoto', AttachmentUserProfilePhotoFieldObject),
     candidateCv: t.relation('candidateCv', AttachmentCandidateCvFieldObject),
     candidateAvatar: t.relation('candidateAvatar', AttachmentCandidateAvatarFieldObject),
@@ -54,6 +55,13 @@ export const AttachmentPathFieldObject = defineFieldObject('Attachment', {
   description: undefined,
   nullable: false,
   resolve: (parent) => parent.path,
+});
+
+export const AttachmentSizeFieldObject = defineFieldObject('Attachment', {
+  type: "Int",
+  description: undefined,
+  nullable: true,
+  resolve: (parent) => parent.size,
 });
 
 export const AttachmentUserProfilePhotoFieldObject = defineRelationObject('Attachment', 'userProfilePhoto', {

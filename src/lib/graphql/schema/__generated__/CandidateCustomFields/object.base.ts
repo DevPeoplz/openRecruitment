@@ -17,8 +17,6 @@ export const CandidateCustomFieldsObject = definePrismaObject('CandidateCustomFi
     inputType: t.field(CandidateCustomFieldsInputTypeFieldObject),
     fieldKey: t.field(CandidateCustomFieldsFieldKeyFieldObject),
     fieldValue: t.field(CandidateCustomFieldsFieldValueFieldObject),
-    fieldSettings: t.field(CandidateCustomFieldsFieldSettingsFieldObject),
-    evaluationAnswers: t.relation('evaluationAnswers', CandidateCustomFieldsEvaluationAnswersFieldObject(t)),
   }),
 });
 
@@ -63,35 +61,3 @@ export const CandidateCustomFieldsFieldValueFieldObject = defineFieldObject('Can
   nullable: false,
   resolve: (parent) => parent.fieldValue,
 });
-
-export const CandidateCustomFieldsFieldSettingsFieldObject = defineFieldObject('CandidateCustomFields', {
-  type: Inputs.Json,
-  description: undefined,
-  nullable: false,
-  resolve: (parent) => parent.fieldSettings,
-});
-
-export const CandidateCustomFieldsEvaluationAnswersFieldArgs = builder.args((t) => ({
-  where: t.field({ type: Inputs.EvaluationAnswerWhereInput, required: false }),
-  orderBy: t.field({ type: [Inputs.EvaluationAnswerOrderByWithRelationInput], required: false }),
-  cursor: t.field({ type: Inputs.EvaluationAnswerWhereUniqueInput, required: false }),
-  take: t.field({ type: 'Int', required: false }),
-  skip: t.field({ type: 'Int', required: false }),
-  distinct: t.field({ type: [Inputs.EvaluationAnswerScalarFieldEnum], required: false }),
-}))
-
-export const CandidateCustomFieldsEvaluationAnswersFieldObject = defineRelationFunction('CandidateCustomFields', (t) =>
-  defineRelationObject('CandidateCustomFields', 'evaluationAnswers', {
-    description: undefined,
-    nullable: false,
-    args: CandidateCustomFieldsEvaluationAnswersFieldArgs,
-    query: (args) => ({
-      where: args.where || undefined,
-      cursor: args.cursor || undefined,
-      take: args.take || undefined,
-      distinct: args.distinct || undefined,
-      skip: args.skip || undefined,
-      orderBy: args.orderBy || undefined,
-    }),
-  }),
-);

@@ -62,7 +62,7 @@ async function handlePOST(res: NextApiResponse, req: NextApiRequest) {
         }
 
         return saveFile(
-          `assets/company-${companyId}/${fields.name[index]}`,
+          `/public/assets/company-${companyId}/${fields.name[index]}`,
           fields.name[index],
           image
         )

@@ -96,6 +96,7 @@ model Attachment {
   contentType          String
   filename             String
   path                 String
+  size                 Int?
   userProfilePhoto     User?            @relation("profilePhoto")
   candidateCv          Candidate?       @relation("cv")
   candidateAvatar      Candidate?       @relation("avatar")
@@ -453,8 +454,8 @@ model TalentPool {
   follows     Follow[]
   company     Company           @relation(fields: [companyId], references: [id])
   companyId   String
-  createdAt                    DateTime           @default(now())
-  updatedAt                    DateTime           @updatedAt
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
 }
 
 model TalentPoolFile {
@@ -540,7 +541,7 @@ model Candidate {
   mainLanguage        String                  @default("en")
   languages           String[]
   coverLetterText     String?
-  birthDate           DateTime?
+  birthday            DateTime?
   referrer            TagSource?              @relation("referrer", fields: [referrerId], references: [id])
   referrerId          Int?
   cv                  Attachment?             @relation("cv", fields: [cvId], references: [id])
@@ -553,7 +554,6 @@ model Candidate {
   socials             String[]
   links               String[]
   salaryExpectation   String?
-  isHired             Boolean?
   hiredAt             Offer?                  @relation(fields: [hiredAtId], references: [id])
   hiredAtId           Int?
   hiredBy             HiringRole?             @relation(fields: [hiredById], references: [id])
@@ -585,42 +585,47 @@ model CandidateTag {
 }
 
 model CandidateCustomFields {
-  id                Int                @id @default(autoincrement())
-  candidate         Candidate          @relation(fields: [candidateId], references: [id])
-  candidateId       Int
-  inputType         String
-  fieldKey          String
-  fieldValue        String
-  fieldSettings     Json
-  evaluationAnswers EvaluationAnswer[] // To Review
+  id          Int       @id @default(autoincrement())
+  candidate   Candidate @relation(fields: [candidateId], references: [id])
+  candidateId Int
+  inputType   String
+  fieldKey    String
+  fieldValue  String
 
-  //@@id(candidateId, fieldKey)
+  @@unique([candidateId, fieldKey])
+}
+
+enum SCORE_TYPES {
+  APPROVED
+  NEUTRAL
+  REJECTED
 }
 
 model Evaluation {
   id                       Int                       @id @default(autoincrement())
-  template                 Template                  @relation(fields: [templateId], references: [id])
-  templateId               Int
+  template                 Template?                 @relation(fields: [templateId], references: [id])
+  templateId               Int?
   offer                    Offer?                    @relation(fields: [offerId], references: [id])
   offerId                  Int?
   candidate                Candidate                 @relation(fields: [candidateId], references: [id])
   candidateId              Int
   teamMember               HiringRole                @relation(fields: [teamMemberId], references: [id])
   teamMemberId             Int
-  note                     String
   isQuickEval              Boolean                   @default(false)
-  score                    Int // or text/String
+  score                    SCORE_TYPES
   eventScheduleEvaluations EventScheduleEvaluation[]
   eventEvaluations         EventEvaluation[]
-  answers                  EvaluationAnswer[]
+  answers                  EvaluationQuestion[]
 }
 
-model EvaluationAnswer {
-  id           Int                   @id @default(autoincrement())
-  evaluation   Evaluation            @relation(fields: [evaluationId], references: [id])
+model EvaluationQuestion {
+  id           Int        @id @default(autoincrement())
+  evaluation   Evaluation @relation(fields: [evaluationId], references: [id])
   evaluationId Int
-  answer       CandidateCustomFields @relation(fields: [answerId], references: [id])
-  answerId     Int
+  inputType    String
+  settings     Json?
+  question     String?
+  answer       String
 }
 
 model SharedCandidateLink {

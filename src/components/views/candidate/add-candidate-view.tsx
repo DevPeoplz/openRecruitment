@@ -14,6 +14,7 @@ import {
   GET_HUB_CANDIDATES,
   GET_TAGSOURCES,
 } from '@/graphql-operations/queries'
+import { CandidateUploadFile } from '@/components/file-upload/file-upload'
 
 const optionsDefault = [
   { value: 1, label: 'Durward Reynolds' },
@@ -79,33 +80,42 @@ const AddCandidateView = () => {
           const files = ['avatar', 'cv', 'coverLetter']
 
           formDataToUpload.append('candidateId', res.data.createOneCandidate.id)
-          files.forEach((file) => {
-            const blob = formData[file] as Blob
-            if (blob) {
-              formDataToUpload.append('name', file)
-              formDataToUpload.append('file', blob)
-            }
-          })
 
-          try {
-            const response = await fetch('/api/candidate/upload-files', {
-              method: 'POST',
-              body: formDataToUpload,
+          return Promise.all(
+            files.map(async (key) => {
+              const blob = formData[key] as File
+              if (blob) {
+                return CandidateUploadFile(blob, key, res.data.createOneCandidate.id)
+              }
+              return null
             })
-
-            console.log(response)
-
-            if (response.ok) {
+          )
+            .then((res) => {
               Alert({ type: 'success', message: 'Candidate created successfully' })
-            } else {
+            })
+            .catch((err) => {
               Alert({
                 type: 'warning',
                 message: 'Candidate created but files were not uploaded',
               })
-            }
-          } catch (error) {
-            console.error('Error uploading files:', error)
-          }
+            })
+
+          // try {
+          //   const response = await fetch('/api/candidate/upload-files', {
+          //     method: 'POST',
+          //     body: formDataToUpload,
+          //   })
+          //
+          //   console.log(response)
+          //
+          //   if (response.ok) {
+          //     Alert({ type: 'success', message: 'Candidate created successfully' })
+          //   } else {
+          //
+          //   }
+          // } catch (error) {
+          //   console.error('Error uploading files:', error)
+          // }
         }
       })
       .catch((err) => {

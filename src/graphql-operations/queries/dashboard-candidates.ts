@@ -193,6 +193,37 @@ export const GET_CANDIDATE_BY_ID = gql`
       name
       email
       phone
+      tags: candidateTags {
+        tag {
+          id
+          name
+        }
+      }
+      source: referrer {
+        id
+        name
+      }
+      avatar {
+        path
+        filename
+      }
+      coverLetter {
+        path
+        filename
+      }
+      coverLetterText
+      cv {
+        path
+        filename
+      }
+      birthday
+      skills
+      mainLanguage
+      languages
+      educationLevel
+      salaryExpectation
+      socials
+      links
     }
   }
 `

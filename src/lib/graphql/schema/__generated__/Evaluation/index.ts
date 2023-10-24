@@ -9,7 +9,6 @@ export {
   EvaluationCandidateIdFieldObject,
   EvaluationTeamMemberFieldObject,
   EvaluationTeamMemberIdFieldObject,
-  EvaluationNoteFieldObject,
   EvaluationIsQuickEvalFieldObject,
   EvaluationScoreFieldObject,
   EvaluationEventScheduleEvaluationsFieldObject,

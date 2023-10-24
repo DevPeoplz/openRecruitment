@@ -26,3 +26,23 @@ export function countRecordsByDay(
 
   return resultArray.map((count) => [new Date(count[0]), count[1]])
 }
+
+export function normalizePath(inputPath: string): string {
+  // Check if the inputPath starts with '/public'
+  if (inputPath.startsWith('/public')) {
+    // Remove '/public' from the beginning
+    inputPath = inputPath.substring('/public'.length)
+  }
+
+  // Ensure the path starts with '/'
+  if (!inputPath.startsWith('/')) {
+    inputPath = '/' + inputPath
+  }
+
+  // Ensure the path ends with a trailing slash
+  if (!inputPath.endsWith('/')) {
+    inputPath += '/'
+  }
+
+  return inputPath
+}

@@ -35,7 +35,7 @@ import * as Candidate from './Candidate';
 import * as CandidateTag from './CandidateTag';
 import * as CandidateCustomFields from './CandidateCustomFields';
 import * as Evaluation from './Evaluation';
-import * as EvaluationAnswer from './EvaluationAnswer';
+import * as EvaluationQuestion from './EvaluationQuestion';
 import * as SharedCandidateLink from './SharedCandidateLink';
 import * as Task from './Task';
 import * as TaskMember from './TaskMember';
@@ -719,22 +719,22 @@ export const Cruds: Record<
       upsertOne: Evaluation.upsertOneEvaluationMutationObject,
     },
   },
-  EvaluationAnswer: {
-    Object: EvaluationAnswer.EvaluationAnswerObject,
+  EvaluationQuestion: {
+    Object: EvaluationQuestion.EvaluationQuestionObject,
     queries: {
-      findFirst: EvaluationAnswer.findFirstEvaluationAnswerQueryObject,
-      findMany: EvaluationAnswer.findManyEvaluationAnswerQueryObject,
-      count: EvaluationAnswer.countEvaluationAnswerQueryObject,
-      findUnique: EvaluationAnswer.findUniqueEvaluationAnswerQueryObject,
+      findFirst: EvaluationQuestion.findFirstEvaluationQuestionQueryObject,
+      findMany: EvaluationQuestion.findManyEvaluationQuestionQueryObject,
+      count: EvaluationQuestion.countEvaluationQuestionQueryObject,
+      findUnique: EvaluationQuestion.findUniqueEvaluationQuestionQueryObject,
     },
     mutations: {
-      createMany: EvaluationAnswer.createManyEvaluationAnswerMutationObject,
-      createOne: EvaluationAnswer.createOneEvaluationAnswerMutationObject,
-      deleteMany: EvaluationAnswer.deleteManyEvaluationAnswerMutationObject,
-      deleteOne: EvaluationAnswer.deleteOneEvaluationAnswerMutationObject,
-      updateMany: EvaluationAnswer.updateManyEvaluationAnswerMutationObject,
-      updateOne: EvaluationAnswer.updateOneEvaluationAnswerMutationObject,
-      upsertOne: EvaluationAnswer.upsertOneEvaluationAnswerMutationObject,
+      createMany: EvaluationQuestion.createManyEvaluationQuestionMutationObject,
+      createOne: EvaluationQuestion.createOneEvaluationQuestionMutationObject,
+      deleteMany: EvaluationQuestion.deleteManyEvaluationQuestionMutationObject,
+      deleteOne: EvaluationQuestion.deleteOneEvaluationQuestionMutationObject,
+      updateMany: EvaluationQuestion.updateManyEvaluationQuestionMutationObject,
+      updateOne: EvaluationQuestion.updateOneEvaluationQuestionMutationObject,
+      upsertOne: EvaluationQuestion.upsertOneEvaluationQuestionMutationObject,
     },
   },
   SharedCandidateLink: {

@@ -1,6 +1,6 @@
 import React from 'react'
 import { user } from '@/utils/mockdata'
-import Avatar from '../Avatar'
+import Avatar from '../avatar'
 
 const UserCard = () => {
   return (

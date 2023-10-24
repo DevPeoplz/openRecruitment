@@ -4,6 +4,7 @@ export {
   AttachmentContentTypeFieldObject,
   AttachmentFilenameFieldObject,
   AttachmentPathFieldObject,
+  AttachmentSizeFieldObject,
   AttachmentUserProfilePhotoFieldObject,
   AttachmentCandidateCvFieldObject,
   AttachmentCandidateAvatarFieldObject,

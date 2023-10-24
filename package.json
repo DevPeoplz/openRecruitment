@@ -46,6 +46,7 @@
     "react-dom": "18.2.0",
     "react-google-charts": "4.0.1",
     "react-icons": "4.10.1",
+    "react-pdf": "^7.5.1",
     "react-phone-input-2": "2.15.1",
     "react-tooltip": "5.18.0",
     "react-use": "^17.4.0",
@@ -58,6 +59,8 @@
   "devDependencies": {
     "@apollo/server": "^4.9.0",
     "@as-integrations/next": "^2.0.1",
+    "@aws-sdk/client-s3": "^3.433.0",
+    "@aws-sdk/s3-request-presigner": "^3.433.0",
     "@graphql-authz/apollo-server-plugin": "^3.1.0",
     "@pothos/core": "^3.30.0",
     "@pothos/plugin-authz": "^3.5.8",

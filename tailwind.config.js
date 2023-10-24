@@ -49,6 +49,9 @@ module.exports = {
         panel: 'calc(100% - theme(width.52))',
         100: '35rem',
       },
+      dropShadow: {
+        'white-sm': '0 0 3px rgba(255, 255, 255, 1)',
+      },
     },
   },
   plugins: [],

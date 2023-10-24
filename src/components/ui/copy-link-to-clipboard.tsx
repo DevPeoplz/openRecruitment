@@ -15,7 +15,7 @@ const CopyLinkToClipboard = ({ url }: { url: string }) => {
     if (copied) {
       timeout = setTimeout(() => {
         setCopied(false)
-      }, 2000)
+      }, 1200)
     }
     return () => {
       clearTimeout(timeout)

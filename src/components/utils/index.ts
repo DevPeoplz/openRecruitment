@@ -14,10 +14,16 @@ export const getChildrenOnDisplayName = (children: ReactNode, displayName: strin
     if (typeof child === displayName) return child
 
     const type = extractType(child)
-    const childDisplayName =
+    let childDisplayName =
       typeof type === 'function'
         ? extractDisplayName(type as unknown as React.FunctionComponent)
         : ''
+
+    if (childDisplayName === '') {
+      const typeRef = type as unknown as { render: { displayName: string }; displayName: string }
+      childDisplayName =
+        typeRef?.render?.displayName === 'LoadableComponent' ? typeRef.displayName : ''
+    }
 
     return childDisplayName === displayName ? child : null
   })
