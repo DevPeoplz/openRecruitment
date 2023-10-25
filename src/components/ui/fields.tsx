@@ -5,6 +5,8 @@ import 'react-phone-input-2/lib/style.css'
 import { PiBuildingsBold } from 'react-icons/pi'
 import Avatar from './Avatar'
 import { PencilSquareIcon, ArrowUpTrayIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { format, parseISO } from 'date-fns'
+import { set } from 'lodash'
 
 const formClasses =
   'block w-full rounded-lg border border-gray-200 bg-white py-[calc(theme(spacing.2)-1px)] px-[calc(theme(spacing.3)-1px)] text-gray-900 placeholder:text-gray-400 focus:border-cyan-500 focus:outline-none focus:ring-cyan-500 sm:text-sm'
@@ -300,43 +302,31 @@ export function UploadAvatar({ id, label, onChange, file, deleteFilePreview }: U
 export function DatePicker({
   className,
   label,
-  onChange,
+  setState,
+  hasTime = false,
+  state,
 }: {
   className?: string
   label?: string
-  onChange: any
+  setState: any
+  hasTime?: boolean
+  state?: any
 }) {
+  const getDate = (date: string) => {
+    const localDate = parseISO(date)
+    const UTCString = format(localDate, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx")
+
+    return UTCString
+  }
+
   return (
     <div className={className}>
       {label ? <Label id="date">{label}</Label> : 'Date:'}
-      <input id="date" type="datetime-local" className={formClasses} onChange={onChange} />
-    </div>
-  )
-}
-
-export function TimeField({
-  className,
-  label,
-  min,
-  max,
-  onChange,
-}: {
-  className?: string
-  label?: string
-  min?: string
-  max?: string
-  onChange: any
-}) {
-  return (
-    <div className={className}>
-      {label ? <Label id="time">{label}</Label> : 'Time:'}
       <input
-        id="time"
-        type="time"
+        id="date"
+        type={hasTime ? 'datetime-local' : 'date'}
         className={formClasses}
-        min={min ?? min}
-        max={max ?? max}
-        onChange={onChange}
+        onChange={(e) => setState({ ...state, date: getDate(e.target.value) })}
       />
     </div>
   )

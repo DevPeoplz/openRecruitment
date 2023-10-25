@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/Button'
 import React, { useState } from 'react'
 import { DatePicker, SelectField, TextField, TextareaField } from '@/components/ui/fields'
 import { set } from 'lodash'
+import { format, parse, parseISO } from 'date-fns'
 
 const CANDIDATES = [
   {
@@ -32,11 +33,17 @@ const DURATION_OPTIONS = [
 ]
 
 const AddEventView = () => {
-  const [event, setEvent] = useState({})
+  const [event, setEvent] = useState({ date: '2023-10-06T19:22:00.000-05:00' })
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     console.log(event)
+  }
+
+  const getDate = (date: string) => {
+    const localDate = parseISO(date)
+    const UTCString = format(localDate, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx")
+    return UTCString
   }
 
   return (
@@ -70,10 +77,7 @@ const AddEventView = () => {
         />
       </div>
       <div className="grid grid-cols-6 gap-1">
-        <DatePicker
-          className="col-span-4 grid"
-          onChange={(e: any) => setEvent(set(event, 'date', e.target.value))}
-        />
+        <DatePicker className="col-span-4 grid" setState={setEvent} hasTime={true} state={event} />
         <SelectField
           className="col-span-2"
           label="Duration:"
