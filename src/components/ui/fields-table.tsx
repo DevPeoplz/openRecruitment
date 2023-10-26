@@ -18,7 +18,7 @@ export const FieldsTable: React.FC<FieldsTableProps> & FieldsTableComponentsType
   const { children, className } = props
   const fieldsTableItems = getChildrenOnDisplayName(children, 'FieldsTable.Item')
   return (
-    <div className={clsx('w-full divide-y divide-gray-200 border border-gray-200', className)}>
+    <div className={clsx('w-full divide-y divide-gray-200 border-b', className)}>
       {fieldsTableItems?.map((fieldItem) => {
         return fieldItem
       })}
@@ -46,10 +46,19 @@ const FieldsTableItem: React.FC<FieldsTableItemProps> & FieldsTableItemComponent
   const value = getChildrenOnDisplayName(children, 'FieldsTable.Item.Value')
 
   return (
-    <div className="flex h-12 items-center justify-center">
-      <div className={'flex h-full w-1/12 flex-wrap items-center justify-center p-1'}>{icon}</div>
-      <div className={'flex h-full w-3/12 flex-wrap items-center border-r p-1'}>{key}</div>
-      <div className={'flex h-full w-8/12 flex-wrap items-center p-1 pl-5'}>{value}</div>
+    <div
+      className={clsx(
+        'grid min-h-[3rem] grid-cols-field-3 grid-rows-field-3 items-center justify-center',
+        className
+      )}
+    >
+      <div className={'flex h-full w-full flex-wrap items-center justify-center p-1'}>{icon}</div>
+      <div
+        className={'flex h-full w-full flex-wrap items-center border-r p-1 text-sm font-semibold'}
+      >
+        {key}
+      </div>
+      <div className={'flex h-full w-full flex-wrap items-center p-1 pl-5 text-sm'}>{value}</div>
     </div>
   )
 }

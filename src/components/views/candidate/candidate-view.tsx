@@ -1,25 +1,17 @@
-import React, { FC, Fragment, useEffect, useMemo, useState } from 'react'
-import Avatar from '@/components/ui/avatar'
+import React, { FC, Fragment, useMemo, useState } from 'react'
 import { ActivityTab, EmailTab, EvaluationTab, FileTab } from './tabs'
-import EvaluationCandidate from './evaluation'
+import { AddQuickEvaluation } from './evaluation'
 import Loader from '@/components/ui/loader'
-import { ApolloQueryResult, useMutation, useQuery } from '@apollo/client'
+import { ApolloQueryResult, useQuery } from '@apollo/client'
 import { GET_CANDIDATE_BY_ID } from '@/graphql-operations/queries'
 import { find } from 'lodash'
 import { AUDIT_LOGS } from '@/utils/mockdata'
 import CopyLinkToClipboard from '@/components/ui/copy-link-to-clipboard'
-import SimpleImageViewer from '@/components/ui/simple-image-viewer'
-import Alert from '@/components/alert'
 import OverviewTab from '@/components/views/candidate/tabs/overview-tab'
 import { formatDistance } from 'date-fns'
-import { PencilSquareIcon } from '@heroicons/react/24/outline'
-import clsx from 'clsx'
-import { CheckCircleIcon, XMarkIcon } from '@heroicons/react/20/solid'
-import { SIGNUP_MUTATION } from '@/graphql-operations/mutations'
-import { UPDATE_CANDIDATE_MUTATION } from '@/graphql-operations/mutations/signup-candidate'
-import { useFileUpload } from '@/hooks/upload-files'
-import { CandidateUploadFile } from '@/components/file-upload/file-upload'
 import { EditableFile } from '@/components/views/candidate/editable-file'
+import { Tabs } from '@/components/ui/tabs'
+import { CandidateJobsUpdate } from '@/components/views/candidate/right-sidebar-components'
 
 type Props = {
   candidateId?: string | number
@@ -97,8 +89,8 @@ const CandidateView: FC<Props> = ({ candidateId }) => {
 
   return (
     <CandidateContext.Provider value={[candidate, refetchCandidate]}>
-      <div className="flex h-auto min-h-full gap-2">
-        <div className="w-100 p-2">
+      <div className="flex h-full w-full gap-0.5">
+        <div className="w-8/12 overflow-y-auto p-2">
           <div className="flex items-center justify-between gap-16">
             <div className="flex items-center gap-2">
               <EditableFile field={'avatar'} />
@@ -110,24 +102,19 @@ const CandidateView: FC<Props> = ({ candidateId }) => {
             <CopyLinkToClipboard url={`${window.location.origin}/candidate/${candidateId}`} />
             <div>Following</div>
           </div>
-          <div className="my-4">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                className={`rounded-xl px-4 py-2 ${
-                  tabSelected === tab.id ? 'bg-primary-50 text-white' : ''
-                }`}
-                onClick={() => setTabSelected(tab.id)}
-              >
-                {tab.name}
-              </button>
-            ))}
+          <div className="mb-4 mt-2">
+            <Tabs
+              tabs={tabs}
+              current={tabSelected}
+              onTabClick={(tab) => setTabSelected(tab)}
+            ></Tabs>
           </div>
-          {<Tab {...props} />}
+          <div className={'w-full'}>{<Tab {...props} />}</div>
         </div>
-
-        <div className="w-[320px] bg-gray-300 p-2">
-          <EvaluationCandidate />
+        <div className="flex w-4/12 flex-col items-center gap-2 overflow-y-auto bg-gray-300 p-2">
+          <AddQuickEvaluation />
+          <CandidateJobsUpdate />
+          <CandidateJobsUpdate field={'talentPool'} title={'Talent Pools'} />
         </div>
       </div>
     </CandidateContext.Provider>
@@ -156,6 +143,12 @@ export type CandidateType = {
   cv?: string | null
   createdAt: string
   languages?: string[] | null
+  birthday?: string | null
+  skills?: string[] | null
+  mainLanguage?: string | null
+  educationLevel?: string | null
+  salaryExpectation?: number | null
+  socials?: string[] | null
 }
 export const queryToCandidate = (data: any): CandidateType | null => {
   if (!data) return null
@@ -181,5 +174,11 @@ export const queryToCandidate = (data: any): CandidateType | null => {
     cv: data.cv && data.cv.path ? data.cv.path : null,
     createdAt: data.createdAt,
     languages: data.languages,
+    birthday: data.birthday,
+    skills: data.skills,
+    mainLanguage: data.mainLanguage,
+    educationLevel: data.educationLevel,
+    salaryExpectation: data.salaryExpectation,
+    socials: data.socials,
   }
 }

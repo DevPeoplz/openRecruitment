@@ -26,7 +26,7 @@ export const Panel: React.FC<PanelProps> & PanelComponentsType = (props: PanelPr
 
 const PanelHeader: React.FC<{ children?: ReactNode; as?: string }> = ({ children, as = 'h3' }) => {
   return (
-    <h3 className="bg-gray-300 py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+    <h3 className="rounded-t bg-gray-300 py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
       {children}
     </h3>
   )
@@ -36,7 +36,7 @@ const PanelBody: React.FC<{ children?: ReactNode; className?: string }> = ({
   children,
   className,
 }) => {
-  return <div className={clsx('border p-2', className)}>{children}</div>
+  return <div className={clsx('rounded-b border p-2', className)}>{children}</div>
 }
 
 PanelHeader.displayName = 'Panel.Header'

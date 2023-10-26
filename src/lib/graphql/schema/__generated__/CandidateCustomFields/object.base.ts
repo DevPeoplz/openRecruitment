@@ -9,22 +9,14 @@ import {
 
 export const CandidateCustomFieldsObject = definePrismaObject('CandidateCustomFields', {
   description: undefined,
-  findUnique: ({ id }) => ({ id }),
+  findUnique: (fields) => ({ candidateId_customFieldId: fields }),
   fields: (t) => ({
-    id: t.field(CandidateCustomFieldsIdFieldObject),
     candidate: t.relation('candidate', CandidateCustomFieldsCandidateFieldObject),
     candidateId: t.field(CandidateCustomFieldsCandidateIdFieldObject),
-    inputType: t.field(CandidateCustomFieldsInputTypeFieldObject),
-    fieldKey: t.field(CandidateCustomFieldsFieldKeyFieldObject),
-    fieldValue: t.field(CandidateCustomFieldsFieldValueFieldObject),
+    customField: t.relation('customField', CandidateCustomFieldsCustomFieldFieldObject),
+    customFieldId: t.field(CandidateCustomFieldsCustomFieldIdFieldObject),
+    value: t.field(CandidateCustomFieldsValueFieldObject),
   }),
-});
-
-export const CandidateCustomFieldsIdFieldObject = defineFieldObject('CandidateCustomFields', {
-  type: "ID",
-  description: undefined,
-  nullable: false,
-  resolve: (parent) => String(parent.id),
 });
 
 export const CandidateCustomFieldsCandidateFieldObject = defineRelationObject('CandidateCustomFields', 'candidate', {
@@ -41,23 +33,23 @@ export const CandidateCustomFieldsCandidateIdFieldObject = defineFieldObject('Ca
   resolve: (parent) => parent.candidateId,
 });
 
-export const CandidateCustomFieldsInputTypeFieldObject = defineFieldObject('CandidateCustomFields', {
-  type: "String",
+export const CandidateCustomFieldsCustomFieldFieldObject = defineRelationObject('CandidateCustomFields', 'customField', {
   description: undefined,
   nullable: false,
-  resolve: (parent) => parent.inputType,
+  args: undefined,
+  query: undefined,
 });
 
-export const CandidateCustomFieldsFieldKeyFieldObject = defineFieldObject('CandidateCustomFields', {
-  type: "String",
+export const CandidateCustomFieldsCustomFieldIdFieldObject = defineFieldObject('CandidateCustomFields', {
+  type: "Int",
   description: undefined,
   nullable: false,
-  resolve: (parent) => parent.fieldKey,
+  resolve: (parent) => parent.customFieldId,
 });
 
-export const CandidateCustomFieldsFieldValueFieldObject = defineFieldObject('CandidateCustomFields', {
+export const CandidateCustomFieldsValueFieldObject = defineFieldObject('CandidateCustomFields', {
   type: "String",
   description: undefined,
   nullable: false,
-  resolve: (parent) => parent.fieldValue,
+  resolve: (parent) => parent.value,
 });

@@ -1,11 +1,10 @@
 export {
   CandidateCustomFieldsObject,
-  CandidateCustomFieldsIdFieldObject,
   CandidateCustomFieldsCandidateFieldObject,
   CandidateCustomFieldsCandidateIdFieldObject,
-  CandidateCustomFieldsInputTypeFieldObject,
-  CandidateCustomFieldsFieldKeyFieldObject,
-  CandidateCustomFieldsFieldValueFieldObject
+  CandidateCustomFieldsCustomFieldFieldObject,
+  CandidateCustomFieldsCustomFieldIdFieldObject,
+  CandidateCustomFieldsValueFieldObject
 } from './object.base';
 export {
   createManyCandidateCustomFieldsMutation,

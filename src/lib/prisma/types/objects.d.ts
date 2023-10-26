@@ -1,5 +1,5 @@
 /* eslint-disable */
-import type { Prisma, User, Account, Session, VerificationToken, Attachment, HiringRole, Role, Company, SubscriptionData, CompanyMetadata, Department, DisqualifyReason, TagSource, AuditLog, MeetingRoom, EventSchedule, EventScheduleInterviewer, EventScheduleEvaluation, Event, EventInterviewer, EventEvaluation, Offer, OfferFile, Match, OfferTag, Membership, TalentPool, TalentPoolFile, TalentPoolMatch, Template, Stage, StageVisibility, StageMetadata, Candidate, CandidateTag, CandidateCustomFields, Evaluation, EvaluationQuestion, SharedCandidateLink, Task, TaskMember, Follow } from ".prisma/client";
+import type { Prisma, User, Account, Session, VerificationToken, Attachment, HiringRole, Role, Company, SubscriptionData, CompanyMetadata, Department, DisqualifyReason, TagSource, AuditLog, MeetingRoom, EventSchedule, EventScheduleInterviewer, EventScheduleEvaluation, Event, EventInterviewer, Offer, OfferFile, Match, OfferTag, Membership, TalentPool, TalentPoolFile, TalentPoolMatch, Template, Stage, StageVisibility, StageMetadata, Candidate, CandidateTag, CandidateCustomFields, CustomFields, Evaluation, EvaluationQuestion, SharedCandidateLink, Task, TaskMember, Follow } from ".prisma/client";
 export default interface PrismaTypes {
     User: {
         Name: "User";
@@ -247,8 +247,8 @@ export default interface PrismaTypes {
         Where: Prisma.CompanyWhereInput;
         Create: {};
         Update: {};
-        RelationName: "roles" | "subscription" | "meetingRooms" | "metadata" | "eventSchedule" | "events" | "departments" | "disqualifyReasons" | "tagSources" | "auditLogs" | "offers" | "templates" | "tasks" | "owner" | "hiringRoles" | "candidates" | "TalentPool";
-        ListRelations: "roles" | "meetingRooms" | "metadata" | "eventSchedule" | "events" | "departments" | "disqualifyReasons" | "tagSources" | "auditLogs" | "offers" | "templates" | "tasks" | "hiringRoles" | "candidates" | "TalentPool";
+        RelationName: "roles" | "subscription" | "meetingRooms" | "metadata" | "eventSchedule" | "events" | "departments" | "disqualifyReasons" | "tagSources" | "auditLogs" | "offers" | "templates" | "tasks" | "owner" | "hiringRoles" | "candidates" | "TalentPool" | "CustomFields";
+        ListRelations: "roles" | "meetingRooms" | "metadata" | "eventSchedule" | "events" | "departments" | "disqualifyReasons" | "tagSources" | "auditLogs" | "offers" | "templates" | "tasks" | "hiringRoles" | "candidates" | "TalentPool" | "CustomFields";
         Relations: {
             roles: {
                 Shape: Role[];
@@ -317,6 +317,10 @@ export default interface PrismaTypes {
             TalentPool: {
                 Shape: TalentPool[];
                 Name: "TalentPool";
+            };
+            CustomFields: {
+                Shape: CustomFields[];
+                Name: "CustomFields";
             };
         };
     };
@@ -568,8 +572,8 @@ export default interface PrismaTypes {
         Where: Prisma.EventWhereInput;
         Create: {};
         Update: {};
-        RelationName: "company" | "eventInterviewers" | "eventEvaluations";
-        ListRelations: "eventInterviewers" | "eventEvaluations";
+        RelationName: "company" | "eventInterviewers" | "evaluations";
+        ListRelations: "eventInterviewers" | "evaluations";
         Relations: {
             company: {
                 Shape: Company;
@@ -579,9 +583,9 @@ export default interface PrismaTypes {
                 Shape: EventInterviewer[];
                 Name: "EventInterviewer";
             };
-            eventEvaluations: {
-                Shape: EventEvaluation[];
-                Name: "EventEvaluation";
+            evaluations: {
+                Shape: Evaluation[];
+                Name: "Evaluation";
             };
         };
     };
@@ -605,29 +609,6 @@ export default interface PrismaTypes {
             teamMember: {
                 Shape: HiringRole;
                 Name: "HiringRole";
-            };
-        };
-    };
-    EventEvaluation: {
-        Name: "EventEvaluation";
-        Shape: EventEvaluation;
-        Include: Prisma.EventEvaluationInclude;
-        Select: Prisma.EventEvaluationSelect;
-        OrderBy: Prisma.EventEvaluationOrderByWithRelationInput;
-        WhereUnique: Prisma.EventEvaluationWhereUniqueInput;
-        Where: Prisma.EventEvaluationWhereInput;
-        Create: {};
-        Update: {};
-        RelationName: "event" | "evaluation";
-        ListRelations: never;
-        Relations: {
-            event: {
-                Shape: Event;
-                Name: "Event";
-            };
-            evaluation: {
-                Shape: Evaluation;
-                Name: "Evaluation";
             };
         };
     };
@@ -898,22 +879,22 @@ export default interface PrismaTypes {
         Create: {};
         Update: {};
         RelationName: "company" | "screeningQuestionsTemplate" | "pipelineTemplate" | "autoConfirmationEmail" | "stages" | "evaluations";
-        ListRelations: "stages" | "evaluations";
+        ListRelations: "screeningQuestionsTemplate" | "pipelineTemplate" | "autoConfirmationEmail" | "stages" | "evaluations";
         Relations: {
             company: {
                 Shape: Company;
                 Name: "Company";
             };
             screeningQuestionsTemplate: {
-                Shape: Offer | null;
+                Shape: Offer[];
                 Name: "Offer";
             };
             pipelineTemplate: {
-                Shape: Offer | null;
+                Shape: Offer[];
                 Name: "Offer";
             };
             autoConfirmationEmail: {
-                Shape: Offer | null;
+                Shape: Offer[];
                 Name: "Offer";
             };
             stages: {
@@ -940,7 +921,7 @@ export default interface PrismaTypes {
         ListRelations: "matches" | "visibility" | "metadata";
         Relations: {
             template: {
-                Shape: Template | null;
+                Shape: Template;
                 Name: "Template";
             };
             matches: {
@@ -1115,12 +1096,39 @@ export default interface PrismaTypes {
         Where: Prisma.CandidateCustomFieldsWhereInput;
         Create: {};
         Update: {};
-        RelationName: "candidate";
+        RelationName: "candidate" | "customField";
         ListRelations: never;
         Relations: {
             candidate: {
                 Shape: Candidate;
                 Name: "Candidate";
+            };
+            customField: {
+                Shape: CustomFields;
+                Name: "CustomFields";
+            };
+        };
+    };
+    CustomFields: {
+        Name: "CustomFields";
+        Shape: CustomFields;
+        Include: Prisma.CustomFieldsInclude;
+        Select: Prisma.CustomFieldsSelect;
+        OrderBy: Prisma.CustomFieldsOrderByWithRelationInput;
+        WhereUnique: Prisma.CustomFieldsWhereUniqueInput;
+        Where: Prisma.CustomFieldsWhereInput;
+        Create: {};
+        Update: {};
+        RelationName: "company" | "candidates";
+        ListRelations: "candidates";
+        Relations: {
+            company: {
+                Shape: Company;
+                Name: "Company";
+            };
+            candidates: {
+                Shape: CandidateCustomFields[];
+                Name: "CandidateCustomFields";
             };
         };
     };
@@ -1134,8 +1142,8 @@ export default interface PrismaTypes {
         Where: Prisma.EvaluationWhereInput;
         Create: {};
         Update: {};
-        RelationName: "template" | "offer" | "candidate" | "teamMember" | "eventScheduleEvaluations" | "eventEvaluations" | "answers";
-        ListRelations: "eventScheduleEvaluations" | "eventEvaluations" | "answers";
+        RelationName: "template" | "offer" | "candidate" | "teamMember" | "eventScheduleEvaluations" | "event" | "answers";
+        ListRelations: "eventScheduleEvaluations" | "answers";
         Relations: {
             template: {
                 Shape: Template | null;
@@ -1157,9 +1165,9 @@ export default interface PrismaTypes {
                 Shape: EventScheduleEvaluation[];
                 Name: "EventScheduleEvaluation";
             };
-            eventEvaluations: {
-                Shape: EventEvaluation[];
-                Name: "EventEvaluation";
+            event: {
+                Shape: Event | null;
+                Name: "Event";
             };
             answers: {
                 Shape: EvaluationQuestion[];

@@ -23,7 +23,7 @@ export const EditableFile: React.FC<{ field: string; file?: string | null }> = (
 
     if (!file) {
       Alert({ type: 'error', message: 'Please select a file' }).then()
-    } else if (file.size > 204800) {
+    } else if (file.size > 2048000) {
       Alert({ type: 'error', message: 'File size cannot exceed more than 2MB' }).then()
     } else {
       if (candidate && refetchCandidate) {
@@ -48,57 +48,55 @@ export const EditableFile: React.FC<{ field: string; file?: string | null }> = (
     }
   }
 
-  const avatarComponent = (
-    <div className="group relative flex h-16 w-16 items-center justify-center overflow-hidden rounded-full">
-      <SimpleImageViewer name={candidate.name} src={candidate.avatar}>
-        <Avatar name={candidate.name} src={candidate.avatar} />
-      </SimpleImageViewer>
-      {updating && (
-        <div className="absolute inset-0 flex items-center justify-center bg-primary-400/50">
-          <Loader size={'w-5 h-5'} fullScreen={false} />
-        </div>
-      )}
-      <div className="absolute bottom-0 left-0 hidden h-2/6 w-full cursor-pointer items-center justify-center bg-primary-400/50 pb-1 font-bold text-primary-900 drop-shadow-white-sm group-hover:flex">
-        <label htmlFor={generatedId} className={'cursor-pointer'}>
-          Edit
-        </label>
-        <input
-          type="file"
-          id={generatedId}
-          className="hidden"
-          accept="image/png, image/jpeg"
-          onChange={handleFileUpload}
-        />
-      </div>
-    </div>
-  )
+  let editComponent = null
 
-  const pdfComponent = (
-    <>
-      {updating ? (
-        <Loader size={'w-5 h-5'} className={'!border-primary-500'} fullScreen={false} />
-      ) : (
-        <>
+  if (field === 'avatar') {
+    editComponent = (
+      <div className="group relative flex h-16 w-16 items-center justify-center overflow-hidden rounded-full">
+        <SimpleImageViewer name={candidate.name} src={candidate.avatar}>
+          <Avatar name={candidate.name} src={candidate.avatar} />
+        </SimpleImageViewer>
+        {updating && (
+          <div className="absolute inset-0 flex items-center justify-center bg-primary-400/50">
+            <Loader size={'w-5 h-5'} fullScreen={false} />
+          </div>
+        )}
+        <div className="absolute bottom-0 left-0 hidden h-2/6 w-full cursor-pointer items-center justify-center bg-primary-400/50 pb-1 font-bold text-primary-900 drop-shadow-white-sm group-hover:flex">
           <label htmlFor={generatedId} className={'cursor-pointer'}>
-            {file ? 'Edit' : 'Upload'}
+            Edit
           </label>
           <input
             type="file"
             id={generatedId}
             className="hidden"
-            accept="application/pdf"
+            accept="image/png, image/jpeg"
             onChange={handleFileUpload}
           />
-        </>
-      )}
-    </>
-  )
-
-  const editComponents: Record<string, React.ReactElement> = {
-    avatar: avatarComponent,
-    cv: pdfComponent,
-    coverLetter: pdfComponent,
+        </div>
+      </div>
+    )
+  } else if (field === 'cv' || field === 'coverLetter') {
+    editComponent = (
+      <>
+        {updating ? (
+          <Loader size={'w-5 h-5'} className={'!border-primary-500'} fullScreen={false} />
+        ) : (
+          <>
+            <label htmlFor={generatedId} className={'cursor-pointer'}>
+              {file ? 'Edit' : 'Upload'}
+            </label>
+            <input
+              type="file"
+              id={generatedId}
+              className="hidden"
+              accept="application/pdf"
+              onChange={handleFileUpload}
+            />
+          </>
+        )}
+      </>
+    )
   }
 
-  return editComponents[field] ?? null
+  return editComponent
 }

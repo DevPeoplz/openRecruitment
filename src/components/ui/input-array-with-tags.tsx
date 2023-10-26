@@ -72,12 +72,15 @@ const InputArrayWithTags: React.FC<InputArrayWithTagsProps> = ({
         {selectedOptions.length > 0 && (
           <div
             className={
-              'absolute -top-10 z-20 mb-2 flex h-7 w-full gap-1 overflow-x-auto overflow-y-hidden'
+              'absolute -top-10 z-20 mb-2 flex h-9 w-full items-start gap-1 overflow-x-auto overflow-y-hidden'
             }
           >
             {selectedOptions.map((option) => (
-              <div key={option} className="flex justify-between gap-2 rounded border bg-white p-1">
-                <p>{option}</p>
+              <div
+                key={option}
+                className="mb-2 flex h-7 justify-between gap-2 rounded border bg-white p-1"
+              >
+                <p className={'max-w-[200px] truncate'}>{option}</p>
                 <XMarkIcon
                   className="h-5 w-5 text-gray-500 hover:cursor-pointer"
                   onClick={() => removeSelectedOption(option)}

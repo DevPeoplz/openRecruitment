@@ -14,8 +14,10 @@ export const CompanyMetadataObject = definePrismaObject('CompanyMetadata', {
     id: t.field(CompanyMetadataIdFieldObject),
     company: t.relation('company', CompanyMetadataCompanyFieldObject),
     companyId: t.field(CompanyMetadataCompanyIdFieldObject),
-    metaKey: t.field(CompanyMetadataMetaKeyFieldObject),
-    metaValue: t.field(CompanyMetadataMetaValueFieldObject),
+    key: t.field(CompanyMetadataKeyFieldObject),
+    value: t.field(CompanyMetadataValueFieldObject),
+    settings: t.field(CompanyMetadataSettingsFieldObject),
+    type: t.field(CompanyMetadataTypeFieldObject),
   }),
 });
 
@@ -40,16 +42,30 @@ export const CompanyMetadataCompanyIdFieldObject = defineFieldObject('CompanyMet
   resolve: (parent) => parent.companyId,
 });
 
-export const CompanyMetadataMetaKeyFieldObject = defineFieldObject('CompanyMetadata', {
+export const CompanyMetadataKeyFieldObject = defineFieldObject('CompanyMetadata', {
   type: "String",
   description: undefined,
   nullable: false,
-  resolve: (parent) => parent.metaKey,
+  resolve: (parent) => parent.key,
 });
 
-export const CompanyMetadataMetaValueFieldObject = defineFieldObject('CompanyMetadata', {
+export const CompanyMetadataValueFieldObject = defineFieldObject('CompanyMetadata', {
   type: "String",
   description: undefined,
   nullable: false,
-  resolve: (parent) => parent.metaValue,
+  resolve: (parent) => parent.value,
+});
+
+export const CompanyMetadataSettingsFieldObject = defineFieldObject('CompanyMetadata', {
+  type: Inputs.Json,
+  description: undefined,
+  nullable: true,
+  resolve: (parent) => parent.settings,
+});
+
+export const CompanyMetadataTypeFieldObject = defineFieldObject('CompanyMetadata', {
+  type: "String",
+  description: undefined,
+  nullable: false,
+  resolve: (parent) => parent.type,
 });

@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { LayoutSideMenu } from '@/components/layout/main/layout-side-menu'
 import { createHubTable, DefaultColumnsExtendedProps } from '@/components/table/hub-table'
-import { useLazyQuery, useQuery } from '@apollo/client'
-import { GET_CANDIDATE_BY_ID, GET_HUB_CANDIDATES } from '@/graphql-operations/queries'
+import { useQuery } from '@apollo/client'
+import { GET_HUB_CANDIDATES } from '@/graphql-operations/queries'
 import ViewCandidateModal from '@/components/modals/view-candidate-modal'
-import { AUDIT_LOGS } from '@/utils/mockdata'
 import AddCandidate from '@/components/table/actions/add-candidate'
-import { CandidateType } from '@/components/views/candidate/candidate-view'
+import { BriefcaseIcon } from '@heroicons/react/20/solid'
+import { ListIcon } from '@/components/ui/list-icon'
+import { SparklesIcon } from '@heroicons/react/24/solid'
+import { FaForwardStep } from 'react-icons/fa6'
 
 export type Person = {
   id: number
@@ -56,11 +58,10 @@ const defaultColumns: DefaultColumnsExtendedProps<Person> = [
       const job = info.getValue() as string[]
       const row = info.row.id
       return (
-        <ul className="list-disc">
-          {job?.map((job) => (
-            <li key={btoa(`${row}${job}`)}>{job}</li>
-          ))}
-        </ul>
+        <ListIcon
+          icon={<BriefcaseIcon className="h-3 w-3 text-primary-500" />}
+          list={job?.map((job) => ({ key: btoa(`${row}${job}`), value: job }))}
+        />
       )
     },
     show: true,
@@ -81,11 +82,10 @@ const defaultColumns: DefaultColumnsExtendedProps<Person> = [
       const stage = info.getValue() as string[]
       const row = info.row.id
       return (
-        <ul className="list-disc">
-          {stage?.map((stage, index) => (
-            <li key={btoa(`${row}${stage}${index}`)}>{stage}</li>
-          ))}
-        </ul>
+        <ListIcon
+          icon={<FaForwardStep className="h-3 w-3 text-primary-900" />}
+          list={stage?.map((item, index) => ({ key: btoa(`${row}${stage}${index}`), value: item }))}
+        />
       )
     },
     show: true,
@@ -141,11 +141,10 @@ const defaultColumns: DefaultColumnsExtendedProps<Person> = [
       const talentPool = info.getValue() as string[]
       const row = info.row.id
       return (
-        <ul className="list-[square]">
-          {talentPool?.map((talentPool) => (
-            <li key={btoa(`${row}${talentPool}`)}>{talentPool}</li>
-          ))}
-        </ul>
+        <ListIcon
+          icon={<SparklesIcon className="h-3 w-3 text-primary-700" />}
+          list={talentPool?.map((item) => ({ key: btoa(`${row}${item}`), value: item }))}
+        />
       )
     },
     show: true,

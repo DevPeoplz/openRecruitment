@@ -1,5 +1,5 @@
 'use client'
-import React, { ReactNode, useRef, useState } from 'react'
+import React, { ReactNode, useEffect, useRef, useState } from 'react'
 import {
   ArrowTopRightOnSquareIcon,
   ChevronLeftIcon,
@@ -30,6 +30,7 @@ function PDFViewer(props: PDFViewerProps) {
   const [loading, setLoading] = useState(true)
   const [pageWidth, setPageWidth] = useState(0)
   const [error, setError] = useState(false)
+  const [isRenderPdf, setIsRenderPdf] = useState(false)
 
   const toolbarItems = getChildrenOnDisplayName(props.children, 'PDFViewer.ToolbarItem')
 
@@ -54,6 +55,12 @@ function PDFViewer(props: PDFViewerProps) {
     standardFontDataUrl: 'standard_fonts/',
   }
 
+  useEffect(() => {
+    setTimeout(() => {
+      setIsRenderPdf(true)
+    }, 500)
+  }, [])
+
   return (
     <div
       className={
@@ -77,26 +84,28 @@ function PDFViewer(props: PDFViewerProps) {
         className={clsx(error ? 'hidden' : '', 'relative flex w-full items-center')}
       >
         <div ref={parentWidthRef} className="flex h-auto w-full justify-center">
-          <Document
-            file={props.file}
-            onLoadSuccess={onDocumentLoadSuccess}
-            onLoadError={onDocumentLoadError}
-            onError={onDocumentLoadError}
-            options={options}
-            renderMode="canvas"
-            className=""
-          >
-            <Page
+          {isRenderPdf && (
+            <Document
+              file={props.file}
+              onLoadSuccess={onDocumentLoadSuccess}
+              onLoadError={onDocumentLoadError}
+              onError={onDocumentLoadError}
+              options={options}
+              renderMode="canvas"
               className=""
-              key={pageNumber}
-              pageNumber={pageNumber}
-              renderAnnotationLayer={false}
-              renderTextLayer={false}
-              onLoadSuccess={onPageLoadSuccess}
-              onRenderError={() => setLoading(false)}
-              width={Math.max(pageWidth * 0.9, 350)}
-            />
-          </Document>
+            >
+              <Page
+                className=""
+                key={pageNumber}
+                pageNumber={pageNumber}
+                renderAnnotationLayer={false}
+                renderTextLayer={false}
+                onLoadSuccess={onPageLoadSuccess}
+                onRenderError={() => setLoading(false)}
+                width={Math.max(pageWidth * 0.9, 350)}
+              />
+            </Document>
+          )}
         </div>
       </div>
     </div>

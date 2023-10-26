@@ -12,7 +12,8 @@ export {
   EvaluationIsQuickEvalFieldObject,
   EvaluationScoreFieldObject,
   EvaluationEventScheduleEvaluationsFieldObject,
-  EvaluationEventEvaluationsFieldObject,
+  EvaluationEventFieldObject,
+  EvaluationEventIdFieldObject,
   EvaluationAnswersFieldObject
 } from './object.base';
 export {

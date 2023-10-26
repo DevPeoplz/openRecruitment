@@ -23,7 +23,8 @@ export const EvaluationObject = definePrismaObject('Evaluation', {
     isQuickEval: t.field(EvaluationIsQuickEvalFieldObject),
     score: t.field(EvaluationScoreFieldObject),
     eventScheduleEvaluations: t.relation('eventScheduleEvaluations', EvaluationEventScheduleEvaluationsFieldObject(t)),
-    eventEvaluations: t.relation('eventEvaluations', EvaluationEventEvaluationsFieldObject(t)),
+    event: t.relation('event', EvaluationEventFieldObject),
+    eventId: t.field(EvaluationEventIdFieldObject),
     answers: t.relation('answers', EvaluationAnswersFieldObject(t)),
   }),
 });
@@ -130,30 +131,19 @@ export const EvaluationEventScheduleEvaluationsFieldObject = defineRelationFunct
   }),
 );
 
-export const EvaluationEventEvaluationsFieldArgs = builder.args((t) => ({
-  where: t.field({ type: Inputs.EventEvaluationWhereInput, required: false }),
-  orderBy: t.field({ type: [Inputs.EventEvaluationOrderByWithRelationInput], required: false }),
-  cursor: t.field({ type: Inputs.EventEvaluationWhereUniqueInput, required: false }),
-  take: t.field({ type: 'Int', required: false }),
-  skip: t.field({ type: 'Int', required: false }),
-  distinct: t.field({ type: [Inputs.EventEvaluationScalarFieldEnum], required: false }),
-}))
+export const EvaluationEventFieldObject = defineRelationObject('Evaluation', 'event', {
+  description: undefined,
+  nullable: true,
+  args: undefined,
+  query: undefined,
+});
 
-export const EvaluationEventEvaluationsFieldObject = defineRelationFunction('Evaluation', (t) =>
-  defineRelationObject('Evaluation', 'eventEvaluations', {
-    description: undefined,
-    nullable: false,
-    args: EvaluationEventEvaluationsFieldArgs,
-    query: (args) => ({
-      where: args.where || undefined,
-      cursor: args.cursor || undefined,
-      take: args.take || undefined,
-      distinct: args.distinct || undefined,
-      skip: args.skip || undefined,
-      orderBy: args.orderBy || undefined,
-    }),
-  }),
-);
+export const EvaluationEventIdFieldObject = defineFieldObject('Evaluation', {
+  type: "Int",
+  description: undefined,
+  nullable: true,
+  resolve: (parent) => parent.eventId,
+});
 
 export const EvaluationAnswersFieldArgs = builder.args((t) => ({
   where: t.field({ type: Inputs.EvaluationQuestionWhereInput, required: false }),

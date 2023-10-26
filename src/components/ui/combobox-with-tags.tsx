@@ -13,6 +13,7 @@ export type ComboboxWithTagsProps = {
   width?: string
   onSelectedOptionsChange?: (options: ComboboxWithTagsProps['options']) => void
   initialSelection?: ComboboxWithTagsProps['options']
+  hideOnFullySelected?: boolean
 }
 
 const ComboboxWithTags: React.FC<ComboboxWithTagsProps> = ({
@@ -22,6 +23,7 @@ const ComboboxWithTags: React.FC<ComboboxWithTagsProps> = ({
   width = 'w-[250px]',
   onSelectedOptionsChange,
   initialSelection = [],
+  hideOnFullySelected = true,
 }) => {
   const [selectedOptions, setSelectedOptions] = useState<ComboboxWithTagsProps['options']>(
     () => initialSelection
@@ -68,7 +70,7 @@ const ComboboxWithTags: React.FC<ComboboxWithTagsProps> = ({
         </div>
 
         <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
-          {selectedOptions.length !== options.length && (
+          {(selectedOptions.length !== options.length || !hideOnFullySelected) && (
             <Combobox.Input
               className={clsx(
                 'w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0'

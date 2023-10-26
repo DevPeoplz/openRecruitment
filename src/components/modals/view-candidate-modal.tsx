@@ -21,7 +21,11 @@ export type LogType = {
 
 const ViewCandidateModal: React.FC<Props> = ({ isOpen, setIsOpen, candidateId }) => {
   return (
-    <ModalContainer isOpen={isOpen} setIsOpen={setIsOpen} className="h-full py-0 pr-0">
+    <ModalContainer
+      isOpen={isOpen}
+      setIsOpen={setIsOpen}
+      className="h-[90vh] w-[900px] max-w-[95vw] py-0 pr-0"
+    >
       <CandidateView candidateId={candidateId} />
     </ModalContainer>
   )

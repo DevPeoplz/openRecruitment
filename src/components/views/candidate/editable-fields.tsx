@@ -4,12 +4,12 @@ import { PencilSquareIcon } from '@heroicons/react/24/outline'
 import Alert from '@/components/alert'
 import { CheckCircleIcon, XMarkIcon } from '@heroicons/react/20/solid'
 import Loader from '@/components/ui/loader'
-import { reject } from 'lodash'
 import { ComboboxWithTagsProps } from '@/components/ui/combobox-with-tags'
 import { CandidateTagsBtnCombobox } from '@/components/ui/dropdowns/candidate-tags-btn-combobox'
 import { childrenRenderer } from '@/components/utils/basic'
 import { getChildrenNotDisplayName, getChildrenOnDisplayName } from '@/components/utils'
 import InputArrayWithTags from '@/components/ui/input-array-with-tags'
+import { DatePicker } from '@/components/ui/date-picker'
 
 interface EditableFieldType<T> {
   initialValue?: T | null | undefined
@@ -114,6 +114,19 @@ export const EditableField = <T,>({
         />
       )
       break
+    case 'date':
+    case 'datetime':
+    case 'datetime-local':
+      inputComponent = (
+        <DatePicker
+          hasTime={type === 'datetime'}
+          onChange={(value) => {
+            setValue(value as T)
+          }}
+          initialValue={initialValue as string}
+        />
+      )
+      break
     case 'text':
     case 'number':
     case 'email':
@@ -129,6 +142,14 @@ export const EditableField = <T,>({
             value={(value as React.InputHTMLAttributes<HTMLInputElement>['value']) ?? undefined}
             type={type}
             onChange={(e) => {
+              if (type === 'number') {
+                const number = Number(e.target.value)
+                if (!isNaN(number)) {
+                  setValue(number as T)
+                }
+                return
+              }
+
               setValue(e.target.value as T)
             }}
           />

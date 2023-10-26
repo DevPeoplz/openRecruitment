@@ -201,7 +201,7 @@ export const CandidateLinksFieldObject = defineFieldObject('Candidate', {
 });
 
 export const CandidateSalaryExpectationFieldObject = defineFieldObject('Candidate', {
-  type: "String",
+  type: "Int",
   description: undefined,
   nullable: true,
   resolve: (parent) => parent.salaryExpectation,

@@ -16,8 +16,10 @@ const Page = () => {
   }
 
   return (
-    <div className="overflow-y-auto">
-      <CandidateView candidateId={id as string} />
+    <div className="flex h-full w-full justify-center bg-gray-200">
+      <div className={'mt-5 h-full w-[1000px] max-w-[90vw] rounded bg-white'}>
+        <CandidateView candidateId={id as string} />
+      </div>
     </div>
   )
 }
