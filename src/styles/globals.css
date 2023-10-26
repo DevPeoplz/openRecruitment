@@ -56,12 +56,3 @@ body {
         @apply text-xl font-bold tracking-tight text-gray-900 sm:text-2xl;
     }
 }
-
-.section {
-    .heading {
-        @apply bg-gray-300 py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6
-    }
-    .body{
-        @apply px-2 py-2 border
-    }
-}

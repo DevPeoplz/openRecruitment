@@ -22,6 +22,10 @@ export const CandidateObject = definePrismaObject('Candidate', {
         type: 'String',
         resolve: (parent) => `${parent.firstName} ${parent.lastName}`,
       }),
+      shortName: t.field({
+        type: 'String',
+        resolve: (parent) => `${parent.firstName.split(' ')[0]} ${parent.lastName.split(' ')[0]}`,
+      }),
       averageScore: t.field({
         type: 'Float',
         resolve: async (parent, args, ctx) => {

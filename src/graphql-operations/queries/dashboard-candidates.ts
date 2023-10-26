@@ -190,6 +190,8 @@ export const GET_CANDIDATE_BY_ID = gql`
   query GET_CANDIDATE_BY_ID($where: CandidateWhereUniqueInput!) {
     findUniqueCandidate(where: $where) {
       id
+      firstName
+      lastName
       name
       email
       phone
@@ -224,6 +226,7 @@ export const GET_CANDIDATE_BY_ID = gql`
       salaryExpectation
       socials
       links
+      createdAt
     }
   }
 `
@@ -301,6 +304,27 @@ export const GET_HUB_POOLS = gql`
         }
       }
       createdAt: createdAt
+    }
+  }
+`
+
+export const GET_CANDIDATE_BY_ID_FILES = gql`
+  query GET_CANDIDATE_BY_ID_FILES($where: CandidateWhereUniqueInput!) {
+    findUniqueCandidate(where: $where) {
+      id
+      avatar {
+        path
+        filename
+      }
+      coverLetter {
+        path
+        filename
+      }
+      coverLetterText
+      cv {
+        path
+        filename
+      }
     }
   }
 `

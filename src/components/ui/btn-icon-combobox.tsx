@@ -13,9 +13,10 @@ type BtnIconComboboxProps = {
   spanClassName?: string
   plusClassName?: string
   icon?: React.ElementType
+  initialSelection?: ComboboxWithTagsProps['options']
 }
 
-const BtnIconCombobox: React.FC<BtnIconComboboxProps> = ({
+export const BtnIconCombobox: React.FC<BtnIconComboboxProps> = ({
   options,
   hideBtnAfterClick = true,
   onSelectedOptionsChange,
@@ -73,5 +74,3 @@ const BtnIconCombobox: React.FC<BtnIconComboboxProps> = ({
     </>
   )
 }
-
-export default BtnIconCombobox

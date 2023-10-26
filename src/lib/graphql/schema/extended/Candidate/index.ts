@@ -3,5 +3,5 @@ export {
   findManyCandidateQueryObject,
   findUniqueCandidateQueryObject,
 } from './queries'
-export { createOneCandidateMutationObject } from './mutations'
+export { createOneCandidateMutationObject, updateOneCandidateMutationObject } from './mutations'
 export { CandidateObject } from './object'

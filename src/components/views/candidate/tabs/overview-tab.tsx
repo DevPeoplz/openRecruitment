@@ -1,117 +1,296 @@
-import React, { useContext } from 'react'
+import React, { useCallback, useContext } from 'react'
 import { LogType } from '../../../modals/view-candidate-modal'
-import { EnvelopeIcon, PhoneIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import { PlusIcon } from '@heroicons/react/20/solid'
-import Avatar from '@/components/ui/avatar'
-import { CandidateContext } from '@/components/views/candidate/candidate-view'
+import { EnvelopeIcon, PhoneIcon } from '@heroicons/react/24/outline'
+import { LanguageIcon, PlusIcon, UserCircleIcon } from '@heroicons/react/20/solid'
+import {
+  CandidateContext,
+  CandidateType,
+  queryToCandidate,
+} from '@/components/views/candidate/candidate-view'
 import PDFViewer from '@/components/pdf-viewer'
+import { EditableField } from '@/components/views/candidate/editable-fields'
+import { useMutation } from '@apollo/client'
+import { UPDATE_CANDIDATE_MUTATION } from '@/graphql-operations/mutations/signup-candidate'
+import { Panel } from '@/components/ui/panel'
+import { FieldsTable } from '@/components/ui/fields-table'
+import { ComboboxWithTagsProps } from '@/components/ui/combobox-with-tags'
+import { parseGQLData } from '@/components/utils/data-parsing'
+import { EditableFile } from '@/components/views/candidate/editable-file'
 
 type Props = {
   logs?: LogType[]
 }
 
 const OverviewTab: React.FC<Props> = ({ logs }) => {
-  const candidate = useContext(CandidateContext)
+  const [candidate, refetchCandidate] = useContext(CandidateContext) ?? []
+
+  const [updateCandidate, { data: dataCandidateUpdated, error: errorCandidateUpdated }] =
+    useMutation(UPDATE_CANDIDATE_MUTATION)
+
+  const dataBuilder = <T,>(field: string, value: T | undefined | null) => {
+    switch (field) {
+      case 'sources':
+        if ((value as ComboboxWithTagsProps['options'])[0]?.value) {
+          return {
+            referrer: {
+              connect: {
+                id: parseInt(String((value as ComboboxWithTagsProps['options'])[0]?.value)),
+              },
+            },
+          }
+        } else {
+          return {
+            referrer: {
+              disconnect: null,
+            },
+          }
+        }
+      //break
+      case 'tags':
+        return {
+          candidateTags: {
+            deleteMany: {},
+            create: [
+              ...(value as ComboboxWithTagsProps['options']).map((tag) => ({
+                tag: { connect: { id: parseInt(String(tag.value)) } },
+              })),
+            ],
+          },
+        }
+      //break
+      case 'email':
+      case 'firstName':
+      case 'lastName':
+        return { [field]: { set: value } }
+      case 'languages':
+        return { [field]: value }
+    }
+
+    return {}
+  }
+
+  const dataParser = <T,>(field: string, candidate: CandidateType | null): T | null => {
+    if (!candidate) return null
+
+    switch (field) {
+      case 'sources':
+        return parseGQLData([candidate.source]) as T
+      case 'tags':
+        return parseGQLData(candidate.tags) as T
+      case 'email':
+      case 'firstName':
+      case 'lastName':
+      case 'languages':
+        return candidate[field] as T
+    }
+
+    return null
+  }
+
+  const handleOnUpdate = useCallback(
+    <T,>({ field }: { field: string }) => {
+      return (value: T | null | undefined) =>
+        new Promise<T | null | undefined>((resolve, reject) => {
+          if (!candidate?.id) {
+            return reject()
+          }
+
+          updateCandidate({
+            variables: {
+              where: { id: parseInt(String(candidate.id)) },
+              data: dataBuilder<T>(field, value),
+            },
+          })
+            .then((res) => {
+              if (res.data.updateOneCandidate?.id) {
+                resolve(dataParser<T>(field, queryToCandidate(res.data.updateOneCandidate)))
+              } else {
+                reject()
+              }
+            })
+            .catch(() => {
+              reject()
+            })
+        }).finally(() => {
+          //return refetchCandidate()
+        })
+    },
+    [candidate?.id, updateCandidate]
+  )
 
   if (!candidate || !logs) return null
 
   return (
     <div className="flex flex-col gap-4 ">
       <div className="flex items-center gap-2">
-        <span className="flex flex-wrap gap-2">
-          <p>Tag:</p>
-          {candidate.tagSource.tag.map((tag) => (
-            <span key={tag.id} className="flex items-center gap-1 rounded-sm border px-2">
-              <p>{tag.name}</p>
-              <XMarkIcon className="h-4 w-4" />
-            </span>
-          ))}
-        </span>
-        <button className="rounded-sm border">
-          <PlusIcon className="h-5 w-5" />
-        </button>
-      </div>
-      <table className="min-w-full divide-y divide-gray-200 border">
-        <thead className="bg-gray-300">
-          <tr>
-            <th
-              scope="col"
-              className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-            >
-              Information
-            </th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-gray-200 bg-white">
-          <tr className="flex items-center gap-2 py-3.5 pl-4 pr-3">
-            <td>
-              <EnvelopeIcon className="h-5 w-5" />
-              <p>Email</p>
-              <p>{candidate.email}</p>
-            </td>
-          </tr>
-          <tr className="flex items-center gap-2 py-3.5 pl-4 pr-3">
-            <td>
-              <PhoneIcon className="h-5 w-5" />
-              <p>Phone</p>
-              <p>{candidate.phone}</p>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div className="flex items-center gap-2">
-        <span className="flex flex-wrap gap-2">
-          <p>Source:</p>
-          {candidate.tagSource.source.map((source) => (
-            <span key={source.id} className="flex items-center gap-1 rounded-sm border px-2">
-              <p>{source.name}</p>
-              <XMarkIcon className="h-4 w-4" />
-            </span>
-          ))}
-        </span>
-        <button className="rounded-sm border">
-          <PlusIcon className="h-5 w-5" />
-        </button>
-      </div>
-      <table className="min-w-full divide-y divide-gray-200 border">
-        <thead className="bg-gray-300">
-          <tr>
-            <th
-              scope="col"
-              className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-            >
-              Recent Activity
-            </th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-gray-200 bg-white">
-          {logs.map((log, index) => (
-            <tr key={index} className="flex items-center justify-between gap-2 py-3.5 pl-4 pr-3">
-              <td>
-                <span className="flex items-center gap-1">
-                  <Avatar name={log.author.name} />
-                  <p>{log.author.name}</p>
-                  <p>{log.description}</p>
-                </span>
-                <p>4d ago</p>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <div className="section">
-        <h3 className="heading">Curriculum</h3>
-        <div className="body">
-          <PDFViewer file={candidate.cv}>
-            <PDFViewer.ToolbarItem>
-              <span>Edit</span>
-            </PDFViewer.ToolbarItem>
-          </PDFViewer>
-          <button className="mt-2 rounded-md border bg-primary-500 p-2 text-white">
-            Add cover letter
-          </button>
+        <div className="flex flex-wrap gap-2">
+          <b>Tags:</b>
+          <EditableField<ComboboxWithTagsProps['options']>
+            type="tags"
+            initialValue={parseGQLData(candidate.tags)}
+            onSave={handleOnUpdate<ComboboxWithTagsProps['options']>({ field: 'tags' })}
+            editVisible={true}
+          >
+            <EditableField.Icon>
+              <PlusIcon className="h-5 w-5 rounded-sm border" />
+            </EditableField.Icon>
+            <div className={'flex max-w-full flex-wrap gap-1'}>
+              {candidate.tags.map((tag) => (
+                <div
+                  key={`tags-${tag.id}`}
+                  className="flex justify-between gap-2 rounded border p-1 px-2 text-sm"
+                >
+                  <p>{tag.name}</p>
+                </div>
+              ))}
+            </div>
+          </EditableField>
         </div>
       </div>
+      <Panel>
+        <Panel.Header>Information</Panel.Header>
+        <Panel.Body className={'!border-none !p-0'}>
+          <FieldsTable>
+            <FieldsTable.Item>
+              <FieldsTable.Item.Icon>
+                <UserCircleIcon className={'h-5 w-5'} />
+              </FieldsTable.Item.Icon>
+              <FieldsTable.Item.Key>
+                <p>First Name</p>
+              </FieldsTable.Item.Key>
+              <FieldsTable.Item.Value>
+                <EditableField<string>
+                  type="text"
+                  initialValue={candidate.firstName}
+                  onSave={handleOnUpdate<string>({ field: 'firstName' })}
+                >
+                  <p>{candidate.firstName}</p>
+                </EditableField>
+              </FieldsTable.Item.Value>
+            </FieldsTable.Item>
+            <FieldsTable.Item>
+              <FieldsTable.Item.Icon>
+                <UserCircleIcon className={'h-5 w-5'} />
+              </FieldsTable.Item.Icon>
+              <FieldsTable.Item.Key>
+                <p>Last Name</p>
+              </FieldsTable.Item.Key>
+              <FieldsTable.Item.Value>
+                <EditableField<string>
+                  type="text"
+                  initialValue={candidate.lastName}
+                  onSave={handleOnUpdate<string>({ field: 'lastName' })}
+                >
+                  <p>{candidate.lastName}</p>
+                </EditableField>
+              </FieldsTable.Item.Value>
+            </FieldsTable.Item>
+            <FieldsTable.Item>
+              <FieldsTable.Item.Icon>
+                <EnvelopeIcon className={'h-5 w-5'} />
+              </FieldsTable.Item.Icon>
+              <FieldsTable.Item.Key>
+                <p>Email</p>
+              </FieldsTable.Item.Key>
+              <FieldsTable.Item.Value>
+                <EditableField<string>
+                  type="email"
+                  initialValue={candidate.email}
+                  onSave={handleOnUpdate<string>({ field: 'email' })}
+                >
+                  <p>{candidate.email}</p>
+                </EditableField>
+              </FieldsTable.Item.Value>
+            </FieldsTable.Item>
+            <FieldsTable.Item>
+              <FieldsTable.Item.Icon>
+                <PhoneIcon className="h-5 w-5" />
+              </FieldsTable.Item.Icon>
+              <FieldsTable.Item.Key>
+                <p>Phone</p>
+              </FieldsTable.Item.Key>
+              <FieldsTable.Item.Value>
+                <EditableField<string>
+                  type="text"
+                  initialValue={candidate.phone}
+                  onSave={handleOnUpdate<string>({ field: 'phone' })}
+                >
+                  <p>{candidate.phone}</p>
+                </EditableField>
+              </FieldsTable.Item.Value>
+            </FieldsTable.Item>
+            <FieldsTable.Item>
+              <FieldsTable.Item.Icon>
+                <LanguageIcon className="h-5 w-5" />
+              </FieldsTable.Item.Icon>
+              <FieldsTable.Item.Key>
+                <p>Languages</p>
+              </FieldsTable.Item.Key>
+              <FieldsTable.Item.Value>
+                <EditableField<string[]>
+                  type="stringArray"
+                  initialValue={
+                    candidate.languages?.length && candidate.languages.length > 0
+                      ? candidate.languages
+                      : null
+                  }
+                  onSave={handleOnUpdate<string[]>({ field: 'languages' })}
+                >
+                  <div className={'flex max-w-full flex-wrap gap-1'}>
+                    {candidate.languages?.map((lang) => (
+                      <div
+                        key={`language-${lang}`}
+                        className="flex justify-between gap-2 rounded border p-1 px-2 text-sm"
+                      >
+                        <p>{lang}</p>
+                      </div>
+                    ))}
+                  </div>
+                </EditableField>
+              </FieldsTable.Item.Value>
+            </FieldsTable.Item>
+          </FieldsTable>
+        </Panel.Body>
+      </Panel>
+      <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <b>Source:</b>
+          <EditableField<ComboboxWithTagsProps['options']>
+            type="sources"
+            initialValue={parseGQLData([candidate.source])}
+            onSave={handleOnUpdate<ComboboxWithTagsProps['options']>({ field: 'sources' })}
+            editVisible={true}
+          >
+            <EditableField.Icon>
+              <PlusIcon className="h-5 w-5 rounded-sm border" />
+            </EditableField.Icon>
+            <>
+              {candidate.source && (
+                <div
+                  key={`source-${candidate.source.id}`}
+                  className="flex justify-between gap-2 rounded border p-1 px-2 text-sm"
+                >
+                  <p>{candidate.source.name}</p>
+                </div>
+              )}
+            </>
+          </EditableField>
+        </div>
+      </div>
+      <Panel>
+        <Panel.Header>Recent Activity</Panel.Header>
+        <Panel.Body></Panel.Body>
+      </Panel>
+      <Panel>
+        <Panel.Header>Curriculum</Panel.Header>
+        <Panel.Body>
+          <PDFViewer file={candidate.cv}>
+            <PDFViewer.ToolbarItem>
+              <EditableFile field="cv" file={candidate.cv} />
+            </PDFViewer.ToolbarItem>
+          </PDFViewer>
+        </Panel.Body>
+      </Panel>
     </div>
   )
 }

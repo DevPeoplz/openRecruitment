@@ -83,6 +83,7 @@ export const Cruds: Record<
     mutations: {
       ...AutoCruds.Candidate.mutations,
       createOne: Candidate.createOneCandidateMutationObject,
+      updateOne: Candidate.updateOneCandidateMutationObject,
     },
   },
   Offer: {

@@ -46,3 +46,23 @@ export function normalizePath(inputPath: string): string {
 
   return inputPath
 }
+
+export const parseGQLData = (
+  data: { id: number | string; name: string }[] | undefined,
+  suffix?: string
+) => {
+  if (!Array.isArray(data)) return []
+
+  return [
+    ...(data
+      .map((item) => {
+        if (!item) return null
+        const extra = suffix ? ` ${suffix}` : ''
+        return {
+          value: `${item.id}${extra}`,
+          label: `${item.name}${extra}`,
+        }
+      })
+      .filter((i) => i) as { value: string; label: string }[]),
+  ]
+}

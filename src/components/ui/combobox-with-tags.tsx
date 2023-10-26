@@ -5,7 +5,10 @@ import clsx from 'clsx'
 
 export type ComboboxWithTagsProps = {
   comboBtnRef?: React.RefObject<HTMLButtonElement>
-  options: ({ label: string; value: string | number } & Record<string, any>)[]
+  options: ({
+    label: string
+    value: string | number
+  } & Record<string, any>)[]
   placeholder?: string
   width?: string
   onSelectedOptionsChange?: (options: ComboboxWithTagsProps['options']) => void
@@ -20,8 +23,9 @@ const ComboboxWithTags: React.FC<ComboboxWithTagsProps> = ({
   onSelectedOptionsChange,
   initialSelection = [],
 }) => {
-  const [selectedOptions, setSelectedOptions] =
-    useState<ComboboxWithTagsProps['options']>(initialSelection)
+  const [selectedOptions, setSelectedOptions] = useState<ComboboxWithTagsProps['options']>(
+    () => initialSelection
+  )
   const [query, setQuery] = useState('')
 
   const filteredOptions: typeof options =

@@ -8,7 +8,7 @@ import { omit } from 'lodash'
 import Loader from '@/components/ui/loader'
 import { ModalControlContext } from '@/hooks/contexts'
 import { ComboboxWithTagsProps } from '@/components/ui/combobox-with-tags'
-import BtnIconCombobox from '@/components/ui/btn-icon-combobox'
+import { BtnIconCombobox } from '@/components/ui/btn-icon-combobox'
 import {
   GET_ADD_CANDIDATE_DROPDOWNS,
   GET_HUB_CANDIDATES,
