@@ -10,7 +10,7 @@ export function Select({
   defaultSize = 'w-36 sm:w-48',
   label,
 }: {
-  selected: string | number
+  selected?: string | number
   list: { label: string; value: string | number; placeholder?: boolean }[]
   onChange?: (value: string) => void
   defaultSize?: string
@@ -24,7 +24,11 @@ export function Select({
         <>
           {label && (
             <Listbox.Label>
-              {typeof label === 'string' ? <span className="font-bold">{label}</span> : label}
+              {typeof label === 'string' ? (
+                <span className="mb-2 block text-sm font-semibold text-gray-900">{label}</span>
+              ) : (
+                label
+              )}
             </Listbox.Label>
           )}
           <div className={clsx('relative', defaultSize)}>

@@ -5,10 +5,8 @@ import 'react-phone-input-2/lib/style.css'
 import { PiBuildingsBold } from 'react-icons/pi'
 import Avatar from './Avatar'
 import { PencilSquareIcon, ArrowUpTrayIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import { format, parseISO } from 'date-fns'
-import { set } from 'lodash'
 
-const formClasses =
+export const formClasses =
   'block w-full rounded-lg border border-gray-200 bg-white py-[calc(theme(spacing.2)-1px)] px-[calc(theme(spacing.3)-1px)] text-gray-900 placeholder:text-gray-400 focus:border-cyan-500 focus:outline-none focus:ring-cyan-500 sm:text-sm'
 
 interface LabelProps {
@@ -42,7 +40,7 @@ interface SelectFieldProps {
   required?: boolean
   name?: string
   options: option[]
-  onChange?: any
+  onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void
 }
 
 interface PhoneFieldProps {
@@ -76,7 +74,7 @@ interface CheckboxFieldProps {
   className?: string
 }
 
-function Label({ id, children }: LabelProps) {
+export function Label({ id, children }: LabelProps) {
   return (
     <label htmlFor={id} className="mb-2 block text-sm font-semibold text-gray-900">
       {children}
@@ -299,40 +297,22 @@ export function UploadAvatar({ id, label, onChange, file, deleteFilePreview }: U
   )
 }
 
-export function DatePicker({
-  className,
-  label,
-  setState,
-  hasTime = false,
-  state,
-}: {
-  className?: string
+interface TextareaFieldProps {
+  id: string
   label?: string
-  setState: any
-  hasTime?: boolean
-  state?: any
-}) {
-  const getDate = (date: string) => {
-    const localDate = parseISO(date)
-    const UTCString = format(localDate, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx")
-
-    return UTCString
-  }
-
-  return (
-    <div className={className}>
-      {label ? <Label id="date">{label}</Label> : 'Date:'}
-      <input
-        id="date"
-        type={hasTime ? 'datetime-local' : 'date'}
-        className={formClasses}
-        onChange={(e) => setState({ ...state, date: getDate(e.target.value) })}
-      />
-    </div>
-  )
+  className?: string
+  placeholder?: string
+  onChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void
 }
 
-export function TextareaField({ id, label, className, placeholder, ...props }: any) {
+export function TextareaField({
+  id,
+  label,
+  className,
+  placeholder,
+  onChange,
+  ...props
+}: TextareaFieldProps) {
   return (
     <div className={className}>
       {label && <Label id={id}>{label}</Label>}
@@ -345,6 +325,7 @@ export function TextareaField({ id, label, className, placeholder, ...props }: a
           'resize-none',
           'px-[calc(theme(spacing.3)-1px)] py-[calc(theme(spacing.2)-1px)]'
         )}
+        onChange={onChange}
       />
     </div>
   )

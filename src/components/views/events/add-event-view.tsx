@@ -1,8 +1,9 @@
 import { Button } from '@/components/ui/Button'
 import React, { useState } from 'react'
-import { DatePicker, SelectField, TextField, TextareaField } from '@/components/ui/fields'
+import { TextField, TextareaField } from '@/components/ui/fields'
 import { set } from 'lodash'
-import { format, parse, parseISO } from 'date-fns'
+import { Select } from '@/components/ui/select'
+import { DatePicker } from '@/components/ui/date-picker'
 
 const CANDIDATES = [
   {
@@ -30,31 +31,42 @@ const DURATION_OPTIONS = [
   { value: 1800, label: '30 min' },
   { value: 2700, label: '45 min' },
   { value: 3600, label: '1 hour' },
+  { value: 5400, label: '1 hour 30 min' },
+  { value: 7200, label: '2 hours' },
+  { value: 9000, label: '2 hours 30 min' },
+  { value: 10800, label: '3 hours' },
+  { value: 12600, label: '3 hours 30 min' },
+  { value: 14400, label: '4 hours' },
 ]
 
 const AddEventView = () => {
-  const [event, setEvent] = useState({ date: '2023-10-06T19:22:00.000-05:00' })
+  const [event, setEvent] = useState<{
+    duration: string | number
+    candidate: string
+    interviewer: string
+    type: string
+    note?: string
+    privateNote?: string
+  }>({
+    candidate: '',
+    duration: 900,
+    interviewer: '',
+    type: '',
+  })
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     console.log(event)
   }
 
-  const getDate = (date: string) => {
-    const localDate = parseISO(date)
-    const UTCString = format(localDate, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx")
-    return UTCString
-  }
-
   return (
     <form className="space-y-4 " onSubmit={handleSubmit}>
-      <SelectField
-        className="col-span-full"
+      <Select
+        defaultSize="col-span-full"
         label="Candidate:"
-        id="candidate"
-        name="candidate"
-        options={CANDIDATES}
-        onChange={(e: any) => setEvent(set(event, 'candidate', e.target.value))}
+        selected={event.candidate}
+        list={CANDIDATES}
+        onChange={(e) => setEvent({ ...event, candidate: e })}
       />
       <div className="grid grid-cols-6 gap-1">
         <TextField
@@ -67,47 +79,49 @@ const AddEventView = () => {
           required
           onChange={(e) => setEvent(set(event, 'location', e.target.value))}
         />
-        <SelectField
-          className="col-span-2"
-          label="Type:"
-          id="type"
-          name="type"
-          options={EVENT_TYPES}
-          onChange={(e: any) => setEvent(set(event, 'type', e.target.value))}
-        />
+        <div className="col-span-2">
+          <Select
+            label="Type:"
+            selected={event.type}
+            list={EVENT_TYPES}
+            onChange={(e) => setEvent({ ...event, type: e })}
+          />
+        </div>
       </div>
+
       <div className="grid grid-cols-6 gap-1">
-        <DatePicker className="col-span-4 grid" setState={setEvent} hasTime={true} state={event} />
-        <SelectField
-          className="col-span-2"
-          label="Duration:"
-          id="duration"
-          name="duration"
-          options={DURATION_OPTIONS}
-          onChange={(e: any) => setEvent(set(event, 'duration', e.target.value))}
-        />
+        <DatePicker className="col-span-4" hasTime={true} label="Date:" />
+        <div className="col-span-2 flex flex-col items-start justify-center">
+          <Select
+            list={DURATION_OPTIONS}
+            label="Duration:"
+            onChange={(e) => setEvent({ ...event, duration: e })}
+            selected={event.duration}
+          />
+        </div>
       </div>
-      <SelectField
-        className="col-span-full"
+      <Select
+        defaultSize="col-span-full"
         label="Interviewer:"
-        id="interviewer"
-        name="interviewer"
-        options={[]}
-        onChange={(e: any) => setEvent(set(event, 'interviewer', e.target.value))}
+        selected={event.interviewer}
+        list={[{ value: '1', label: 'Jhon Doe' }]}
       />
+
       <TextareaField
         className="col-span-full"
         label="Description:"
         id="description"
-        name="description"
-        onChange={(e: any) => setEvent(set(event, 'description', e.target.value))}
+        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+          setEvent({ ...event, note: e.target.value })
+        }
       />
       <TextareaField
         className="col-span-full"
         label="Note:"
         id="note"
-        name="note"
-        onChange={(e: any) => setEvent(set(event, 'note', e.target.value))}
+        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+          setEvent({ ...event, privateNote: e.target.value })
+        }
       />
 
       <Button type="submit" color="primary" className="mt-8 w-full">

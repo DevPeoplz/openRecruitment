@@ -2,7 +2,7 @@ import React, { useState, useEffect, FC } from 'react'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
 import { compareAsc } from 'date-fns'
-import { Event } from '@/pages/events'
+import { Event } from './event-card'
 
 type DaysInCalendar = {
   date: Date
@@ -32,11 +32,13 @@ const months = [
 
 const currentDate = new Date()
 
-const DateSelector: FC<{ dateSelected: Date; selectDate: void; events: Event[] }> = ({
-  selectDate,
-  dateSelected,
-  events,
-}) => {
+type Props = {
+  dateSelected: string
+  selectDate: (date: Date) => void
+  events: Event[]
+}
+
+const DateSelector: FC<Props> = ({ selectDate, dateSelected, events }) => {
   const [month, setMonth] = useState(currentDate.toLocaleString('default', { month: 'long' }))
   const [days, setDays] = useState<DaysInCalendar | []>([])
 
@@ -56,10 +58,11 @@ const DateSelector: FC<{ dateSelected: Date; selectDate: void; events: Event[] }
       } else {
         const day = i - firstDay + 1
         const date = new Date(currentYear, currentMonth, day)
+
         return {
           date,
           isCurrentMonth: true,
-          isToday: compareAsc(date, new Date(currentYear, currentMonth, currentDay)) === 0,
+          isToday: compareAsc(date, new Date(currentYear, new Date().getMonth(), currentDay)) === 0,
           isSelected: compareAsc(date, new Date(dateSelected)) === 0,
           thereIsEvent: events.some((event: Event) => {
             return compareAsc(date, new Date(event.date)) === 0
@@ -69,8 +72,8 @@ const DateSelector: FC<{ dateSelected: Date; selectDate: void; events: Event[] }
           day,
         }
       }
-    }).filter((day) => day !== null)
-    setDays(daysArray)
+    })
+    setDays(daysArray.filter((day) => day !== null) as DaysInCalendar)
   }, [month, dateSelected, events])
 
   const showNextMonth = () => {
@@ -119,36 +122,41 @@ const DateSelector: FC<{ dateSelected: Date; selectDate: void; events: Event[] }
         <div>F</div>
         <div>S</div>
       </div>
-      <div className="isolate mt-2 grid grid-cols-7 gap-px rounded-lg bg-gray-200 text-sm shadow ring-1 ring-gray-200">
-        {days.map((day: any, index) => (
+      <div className="isolate mt-2 grid grid-cols-7 gap-px overflow-hidden rounded-lg bg-gray-100 text-sm shadow ring-1 ring-gray-200">
+        {days.map((day: DaysInCalendar[number], index) => (
           <button
             key={index}
             type="button"
             className={clsx(
-              'flex py-1.5 hover:bg-gray-100 focus:z-10',
-              day?.isCurrentMonth ? 'bg-white' : 'bg-gray-50',
+              'flex  py-1.5 hover:bg-gray-100 focus:z-10',
+              day?.isCurrentMonth ? 'bg-white' : 'bg-gray-100',
               day?.isSelected && 'font-semibold',
               day?.isSelected && 'text-white',
               !day?.isSelected && day?.isCurrentMonth && !day?.isToday && ' text-gray-900',
               !day?.isSelected && !day?.isCurrentMonth && !day?.isToday && 'text-gray-400',
-              day?.isToday && !day?.isSelected && 'text-indigo-600'
+              day?.isToday && !day?.isSelected && ' text-white'
             )}
             onClick={() => {
-              selectDate(new Date(day?.year, day?.month - 1, day?.day))
+              const year = day?.year ?? 0
+              const month = day?.month ? day.month - 1 : 0
+              const dayOfMonth = day?.day ?? 1
+              const date = new Date(year, month, dayOfMonth)
+              selectDate(date)
             }}
           >
             <time
-              dateTime={day?.date}
+              dateTime={day?.date.toISOString()}
               className={clsx(
                 'mx-auto flex items-center justify-center  rounded-full px-1 ',
-                day?.isSelected && day?.isToday && 'bg-indigo-600',
+                day?.isToday && !day?.isSelected && 'bg-tertiary-500 text-white',
+                day?.isSelected && day?.isToday && 'bg-tertiary-500',
                 day?.isSelected && !day?.isToday && ' bg-gray-900'
               )}
             >
               {day?.date.getDate().toString().split('-').pop()?.replace(/^0/, '')}
             </time>
             {day?.thereIsEvent && (
-              <div className=" relative right-1 h-1 w-1 rounded-full bg-red-500" />
+              <div className=" relative right-1 h-1 w-1 rounded-full bg-warning" />
             )}
           </button>
         ))}

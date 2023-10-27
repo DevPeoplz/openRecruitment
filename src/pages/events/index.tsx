@@ -3,7 +3,7 @@ import { NextPageWithLayout } from '../_app'
 import LayoutAuthenticated from '@/components/layout/layout-authenticated'
 import { LayoutSideMenu } from '@/components/layout/main/layout-side-menu'
 import Loader from '@/components/ui/loader'
-import EventsCard from '@/components/views/events/events-cards'
+import EventsCard from '@/components/views/events/event-card'
 import EventsTags from '@/components/views/events/events-tabs'
 import EmptyState from '@/components/views/events/events-empy-state'
 import { Button } from '@/components/ui/Button'
@@ -12,28 +12,16 @@ import AddEventModal from '@/components/modals/add-event-modal'
 import DateSelector from '@/components/views/events/date-selector'
 import ButtonDropdown from '@/components/ui/btn-dropdown'
 import { BarsArrowDownIcon } from '@heroicons/react/24/outline'
-import { compareAsc, format } from 'date-fns'
+import { compareAsc } from 'date-fns'
+import { Event } from '@/components/views/events/event-card'
 
-export type Event = {
-  date: Date
-  time: string
-  type: string
-  location: string
-  note: string
-  privateNote: string
-  candidate: string
-  description: string
-  candidateAvatar: string
-  interviewers: any
-}
-
-const LISTTYPES = ['meeting', 'interview', 'call', 'all events']
-const EVENTYPES = ['meeting', 'interview', 'call']
+const LIST_TYPES = ['meeting', 'interview', 'call', 'all events']
+const EVENT_TYPES = ['meeting', 'interview', 'call']
 const EVENTS = [
   {
     date: new Date(2023, 9, 21),
     time: '2:00pm - 3:00pm',
-    type: `${EVENTYPES[Math.floor(Math.random() * EVENTYPES.length)]}`,
+    type: `${EVENT_TYPES[Math.floor(Math.random() * EVENT_TYPES.length)]}`,
     location: 'virtual',
     note: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatum, maxime dolorem ducimus neque laborum est officia distinctio esse dicta rerum voluptatem. Ipsum, nesciunt hic aut magni magnam quaerat alias nulla!',
     privateNote: 'this is a private note',
@@ -63,7 +51,7 @@ const EVENTS = [
   {
     date: new Date(2023, Math.floor(Math.random() * 12), Math.floor(Math.random() * 30)),
     time: '2:00pm - 3:00pm',
-    type: `${EVENTYPES[Math.floor(Math.random() * EVENTYPES.length)]}`,
+    type: `${EVENT_TYPES[Math.floor(Math.random() * EVENT_TYPES.length)]}`,
     location: 'virtual',
     note: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatum, maxime dolorem ducimus neque laborum est officia distinctio esse dicta rerum voluptatem. Ipsum, nesciunt hic aut magni magnam quaerat alias nulla!',
     privateNote: 'this is a private note',
@@ -94,7 +82,7 @@ const EVENTS = [
   {
     date: new Date(2023, Math.floor(Math.random() * 12), Math.floor(Math.random() * 30)),
     time: '2:00pm - 3:00pm',
-    type: `${EVENTYPES[Math.floor(Math.random() * EVENTYPES.length)]}`,
+    type: `${EVENT_TYPES[Math.floor(Math.random() * EVENT_TYPES.length)]}`,
     location: 'virtual',
     note: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatum, maxime dolorem ducimus neque laborum est officia distinctio esse dicta rerum voluptatem. Ipsum, nesciunt hic aut magni magnam quaerat alias nulla!',
     privateNote: 'this is a private note',
@@ -124,7 +112,7 @@ const EVENTS = [
   {
     date: new Date(2023, Math.floor(Math.random() * 12), Math.floor(Math.random() * 30)),
     time: '2:00pm - 3:00pm',
-    type: `${EVENTYPES[Math.floor(Math.random() * EVENTYPES.length)]}`,
+    type: `${EVENT_TYPES[Math.floor(Math.random() * EVENT_TYPES.length)]}`,
     location: 'virtual',
     note: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatum, maxime dolorem ducimus neque laborum est officia distinctio esse dicta rerum voluptatem. Ipsum, nesciunt hic aut magni magnam quaerat alias nulla!',
     privateNote: 'this is a private note',
@@ -154,7 +142,7 @@ const EVENTS = [
   {
     date: new Date(2023, Math.floor(Math.random() * 12), Math.floor(Math.random() * 30)),
     time: '2:00pm - 3:00pm',
-    type: `${EVENTYPES[Math.floor(Math.random() * EVENTYPES.length)]}`,
+    type: `${EVENT_TYPES[Math.floor(Math.random() * EVENT_TYPES.length)]}`,
     location: 'virtual',
     note: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatum, maxime dolorem ducimus neque laborum est officia distinctio esse dicta rerum voluptatem. Ipsum, nesciunt hic aut magni magnam quaerat alias nulla!',
     privateNote: 'this is a private note',
@@ -184,7 +172,7 @@ const EVENTS = [
   {
     date: new Date(2023, Math.floor(Math.random() * 12), Math.floor(Math.random() * 30)),
     time: '2:00pm - 3:00pm',
-    type: `${EVENTYPES[Math.floor(Math.random() * EVENTYPES.length)]}`,
+    type: `${EVENT_TYPES[Math.floor(Math.random() * EVENT_TYPES.length)]}`,
     location: 'virtual',
     note: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatum, maxime dolorem ducimus neque laborum est officia distinctio esse dicta rerum voluptatem. Ipsum, nesciunt hic aut magni magnam quaerat alias nulla!',
     privateNote: 'this is a private note',
@@ -214,7 +202,7 @@ const EVENTS = [
   {
     date: new Date(2023, Math.floor(Math.random() * 12), Math.floor(Math.random() * 30)),
     time: '2:00pm - 3:00pm',
-    type: `${EVENTYPES[Math.floor(Math.random() * EVENTYPES.length)]}`,
+    type: `${EVENT_TYPES[Math.floor(Math.random() * EVENT_TYPES.length)]}`,
     location: 'virtual',
     note: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatum, maxime dolorem ducimus neque laborum est officia distinctio esse dicta rerum voluptatem. Ipsum, nesciunt hic aut magni magnam quaerat alias nulla!',
     privateNote: 'this is a private note',
@@ -267,19 +255,19 @@ const Events: NextPageWithLayout = () => {
     )
   })
 
-  const selectFilter = (e: any) => {
-    if (e.target.innerText.toLowerCase() == 'all events') {
+  const selectFilter = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (e.currentTarget.innerText.toLowerCase() === 'all events') {
       setDateSelected(undefined)
       setFilter('')
     } else {
       setDateSelected(undefined)
-      setFilter(e.target.innerText.toLowerCase())
+      setFilter(e.currentTarget.innerText.toLowerCase())
     }
   }
 
-  const handleTab = (e: any) => {
+  const handleTab = (e: React.MouseEvent<HTMLButtonElement>) => {
     setDateSelected(undefined)
-    setCurrentTab(e.target.id)
+    setCurrentTab(e.currentTarget.id)
   }
 
   return (
@@ -291,7 +279,7 @@ const Events: NextPageWithLayout = () => {
             <EventsTags tabs={TABS} currentTab={currentTab} setCurrentTab={handleTab} />
             <div className="flex items-center gap-1">
               <ButtonDropdown
-                list={LISTTYPES}
+                list={LIST_TYPES}
                 label={filter ? filter.charAt(0).toUpperCase() + filter.slice(1) : 'My events'}
                 Icon={BarsArrowDownIcon}
                 selectOption={selectFilter}
@@ -312,14 +300,18 @@ const Events: NextPageWithLayout = () => {
             {events.length == 0 ? (
               <EmptyState tab={currentTab} />
             ) : (
-              events.map((event, index) => {
-                return <EventsCard key={index} event={event} />
+              events.map((event: Event) => {
+                return <EventsCard key={event.type} event={event} />
               })
             )}
           </div>
         </div>
         <div className="col-span-2">
-          <DateSelector selectDate={setDateSelected} dateSelected={dateSelected} events={EVENTS} />
+          <DateSelector
+            selectDate={setDateSelected}
+            dateSelected={dateSelected ? dateSelected.toDateString() : ''}
+            events={EVENTS}
+          />
         </div>
       </div>
       <AddEventModal isOpen={openModal} setIsOpen={setOpenModal} />

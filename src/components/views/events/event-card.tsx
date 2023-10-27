@@ -9,7 +9,6 @@ import {
 } from '@heroicons/react/24/outline'
 import React, { FC, useState } from 'react'
 import { Tooltip } from 'react-tooltip'
-import Image from 'next/image'
 
 export type Event = {
   date: Date
@@ -17,12 +16,12 @@ export type Event = {
   candidate: string
   description: string
   location: string
-  note: string
+  note?: string
   candidateAvatar: string
   type: string
   privateNote?: string
   interviewers: {
-    id: string
+    id: string | number
     name: string
     avatar: string
   }[]
@@ -30,6 +29,12 @@ export type Event = {
 
 type Props = {
   event: Event
+}
+
+type Inteviewer = {
+  id: string | number
+  name: string
+  avatar: string
 }
 
 const EventsCard: FC<Props> = ({ event }) => {
@@ -96,26 +101,16 @@ const EventsCard: FC<Props> = ({ event }) => {
             </div>
           )}
           <div className="flex -space-x-1 self-end overflow-hidden">
-            {event.interviewers.map((interviewer) => (
-              <>
-                <Tooltip
-                  place="top"
-                  content={interviewer.name}
-                  id={`interviewer-${interviewer.id}`}
-                >
-                  <span className="sr-only">{interviewer.name}</span>
-                </Tooltip>
-                <Image
-                  key={interviewer.id}
-                  width={24}
-                  height={24}
-                  className="inline-block h-6 w-6 cursor-pointer rounded-full ring-2 ring-white"
-                  src={interviewer.avatar}
-                  alt={interviewer.name}
-                  data-tooltip-id={`interviewer-${interviewer.id}`}
-                  data-tooltip-content={interviewer.name}
-                />
-              </>
+            {event.interviewers.map((interviewer: Inteviewer) => (
+              <Avatar
+                size="small"
+                src={interviewer.avatar}
+                name={interviewer.name}
+                className="inline-block cursor-pointer"
+                data-tooltip-id={`interviewer-${interviewer.id}`}
+                data-tooltip-content={interviewer.name}
+                key={interviewer.id}
+              />
             ))}
           </div>
         </div>

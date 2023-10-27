@@ -3,7 +3,7 @@ import React, { Fragment, FC } from 'react'
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline'
 import { Button } from './Button'
 
-const ButtonDropdown: FC<{ list: string[]; Icon?: FC; label: string; selectOption: any }> = ({
+const ButtonDropdown: FC<{ list: string[]; Icon?: any; label: string; selectOption: any }> = ({
   list,
   Icon,
   label,
@@ -16,7 +16,7 @@ const ButtonDropdown: FC<{ list: string[]; Icon?: FC; label: string; selectOptio
           <Menu.Button className="flex items-center">
             <Button variant="solid" color="primary" size="full">
               <span className="flex h-full items-center gap-1">
-                <Icon name="home" className="h-5 w-5" />
+                {Icon && <Icon className="h-5 w-5" />}
                 {label}
                 {open ? (
                   <ChevronUpIcon className="h-5 w-5" />
