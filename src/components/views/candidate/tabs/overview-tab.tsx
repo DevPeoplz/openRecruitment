@@ -13,7 +13,6 @@ import {
   LanguageIcon,
   ListBulletIcon,
   PhoneIcon,
-  PlusIcon,
   UserCircleIcon,
 } from '@heroicons/react/24/outline'
 import {
@@ -22,7 +21,6 @@ import {
   queryToCandidate,
 } from '@/components/views/candidate/candidate-view'
 import PDFViewer from '@/components/pdf-viewer'
-import { EditableField } from '@/components/ui/edit/editable-field'
 import { useMutation } from '@apollo/client'
 import { UPDATE_CANDIDATE_MUTATION } from '@/graphql-operations/mutations/signup-candidate'
 import { Panel } from '@/components/ui/panel'
@@ -35,12 +33,11 @@ import { Tooltip } from 'react-tooltip'
 import { SimpleTags } from '@/components/ui/simple-tags'
 import { FaHandSparkles } from 'react-icons/fa'
 import { useCandidateUpdateFile } from '@/hooks/candidate-view'
-import { FieldRenderer } from '@/components/ui/edit/field-renderer'
 import {
-  EditableFieldFixOnSaveType,
   EditableFieldItemType,
   EditableFieldsValidTypes,
   generateFieldItemComponent,
+  generateFullEditableCandidateTags,
 } from '@/components/ui/edit/editable-field-generator'
 
 type Props = {
@@ -233,7 +230,10 @@ const OverviewTab: React.FC<Props> = ({ logs }) => {
       settings: {
         options: [
           { label: 'High School', value: 'highschool' },
-          { label: 'Bachelor', value: 'bachelor' },
+          {
+            label: 'Bachelor',
+            value: 'bachelor',
+          },
           { label: 'Master', value: 'master' },
           { label: 'PhD', value: 'phd' },
           { label: '', value: '' },
@@ -284,40 +284,12 @@ const OverviewTab: React.FC<Props> = ({ logs }) => {
     },
   ]
 
-  const generateFullEditableCandidateTags = (field: 'tags' | 'source') => {
-    const data = field === 'tags' ? candidate[field] : [candidate[field]]
-    return (
-      <EditableField<EditableFieldsValidTypes['selectOptions']>
-        type="candidateTags"
-        value={parseGQLData(data)}
-        onSave={
-          handleOnUpdate('selectOptions', field) as EditableFieldFixOnSaveType<
-            EditableFieldsValidTypes['selectOptions']
-          >
-        }
-        editVisible={true}
-        settings={{
-          attribute: field === 'tags' ? 'tags' : 'sources',
-          placeholder: `Select a ${field === 'tags' ? 'tag' : 'source'}...`,
-        }}
-      >
-        <EditableField.Icon>
-          <PlusIcon className="h-5 w-5 rounded-sm border" />
-        </EditableField.Icon>
-        <FieldRenderer<EditableFieldsValidTypes['stringArray']>
-          type={'stringArray'}
-          value={data.map((tag) => tag.name)}
-        />
-      </EditableField>
-    )
-  }
-
   return (
     <div className="flex flex-col gap-4 pb-5">
       <div className="flex items-center gap-2">
         <div className="z-10 flex flex-wrap gap-2">
           <b>Tags:</b>
-          {generateFullEditableCandidateTags('tags')}
+          {generateFullEditableCandidateTags('tags', candidate.tags, handleOnUpdate)}
         </div>
       </div>
       <Panel>
@@ -416,7 +388,7 @@ const OverviewTab: React.FC<Props> = ({ logs }) => {
       <div className="flex items-center gap-2">
         <div className="flex flex-wrap items-center gap-2">
           <b>Source:</b>
-          {generateFullEditableCandidateTags('source')}
+          {generateFullEditableCandidateTags('source', [candidate.source], handleOnUpdate)}
         </div>
       </div>
       <Panel>

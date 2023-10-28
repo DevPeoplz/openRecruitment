@@ -6,7 +6,7 @@ import { ApolloQueryResult, useQuery } from '@apollo/client'
 import { GET_CANDIDATE_BY_ID } from '@/graphql-operations/queries'
 import { find } from 'lodash'
 import { AUDIT_LOGS } from '@/utils/mockdata'
-import CopyLinkToClipboard from '@/components/ui/copy-link-to-clipboard'
+import { CopyLinkToClipboard, OpenNewTabCircleButton } from '@/components/ui/copy-link-to-clipboard'
 import OverviewTab from '@/components/views/candidate/tabs/overview-tab'
 import { formatDistance } from 'date-fns'
 import { EditableFile } from '@/components/ui/edit/editable-file'
@@ -52,7 +52,11 @@ export const CandidateContext = React.createContext<
   | [
       CandidateType,
       (
-        variables?: Partial<{ where: { id: number } }> | undefined
+        variables?:
+          | Partial<{
+              where: { id: number }
+            }>
+          | undefined
       ) => Promise<ApolloQueryResult<any>>
     ]
   | null
@@ -117,7 +121,10 @@ const CandidateView: FC<Props> = ({ candidateId }) => {
                 <p className="text-gray-600">{`Added ${createdAgo}`}</p>
               </div>
             </div>
-            <CopyLinkToClipboard url={`${window.location.origin}/candidate/${candidateId}`} />
+            <div className="flex flex-wrap gap-1">
+              <CopyLinkToClipboard url={`${window.location.origin}/candidate/${candidateId}`} />
+              <OpenNewTabCircleButton url={`${window.location.origin}/candidate/${candidateId}`} />
+            </div>
             <div>Following</div>
           </div>
           <div className="mb-4 mt-2">

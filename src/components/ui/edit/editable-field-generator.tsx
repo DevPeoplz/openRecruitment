@@ -4,6 +4,8 @@ import { FieldRenderer } from '@/components/ui/edit/field-renderer'
 import React, { ForwardRefExoticComponent } from 'react'
 import { IconType } from 'react-icons'
 import { ComboboxWithTagsProps } from '@/components/ui/combobox-with-tags'
+import { parseGQLData } from '@/components/utils/data-parsing'
+import { PlusIcon } from '@heroicons/react/24/outline'
 
 export type EditableFieldsValidTypes = {
   string: string
@@ -70,5 +72,39 @@ export const generateFieldItemComponent = (
         </EditableField>
       </FieldsTable.Item.Value>
     </FieldsTable.Item>
+  )
+}
+
+export const generateFullEditableCandidateTags = (
+  field: 'tags' | 'source',
+  data: {
+    id: string
+    name: string
+  }[],
+  handleOnUpdate: EditableFieldHandleOnUpdateType
+) => {
+  return (
+    <EditableField<EditableFieldsValidTypes['selectOptions']>
+      type="candidateTags"
+      value={parseGQLData(data)}
+      onSave={
+        handleOnUpdate('selectOptions', field) as EditableFieldFixOnSaveType<
+          EditableFieldsValidTypes['selectOptions']
+        >
+      }
+      editVisible={true}
+      settings={{
+        attribute: field === 'tags' ? 'tags' : 'sources',
+        placeholder: `Select a ${field === 'tags' ? 'tag' : 'source'}...`,
+      }}
+    >
+      <EditableField.Icon>
+        <PlusIcon className="h-5 w-5 rounded-sm border" />
+      </EditableField.Icon>
+      <FieldRenderer<EditableFieldsValidTypes['stringArray']>
+        type={'stringArray'}
+        value={data.map((tag) => tag.name)}
+      />
+    </EditableField>
   )
 }
