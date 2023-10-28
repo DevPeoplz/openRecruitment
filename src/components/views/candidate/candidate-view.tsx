@@ -9,9 +9,12 @@ import { AUDIT_LOGS } from '@/utils/mockdata'
 import CopyLinkToClipboard from '@/components/ui/copy-link-to-clipboard'
 import OverviewTab from '@/components/views/candidate/tabs/overview-tab'
 import { formatDistance } from 'date-fns'
-import { EditableFile } from '@/components/views/candidate/editable-file'
+import { EditableFile } from '@/components/ui/edit/editable-file'
 import { Tabs } from '@/components/ui/tabs'
 import { CandidateJobsUpdate } from '@/components/views/candidate/right-sidebar-components'
+import SimpleImageViewer from '@/components/ui/simple-image-viewer'
+import Avatar from '@/components/ui/avatar'
+import { useCandidateUpdateFile } from '@/hooks/candidate-view'
 
 type Props = {
   candidateId?: string | number
@@ -57,6 +60,7 @@ export const CandidateContext = React.createContext<
 
 const CandidateView: FC<Props> = ({ candidateId }) => {
   const [tabSelected, setTabSelected] = useState('overview')
+  const { handleFileUpload } = useCandidateUpdateFile(candidateId)
 
   const {
     loading: loadingCandidate,
@@ -93,7 +97,21 @@ const CandidateView: FC<Props> = ({ candidateId }) => {
         <div className="w-8/12 overflow-y-auto p-2">
           <div className="flex items-center justify-between gap-16">
             <div className="flex items-center gap-2">
-              <EditableFile field={'avatar'} />
+              <div className="group relative flex h-16 w-16 items-center justify-center overflow-hidden rounded-full">
+                <SimpleImageViewer name={candidate.name} src={candidate.avatar}>
+                  <Avatar name={candidate.name} src={candidate.avatar} />
+                </SimpleImageViewer>
+                <EditableFile
+                  labelClassName="absolute bottom-0 left-0 hidden h-2/6 w-full cursor-pointer items-center justify-center bg-primary-400/50 pb-1 font-bold text-primary-900 drop-shadow-white-sm group-hover:flex"
+                  handleFileUpload={handleFileUpload('avatar')}
+                >
+                  <EditableFile.Loader>
+                    <div className="absolute inset-0 flex items-center justify-center bg-primary-400/50">
+                      <Loader size={'w-5 h-5'} fullScreen={false} />
+                    </div>
+                  </EditableFile.Loader>
+                </EditableFile>
+              </div>
               <div>
                 <h3>{candidate.name}</h3>
                 <p className="text-gray-600">{`Added ${createdAgo}`}</p>

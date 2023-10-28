@@ -14,7 +14,6 @@ import {
   ListBulletIcon,
   PhoneIcon,
   PlusIcon,
-  PresentationChartLineIcon,
   UserCircleIcon,
 } from '@heroicons/react/24/outline'
 import {
@@ -23,19 +22,26 @@ import {
   queryToCandidate,
 } from '@/components/views/candidate/candidate-view'
 import PDFViewer from '@/components/pdf-viewer'
-import { EditableField } from '@/components/views/candidate/editable-fields'
+import { EditableField } from '@/components/ui/edit/editable-field'
 import { useMutation } from '@apollo/client'
 import { UPDATE_CANDIDATE_MUTATION } from '@/graphql-operations/mutations/signup-candidate'
 import { Panel } from '@/components/ui/panel'
 import { FieldsTable } from '@/components/ui/fields-table'
 import { ComboboxWithTagsProps } from '@/components/ui/combobox-with-tags'
 import { parseGQLData } from '@/components/utils/data-parsing'
-import { EditableFile } from '@/components/views/candidate/editable-file'
+import { EditableFile } from '@/components/ui/edit/editable-file'
 import { useLocalStorageState } from '@/hooks/localStorage'
 import { Tooltip } from 'react-tooltip'
-import { formatDistance } from 'date-fns'
 import { SimpleTags } from '@/components/ui/simple-tags'
 import { FaHandSparkles } from 'react-icons/fa'
+import { useCandidateUpdateFile } from '@/hooks/candidate-view'
+import { FieldRenderer } from '@/components/ui/edit/field-renderer'
+import {
+  EditableFieldFixOnSaveType,
+  EditableFieldItemType,
+  EditableFieldsValidTypes,
+  generateFieldItemComponent,
+} from '@/components/ui/edit/editable-field-generator'
 
 type Props = {
   logs?: LogType[]
@@ -53,13 +59,14 @@ const OverviewTab: React.FC<Props> = ({ logs }) => {
     'customFieldsOpen',
     false
   )
+  const { handleFileUpload } = useCandidateUpdateFile(candidate?.id)
 
   const [updateCandidate, { data: dataCandidateUpdated, error: errorCandidateUpdated }] =
     useMutation(UPDATE_CANDIDATE_MUTATION)
 
   const dataBuilder = <T,>(field: string, value: T | undefined | null) => {
     switch (field) {
-      case 'sources':
+      case 'source':
         if ((value as ComboboxWithTagsProps['options'])[0]?.value) {
           return {
             referrer: {
@@ -91,6 +98,7 @@ const OverviewTab: React.FC<Props> = ({ logs }) => {
       case 'email':
       case 'firstName':
       case 'lastName':
+      case 'phone':
       case 'educationLevel':
       case 'salaryExpectation':
       case 'birthday':
@@ -109,13 +117,14 @@ const OverviewTab: React.FC<Props> = ({ logs }) => {
     if (!candidate) return null
 
     switch (field) {
-      case 'sources':
+      case 'source':
         return parseGQLData([candidate.source]) as T
       case 'tags':
         return parseGQLData(candidate.tags) as T
-      case 'email':
       case 'firstName':
       case 'lastName':
+      case 'email':
+      case 'phone':
       case 'languages':
       case 'educationLevel':
       case 'salaryExpectation':
@@ -130,32 +139,37 @@ const OverviewTab: React.FC<Props> = ({ logs }) => {
   }
 
   const handleOnUpdate = useCallback(
-    <T,>({ field }: { field: string }) => {
-      return (value: T | null | undefined) =>
-        new Promise<T | null | undefined>((resolve, reject) => {
-          console.log(value)
-          console.log(typeof value)
-          if (!candidate?.id) {
-            return reject()
-          }
+    (typeName: keyof EditableFieldsValidTypes, field: string) => {
+      return (value: EditableFieldsValidTypes[typeof typeName] | null | undefined) =>
+        new Promise<EditableFieldsValidTypes[typeof typeName] | null | undefined>(
+          (resolve, reject) => {
+            if (!candidate?.id) {
+              return reject()
+            }
 
-          updateCandidate({
-            variables: {
-              where: { id: parseInt(String(candidate.id)) },
-              data: dataBuilder<T>(field, value),
-            },
-          })
-            .then((res) => {
-              if (res.data.updateOneCandidate?.id) {
-                resolve(dataParser<T>(field, queryToCandidate(res.data.updateOneCandidate)))
-              } else {
+            updateCandidate({
+              variables: {
+                where: { id: parseInt(String(candidate.id)) },
+                data: dataBuilder<EditableFieldsValidTypes[typeof typeName]>(field, value),
+              },
+            })
+              .then((res) => {
+                if (res.data.updateOneCandidate?.id) {
+                  resolve(
+                    dataParser<typeof typeName>(
+                      field,
+                      queryToCandidate(res.data.updateOneCandidate)
+                    )
+                  )
+                } else {
+                  reject()
+                }
+              })
+              .catch(() => {
                 reject()
-              }
-            })
-            .catch(() => {
-              reject()
-            })
-        }).finally(() => {
+              })
+          }
+        ).finally(() => {
           //return refetchCandidate()
         })
     },
@@ -164,129 +178,154 @@ const OverviewTab: React.FC<Props> = ({ logs }) => {
 
   if (!candidate || !logs) return null
 
+  const mainFields: EditableFieldItemType[] = [
+    {
+      key: 'firstName',
+      value: candidate.firstName,
+      icon: UserCircleIcon,
+      title: 'First Name',
+      type: 'string',
+      inputType: 'text',
+    },
+    {
+      key: 'lastName',
+      value: candidate.lastName,
+      icon: UserCircleIcon,
+      title: 'Last Name',
+      type: 'string',
+      inputType: 'text',
+    },
+    {
+      key: 'email',
+      value: candidate.email,
+      icon: EnvelopeIcon,
+      title: 'Email',
+      type: 'string',
+      inputType: 'email',
+    },
+    {
+      key: 'phone',
+      value: candidate.phone,
+      icon: PhoneIcon,
+      title: 'Phone',
+      type: 'string',
+      inputType: 'text',
+    },
+    {
+      key: 'languages',
+      value: candidate.languages,
+      icon: LanguageIcon,
+      title: 'Languages',
+      type: 'stringArray',
+      inputType: 'stringArray',
+    },
+  ]
+
+  const extraFields: EditableFieldItemType[] = [
+    {
+      key: 'educationLevel',
+      value: candidate.educationLevel,
+      icon: AcademicCapIcon,
+      title: 'Education Level',
+      type: 'string',
+      inputType: 'select',
+      fieldType: 'select',
+      settings: {
+        options: [
+          { label: 'High School', value: 'highschool' },
+          { label: 'Bachelor', value: 'bachelor' },
+          { label: 'Master', value: 'master' },
+          { label: 'PhD', value: 'phd' },
+          { label: '', value: '' },
+        ],
+      },
+    },
+    {
+      key: 'salaryExpectation',
+      value: candidate.salaryExpectation,
+      icon: BanknotesIcon,
+      title: 'Salary Expectation',
+      type: 'number',
+      inputType: 'number',
+      fieldType: 'currency',
+    },
+    {
+      key: 'birthday',
+      value: candidate.birthday,
+      icon: CakeIcon,
+      title: 'Birthday',
+      type: 'string',
+      inputType: 'date',
+      fieldType: 'date-distance',
+    },
+    {
+      key: 'skills',
+      value: candidate.skills,
+      icon: FaHandSparkles,
+      title: 'Skills',
+      type: 'stringArray',
+      inputType: 'stringArray',
+    },
+    {
+      key: 'mainLanguage',
+      value: candidate.mainLanguage,
+      icon: LanguageIcon,
+      title: 'Main Language',
+      type: 'string',
+      inputType: 'text',
+    },
+    {
+      key: 'socials',
+      value: candidate.socials,
+      icon: GlobeAltIcon,
+      title: 'Socials',
+      type: 'stringArray',
+      inputType: 'stringArray',
+    },
+  ]
+
+  const generateFullEditableCandidateTags = (field: 'tags' | 'source') => {
+    const data = field === 'tags' ? candidate[field] : [candidate[field]]
+    return (
+      <EditableField<EditableFieldsValidTypes['selectOptions']>
+        type="candidateTags"
+        value={parseGQLData(data)}
+        onSave={
+          handleOnUpdate('selectOptions', field) as EditableFieldFixOnSaveType<
+            EditableFieldsValidTypes['selectOptions']
+          >
+        }
+        editVisible={true}
+        settings={{
+          attribute: field === 'tags' ? 'tags' : 'sources',
+          placeholder: `Select a ${field === 'tags' ? 'tag' : 'source'}...`,
+        }}
+      >
+        <EditableField.Icon>
+          <PlusIcon className="h-5 w-5 rounded-sm border" />
+        </EditableField.Icon>
+        <FieldRenderer<EditableFieldsValidTypes['stringArray']>
+          type={'stringArray'}
+          value={data.map((tag) => tag.name)}
+        />
+      </EditableField>
+    )
+  }
+
   return (
     <div className="flex flex-col gap-4 pb-5">
       <div className="flex items-center gap-2">
-        <div className="flex flex-wrap gap-2">
+        <div className="z-10 flex flex-wrap gap-2">
           <b>Tags:</b>
-          <EditableField<ComboboxWithTagsProps['options']>
-            type="tags"
-            initialValue={parseGQLData(candidate.tags)}
-            onSave={handleOnUpdate<ComboboxWithTagsProps['options']>({ field: 'tags' })}
-            editVisible={true}
-          >
-            <EditableField.Icon>
-              <PlusIcon className="h-5 w-5 rounded-sm border" />
-            </EditableField.Icon>
-            <div className={'flex max-w-full flex-wrap gap-1'}>
-              {candidate.tags.map((tag) => (
-                <div
-                  key={`tags-${tag.id}`}
-                  className="flex justify-between gap-2 rounded border p-1 px-2 text-sm"
-                >
-                  <p>{tag.name}</p>
-                </div>
-              ))}
-            </div>
-          </EditableField>
+          {generateFullEditableCandidateTags('tags')}
         </div>
       </div>
       <Panel>
         <Panel.Header>Information</Panel.Header>
-        <Panel.Body className={'relative z-10 max-h-[600px] overflow-y-auto !p-0'}>
+        <Panel.Body className={'relative max-h-[600px] overflow-y-auto !p-0'}>
           <div className="relative">
             <FieldsTable>
-              <FieldsTable.Item>
-                <FieldsTable.Item.Icon>
-                  <UserCircleIcon className={'h-5 w-5'} />
-                </FieldsTable.Item.Icon>
-                <FieldsTable.Item.Key>
-                  <p>First Name</p>
-                </FieldsTable.Item.Key>
-                <FieldsTable.Item.Value>
-                  <EditableField<string>
-                    type="text"
-                    initialValue={candidate.firstName}
-                    onSave={handleOnUpdate<string>({ field: 'firstName' })}
-                  >
-                    <p>{candidate.firstName}</p>
-                  </EditableField>
-                </FieldsTable.Item.Value>
-              </FieldsTable.Item>
-              <FieldsTable.Item>
-                <FieldsTable.Item.Icon>
-                  <UserCircleIcon className={'h-5 w-5'} />
-                </FieldsTable.Item.Icon>
-                <FieldsTable.Item.Key>
-                  <p>Last Name</p>
-                </FieldsTable.Item.Key>
-                <FieldsTable.Item.Value>
-                  <EditableField<string>
-                    type="text"
-                    initialValue={candidate.lastName}
-                    onSave={handleOnUpdate<string>({ field: 'lastName' })}
-                  >
-                    <p>{candidate.lastName}</p>
-                  </EditableField>
-                </FieldsTable.Item.Value>
-              </FieldsTable.Item>
-              <FieldsTable.Item>
-                <FieldsTable.Item.Icon>
-                  <EnvelopeIcon className={'h-5 w-5'} />
-                </FieldsTable.Item.Icon>
-                <FieldsTable.Item.Key>
-                  <p>Email</p>
-                </FieldsTable.Item.Key>
-                <FieldsTable.Item.Value>
-                  <EditableField<string>
-                    type="email"
-                    initialValue={candidate.email}
-                    onSave={handleOnUpdate<string>({ field: 'email' })}
-                  >
-                    <p>{candidate.email}</p>
-                  </EditableField>
-                </FieldsTable.Item.Value>
-              </FieldsTable.Item>
-              <FieldsTable.Item>
-                <FieldsTable.Item.Icon>
-                  <PhoneIcon className="h-5 w-5" />
-                </FieldsTable.Item.Icon>
-                <FieldsTable.Item.Key>
-                  <p>Phone</p>
-                </FieldsTable.Item.Key>
-                <FieldsTable.Item.Value>
-                  <EditableField<string>
-                    type="text"
-                    initialValue={candidate.phone}
-                    onSave={handleOnUpdate<string>({ field: 'phone' })}
-                  >
-                    <p>{candidate.phone}</p>
-                  </EditableField>
-                </FieldsTable.Item.Value>
-              </FieldsTable.Item>
-              <FieldsTable.Item>
-                <FieldsTable.Item.Icon>
-                  <LanguageIcon className="h-5 w-5" />
-                </FieldsTable.Item.Icon>
-                <FieldsTable.Item.Key>
-                  <p>Languages</p>
-                </FieldsTable.Item.Key>
-                <FieldsTable.Item.Value>
-                  <EditableField<string[]>
-                    type="stringArray"
-                    initialValue={
-                      candidate.languages?.length && candidate.languages.length > 0
-                        ? candidate.languages
-                        : null
-                    }
-                    onSave={handleOnUpdate<string[]>({ field: 'languages' })}
-                  >
-                    <div className={'flex max-w-full flex-wrap gap-1'}>
-                      <SimpleTags list={candidate.languages} keyPrefix="languages" />
-                    </div>
-                  </EditableField>
-                </FieldsTable.Item.Value>
-              </FieldsTable.Item>
+              {mainFields.map((field) => generateFieldItemComponent(field, handleOnUpdate))}
             </FieldsTable>
             <div
               className="absolute left-1/4 z-50 -mt-3 flex h-5 w-5 cursor-pointer items-center rounded-full border border-primary-500 bg-primary-50/50 font-bold text-primary-500"
@@ -305,131 +344,7 @@ const OverviewTab: React.FC<Props> = ({ logs }) => {
             </div>
             {extraFieldsOpen && (
               <FieldsTable>
-                <FieldsTable.Item>
-                  <FieldsTable.Item.Icon>
-                    <AcademicCapIcon className={'h-5 w-5'} />
-                  </FieldsTable.Item.Icon>
-                  <FieldsTable.Item.Key>
-                    <p>Education Level</p>
-                  </FieldsTable.Item.Key>
-                  <FieldsTable.Item.Value>
-                    <EditableField<string>
-                      type="text"
-                      initialValue={candidate.educationLevel}
-                      onSave={handleOnUpdate<string>({ field: 'educationLevel' })}
-                    >
-                      <p>{candidate.educationLevel}</p>
-                    </EditableField>
-                  </FieldsTable.Item.Value>
-                </FieldsTable.Item>
-                <FieldsTable.Item>
-                  <FieldsTable.Item.Icon>
-                    <BanknotesIcon className={'h-5 w-5'} />
-                  </FieldsTable.Item.Icon>
-                  <FieldsTable.Item.Key>
-                    <p>Salary Expectation</p>
-                  </FieldsTable.Item.Key>
-                  <FieldsTable.Item.Value>
-                    <EditableField<number>
-                      type="number"
-                      initialValue={candidate.salaryExpectation}
-                      onSave={handleOnUpdate<number>({ field: 'salaryExpectation' })}
-                    >
-                      <p>
-                        {candidate.salaryExpectation
-                          ? candidate.salaryExpectation.toLocaleString('en-US', {
-                              style: 'currency',
-                              currency: 'USD',
-                              minimumFractionDigits: 2,
-                            })
-                          : 0}
-                      </p>
-                    </EditableField>
-                  </FieldsTable.Item.Value>
-                </FieldsTable.Item>
-                <FieldsTable.Item>
-                  <FieldsTable.Item.Icon>
-                    <CakeIcon className={'h-5 w-5'} />
-                  </FieldsTable.Item.Icon>
-                  <FieldsTable.Item.Key>
-                    <p>BirthDay</p>
-                  </FieldsTable.Item.Key>
-                  <FieldsTable.Item.Value>
-                    <EditableField<string>
-                      type="datetime"
-                      initialValue={candidate.birthday}
-                      onSave={handleOnUpdate<string>({ field: 'birthday' })}
-                    >
-                      <p className={'leading-none'}>
-                        <span>
-                          {candidate.birthday
-                            ? new Date(candidate.birthday).toLocaleDateString()
-                            : ''}
-                        </span>
-                        {candidate.birthday && (
-                          <span className={'ml-auto pl-1 text-xs leading-none'}>
-                            ({formatDistance(new Date(candidate.birthday), new Date())})
-                          </span>
-                        )}
-                      </p>
-                    </EditableField>
-                  </FieldsTable.Item.Value>
-                </FieldsTable.Item>
-                <FieldsTable.Item>
-                  <FieldsTable.Item.Icon>
-                    <FaHandSparkles className={'h-5 w-5'} />
-                  </FieldsTable.Item.Icon>
-                  <FieldsTable.Item.Key>
-                    <p>Skills</p>
-                  </FieldsTable.Item.Key>
-                  <FieldsTable.Item.Value>
-                    <EditableField<string[]>
-                      type="stringArray"
-                      initialValue={
-                        candidate.skills && candidate.skills.length > 0 ? candidate.skills : null
-                      }
-                      onSave={handleOnUpdate<string[]>({ field: 'skills' })}
-                    >
-                      <SimpleTags list={candidate.skills} keyPrefix="skills" />
-                    </EditableField>
-                  </FieldsTable.Item.Value>
-                </FieldsTable.Item>
-                <FieldsTable.Item>
-                  <FieldsTable.Item.Icon>
-                    <LanguageIcon className={'h-5 w-5'} />
-                  </FieldsTable.Item.Icon>
-                  <FieldsTable.Item.Key>
-                    <p>Main Language</p>
-                  </FieldsTable.Item.Key>
-                  <FieldsTable.Item.Value>
-                    <EditableField<string>
-                      type="text"
-                      initialValue={candidate.mainLanguage}
-                      onSave={handleOnUpdate<string>({ field: 'mainLanguage' })}
-                    >
-                      <p>{candidate.mainLanguage}</p>
-                    </EditableField>
-                  </FieldsTable.Item.Value>
-                </FieldsTable.Item>
-                <FieldsTable.Item>
-                  <FieldsTable.Item.Icon>
-                    <GlobeAltIcon className={'h-5 w-5'} />
-                  </FieldsTable.Item.Icon>
-                  <FieldsTable.Item.Key>
-                    <p>Socials</p>
-                  </FieldsTable.Item.Key>
-                  <FieldsTable.Item.Value>
-                    <EditableField<string[]>
-                      type="stringArray"
-                      initialValue={
-                        candidate.socials && candidate.socials.length > 0 ? candidate.socials : null
-                      }
-                      onSave={handleOnUpdate<string[]>({ field: 'socials' })}
-                    >
-                      <SimpleTags list={candidate.socials} keyPrefix={'socials'}></SimpleTags>
-                    </EditableField>
-                  </FieldsTable.Item.Value>
-                </FieldsTable.Item>
+                {extraFields.map((field) => generateFieldItemComponent(field, handleOnUpdate))}
               </FieldsTable>
             )}
           </div>
@@ -501,26 +416,7 @@ const OverviewTab: React.FC<Props> = ({ logs }) => {
       <div className="flex items-center gap-2">
         <div className="flex flex-wrap items-center gap-2">
           <b>Source:</b>
-          <EditableField<ComboboxWithTagsProps['options']>
-            type="sources"
-            initialValue={parseGQLData([candidate.source])}
-            onSave={handleOnUpdate<ComboboxWithTagsProps['options']>({ field: 'sources' })}
-            editVisible={true}
-          >
-            <EditableField.Icon>
-              <PlusIcon className="h-5 w-5 rounded-sm border" />
-            </EditableField.Icon>
-            <>
-              {candidate.source && (
-                <div
-                  key={`source-${candidate.source.id}`}
-                  className="flex justify-between gap-2 rounded border p-1 px-2 text-sm"
-                >
-                  <p>{candidate.source.name}</p>
-                </div>
-              )}
-            </>
-          </EditableField>
+          {generateFullEditableCandidateTags('source')}
         </div>
       </div>
       <Panel>
@@ -532,7 +428,11 @@ const OverviewTab: React.FC<Props> = ({ logs }) => {
         <Panel.Body>
           <PDFViewer file={candidate.cv}>
             <PDFViewer.ToolbarItem>
-              <EditableFile field="cv" file={candidate.cv} />
+              <EditableFile
+                label={candidate.cv ? 'Edit' : 'Upload'}
+                handleFileUpload={handleFileUpload('cv')}
+                fileType={'application/pdf'}
+              />
             </PDFViewer.ToolbarItem>
           </PDFViewer>
         </Panel.Body>

@@ -2,10 +2,12 @@ import React, { FC, useContext } from 'react'
 import { Panel } from '@/components/ui/panel'
 import PDFViewer from '@/components/pdf-viewer'
 import { CandidateContext } from '@/components/views/candidate/candidate-view'
-import { EditableFile } from '@/components/views/candidate/editable-file'
+import { EditableFile } from '@/components/ui/edit/editable-file'
+import { useCandidateUpdateFile } from '@/hooks/candidate-view'
 
 const FileTab: FC = () => {
   const [candidate, refetchCandidate] = useContext(CandidateContext) ?? []
+  const { handleFileUpload } = useCandidateUpdateFile(candidate?.id)
 
   if (!candidate) {
     return null
@@ -18,7 +20,11 @@ const FileTab: FC = () => {
         <Panel.Body>
           <PDFViewer file={candidate.coverLetter}>
             <PDFViewer.ToolbarItem>
-              <EditableFile field={'coverLetter'} file={candidate.coverLetter} />
+              <EditableFile
+                label={candidate.cv ? 'Edit' : 'Upload'}
+                handleFileUpload={handleFileUpload('coverLetter')}
+                fileType={'application/pdf'}
+              />
             </PDFViewer.ToolbarItem>
           </PDFViewer>
         </Panel.Body>

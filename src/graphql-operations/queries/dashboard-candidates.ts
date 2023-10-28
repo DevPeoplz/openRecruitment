@@ -312,6 +312,7 @@ export const GET_CANDIDATE_BY_ID_FILES = gql`
   query GET_CANDIDATE_BY_ID_FILES($where: CandidateWhereUniqueInput!) {
     findUniqueCandidate(where: $where) {
       id
+      email
       avatar {
         path
         filename
@@ -320,7 +321,6 @@ export const GET_CANDIDATE_BY_ID_FILES = gql`
         path
         filename
       }
-      coverLetterText
       cv {
         path
         filename
