@@ -157,3 +157,41 @@ export const upsert_one_candidate_custom_fields_variables = (
     },
   }
 }
+
+export const UPDATE_CANDIDATE_BY_ID_JOBS_TALENT_POOLS = gql`
+  mutation UPDATE_CANDIDATE_BY_ID_JOBS_TALENT_POOLS(
+    $data: CandidateUpdateInput!
+    $where: CandidateWhereUniqueInput!
+  ) {
+    candidateJobTalents: updateOneCandidate(data: $data, where: $where) {
+      id
+      candidateJobs: offers(orderBy: { offer: { createdAt: desc } }) {
+        id
+        job: offer {
+          id
+          name
+          pipelineTemplate {
+            id
+            stages(orderBy: { position: asc }) {
+              id
+              category
+              position
+            }
+          }
+        }
+        currentStage: stage {
+          id
+          category
+          position
+        }
+      }
+      talentPools {
+        id
+        talentPool {
+          id
+          name
+        }
+      }
+    }
+  }
+`

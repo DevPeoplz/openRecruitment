@@ -2512,6 +2512,7 @@ export const MatchOrderByWithRelationInput = builder.inputRef<PrismaUpdateOperat
 
 export const MatchWhereUniqueInputFields = (t: any) => ({
   id: t.int({"required":false}),
+  candidateId_offerId: t.field({"required":false,"type":MatchCandidateIdOfferIdCompoundUniqueInput}),
   AND: t.field({"required":false,"type":[MatchWhereInput]}),
   OR: t.field({"required":false,"type":[MatchWhereInput]}),
   NOT: t.field({"required":false,"type":[MatchWhereInput]}),
@@ -8802,6 +8803,14 @@ export const DisqualifyReasonNullableRelationFilterFields = (t: any) => ({
 });
 export const DisqualifyReasonNullableRelationFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.DisqualifyReasonNullableRelationFilter>>('DisqualifyReasonNullableRelationFilter').implement({
   fields: DisqualifyReasonNullableRelationFilterFields,
+});
+
+export const MatchCandidateIdOfferIdCompoundUniqueInputFields = (t: any) => ({
+  candidateId: t.int({"required":true}),
+  offerId: t.int({"required":true}),
+});
+export const MatchCandidateIdOfferIdCompoundUniqueInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.MatchCandidateIdOfferIdCompoundUniqueInput>>('MatchCandidateIdOfferIdCompoundUniqueInput').implement({
+  fields: MatchCandidateIdOfferIdCompoundUniqueInputFields,
 });
 
 export const MatchCountOrderByAggregateInputFields = (t: any) => ({

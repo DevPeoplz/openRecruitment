@@ -138,8 +138,9 @@ const CandidateView: FC<Props> = ({ candidateId }) => {
         </div>
         <div className="flex w-4/12 flex-col items-center gap-2 overflow-y-auto bg-gray-300 p-2">
           <AddQuickEvaluation />
+          <hr className={'w-full border-white p-1'} />
           <CandidateJobsUpdate />
-          <CandidateJobsUpdate field={'talentPool'} title={'Talent Pools'} />
+          <CandidateJobsUpdate field={'talentPool'} />
         </div>
       </div>
     </CandidateContext.Provider>

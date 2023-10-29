@@ -254,6 +254,14 @@ export const GET_ADD_CANDIDATE_DROPDOWNS = gql`
     jobs: findManyOffer {
       id
       name
+      firstStage: pipelineTemplate {
+        id
+        stages(orderBy: { position: asc }, take: 1) {
+          id
+          category
+          position
+        }
+      }
     }
     talentPools: findManyTalentPool {
       id
@@ -333,22 +341,24 @@ export const GET_CANDIDATE_BY_ID_JOBS_TALENT_POOLS = gql`
   query GET_CANDIDATE_BY_ID_JOBS_TALENT_POOLS($where: CandidateWhereUniqueInput!) {
     findUniqueCandidate(where: $where) {
       id
-      candidateJobs: offers {
+      candidateJobs: offers(orderBy: { offer: { createdAt: desc } }) {
         id
         job: offer {
           id
           name
           pipelineTemplate {
             id
-            stages {
+            stages(orderBy: { position: asc }) {
               id
               category
+              position
             }
           }
         }
         currentStage: stage {
           id
           category
+          position
         }
       }
       talentPools {

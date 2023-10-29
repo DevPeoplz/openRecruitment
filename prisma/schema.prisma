@@ -414,6 +414,8 @@ model Match {
   isHired            Boolean           @default(false)
   disqualifyReason   DisqualifyReason? @relation(fields: [disqualifyReasonId], references: [id])
   disqualifyReasonId Int?
+
+  @@unique([candidateId, offerId])
 }
 
 // Implicit

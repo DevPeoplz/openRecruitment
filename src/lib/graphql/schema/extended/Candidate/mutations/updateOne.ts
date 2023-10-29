@@ -156,6 +156,73 @@ export const updateOneCandidateMutationObject = defineMutationFunction((t) =>
         }
       }
 
+      if (args.data.offers) {
+        const candidateOffers = args.data.offers
+        const candidateOfferKeys = Object.keys(candidateOffers)
+
+        if (candidateOfferKeys.includes('update')) {
+          const update = Array.isArray(candidateOffers.update) ? candidateOffers.update : []
+
+          argsDataProcessed = {
+            ...argsDataProcessed,
+            offers: {
+              ...(update.length > 0
+                ? {
+                    update: [
+                      ...(update
+                        .map((candidateOffer) => {
+                          const newMatchId = candidateOffer.where.id
+                          const offerId = (
+                            candidateOffer.where.offer?.id as Prisma.IntFilter<'Match'>
+                          )?.equals
+                          const stageId = candidateOffer?.data.stage?.connect?.id
+
+                          if (offerId && stageId) {
+                            return {
+                              where: {
+                                id: newMatchId,
+                                offer: {
+                                  id: { equals: offerId },
+                                  companyId: {
+                                    equals: selectedCompany,
+                                  },
+                                },
+                              },
+                              data: {
+                                stage: {
+                                  connect: {
+                                    id: stageId,
+                                    template: {
+                                      companyId: {
+                                        equals: selectedCompany,
+                                      },
+                                      pipelineTemplate: {
+                                        some: {
+                                          id: {
+                                            equals: offerId,
+                                          },
+                                        },
+                                      },
+                                    },
+                                  },
+                                },
+                              },
+                            }
+                          }
+
+                          return null
+                        })
+                        .filter(
+                          (e) => e
+                        ) as Prisma.MatchUpdateWithWhereUniqueWithoutCandidateInput[]),
+                    ],
+                  }
+                : {}),
+            },
+          }
+        }
+      }
+
       return prisma.candidate.update({
         where: argsWhereCompanyFromSession,
         data: argsDataProcessed,
