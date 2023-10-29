@@ -32,8 +32,8 @@ import * as StageVisibility from './StageVisibility';
 import * as StageMetadata from './StageMetadata';
 import * as Candidate from './Candidate';
 import * as CandidateTag from './CandidateTag';
-import * as CandidateCustomFields from './CandidateCustomFields';
-import * as CustomFields from './CustomFields';
+import * as CandidateCustomField from './CandidateCustomField';
+import * as CustomField from './CustomField';
 import * as Evaluation from './Evaluation';
 import * as EvaluationQuestion from './EvaluationQuestion';
 import * as SharedCandidateLink from './SharedCandidateLink';
@@ -665,40 +665,40 @@ export const Cruds: Record<
       upsertOne: CandidateTag.upsertOneCandidateTagMutationObject,
     },
   },
-  CandidateCustomFields: {
-    Object: CandidateCustomFields.CandidateCustomFieldsObject,
+  CandidateCustomField: {
+    Object: CandidateCustomField.CandidateCustomFieldObject,
     queries: {
-      findFirst: CandidateCustomFields.findFirstCandidateCustomFieldsQueryObject,
-      findMany: CandidateCustomFields.findManyCandidateCustomFieldsQueryObject,
-      count: CandidateCustomFields.countCandidateCustomFieldsQueryObject,
-      findUnique: CandidateCustomFields.findUniqueCandidateCustomFieldsQueryObject,
+      findFirst: CandidateCustomField.findFirstCandidateCustomFieldQueryObject,
+      findMany: CandidateCustomField.findManyCandidateCustomFieldQueryObject,
+      count: CandidateCustomField.countCandidateCustomFieldQueryObject,
+      findUnique: CandidateCustomField.findUniqueCandidateCustomFieldQueryObject,
     },
     mutations: {
-      createMany: CandidateCustomFields.createManyCandidateCustomFieldsMutationObject,
-      createOne: CandidateCustomFields.createOneCandidateCustomFieldsMutationObject,
-      deleteMany: CandidateCustomFields.deleteManyCandidateCustomFieldsMutationObject,
-      deleteOne: CandidateCustomFields.deleteOneCandidateCustomFieldsMutationObject,
-      updateMany: CandidateCustomFields.updateManyCandidateCustomFieldsMutationObject,
-      updateOne: CandidateCustomFields.updateOneCandidateCustomFieldsMutationObject,
-      upsertOne: CandidateCustomFields.upsertOneCandidateCustomFieldsMutationObject,
+      createMany: CandidateCustomField.createManyCandidateCustomFieldMutationObject,
+      createOne: CandidateCustomField.createOneCandidateCustomFieldMutationObject,
+      deleteMany: CandidateCustomField.deleteManyCandidateCustomFieldMutationObject,
+      deleteOne: CandidateCustomField.deleteOneCandidateCustomFieldMutationObject,
+      updateMany: CandidateCustomField.updateManyCandidateCustomFieldMutationObject,
+      updateOne: CandidateCustomField.updateOneCandidateCustomFieldMutationObject,
+      upsertOne: CandidateCustomField.upsertOneCandidateCustomFieldMutationObject,
     },
   },
-  CustomFields: {
-    Object: CustomFields.CustomFieldsObject,
+  CustomField: {
+    Object: CustomField.CustomFieldObject,
     queries: {
-      findFirst: CustomFields.findFirstCustomFieldsQueryObject,
-      findMany: CustomFields.findManyCustomFieldsQueryObject,
-      count: CustomFields.countCustomFieldsQueryObject,
-      findUnique: CustomFields.findUniqueCustomFieldsQueryObject,
+      findFirst: CustomField.findFirstCustomFieldQueryObject,
+      findMany: CustomField.findManyCustomFieldQueryObject,
+      count: CustomField.countCustomFieldQueryObject,
+      findUnique: CustomField.findUniqueCustomFieldQueryObject,
     },
     mutations: {
-      createMany: CustomFields.createManyCustomFieldsMutationObject,
-      createOne: CustomFields.createOneCustomFieldsMutationObject,
-      deleteMany: CustomFields.deleteManyCustomFieldsMutationObject,
-      deleteOne: CustomFields.deleteOneCustomFieldsMutationObject,
-      updateMany: CustomFields.updateManyCustomFieldsMutationObject,
-      updateOne: CustomFields.updateOneCustomFieldsMutationObject,
-      upsertOne: CustomFields.upsertOneCustomFieldsMutationObject,
+      createMany: CustomField.createManyCustomFieldMutationObject,
+      createOne: CustomField.createOneCustomFieldMutationObject,
+      deleteMany: CustomField.deleteManyCustomFieldMutationObject,
+      deleteOne: CustomField.deleteOneCustomFieldMutationObject,
+      updateMany: CustomField.updateManyCustomFieldMutationObject,
+      updateOne: CustomField.updateOneCustomFieldMutationObject,
+      upsertOne: CustomField.upsertOneCustomFieldMutationObject,
     },
   },
   Evaluation: {

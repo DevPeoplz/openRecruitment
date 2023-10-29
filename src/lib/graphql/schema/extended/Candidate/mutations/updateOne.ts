@@ -20,6 +20,8 @@ export const updateOneCandidateMutationObject = defineMutationFunction((t) =>
         companyId: selectedCompany,
       }
 
+      const candidateId = args.where.id
+
       let argsDataProcessed = args.data
 
       if (args.data.referrer) {
@@ -82,6 +84,73 @@ export const updateOneCandidateMutationObject = defineMutationFunction((t) =>
                   return newTag
                 }) as Prisma.CandidateTagCreateWithoutCandidateInput[]),
               ],
+            },
+          }
+        }
+      }
+
+      if (args.data.candidateCustomFields) {
+        const candidateCustomFields = args.data.candidateCustomFields
+        const candidateCFKeys = Object.keys(args.data.candidateCustomFields)
+
+        if (candidateCFKeys.includes('upsert')) {
+          const upsert = Array.isArray(candidateCustomFields.upsert)
+            ? candidateCustomFields.upsert
+            : []
+
+          argsDataProcessed = {
+            ...argsDataProcessed,
+            candidateCustomFields: {
+              ...(upsert.length > 0
+                ? {
+                    upsert: [
+                      ...(upsert
+                        .map((candidateCF) => {
+                          const newCFId = (
+                            candidateCF.where
+                              .customFieldId as Prisma.IntFilter<'CandidateCustomField'>
+                          )?.equals
+
+                          if (newCFId) {
+                            return {
+                              where: {
+                                customField: {
+                                  id: newCFId,
+                                  companyId: selectedCompany,
+                                },
+                                candidateId_customFieldId: {
+                                  candidateId: candidateId,
+                                  customFieldId: newCFId,
+                                },
+                              },
+                              update: {
+                                value: (
+                                  candidateCF.update
+                                    ?.value as Prisma.NullableStringFieldUpdateOperationsInput
+                                )?.set,
+                              },
+                              create: {
+                                customField: {
+                                  connect: {
+                                    id: newCFId,
+                                    companyId: {
+                                      equals: selectedCompany,
+                                    },
+                                  },
+                                },
+                                value: candidateCF.create?.value,
+                              },
+                            }
+                          }
+
+                          return null
+                        })
+                        .filter(
+                          (e) => e
+                        ) as Prisma.CandidateCustomFieldUpsertWithWhereUniqueWithoutCandidateInput[]),
+                    ],
+                  }
+                : {}),
             },
           }
         }

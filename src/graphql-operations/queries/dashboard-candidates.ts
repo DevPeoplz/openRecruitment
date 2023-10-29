@@ -361,3 +361,56 @@ export const GET_CANDIDATE_BY_ID_JOBS_TALENT_POOLS = gql`
     }
   }
 `
+
+export const GET_AVAILABLE_CUSTOM_FIELDS = gql`
+  query GET_AVAILABLE_CUSTOM_FIELDS {
+    customFields: findManyCustomField {
+      id
+      companyId
+      key
+      defaultValue
+      settings
+      type
+    }
+  }
+`
+export const GET_CANDIDATE_BY_ID_VISIBLE_CUSTOM_FIELDS = gql`
+  query GET_CANDIDATE_BY_ID_VISIBLE_CUSTOM_FIELDS(
+    $where: CandidateWhereUniqueInput!
+    $cfs_visibility: CandidateCustomFieldWhereInput
+  ) {
+    candidateCFs: findUniqueCandidate(where: $where) {
+      id
+      candidateCustomFields(where: $cfs_visibility) {
+        customField {
+          id
+          key
+        }
+        value
+      }
+    }
+  }
+`
+
+export const get_candidate_by_id_visible_custom_fields_variables = (
+  candidateId: string | number | null | undefined,
+  customFieldsVisibility?: string[] | null
+) => {
+  const cId = parseInt(String(candidateId))
+
+  return {
+    where: {
+      id: cId,
+    },
+    cfs_visibility: {
+      customField: {
+        key: {
+          in:
+            customFieldsVisibility && customFieldsVisibility.length > 0
+              ? customFieldsVisibility
+              : [],
+        },
+      },
+    },
+  }
+}

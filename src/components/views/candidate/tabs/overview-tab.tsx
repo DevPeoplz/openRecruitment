@@ -4,14 +4,11 @@ import {
   AcademicCapIcon,
   BanknotesIcon,
   CakeIcon,
-  CalculatorIcon,
   ChevronDownIcon,
   ChevronUpIcon,
-  DocumentTextIcon,
   EnvelopeIcon,
   GlobeAltIcon,
   LanguageIcon,
-  ListBulletIcon,
   PhoneIcon,
   UserCircleIcon,
 } from '@heroicons/react/24/outline'
@@ -30,7 +27,6 @@ import { parseGQLData } from '@/components/utils/data-parsing'
 import { EditableFile } from '@/components/ui/edit/editable-file'
 import { useLocalStorageState } from '@/hooks/localStorage'
 import { Tooltip } from 'react-tooltip'
-import { SimpleTags } from '@/components/ui/simple-tags'
 import { FaHandSparkles } from 'react-icons/fa'
 import { useCandidateUpdateFile } from '@/hooks/candidate-view'
 import {
@@ -39,6 +35,7 @@ import {
   generateFieldItemComponent,
   generateFullEditableCandidateTags,
 } from '@/components/ui/edit/editable-field-generator'
+import { CandidateCustomFieldsAsFieldItems } from '@/components/views/candidate/custom-field-display'
 
 type Props = {
   logs?: LogType[]
@@ -55,6 +52,12 @@ const OverviewTab: React.FC<Props> = ({ logs }) => {
     'candidate-view',
     'customFieldsOpen',
     false
+  )
+
+  const [customFieldsVisibility, setCustomFieldsVisibility] = useLocalStorageState<string[]>(
+    'candidate-view',
+    'custom-fields-visibility',
+    []
   )
   const { handleFileUpload } = useCandidateUpdateFile(candidate?.id)
 
@@ -338,48 +341,7 @@ const OverviewTab: React.FC<Props> = ({ logs }) => {
           <div className={'h-3 w-full bg-gray-200'}></div>
           {customFieldsOpen && (
             <>
-              <FieldsTable>
-                <FieldsTable.Item>
-                  <FieldsTable.Item.Key>
-                    <p>
-                      <b>Custom Fields:</b>
-                    </p>
-                  </FieldsTable.Item.Key>
-                </FieldsTable.Item>
-                <FieldsTable.Item>
-                  <FieldsTable.Item.Icon>
-                    <DocumentTextIcon className={'h-5 w-5'} />
-                  </FieldsTable.Item.Icon>
-                  <FieldsTable.Item.Key>
-                    <p>Custom String</p>
-                  </FieldsTable.Item.Key>
-                  <FieldsTable.Item.Value>
-                    <p>Custom String Value</p>
-                  </FieldsTable.Item.Value>
-                </FieldsTable.Item>
-                <FieldsTable.Item>
-                  <FieldsTable.Item.Icon>
-                    <CalculatorIcon className={'h-5 w-5'} />
-                  </FieldsTable.Item.Icon>
-                  <FieldsTable.Item.Key>
-                    <p>Custom Number</p>
-                  </FieldsTable.Item.Key>
-                  <FieldsTable.Item.Value>
-                    <p>Custom Number Value</p>
-                  </FieldsTable.Item.Value>
-                </FieldsTable.Item>
-                <FieldsTable.Item>
-                  <FieldsTable.Item.Icon>
-                    <ListBulletIcon className={'h-5 w-5'} />
-                  </FieldsTable.Item.Icon>
-                  <FieldsTable.Item.Key>
-                    <p>Custom String Array</p>
-                  </FieldsTable.Item.Key>
-                  <FieldsTable.Item.Value>
-                    <SimpleTags list={['Custom', 'String', 'Array']} keyPrefix="custom-array" />
-                  </FieldsTable.Item.Value>
-                </FieldsTable.Item>
-              </FieldsTable>
+              <CandidateCustomFieldsAsFieldItems candidateId={candidate?.id} />
               <div className={'h-3 w-full bg-gray-200'}></div>
             </>
           )}

@@ -550,12 +550,12 @@ export const CompanyTalentPoolFieldObject = defineRelationFunction('Company', (t
 );
 
 export const CompanyCustomFieldsFieldArgs = builder.args((t) => ({
-  where: t.field({ type: Inputs.CustomFieldsWhereInput, required: false }),
-  orderBy: t.field({ type: [Inputs.CustomFieldsOrderByWithRelationInput], required: false }),
-  cursor: t.field({ type: Inputs.CustomFieldsWhereUniqueInput, required: false }),
+  where: t.field({ type: Inputs.CustomFieldWhereInput, required: false }),
+  orderBy: t.field({ type: [Inputs.CustomFieldOrderByWithRelationInput], required: false }),
+  cursor: t.field({ type: Inputs.CustomFieldWhereUniqueInput, required: false }),
   take: t.field({ type: 'Int', required: false }),
   skip: t.field({ type: 'Int', required: false }),
-  distinct: t.field({ type: [Inputs.CustomFieldsScalarFieldEnum], required: false }),
+  distinct: t.field({ type: [Inputs.CustomFieldScalarFieldEnum], required: false }),
 }))
 
 export const CompanyCustomFieldsFieldObject = defineRelationFunction('Company', (t) =>

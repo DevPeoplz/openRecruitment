@@ -9,6 +9,7 @@ import * as User from './User'
 // import * as HiringRole from './HiringRole'
 // import * as Role from './Role'
 import * as Company from './Company'
+import * as CustomField from './CustomField'
 // import * as SubscriptionData from './SubscriptionData'
 // import * as CompanyMetadata from './CompanyMetadata'
 // import * as Department from './Department'
@@ -71,6 +72,17 @@ export const Cruds: Record<
     Object: Company.CompanyObject,
     queries: AutoCruds.Company.queries,
     mutations: AutoCruds.Company.mutations,
+  },
+  CustomField: {
+    Object: AutoCruds.CustomField.Object,
+    queries: {
+      ...AutoCruds.CustomField.queries,
+      findMany: CustomField.findManyCustomFieldQueryObject,
+    },
+    mutations: {
+      ...AutoCruds.Candidate.mutations,
+      createOne: CustomField.createOneCustomFieldMutationObject,
+    },
   },
   Candidate: {
     Object: Candidate.CandidateObject,

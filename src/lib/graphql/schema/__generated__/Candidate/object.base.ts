@@ -41,7 +41,7 @@ export const CandidateObject = definePrismaObject('Candidate', {
     offers: t.relation('offers', CandidateOffersFieldObject(t)),
     talentPools: t.relation('talentPools', CandidateTalentPoolsFieldObject(t)),
     candidateTags: t.relation('candidateTags', CandidateCandidateTagsFieldObject(t)),
-    customFields: t.relation('customFields', CandidateCustomFieldsFieldObject(t)),
+    candidateCustomFields: t.relation('candidateCustomFields', CandidateCandidateCustomFieldsFieldObject(t)),
     evaluation: t.relation('evaluation', CandidateEvaluationFieldObject(t)),
     tasks: t.relation('tasks', CandidateTasksFieldObject(t)),
     follows: t.relation('follows', CandidateFollowsFieldObject(t)),
@@ -335,20 +335,20 @@ export const CandidateCandidateTagsFieldObject = defineRelationFunction('Candida
   }),
 );
 
-export const CandidateCustomFieldsFieldArgs = builder.args((t) => ({
-  where: t.field({ type: Inputs.CandidateCustomFieldsWhereInput, required: false }),
-  orderBy: t.field({ type: [Inputs.CandidateCustomFieldsOrderByWithRelationInput], required: false }),
-  cursor: t.field({ type: Inputs.CandidateCustomFieldsWhereUniqueInput, required: false }),
+export const CandidateCandidateCustomFieldsFieldArgs = builder.args((t) => ({
+  where: t.field({ type: Inputs.CandidateCustomFieldWhereInput, required: false }),
+  orderBy: t.field({ type: [Inputs.CandidateCustomFieldOrderByWithRelationInput], required: false }),
+  cursor: t.field({ type: Inputs.CandidateCustomFieldWhereUniqueInput, required: false }),
   take: t.field({ type: 'Int', required: false }),
   skip: t.field({ type: 'Int', required: false }),
-  distinct: t.field({ type: [Inputs.CandidateCustomFieldsScalarFieldEnum], required: false }),
+  distinct: t.field({ type: [Inputs.CandidateCustomFieldScalarFieldEnum], required: false }),
 }))
 
-export const CandidateCustomFieldsFieldObject = defineRelationFunction('Candidate', (t) =>
-  defineRelationObject('Candidate', 'customFields', {
+export const CandidateCandidateCustomFieldsFieldObject = defineRelationFunction('Candidate', (t) =>
+  defineRelationObject('Candidate', 'candidateCustomFields', {
     description: undefined,
     nullable: false,
-    args: CandidateCustomFieldsFieldArgs,
+    args: CandidateCandidateCustomFieldsFieldArgs,
     query: (args) => ({
       where: args.where || undefined,
       cursor: args.cursor || undefined,

@@ -11,7 +11,7 @@ export const CandidateObject = definePrismaObject('Candidate', {
     return {
       ...fields,
       // Add custom fields
-      customField: t.field({
+      testingCustomGQLField: t.field({
         authz: {
           rules: ['IsAuthenticated'],
         },

@@ -21,7 +21,11 @@ export const ADD_CANDIDATE_MUTATION = gql`
 `
 
 export const UPDATE_CANDIDATE_MUTATION = gql`
-  mutation UpdateOneCandidate($data: CandidateUpdateInput!, $where: CandidateWhereUniqueInput!) {
+  mutation UPDATE_CANDIDATE_MUTATION(
+    $data: CandidateUpdateInput!
+    $where: CandidateWhereUniqueInput!
+    $cfs_visibility: CandidateCustomFieldWhereInput
+  ) {
     updateOneCandidate(data: $data, where: $where) {
       id
       firstName
@@ -61,6 +65,95 @@ export const UPDATE_CANDIDATE_MUTATION = gql`
       socials
       links
       createdAt
+      candidateCustomFields(where: $cfs_visibility) {
+        customField {
+          key
+        }
+        value
+      }
     }
   }
 `
+export const ADD_CUSTOM_FIELD_MUTATION = gql`
+  mutation ADD_CUSTOM_FIELD_MUTATION($data: CustomFieldCreateInputExtended!) {
+    customField: createOneCustomField(data: $data) {
+      id
+      companyId
+      key
+      defaultValue
+      settings
+      type
+    }
+  }
+`
+
+export const UPSERT_CANDIDATE_CUSTOM_FIELDS_MUTATION = gql`
+  mutation UPSERT_CANDIDATE_CUSTOM_FIELDS_MUTATION(
+    $data: CandidateUpdateInput!
+    $where: CandidateWhereUniqueInput!
+    $cfs_visibility: CandidateCustomFieldWhereInput
+  ) {
+    candidateCFs: updateOneCandidate(data: $data, where: $where) {
+      id
+      candidateCustomFields(where: $cfs_visibility) {
+        customField {
+          id
+          key
+        }
+        value
+      }
+    }
+  }
+`
+
+export const upsert_one_candidate_custom_fields_variables = (
+  candidateId: string | number | null | undefined,
+  customFieldId: string | number | null | undefined,
+  value: string | null,
+  customFieldsVisibility?: string[] | null
+) => {
+  const cId = parseInt(String(candidateId))
+  const cfId = parseInt(String(customFieldId))
+
+  return {
+    where: {
+      id: cId,
+    },
+    data: {
+      candidateCustomFields: {
+        upsert: [
+          {
+            update: {
+              value: {
+                set: value,
+              },
+            },
+            create: {
+              customField: {
+                connect: {
+                  id: cfId,
+                },
+              },
+              value: value,
+            },
+            where: {
+              customFieldId: {
+                equals: cfId,
+              },
+            },
+          },
+        ],
+      },
+    },
+    cfs_visibility: {
+      customField: {
+        key: {
+          in:
+            customFieldsVisibility && customFieldsVisibility.length > 0
+              ? customFieldsVisibility
+              : [],
+        },
+      },
+    },
+  }
+}

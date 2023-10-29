@@ -30,7 +30,7 @@ export {
   CandidateOffersFieldObject,
   CandidateTalentPoolsFieldObject,
   CandidateCandidateTagsFieldObject,
-  CandidateCustomFieldsFieldObject,
+  CandidateCandidateCustomFieldsFieldObject,
   CandidateEvaluationFieldObject,
   CandidateTasksFieldObject,
   CandidateFollowsFieldObject,
