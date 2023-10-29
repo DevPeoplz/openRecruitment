@@ -27,21 +27,15 @@ import {
 } from '@/graphql-operations/mutations/signup-candidate'
 import { FieldsTable } from '@/components/ui/fields-table'
 import { BtnIconCombobox } from '@/components/ui/btn-icon-combobox'
-import { ComboboxWithTagsProps } from '@/components/ui/combobox-with-tags'
-import { List, uniq } from 'lodash'
+import { uniq } from 'lodash'
+import {
+  AddCustomFieldComponentFieldsTableItem,
+  CustomFieldAvailableTypes,
+} from '@/components/ui/create/add-custom-field'
 
 type CustomFieldsAsFieldItemsProps = {
   candidateId: string | number | null
 }
-
-type CustomFieldAvailableTypes =
-  | 'string'
-  | 'int'
-  | 'date'
-  | 'datetime'
-  | 'select'
-  | 'stringArray'
-  | 'currency'
 
 const parseCFValue = (type: keyof EditableFieldsValidTypes, value: string | null | undefined) => {
   switch (type) {
@@ -111,16 +105,6 @@ export const CandidateCustomFieldsAsFieldItems: React.FC<CustomFieldsAsFieldItem
       customFieldsVisibility
     ),
   })
-
-  const customFieldsVisibilityAsOptions = useMemo(() => {
-    return customFieldsVisibility.map((cf) => ({
-      label:
-        dataAvailableCustomFields?.customFields?.find(
-          (cfAval: { key: string }) => cfAval.key === cf
-        )?.settings?.label ?? cf,
-      value: cf,
-    }))
-  }, [customFieldsVisibility, dataAvailableCustomFields?.customFields])
 
   const availableCustomFieldsAsOptions = useMemo(() => {
     return dataAvailableCustomFields?.customFields?.map(
@@ -278,6 +262,9 @@ export const CandidateCustomFieldsAsFieldItems: React.FC<CustomFieldsAsFieldItem
           return generateFieldItemComponent(customField, handleOnUpdate)
         })}
       </FieldsTable>
+      <AddCustomFieldComponentFieldsTableItem
+        visibility={[customFieldsVisibility, setCustomFieldsVisibility]}
+      />
     </>
   )
 }

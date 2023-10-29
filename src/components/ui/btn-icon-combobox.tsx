@@ -38,7 +38,6 @@ export const BtnIconCombobox: React.FC<BtnIconComboboxProps> = ({
 }) => {
   const [btnClicked, setBtnClicked] = useState(false)
   const comboBtnRef = useRef<HTMLButtonElement>(null)
-  const ComboboxSelected = comboboxType === 'tags' ? ComboboxWithTags : ComboboxWithChecks
 
   const handleBtnClick = () => () => {
     setBtnClicked((prev) => {

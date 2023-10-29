@@ -38,6 +38,7 @@ export const createOneCustomFieldMutationObject = defineMutationFunction((t) =>
         company: Prisma.CandidateCreateInput['company']
       } = {
         ...args.data,
+        key: args.data.key.toLowerCase().replace(/\W/g, '_'),
         company: {
           connect: {
             id: selectedCompany,
