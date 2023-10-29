@@ -28,6 +28,9 @@ export const createOneCustomFieldMutationObject = defineMutationFunction((t) =>
   defineMutationPrismaObject({
     type: 'CustomField',
     nullable: false,
+    authz: {
+      rules: ['IsAuthenticated'],
+    },
     args: createOneCustomFieldMutationArgs,
     resolve: async (query, _root, args, _context, _info) => {
       const selectedCompany: string = _context?.session?.user?.selectedCompany

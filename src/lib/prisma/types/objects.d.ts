@@ -98,7 +98,7 @@ export default interface PrismaTypes {
         Where: Prisma.AttachmentWhereInput;
         Create: {};
         Update: {};
-        RelationName: "userProfilePhoto" | "candidateCv" | "candidateAvatar" | "candidateCoverLetter" | "uploader" | "offerFiles" | "talentPoolFiles";
+        RelationName: "userProfilePhoto" | "candidateCv" | "candidateAvatar" | "candidateCoverLetter" | "companyLogo" | "uploader" | "offerFiles" | "talentPoolFiles" | "company";
         ListRelations: "offerFiles" | "talentPoolFiles";
         Relations: {
             userProfilePhoto: {
@@ -117,6 +117,10 @@ export default interface PrismaTypes {
                 Shape: Candidate | null;
                 Name: "Candidate";
             };
+            companyLogo: {
+                Shape: Company | null;
+                Name: "Company";
+            };
             uploader: {
                 Shape: HiringRole | null;
                 Name: "HiringRole";
@@ -128,6 +132,10 @@ export default interface PrismaTypes {
             talentPoolFiles: {
                 Shape: TalentPoolFile[];
                 Name: "TalentPoolFile";
+            };
+            company: {
+                Shape: Company;
+                Name: "Company";
             };
         };
     };
@@ -247,8 +255,8 @@ export default interface PrismaTypes {
         Where: Prisma.CompanyWhereInput;
         Create: {};
         Update: {};
-        RelationName: "roles" | "subscription" | "meetingRooms" | "metadata" | "eventSchedule" | "events" | "departments" | "disqualifyReasons" | "tagSources" | "auditLogs" | "offers" | "templates" | "tasks" | "owner" | "hiringRoles" | "candidates" | "TalentPool" | "CustomFields";
-        ListRelations: "roles" | "meetingRooms" | "metadata" | "eventSchedule" | "events" | "departments" | "disqualifyReasons" | "tagSources" | "auditLogs" | "offers" | "templates" | "tasks" | "hiringRoles" | "candidates" | "TalentPool" | "CustomFields";
+        RelationName: "roles" | "subscription" | "meetingRooms" | "metadata" | "eventSchedule" | "events" | "departments" | "disqualifyReasons" | "tagSources" | "auditLogs" | "offers" | "templates" | "tasks" | "owner" | "hiringRoles" | "candidates" | "TalentPool" | "CustomFields" | "logo" | "attachments";
+        ListRelations: "roles" | "meetingRooms" | "metadata" | "eventSchedule" | "events" | "departments" | "disqualifyReasons" | "tagSources" | "auditLogs" | "offers" | "templates" | "tasks" | "hiringRoles" | "candidates" | "TalentPool" | "CustomFields" | "attachments";
         Relations: {
             roles: {
                 Shape: Role[];
@@ -321,6 +329,14 @@ export default interface PrismaTypes {
             CustomFields: {
                 Shape: CustomField[];
                 Name: "CustomField";
+            };
+            logo: {
+                Shape: Attachment | null;
+                Name: "Attachment";
+            };
+            attachments: {
+                Shape: Attachment[];
+                Name: "Attachment";
             };
         };
     };
@@ -994,8 +1010,8 @@ export default interface PrismaTypes {
         Where: Prisma.CandidateWhereInput;
         Create: {};
         Update: {};
-        RelationName: "referrer" | "cv" | "avatar" | "coverLetter" | "hiredAt" | "hiredBy" | "auditLogs" | "offers" | "talentPools" | "candidateTags" | "candidateCustomFields" | "evaluation" | "tasks" | "follows" | "SharedCandidateLink" | "company";
-        ListRelations: "auditLogs" | "offers" | "talentPools" | "candidateTags" | "candidateCustomFields" | "evaluation" | "tasks" | "follows" | "SharedCandidateLink";
+        RelationName: "referrer" | "cv" | "avatar" | "coverLetter" | "hiredAt" | "hiredBy" | "auditLogs" | "offers" | "talentPools" | "candidateTags" | "candidateCustomFields" | "evaluations" | "tasks" | "follows" | "SharedCandidateLink" | "company";
+        ListRelations: "auditLogs" | "offers" | "talentPools" | "candidateTags" | "candidateCustomFields" | "evaluations" | "tasks" | "follows" | "SharedCandidateLink";
         Relations: {
             referrer: {
                 Shape: TagSource | null;
@@ -1041,7 +1057,7 @@ export default interface PrismaTypes {
                 Shape: CandidateCustomField[];
                 Name: "CandidateCustomField";
             };
-            evaluation: {
+            evaluations: {
                 Shape: Evaluation[];
                 Name: "Evaluation";
             };

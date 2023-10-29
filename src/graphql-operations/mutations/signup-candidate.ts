@@ -195,3 +195,25 @@ export const UPDATE_CANDIDATE_BY_ID_JOBS_TALENT_POOLS = gql`
     }
   }
 `
+
+export const UPDATE_CANDIDATE_BY_ID_QUICK_EVALUATION = gql`
+  mutation UPDATE_CANDIDATE_BY_ID_QUICK_EVALUATION(
+    $data: CandidateUpdateInput!
+    $where: CandidateWhereUniqueInput!
+  ) {
+    candidateQuickEvaluation: updateOneCandidate(data: $data, where: $where) {
+      id
+      evaluations {
+        id
+        isQuickEval
+        description
+        score
+        teamMember {
+          user {
+            name
+          }
+        }
+      }
+    }
+  }
+`

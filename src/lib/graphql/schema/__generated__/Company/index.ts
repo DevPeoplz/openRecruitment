@@ -33,7 +33,10 @@ export {
   CompanyHiringRolesFieldObject,
   CompanyCandidatesFieldObject,
   CompanyTalentPoolFieldObject,
-  CompanyCustomFieldsFieldObject
+  CompanyCustomFieldsFieldObject,
+  CompanyLogoFieldObject,
+  CompanyLogoIdFieldObject,
+  CompanyAttachmentsFieldObject
 } from './object.base';
 export {
   createManyCompanyMutation,

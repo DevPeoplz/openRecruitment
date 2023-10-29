@@ -37,6 +37,9 @@ export const createOneCandidateMutationObject = defineMutationFunction((t) =>
   defineMutationPrismaObject({
     type: 'Candidate',
     nullable: false,
+    authz: {
+      rules: ['IsAuthenticated'],
+    },
     args: createOneCandidateMutationArgs,
     resolve: async (query, _root, args, _context, _info) => {
       const selectedCompany: string = _context?.session?.user?.selectedCompany

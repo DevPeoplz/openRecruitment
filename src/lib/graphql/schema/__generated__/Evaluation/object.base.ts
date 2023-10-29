@@ -21,11 +21,14 @@ export const EvaluationObject = definePrismaObject('Evaluation', {
     teamMember: t.relation('teamMember', EvaluationTeamMemberFieldObject),
     teamMemberId: t.field(EvaluationTeamMemberIdFieldObject),
     isQuickEval: t.field(EvaluationIsQuickEvalFieldObject),
+    description: t.field(EvaluationDescriptionFieldObject),
     score: t.field(EvaluationScoreFieldObject),
     eventScheduleEvaluations: t.relation('eventScheduleEvaluations', EvaluationEventScheduleEvaluationsFieldObject(t)),
     event: t.relation('event', EvaluationEventFieldObject),
     eventId: t.field(EvaluationEventIdFieldObject),
     answers: t.relation('answers', EvaluationAnswersFieldObject(t)),
+    createdAt: t.field(EvaluationCreatedAtFieldObject),
+    updatedAt: t.field(EvaluationUpdatedAtFieldObject),
   }),
 });
 
@@ -99,6 +102,13 @@ export const EvaluationIsQuickEvalFieldObject = defineFieldObject('Evaluation', 
   resolve: (parent) => parent.isQuickEval,
 });
 
+export const EvaluationDescriptionFieldObject = defineFieldObject('Evaluation', {
+  type: "String",
+  description: undefined,
+  nullable: true,
+  resolve: (parent) => parent.description,
+});
+
 export const EvaluationScoreFieldObject = defineFieldObject('Evaluation', {
   type: Inputs.SCORE_TYPES,
   description: undefined,
@@ -169,3 +179,17 @@ export const EvaluationAnswersFieldObject = defineRelationFunction('Evaluation',
     }),
   }),
 );
+
+export const EvaluationCreatedAtFieldObject = defineFieldObject('Evaluation', {
+  type: Inputs.DateTime,
+  description: undefined,
+  nullable: false,
+  resolve: (parent) => parent.createdAt,
+});
+
+export const EvaluationUpdatedAtFieldObject = defineFieldObject('Evaluation', {
+  type: Inputs.DateTime,
+  description: undefined,
+  nullable: false,
+  resolve: (parent) => parent.updatedAt,
+});

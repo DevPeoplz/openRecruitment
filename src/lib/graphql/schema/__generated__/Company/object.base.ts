@@ -45,6 +45,9 @@ export const CompanyObject = definePrismaObject('Company', {
     candidates: t.relation('candidates', CompanyCandidatesFieldObject(t)),
     TalentPool: t.relation('TalentPool', CompanyTalentPoolFieldObject(t)),
     CustomFields: t.relation('CustomFields', CompanyCustomFieldsFieldObject(t)),
+    logo: t.relation('logo', CompanyLogoFieldObject),
+    logoId: t.field(CompanyLogoIdFieldObject),
+    attachments: t.relation('attachments', CompanyAttachmentsFieldObject(t)),
   }),
 });
 
@@ -563,6 +566,45 @@ export const CompanyCustomFieldsFieldObject = defineRelationFunction('Company', 
     description: undefined,
     nullable: false,
     args: CompanyCustomFieldsFieldArgs,
+    query: (args) => ({
+      where: args.where || undefined,
+      cursor: args.cursor || undefined,
+      take: args.take || undefined,
+      distinct: args.distinct || undefined,
+      skip: args.skip || undefined,
+      orderBy: args.orderBy || undefined,
+    }),
+  }),
+);
+
+export const CompanyLogoFieldObject = defineRelationObject('Company', 'logo', {
+  description: undefined,
+  nullable: true,
+  args: undefined,
+  query: undefined,
+});
+
+export const CompanyLogoIdFieldObject = defineFieldObject('Company', {
+  type: "Int",
+  description: undefined,
+  nullable: true,
+  resolve: (parent) => parent.logoId,
+});
+
+export const CompanyAttachmentsFieldArgs = builder.args((t) => ({
+  where: t.field({ type: Inputs.AttachmentWhereInput, required: false }),
+  orderBy: t.field({ type: [Inputs.AttachmentOrderByWithRelationInput], required: false }),
+  cursor: t.field({ type: Inputs.AttachmentWhereUniqueInput, required: false }),
+  take: t.field({ type: 'Int', required: false }),
+  skip: t.field({ type: 'Int', required: false }),
+  distinct: t.field({ type: [Inputs.AttachmentScalarFieldEnum], required: false }),
+}))
+
+export const CompanyAttachmentsFieldObject = defineRelationFunction('Company', (t) =>
+  defineRelationObject('Company', 'attachments', {
+    description: undefined,
+    nullable: false,
+    args: CompanyAttachmentsFieldArgs,
     query: (args) => ({
       where: args.where || undefined,
       cursor: args.cursor || undefined,

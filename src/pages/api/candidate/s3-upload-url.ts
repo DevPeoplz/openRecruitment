@@ -93,6 +93,7 @@ const handlePOST = async (res: NextApiResponse, req: NextApiRequest) => {
             size: fileSize,
             path: `https://${process.env.AWS_BUCKET_NAME}.s3.amazonaws.com/${fullFileName}`,
             [fieldData.attachmentType]: { connect: { id: parseInt(candidateId) } },
+            companyId: companyId,
           },
         })
       } catch (error) {

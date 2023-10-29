@@ -10,11 +10,14 @@ export {
   EvaluationTeamMemberFieldObject,
   EvaluationTeamMemberIdFieldObject,
   EvaluationIsQuickEvalFieldObject,
+  EvaluationDescriptionFieldObject,
   EvaluationScoreFieldObject,
   EvaluationEventScheduleEvaluationsFieldObject,
   EvaluationEventFieldObject,
   EvaluationEventIdFieldObject,
-  EvaluationAnswersFieldObject
+  EvaluationAnswersFieldObject,
+  EvaluationCreatedAtFieldObject,
+  EvaluationUpdatedAtFieldObject
 } from './object.base';
 export {
   createManyEvaluationMutation,

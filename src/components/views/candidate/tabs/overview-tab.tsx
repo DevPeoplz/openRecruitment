@@ -354,10 +354,6 @@ const OverviewTab: React.FC<Props> = ({ logs }) => {
         </div>
       </div>
       <Panel>
-        <Panel.Header>Recent Activity</Panel.Header>
-        <Panel.Body></Panel.Body>
-      </Panel>
-      <Panel>
         <Panel.Header>Curriculum</Panel.Header>
         <Panel.Body>
           <PDFViewer file={candidate.cv}>
@@ -370,6 +366,10 @@ const OverviewTab: React.FC<Props> = ({ logs }) => {
             </PDFViewer.ToolbarItem>
           </PDFViewer>
         </Panel.Body>
+      </Panel>
+      <Panel>
+        <Panel.Header>Recent Activity</Panel.Header>
+        <Panel.Body></Panel.Body>
       </Panel>
     </div>
   )

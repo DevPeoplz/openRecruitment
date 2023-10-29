@@ -101,12 +101,15 @@ model Attachment {
   candidateCv          Candidate?       @relation("cv")
   candidateAvatar      Candidate?       @relation("avatar")
   candidateCoverLetter Candidate?       @relation("coverLetter")
+  companyLogo          Company?         @relation("logo")
   uploader             HiringRole?      @relation(fields: [uploaderId], references: [id])
   uploaderId           Int?
   createdAt            DateTime         @default(now())
   updatedAt            DateTime         @updatedAt
   offerFiles           OfferFile[]
   talentPoolFiles      TalentPoolFile[]
+  company              Company          @relation("attachments", fields: [companyId], references: [id])
+  companyId            String
 }
 
 model HiringRole {
@@ -185,6 +188,9 @@ model Company {
   candidates            Candidate[]
   TalentPool            TalentPool[]
   CustomFields          CustomField[]
+  logo                  Attachment?        @relation("logo", fields: [logoId], references: [id])
+  logoId                Int?               @unique
+  attachments           Attachment[]       @relation("attachments")
 }
 
 model SubscriptionData {
@@ -562,7 +568,7 @@ model Candidate {
   talentPools           TalentPoolMatch[]
   candidateTags         CandidateTag[]
   candidateCustomFields CandidateCustomField[]
-  evaluation            Evaluation[]
+  evaluations           Evaluation[]
   tasks                 Task[]
   follows               Follow[]
   SharedCandidateLink   SharedCandidateLink[]
@@ -623,11 +629,14 @@ model Evaluation {
   teamMember               HiringRole                @relation(fields: [teamMemberId], references: [id])
   teamMemberId             Int
   isQuickEval              Boolean                   @default(false)
+  description              String?
   score                    SCORE_TYPES
   eventScheduleEvaluations EventScheduleEvaluation[]
   event                    Event?                    @relation(fields: [eventId], references: [id])
   eventId                  Int?
   answers                  EvaluationQuestion[]
+  createdAt                DateTime                  @default(now())
+  updatedAt                DateTime                  @updatedAt
 }
 
 model EvaluationQuestion {

@@ -38,7 +38,7 @@ import * as TalentPool from './TalentPool'
 import * as Candidate from './Candidate'
 // import * as CandidateTag from './CandidateTag'
 // import * as CandidateCustomFields from './CandidateCustomFields'
-// import * as Evaluation from './Evaluation'
+import * as Evaluation from './Evaluation'
 // import * as EvaluationAnswer from './EvaluationAnswer'
 // import * as SharedCandidateLink from './SharedCandidateLink'
 // import * as Task from './Task'
@@ -131,6 +131,17 @@ export const Cruds: Record<
       findMany: AuditLog.findManyAuditLogQueryObject,
     },
     mutations: AutoCruds.AuditLog.mutations,
+  },
+  Evaluation: {
+    Object: AutoCruds.Evaluation.Object,
+    queries: {
+      ...AutoCruds.Evaluation.queries,
+      findMany: Evaluation.findManyEvaluationQueryObject,
+    },
+    mutations: {
+      ...AutoCruds.Evaluation.mutations,
+      createOne: Evaluation.createOneEvaluationMutationObject,
+    },
   },
 }
 

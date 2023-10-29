@@ -31,7 +31,7 @@ export {
   CandidateTalentPoolsFieldObject,
   CandidateCandidateTagsFieldObject,
   CandidateCandidateCustomFieldsFieldObject,
-  CandidateEvaluationFieldObject,
+  CandidateEvaluationsFieldObject,
   CandidateTasksFieldObject,
   CandidateFollowsFieldObject,
   CandidateSharedCandidateLinkFieldObject,

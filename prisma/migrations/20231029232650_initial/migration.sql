@@ -88,6 +88,7 @@ CREATE TABLE "Attachment" (
     "uploaderId" INTEGER,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "companyId" TEXT NOT NULL,
 
     CONSTRAINT "Attachment_pkey" PRIMARY KEY ("id")
 );
@@ -135,6 +136,7 @@ CREATE TABLE "Company" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "ownerId" TEXT NOT NULL,
+    "logoId" INTEGER,
 
     CONSTRAINT "Company_pkey" PRIMARY KEY ("id")
 );
@@ -400,7 +402,7 @@ CREATE TABLE "TalentPoolMatch" (
 CREATE TABLE "Template" (
     "id" SERIAL NOT NULL,
     "companyId" TEXT NOT NULL,
-    "isCompanyWide" BOOLEAN NOT NULL DEFAULT true,
+    "isCompanyWide" BOOLEAN DEFAULT true,
     "type" "TemplateTypes" NOT NULL,
     "name" TEXT NOT NULL,
     "category" TEXT,
@@ -480,24 +482,24 @@ CREATE TABLE "CandidateTag" (
 );
 
 -- CreateTable
-CREATE TABLE "CandidateCustomFields" (
+CREATE TABLE "CandidateCustomField" (
     "candidateId" INTEGER NOT NULL,
     "customFieldId" INTEGER NOT NULL,
-    "value" TEXT NOT NULL,
+    "value" TEXT,
 
-    CONSTRAINT "CandidateCustomFields_pkey" PRIMARY KEY ("candidateId","customFieldId")
+    CONSTRAINT "CandidateCustomField_pkey" PRIMARY KEY ("candidateId","customFieldId")
 );
 
 -- CreateTable
-CREATE TABLE "CustomFields" (
+CREATE TABLE "CustomField" (
     "id" SERIAL NOT NULL,
-    "type" TEXT NOT NULL,
+    "type" TEXT NOT NULL DEFAULT 'string',
     "key" TEXT NOT NULL,
     "defaultValue" TEXT,
     "settings" JSONB,
     "companyId" TEXT NOT NULL,
 
-    CONSTRAINT "CustomFields_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "CustomField_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -508,8 +510,11 @@ CREATE TABLE "Evaluation" (
     "candidateId" INTEGER NOT NULL,
     "teamMemberId" INTEGER NOT NULL,
     "isQuickEval" BOOLEAN NOT NULL DEFAULT false,
+    "description" TEXT,
     "score" "SCORE_TYPES" NOT NULL,
     "eventId" INTEGER,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Evaluation_pkey" PRIMARY KEY ("id")
 );
@@ -594,6 +599,9 @@ CREATE UNIQUE INDEX "VerificationToken_identifier_token_key" ON "VerificationTok
 CREATE UNIQUE INDEX "HiringRole_userId_companyId_key" ON "HiringRole"("userId", "companyId");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Company_logoId_key" ON "Company"("logoId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "SubscriptionData_companyId_key" ON "SubscriptionData"("companyId");
 
 -- CreateIndex
@@ -609,6 +617,9 @@ CREATE UNIQUE INDEX "Offer_recruiterId_key" ON "Offer"("recruiterId");
 CREATE UNIQUE INDEX "Offer_hiringManagerId_key" ON "Offer"("hiringManagerId");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Match_candidateId_offerId_key" ON "Match"("candidateId", "offerId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Candidate_cvId_key" ON "Candidate"("cvId");
 
 -- CreateIndex
@@ -621,7 +632,7 @@ CREATE UNIQUE INDEX "Candidate_coverLetterId_key" ON "Candidate"("coverLetterId"
 CREATE UNIQUE INDEX "Candidate_email_companyId_key" ON "Candidate"("email", "companyId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "CustomFields_companyId_key_key" ON "CustomFields"("companyId", "key");
+CREATE UNIQUE INDEX "CustomField_companyId_key_key" ON "CustomField"("companyId", "key");
 
 -- AddForeignKey
 ALTER TABLE "User" ADD CONSTRAINT "User_photoId_fkey" FOREIGN KEY ("photoId") REFERENCES "Attachment"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -634,6 +645,9 @@ ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId"
 
 -- AddForeignKey
 ALTER TABLE "Attachment" ADD CONSTRAINT "Attachment_uploaderId_fkey" FOREIGN KEY ("uploaderId") REFERENCES "HiringRole"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Attachment" ADD CONSTRAINT "Attachment_companyId_fkey" FOREIGN KEY ("companyId") REFERENCES "Company"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "HiringRole" ADD CONSTRAINT "HiringRole_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -649,6 +663,9 @@ ALTER TABLE "Role" ADD CONSTRAINT "Role_companyId_fkey" FOREIGN KEY ("companyId"
 
 -- AddForeignKey
 ALTER TABLE "Company" ADD CONSTRAINT "Company_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Company" ADD CONSTRAINT "Company_logoId_fkey" FOREIGN KEY ("logoId") REFERENCES "Attachment"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "SubscriptionData" ADD CONSTRAINT "SubscriptionData_companyId_fkey" FOREIGN KEY ("companyId") REFERENCES "Company"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -819,13 +836,13 @@ ALTER TABLE "CandidateTag" ADD CONSTRAINT "CandidateTag_candidateId_fkey" FOREIG
 ALTER TABLE "CandidateTag" ADD CONSTRAINT "CandidateTag_tagId_fkey" FOREIGN KEY ("tagId") REFERENCES "TagSource"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CandidateCustomFields" ADD CONSTRAINT "CandidateCustomFields_candidateId_fkey" FOREIGN KEY ("candidateId") REFERENCES "Candidate"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "CandidateCustomField" ADD CONSTRAINT "CandidateCustomField_candidateId_fkey" FOREIGN KEY ("candidateId") REFERENCES "Candidate"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CandidateCustomFields" ADD CONSTRAINT "CandidateCustomFields_customFieldId_fkey" FOREIGN KEY ("customFieldId") REFERENCES "CustomFields"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "CandidateCustomField" ADD CONSTRAINT "CandidateCustomField_customFieldId_fkey" FOREIGN KEY ("customFieldId") REFERENCES "CustomField"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CustomFields" ADD CONSTRAINT "CustomFields_companyId_fkey" FOREIGN KEY ("companyId") REFERENCES "Company"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "CustomField" ADD CONSTRAINT "CustomField_companyId_fkey" FOREIGN KEY ("companyId") REFERENCES "Company"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Evaluation" ADD CONSTRAINT "Evaluation_templateId_fkey" FOREIGN KEY ("templateId") REFERENCES "Template"("id") ON DELETE SET NULL ON UPDATE CASCADE;

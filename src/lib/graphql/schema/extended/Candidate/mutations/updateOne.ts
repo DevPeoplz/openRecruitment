@@ -5,11 +5,16 @@ import {
 } from '@/lib/graphql/schema/__generated__/utils'
 import { updateOneCandidateMutationArgs } from '@/lib/graphql/schema/__generated__/Candidate/mutations/updateOne.base'
 import { Prisma } from '.prisma/client'
+import { omit } from 'lodash'
+import sanitizeHtml from 'sanitize-html'
 
 export const updateOneCandidateMutationObject = defineMutationFunction((t) =>
   defineMutationPrismaObject({
     type: 'Candidate',
     nullable: true,
+    authz: {
+      rules: ['IsAuthenticated'],
+    },
     args: updateOneCandidateMutationArgs,
     resolve: async (query, _root, args, _context, _info) => {
       const selectedCompany: string = _context?.session?.user?.selectedCompany
@@ -220,6 +225,49 @@ export const updateOneCandidateMutationObject = defineMutationFunction((t) =>
                 : {}),
             },
           }
+        }
+      }
+
+      if (args.data.evaluations) {
+        const candidateEvaluations = args.data.evaluations
+        const candidateEvaluationKeys = Object.keys(candidateEvaluations)
+        const hiringRoleId = _context?.session?.user?.hiringRoleId
+
+        if (candidateEvaluationKeys.includes('create') && hiringRoleId) {
+          const create = Array.isArray(candidateEvaluations.create)
+            ? candidateEvaluations.create
+            : []
+
+          argsDataProcessed = {
+            ...argsDataProcessed,
+            evaluations: {
+              ...(create.length > 0
+                ? {
+                    create: [
+                      ...create.map((candidateEvaluation) => {
+                        return {
+                          ...candidateEvaluation,
+                          description: candidateEvaluation.description
+                            ? sanitizeHtml(candidateEvaluation.description)
+                            : null,
+                          isQuickEval: true,
+                          teamMember: {
+                            connect: {
+                              id: hiringRoleId,
+                              companyId: {
+                                equals: selectedCompany,
+                              },
+                            },
+                          },
+                        }
+                      }),
+                    ],
+                  }
+                : {}),
+            },
+          }
+        } else {
+          argsDataProcessed = omit(argsDataProcessed, ['evaluations'])
         }
       }
 

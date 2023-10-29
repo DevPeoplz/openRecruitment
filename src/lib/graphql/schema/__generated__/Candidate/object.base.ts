@@ -42,7 +42,7 @@ export const CandidateObject = definePrismaObject('Candidate', {
     talentPools: t.relation('talentPools', CandidateTalentPoolsFieldObject(t)),
     candidateTags: t.relation('candidateTags', CandidateCandidateTagsFieldObject(t)),
     candidateCustomFields: t.relation('candidateCustomFields', CandidateCandidateCustomFieldsFieldObject(t)),
-    evaluation: t.relation('evaluation', CandidateEvaluationFieldObject(t)),
+    evaluations: t.relation('evaluations', CandidateEvaluationsFieldObject(t)),
     tasks: t.relation('tasks', CandidateTasksFieldObject(t)),
     follows: t.relation('follows', CandidateFollowsFieldObject(t)),
     SharedCandidateLink: t.relation('SharedCandidateLink', CandidateSharedCandidateLinkFieldObject(t)),
@@ -360,7 +360,7 @@ export const CandidateCandidateCustomFieldsFieldObject = defineRelationFunction(
   }),
 );
 
-export const CandidateEvaluationFieldArgs = builder.args((t) => ({
+export const CandidateEvaluationsFieldArgs = builder.args((t) => ({
   where: t.field({ type: Inputs.EvaluationWhereInput, required: false }),
   orderBy: t.field({ type: [Inputs.EvaluationOrderByWithRelationInput], required: false }),
   cursor: t.field({ type: Inputs.EvaluationWhereUniqueInput, required: false }),
@@ -369,11 +369,11 @@ export const CandidateEvaluationFieldArgs = builder.args((t) => ({
   distinct: t.field({ type: [Inputs.EvaluationScalarFieldEnum], required: false }),
 }))
 
-export const CandidateEvaluationFieldObject = defineRelationFunction('Candidate', (t) =>
-  defineRelationObject('Candidate', 'evaluation', {
+export const CandidateEvaluationsFieldObject = defineRelationFunction('Candidate', (t) =>
+  defineRelationObject('Candidate', 'evaluations', {
     description: undefined,
     nullable: false,
-    args: CandidateEvaluationFieldArgs,
+    args: CandidateEvaluationsFieldArgs,
     query: (args) => ({
       where: args.where || undefined,
       cursor: args.cursor || undefined,

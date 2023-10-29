@@ -29,20 +29,6 @@ async function main() {
   })
   console.log({ user1 })
 
-  const adminPhoto =
-    '1' ||
-    (await prisma.attachment.upsert({
-      where: { id: 1 },
-      update: {},
-      create: {
-        contentType: 'profilePhoto',
-        filename: 'photo1.png',
-        path: '/images/photo1.png',
-        uploaderId: 1,
-        updatedAt: new Date(),
-      },
-    }))
-
   const user2 = await prisma.user.upsert({
     where: { email: 'peter@admin.ad' },
     update: {},
@@ -78,6 +64,23 @@ async function main() {
     },
   })
   console.log({ company1 })
+
+  const logo1 = await prisma.attachment.upsert({
+    where: { id: 1 },
+    update: {},
+    create: {
+      contentType: 'image/png',
+      filename: 'company-1/logo/devpeoplz-logo.png',
+      size: 15877,
+      path: `https://${process.env.AWS_BUCKET_NAME}.s3.amazonaws.com/company-1/logo/devpeoplz-logo.png`,
+      companyId: company1.id,
+      companyLogo: {
+        connect: { id: company1.id },
+      },
+    },
+  })
+
+  console.log(logo1)
 
   const company2 = await prisma.company.upsert({
     where: { id: '2' },

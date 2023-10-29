@@ -7,6 +7,9 @@ export const GET_ME_DATA_AND_COMPANIES = gql`
       hiringRoles {
         company {
           name
+          logo {
+            path
+          }
         }
         id
       }
@@ -22,6 +25,9 @@ export const GET_ME_COMPANIES = gql`
         company {
           id
           name
+          logo {
+            path
+          }
         }
       }
     }
@@ -424,3 +430,22 @@ export const get_candidate_by_id_visible_custom_fields_variables = (
     },
   }
 }
+
+export const GET_CANDIDATE_BY_ID_QUICK_EVALUATIONS = gql`
+  query GET_CANDIDATE_BY_ID_QUICK_EVALUATIONS($where: CandidateWhereUniqueInput!) {
+    candidateQuickEvaluations: findUniqueCandidate(where: $where) {
+      id
+      evaluations {
+        id
+        isQuickEval
+        description
+        score
+        teamMember {
+          user {
+            name
+          }
+        }
+      }
+    }
+  }
+`
