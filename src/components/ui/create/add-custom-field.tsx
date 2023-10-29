@@ -8,17 +8,21 @@ import { uniq } from 'lodash'
 import Alert from '@/components/alert'
 import Loader from '@/components/ui/loader'
 
-export const customFieldAvailableTypes = [
-  'string',
-  'int',
-  'date',
-  'datetime',
-  'select',
-  'stringArray',
-  'currency',
-] as const
+export const customFieldAvailableTypesData = {
+  string: 'Text',
+  int: 'Number',
+  date: 'Date',
+  datetime: 'Date with Time',
+  select: 'Select/Dropdown',
+  stringArray: 'Text List',
+  currency: 'Currency',
+}
 
-export type CustomFieldAvailableTypes = (typeof customFieldAvailableTypes)[number]
+export type CustomFieldAvailableTypes = keyof typeof customFieldAvailableTypesData
+
+export const customFieldAvailableTypes = Object.keys(
+  customFieldAvailableTypesData
+) as CustomFieldAvailableTypes[]
 
 type CustomFieldForm = {
   defaultValue?: string
@@ -28,7 +32,7 @@ type CustomFieldForm = {
 }
 
 type AddCustomFieldComponentFieldsTableItemProps = {
-  visibility: [string[], React.Dispatch<React.SetStateAction<string[]>>]
+  visibility: [string[], (newValue: string[]) => void]
 }
 
 export const AddCustomFieldComponentFieldsTableItem = ({
@@ -174,9 +178,9 @@ export const AddCustomFieldComponentFieldsTableItem = ({
                     value={newCustomFieldForm.type ?? undefined}
                     onChange={handleInputChange('type')}
                   >
-                    {customFieldAvailableTypes.map((op) => (
-                      <option key={op} value={op}>
-                        {op}
+                    {Object.entries(customFieldAvailableTypesData).map(([key, label]) => (
+                      <option key={key} value={key}>
+                        {label}
                       </option>
                     ))}
                   </select>

@@ -20,12 +20,21 @@ export const DatePicker: React.FC<DatePickerType> = ({
 }) => {
   const getDateInput = (date: string) => {
     const localDate = new Date(date)
-    return hasTime
-      ? format(localDate, "yyyy-MM-dd'T'HH:mm:ss.SSS")
-      : format(localDate, 'yyyy-MM-dd')
+    let formattedDate = null
+
+    try {
+      formattedDate = hasTime
+        ? format(localDate, "yyyy-MM-dd'T'HH:mm:ss.SSS")
+        : format(localDate, 'yyyy-MM-dd')
+    } catch (e) {
+      console.log(e)
+    }
+    return formattedDate
   }
 
   const getDateOutput = (date: string) => {
+    if (!date) return null
+
     const localDate = parseISO(date)
     return localDate.toISOString()
   }
@@ -35,7 +44,7 @@ export const DatePicker: React.FC<DatePickerType> = ({
   const handleOnChange = (e: { target: { value: React.SetStateAction<string> } }) => {
     setValue(getDateInput(e.target.value as string))
     if (onChange) {
-      onChange(getDateOutput(e.target.value as string))
+      onChange(getDateOutput(e.target.value as string) ?? '')
     }
   }
 
@@ -47,7 +56,7 @@ export const DatePicker: React.FC<DatePickerType> = ({
         type={hasTime ? 'datetime-local' : 'date'}
         className={formClasses}
         onChange={handleOnChange}
-        value={value}
+        value={value ?? undefined}
       />
     </div>
   )

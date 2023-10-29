@@ -51,7 +51,12 @@ export const FieldRenderer = <T,>({
     case 'datetime-distance':
       fieldComponent = (
         <p className={clsx(className, 'leading-none')}>
-          <span>{value ? new Date(value as string).toLocaleDateString() : ''}</span>
+          <span>
+            {value ? new Date(value as string).toLocaleDateString() : ''}
+            {value && type.startsWith('datetime')
+              ? ` ${new Date(value as string).toLocaleTimeString()}`
+              : ''}
+          </span>
           {['date-distance', 'datetime-distance'].includes(type) && value && (
             <span className={'ml-auto pl-1 text-xs leading-none'}>
               ({formatDistance(new Date(value as string), new Date())})

@@ -297,7 +297,7 @@ const OverviewTab: React.FC<Props> = ({ logs }) => {
       </div>
       <Panel>
         <Panel.Header>Information</Panel.Header>
-        <Panel.Body className={'relative max-h-[600px] overflow-y-auto !p-0'}>
+        <Panel.Body className={'relative min-h-[240px] !p-0'}>
           <div className="relative">
             <FieldsTable>
               {mainFields.map((field) => generateFieldItemComponent(field, handleOnUpdate))}
