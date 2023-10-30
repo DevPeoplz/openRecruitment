@@ -3,8 +3,8 @@ import HubTable, { createHubTable, DefaultColumnsExtendedProps } from '@/compone
 import { useQuery } from '@apollo/client'
 import { GET_HUB_POOLS } from '@/graphql-operations/queries'
 import { useRouter } from 'next/router'
-import { AddCandidateView } from '@/components/views/candidate/add-candidate-view'
 import { ButtonIconSimpleModal } from '@/components/table/actions/add-candidate'
+import { AddTalentPoolView } from '@/components/views/talent-pools/add-talent-pool-view'
 
 type Job = {
   id: number
@@ -102,7 +102,7 @@ const ActivePools = () => {
           modalTitle={'Add New Talent Pool'}
           btnClassName="!bg-amber-400 hover:!bg-amber-200"
         >
-          <AddCandidateView />
+          <AddTalentPoolView />
         </ButtonIconSimpleModal>
       </HubTable.Toolbar>
     </HubTable>

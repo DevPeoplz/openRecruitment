@@ -1,6 +1,6 @@
-import { Dispatch, SetStateAction, createContext } from 'react'
+import { createContext } from 'react'
 
-export const ModalControlContext = createContext<[boolean, Dispatch<SetStateAction<boolean>>]>([
+export const ModalControlContext = createContext<[boolean, (x: boolean) => void]>([
   false,
-  () => false,
+  () => null,
 ])

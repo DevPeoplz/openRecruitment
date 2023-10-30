@@ -3,8 +3,8 @@ import HubTable, { createHubTable, DefaultColumnsExtendedProps } from '@/compone
 import { useQuery } from '@apollo/client'
 import { GET_HUB_JOBS } from '@/graphql-operations/queries'
 import { useRouter } from 'next/router'
-import { AddCandidateView } from '@/components/views/candidate/add-candidate-view'
 import { ButtonIconSimpleModal } from '@/components/table/actions/add-candidate'
+import { AddJobView } from '@/components/views/jobs/add-job-view'
 
 type Job = {
   id: number
@@ -185,7 +185,7 @@ const ActiveJobs = () => {
           modalTitle={'Add New Job'}
           btnClassName="!bg-primary-400 hover:!bg-primary-200"
         >
-          <AddCandidateView />
+          <AddJobView />
         </ButtonIconSimpleModal>
       </HubTable.Toolbar>
     </HubTable>

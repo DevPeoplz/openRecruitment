@@ -273,6 +273,7 @@ async function main() {
     update: {},
     include: { stages: true },
     create: {
+      id: 1,
       companyId: company1.id,
       name: 'Default Pipeline',
       type: TemplateTypes.PIPELINE,
