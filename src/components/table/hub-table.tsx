@@ -399,7 +399,7 @@ const createHubTableComponent = <T,>() => {
   type HubTableProps = {
     table: Table<T>
     tableStates: TableStatesType
-    rowOnClick: (x: Row<T>) => void
+    rowOnClick?: (x: Row<T>) => void
     children?: ReactNode
   }
   const HubTable: HubTableSubComponents & React.FC<HubTableProps> = (props: HubTableProps) => {
@@ -477,9 +477,12 @@ const createHubTableComponent = <T,>() => {
                     <tbody className="flex w-full flex-wrap divide-y divide-gray-200 bg-white lg:table-row-group">
                       {table.getRowModel().rows.map((row) => (
                         <tr
-                          onClick={() => rowOnClick(row)}
+                          onClick={rowOnClick ? () => rowOnClick(row) : undefined}
                           key={row.id}
-                          className="flex w-full cursor-pointer even:bg-gray-50 lg:table-row"
+                          className={clsx(
+                            'flex w-full  even:bg-gray-50 lg:table-row',
+                            rowOnClick ? 'cursor-pointer' : ''
+                          )}
                         >
                           {row.getVisibleCells().map((cell) => (
                             <td

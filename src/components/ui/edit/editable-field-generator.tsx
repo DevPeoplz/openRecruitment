@@ -103,7 +103,7 @@ export const generateFullEditableCandidateTags = (
       </EditableField.Icon>
       <FieldRenderer<EditableFieldsValidTypes['stringArray']>
         type={'stringArray'}
-        value={data.map((tag) => tag.name)}
+        value={data?.map((tag) => tag?.name) ?? []}
       />
     </EditableField>
   )

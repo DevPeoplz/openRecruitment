@@ -165,7 +165,7 @@ export const UPDATE_CANDIDATE_BY_ID_JOBS_TALENT_POOLS = gql`
   ) {
     candidateJobTalents: updateOneCandidate(data: $data, where: $where) {
       id
-      candidateJobs: offers(orderBy: { offer: { createdAt: desc } }) {
+      offers(orderBy: { offer: { createdAt: desc } }) {
         id
         job: offer {
           id
@@ -214,6 +214,30 @@ export const UPDATE_CANDIDATE_BY_ID_QUICK_EVALUATION = gql`
           }
         }
       }
+    }
+  }
+`
+export const ADD_JOB_MUTATION = gql`
+  mutation ADD_JOB_MUTATION($data: OfferCreateInputExtended!) {
+    job: createOneOffer(data: $data) {
+      id
+      name
+      pipelineTemplate {
+        id
+        stages(orderBy: { position: asc }) {
+          id
+          category
+          position
+        }
+      }
+    }
+  }
+`
+export const ADD_TALENT_POOL_MUTATION = gql`
+  mutation ADD_TALENT_POOL_MUTATION($data: TalentPoolCreateInputExtended!) {
+    talentPool: createOneTalentPool(data: $data) {
+      id
+      name
     }
   }
 `

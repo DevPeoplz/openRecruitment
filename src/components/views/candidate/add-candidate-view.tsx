@@ -9,20 +9,8 @@ import Loader from '@/components/ui/loader'
 import { ModalControlContext } from '@/hooks/contexts'
 import { ComboboxWithTagsProps } from '@/components/ui/combobox-with-tags'
 import { BtnIconCombobox } from '@/components/ui/btn-icon-combobox'
-import {
-  GET_ADD_CANDIDATE_DROPDOWNS,
-  GET_HUB_CANDIDATES,
-  GET_TAGSOURCES,
-} from '@/graphql-operations/queries'
-import { CandidateUploadFile } from '@/components/file-upload/file-upload'
-
-const optionsDefault = [
-  { value: 1, label: 'Durward Reynolds' },
-  { value: 2, label: 'Kenton Towne' },
-  { value: 3, label: 'Therese Wunsch' },
-  { value: 4, label: 'Benedict Kessler' },
-  { value: 5, label: 'Katelyn Rohan' },
-]
+import { GET_ADD_CANDIDATE_DROPDOWNS } from '@/graphql-operations/queries'
+import { uploadFileHelper } from '@/components/file-upload/file-upload'
 
 const parseGQLData = (
   data: { id: number | string; name: string }[] | undefined,
@@ -39,7 +27,7 @@ const parseGQLData = (
   })
 }
 
-const AddCandidateView = () => {
+export const AddCandidateView = () => {
   const [_, setIsOpen] = useContext(ModalControlContext)
   const { data: dataDropdown, loading: loadingDropdown } = useQuery(GET_ADD_CANDIDATE_DROPDOWNS)
 
@@ -85,7 +73,7 @@ const AddCandidateView = () => {
             files.map(async (key) => {
               const blob = formData[key] as File
               if (blob) {
-                return CandidateUploadFile(blob, key, res.data.createOneCandidate.id)
+                return uploadFileHelper(blob, key, res.data.createOneCandidate.id)
               }
               return null
             })
@@ -171,7 +159,7 @@ const AddCandidateView = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-2 p-2">
+    <form onSubmit={handleSubmit} className="mb-2 h-full max-h-full p-2">
       <div className="flex max-h-[65vh] flex-col gap-2 overflow-y-auto">
         <UploadAvatar
           id="avatar"
@@ -245,7 +233,7 @@ const AddCandidateView = () => {
           deleteFilePreview={deleteFilePreview}
         />
       </div>
-      <div className="">
+      <div>
         <Button className="w-full " color="primary" type="submit">
           {onSubmitLoading ? <Loader size="h-4 w-4" fullScreen={false} /> : 'Add candidate'}
         </Button>
@@ -253,5 +241,3 @@ const AddCandidateView = () => {
     </form>
   )
 }
-
-export default AddCandidateView

@@ -1,10 +1,10 @@
 import React from 'react'
 import { SelectCompany } from '@/components/ui/select-company'
-import { Logo } from '@/components/ui/Logo'
 import Chip from '@/components/ui/Chip'
 import { user } from '@/utils/mockdata'
 import { MenuUser } from '@/components/layout/header/menu-user'
 import { IoMdNotificationsOutline } from 'react-icons/io'
+import { CompanyLogo } from '@/components/ui/company-logo'
 
 const navOptions: [string, string][] = [
   ['/dashboard', 'Dashboard'],
@@ -22,7 +22,7 @@ export function HeaderAuthenticated() {
     <header className="h-header w-full">
       <div className="z-10 flex h-14 items-center justify-between px-2">
         <div className="flex items-center gap-3 sm:gap-8">
-          <Logo />
+          <CompanyLogo />
           <div className="flex gap-1 sm:gap-2">
             <SelectCompany />
             <Chip>{user.plan}</Chip>

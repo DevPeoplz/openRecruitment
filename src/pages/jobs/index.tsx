@@ -31,7 +31,6 @@ const Page = () => {
   )
 }
 Page.auth = {
-  permission: 'SUPERADMIN',
   loading: (
     <LayoutAuthenticated>
       <LayoutSideMenu>

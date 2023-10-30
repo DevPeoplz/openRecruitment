@@ -1,23 +1,11 @@
-import React, { useEffect, useState } from 'react'
-import HubTable, {
-  createHubTable,
-  DefaultColumnsExtendedProps,
-  useHubTable,
-} from '@/components/table/hub-table'
-import { useLazyQuery, useQuery } from '@apollo/client'
-import { GET_CANDIDATE_BY_ID, GET_HUB_CANDIDATES, GET_HUB_JOBS } from '@/graphql-operations/queries'
-import ViewCandidateModal from '@/components/modals/view-candidate-modal'
-import { LayoutSideMenu } from '@/components/layout/main/layout-side-menu'
-import AddCandidate from '@/components/table/actions/add-candidate'
-import { AUDIT_LOGS } from '@/utils/mockdata'
-import { Person } from '@/pages/candidates'
-import { PlusIcon } from '@heroicons/react/20/solid'
-import { Tooltip } from 'react-tooltip'
-import { ModalControlContext } from '@/hooks/contexts'
-import AddCandidateModal from '@/components/modals/add-candidate-modal'
-import { router } from 'next/client'
+import React from 'react'
+import HubTable, { createHubTable, DefaultColumnsExtendedProps } from '@/components/table/hub-table'
+import { useQuery } from '@apollo/client'
+import { GET_HUB_JOBS } from '@/graphql-operations/queries'
 import { useRouter } from 'next/router'
-import { CandidateType } from '@/components/views/candidate/candidate-view'
+import { ButtonIconSimpleModal } from '@/components/table/actions/add-candidate'
+import { AddJobView } from '@/components/views/jobs/add-job-view'
+import Link from 'next/link'
 
 type Job = {
   id: number
@@ -36,6 +24,7 @@ type Job = {
   }[]
   candidates: {
     candidate: {
+      id: number
       name: string
     }
     isHired: boolean
@@ -56,19 +45,23 @@ const defaultColumns: DefaultColumnsExtendedProps<Job> = [
     accessorFn: (originalRow) => {
       return originalRow.candidates
         ?.map((candidate) => {
-          return candidate.candidate?.name
+          return { id: candidate.candidate?.id, name: candidate.candidate?.name }
         })
-        .filter((e) => e)
+        .filter((e) => !!e.id)
     },
     id: 'candidates',
     header: 'Candidates',
     cell: (info) => {
-      const value = info.getValue() as string[]
+      const value = info.getValue() as { id: number; name: string }[]
       const row = info.row.id
       return (
         <ul className="list-disc">
           {value?.map((val, index) => (
-            <li key={btoa(`${row}${val}${index}`)}>{val}</li>
+            <li key={btoa(`${row}${val.id}${index}`)}>
+              <Link className="hover:text-primary-400" href={`/candidate/${val.id}`}>
+                {val.name}
+              </Link>
+            </li>
           ))}
         </ul>
       )
@@ -174,7 +167,9 @@ const defaultColumns: DefaultColumnsExtendedProps<Job> = [
 const ActiveJobs = () => {
   const router = useRouter()
   const { useHubTable, HubTable } = createHubTable<Job>()
-  const { data: dataHubOffers, loading: loadingHubOffers } = useQuery(GET_HUB_JOBS)
+  const { data: dataHubOffers, loading: loadingHubOffers } = useQuery(GET_HUB_JOBS, {
+    fetchPolicy: 'cache-and-network',
+  })
 
   const { table, tableStates } = useHubTable(
     'jobs-hub',
@@ -183,26 +178,15 @@ const ActiveJobs = () => {
   )
 
   return (
-    <HubTable
-      table={table}
-      tableStates={tableStates}
-      rowOnClick={async (row) => {
-        console.log(row)
-      }}
-    >
+    <HubTable table={table} tableStates={tableStates}>
       <HubTable.Toolbar>
-        <div data-tooltip-id="button-tooltip">
-          <button
-            className="relative cursor-pointer rounded-md bg-primary-400 p-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-200"
-            id="button-tooltip"
-            onClick={() => router.push('/add-offer')}
-          >
-            <PlusIcon className="h-5 w-5 text-white" />
-          </button>
-          <Tooltip place="top" id="button-tooltip" className="capitalize">
-            <span>Add Job Offer</span>
-          </Tooltip>
-        </div>
+        <ButtonIconSimpleModal
+          tooltip={'Add a Job'}
+          modalTitle={'Add New Job'}
+          btnClassName="!bg-primary-400 hover:!bg-primary-200"
+        >
+          <AddJobView />
+        </ButtonIconSimpleModal>
       </HubTable.Toolbar>
     </HubTable>
   )

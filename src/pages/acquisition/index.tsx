@@ -4,18 +4,17 @@ import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/pages/api/auth/[...nextauth]'
 
 const Page = () => {
-  return (
-    <p>Acquisition</p>
-  )
+  return <p>Acquisition</p>
 }
 
-Page.auth = {}
-export default Page
+Page.auth = {
+  permission: 'GOD',
+}
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await getServerSession(context.req, context.res, authOptions)
 
-  if (session?.user.userRole !== 'asdf') {
+  if (session?.user.userRole !== 'GOD') {
     return { redirect: { destination: '/dashboard?redirectionFlag=1' } }
   }
 
@@ -23,3 +22,5 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     props: {},
   }
 }
+
+export default Page

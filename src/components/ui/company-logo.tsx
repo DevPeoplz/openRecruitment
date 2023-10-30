@@ -6,7 +6,7 @@ import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { Tooltip } from 'react-tooltip'
 
-export function Logo() {
+export const CompanyLogo = () => {
   const { data } = useQuery(GET_ME_COMPANIES)
   const { data: session } = useSession()
 

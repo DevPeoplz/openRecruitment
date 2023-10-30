@@ -51,12 +51,16 @@ const ComboboxWithTags: React.FC<ComboboxWithTagsProps> = ({
   }, [onSelectedOptionsChange, selectedOptions])
 
   return (
-    <Combobox value={selectedOptions} onChange={(options) => setSelectedOptions(options)} multiple>
+    <Combobox
+      value={selectedOptions ?? []}
+      onChange={(options) => setSelectedOptions(options)}
+      multiple
+    >
       <div className={clsx(width, 'relative mt-1')}>
         <div className="mb-1 flex flex-wrap gap-1 text-xs">
-          {selectedOptions.length > 0 && (
+          {selectedOptions?.length > 0 && (
             <>
-              {selectedOptions.map((option) => (
+              {selectedOptions?.map((option) => (
                 <div key={option.value} className="flex justify-between gap-2 rounded border p-1">
                   <p>{option.label}</p>
                   <XMarkIcon
@@ -70,7 +74,7 @@ const ComboboxWithTags: React.FC<ComboboxWithTagsProps> = ({
         </div>
 
         <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
-          {(selectedOptions.length !== options.length || !hideOnFullySelected) && (
+          {(selectedOptions?.length !== options?.length || !hideOnFullySelected) && (
             <Combobox.Input
               className={clsx(
                 'w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0'
@@ -101,7 +105,9 @@ const ComboboxWithTags: React.FC<ComboboxWithTagsProps> = ({
             ) : (
               <>
                 {filteredOptions
-                  .filter((option) => !selectedOptions.map((op) => op.value).includes(option.value))
+                  .filter(
+                    (option) => !selectedOptions?.map((op) => op.value).includes(option.value)
+                  )
                   .map((option) => (
                     <Combobox.Option
                       key={option.value}

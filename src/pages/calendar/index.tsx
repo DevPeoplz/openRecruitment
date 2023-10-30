@@ -43,7 +43,6 @@ const CalendarView: NextPageWithLayout = () => {
 }
 
 CalendarView.auth = {
-  permission: 'SUPERADMIN',
   loading: (
     <LayoutAuthenticated>
       <LayoutSideMenu>

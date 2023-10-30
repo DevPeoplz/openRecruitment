@@ -105,7 +105,10 @@ export const Cruds: Record<
       count: Offer.countOfferQueryObject,
       findMany: Offer.findManyOfferQueryObject,
     },
-    mutations: AutoCruds.Offer.mutations,
+    mutations: {
+      ...AutoCruds.Offer.mutations,
+      createOne: Offer.createOneOfferMutationObject,
+    },
   },
   TalentPool: {
     Object: AutoCruds.TalentPool.Object,
@@ -114,7 +117,10 @@ export const Cruds: Record<
       count: TalentPool.countTalentPoolQueryObject,
       findMany: TalentPool.findManyTalentPoolQueryObject,
     },
-    mutations: AutoCruds.TalentPool.mutations,
+    mutations: {
+      ...AutoCruds.TalentPool.mutations,
+      createOne: TalentPool.createOneTalentPoolMutationObject,
+    },
   },
   TagSource: {
     Object: AutoCruds.TagSource.Object,

@@ -1,6 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
-import { GoBriefcase, GoGraph, GoHome, GoInbox, GoPeople, GoPersonAdd, GoRss } from 'react-icons/go'
+import { GoBriefcase, GoGraph, GoHome, GoInbox, GoPeople, GoRss, GoStar } from 'react-icons/go'
 import { IoMdSettings } from 'react-icons/io'
 import { Tooltip } from 'react-tooltip'
 import clsx from 'clsx'
@@ -23,6 +23,11 @@ const roots = [
     icon: GoBriefcase,
   },
   {
+    name: 'talent pools',
+    href: '/talent_pool',
+    icon: GoStar,
+  },
+  {
     name: 'mailbox',
     href: '/mailbox',
     icon: GoInbox,
@@ -31,11 +36,6 @@ const roots = [
     name: 'reports',
     href: '/reports',
     icon: GoGraph,
-  },
-  {
-    name: 'talent pools',
-    href: '/talent_pool',
-    icon: GoPersonAdd,
   },
   {
     name: 'acquisition',

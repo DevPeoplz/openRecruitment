@@ -1,29 +1,50 @@
-import React, { Dispatch, SetStateAction, createContext, useState } from 'react'
+import React, { useId, useState } from 'react'
 import { PlusIcon } from '@heroicons/react/20/solid'
 import { Tooltip } from 'react-tooltip'
-import AddCandidateModal from '@/components/modals/add-candidate-modal'
-import { ModalControlContext } from '@/hooks/contexts'
+import { SimpleModalContainer } from '@/components/modals/simple-modal-container'
+import clsx from 'clsx'
 
-const AddCandidate = () => {
+type ButtonIconSimpleModalProps = {
+  children: React.ReactNode
+  tooltip: string
+  icon?: React.ReactNode
+  modalTitle: string
+  btnClassName?: string
+}
+
+export const ButtonIconSimpleModal: React.FC<ButtonIconSimpleModalProps> = ({
+  children,
+  tooltip,
+  icon = <PlusIcon className="h-5 w-5 text-white" />,
+  modalTitle,
+  btnClassName,
+}) => {
+  const generatedId = useId()
   const [openModal, setOpenModal] = useState(false)
   return (
     <div data-tooltip-id="button-tooltip" data-tooltip-content="add candidates">
       <button
-        className="relative cursor-pointer rounded-md bg-secondary-400 p-2 text-sm font-semibold text-white shadow-sm hover:bg-secondary-200"
-        data-tooltip-content="Add candidates"
-        id="button-tooltip"
+        className={clsx(
+          'relative cursor-pointer rounded-md bg-secondary-400 p-2 text-sm font-semibold text-white shadow-sm hover:bg-secondary-200',
+          btnClassName
+        )}
+        data-tooltip-content={tooltip}
+        id={`button-tooltip-${generatedId}`}
         onClick={() => setOpenModal(true)}
       >
-        <PlusIcon className="h-5 w-5 text-white" />
+        {icon}
       </button>
-      <Tooltip place="top" content="add candidates" id="button-tooltip" className="capitalize">
-        <span>Add candidates</span>
+      <Tooltip
+        place="top"
+        content={tooltip}
+        id={`button-tooltip-${generatedId}`}
+        className="capitalize"
+      >
+        <span>{tooltip}</span>
       </Tooltip>
-      <ModalControlContext.Provider value={[openModal, setOpenModal]}>
-        <AddCandidateModal />
-      </ModalControlContext.Provider>
+      <SimpleModalContainer state={[openModal, setOpenModal]} title={modalTitle}>
+        {children}
+      </SimpleModalContainer>
     </div>
   )
 }
-
-export default AddCandidate
