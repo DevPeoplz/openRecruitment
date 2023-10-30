@@ -6,6 +6,7 @@ export const GET_ME_DATA_AND_COMPANIES = gql`
     me {
       hiringRoles {
         company {
+          id
           name
           logo {
             path

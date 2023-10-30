@@ -14,7 +14,6 @@ const Page = () => {
   const [updating, setUpdating] = React.useState(false)
   const [logo, setLogo] = React.useState<File | undefined>(undefined)
 
-  console.log(session)
   const handleFileUpload = useCallback(
     async (file: File | undefined, field: string) => {
       if (!file) {
@@ -61,7 +60,7 @@ const Page = () => {
 
       return Promise.resolve()
     },
-    [session?.user?.selectedCompany]
+    [client, session?.user?.selectedCompany]
   )
 
   const handleClick = () => {
@@ -94,7 +93,7 @@ const Page = () => {
             />
           </div>
           <Button onClick={handleClick} variant="solid">
-            {updating ? <Loader fullScreen={false} size={'h-4 w-4'} /> : <span>Upload Logo</span>}
+            {updating ? <Loader fullScreen={false} size={'h-5 w-5'} /> : <span>Upload Logo</span>}
           </Button>
         </div>
       </div>

@@ -10,16 +10,16 @@ import { useQuery } from '@apollo/client'
 import { useSession } from 'next-auth/react'
 import Loader from '@/components/ui/loader'
 import AppliedGraph from '@/components/dashboard/applied-graph'
-import FilterTag from '@/components/dashboard/filter-tag'
 import type { Tag as FilterTagType } from '@/components/dashboard/filter-tag'
+import FilterTag from '@/components/dashboard/filter-tag'
 
 import {
-  GET_ME_DATA_AND_COMPANIES,
   GET_DASHBOARD_COUNTS,
-  get_tagSources_variables,
-  GET_TAGSOURCES,
-  get_recently_work_on_variables,
+  GET_ME_DATA_AND_COMPANIES,
   GET_RECENTLY_WORK_ON,
+  get_recently_work_on_variables,
+  GET_TAGSOURCES,
+  get_tagSources_variables,
 } from '@/graphql-operations/queries'
 import { BriefcaseIcon, UserGroupIcon, UserIcon } from '@heroicons/react/24/outline'
 import RecentlyWorkOn, { RecentlyWorkOnType } from '@/components/dashboard/recently-work-on'
@@ -43,7 +43,13 @@ export const countComponents = [
 ]
 
 const filterTagSourceData = (
-  tagSource: { id: number; name: string; count: Record<string, string>[] }[] | undefined
+  tagSource:
+    | {
+        id: number
+        name: string
+        count: Record<string, string>[]
+      }[]
+    | undefined
 ): FilterTagType[] => {
   const filterTags: FilterTagType[] = []
 
@@ -61,7 +67,11 @@ const filterTagSourceData = (
 }
 
 const filterLogData = (
-  logs: { eventDetails: { candidate?: object; offer?: object } }[] | undefined
+  logs:
+    | {
+        eventDetails: { candidate?: object; offer?: object }
+      }[]
+    | undefined
 ): RecentlyWorkOnType[] => {
   const filtered: RecentlyWorkOnType[] = []
 
@@ -110,17 +120,16 @@ const Dashboard: NextPageWithLayout = () => {
   })
 
   const company = session?.user?.selectedCompany
-    ? meCompany?.me.hiringRoles.filter(
-        (company: { _typename: string; name: string; id: string }) =>
-          company.id === session?.user?.selectedCompany
-      )[0].company
+    ? meCompany?.me?.hiringRoles.filter(
+        (company: { company: { id: any } }) => company.company.id === session?.user?.selectedCompany
+      )?.[0]?.company
     : {}
 
   useRedirectionFlag()
 
   return (
     <LayoutSideMenu>
-      {loading ? (
+      {loading || !company || (company && Object.keys(company).length === 0) ? (
         <Loader />
       ) : (
         <div className="flex w-full flex-col gap-4 px-2">

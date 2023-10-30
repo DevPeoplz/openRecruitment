@@ -64,7 +64,7 @@ export function SelectCompany() {
 
   let companies = [{ label: 'Select a Company...', value: 'placeholder', placeholder: true }]
 
-  if (query?.me.hiringRoles) {
+  if (query?.me?.hiringRoles) {
     companies = [
       ...companies,
       ...query.me.hiringRoles.map((hr: { company: Company }) => ({
