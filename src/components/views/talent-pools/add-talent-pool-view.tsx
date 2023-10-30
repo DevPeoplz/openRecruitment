@@ -27,7 +27,7 @@ const parseGQLData = (
   })
 }
 
-export const AddCandidateView = () => {
+export const AddTalentPoolView = () => {
   const [_, setIsOpen] = useContext(ModalControlContext)
   const { data: dataDropdown, loading: loadingDropdown } = useQuery(GET_ADD_CANDIDATE_DROPDOWNS)
 

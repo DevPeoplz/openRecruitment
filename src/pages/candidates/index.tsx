@@ -4,11 +4,12 @@ import { createHubTable, DefaultColumnsExtendedProps } from '@/components/table/
 import { useQuery } from '@apollo/client'
 import { GET_HUB_CANDIDATES } from '@/graphql-operations/queries'
 import ViewCandidateModal from '@/components/modals/view-candidate-modal'
-import AddCandidate from '@/components/table/actions/add-candidate'
 import { BriefcaseIcon } from '@heroicons/react/20/solid'
 import { ListIcon } from '@/components/ui/list-icon'
 import { SparklesIcon } from '@heroicons/react/24/solid'
 import { FaForwardStep } from 'react-icons/fa6'
+import { ButtonIconSimpleModal } from '@/components/table/actions/add-candidate'
+import { AddCandidateView } from '@/components/views/candidate/add-candidate-view'
 
 export type Person = {
   id: number
@@ -239,7 +240,9 @@ const Page = () => {
         }}
       >
         <HubTable.Toolbar>
-          <AddCandidate key="add-candidate" />
+          <ButtonIconSimpleModal tooltip={'Add Candidate'} modalTitle={'Add New Candidate'}>
+            <AddCandidateView />
+          </ButtonIconSimpleModal>
         </HubTable.Toolbar>
       </HubTable>
       <ViewCandidateModal

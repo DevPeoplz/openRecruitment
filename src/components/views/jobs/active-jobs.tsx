@@ -2,9 +2,9 @@ import React from 'react'
 import HubTable, { createHubTable, DefaultColumnsExtendedProps } from '@/components/table/hub-table'
 import { useQuery } from '@apollo/client'
 import { GET_HUB_JOBS } from '@/graphql-operations/queries'
-import { PlusIcon } from '@heroicons/react/20/solid'
-import { Tooltip } from 'react-tooltip'
 import { useRouter } from 'next/router'
+import { AddCandidateView } from '@/components/views/candidate/add-candidate-view'
+import { ButtonIconSimpleModal } from '@/components/table/actions/add-candidate'
 
 type Job = {
   id: number
@@ -180,18 +180,13 @@ const ActiveJobs = () => {
       }}
     >
       <HubTable.Toolbar>
-        <div data-tooltip-id="button-tooltip">
-          <button
-            className="relative cursor-pointer rounded-md bg-primary-400 p-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-200"
-            id="button-tooltip"
-            onClick={() => router.push('/add-offer')}
-          >
-            <PlusIcon className="h-5 w-5 text-white" />
-          </button>
-          <Tooltip place="top" id="button-tooltip" className="capitalize">
-            <span>Add Job Offer</span>
-          </Tooltip>
-        </div>
+        <ButtonIconSimpleModal
+          tooltip={'Add a Job'}
+          modalTitle={'Add New Job'}
+          btnClassName="!bg-primary-400 hover:!bg-primary-200"
+        >
+          <AddCandidateView />
+        </ButtonIconSimpleModal>
       </HubTable.Toolbar>
     </HubTable>
   )

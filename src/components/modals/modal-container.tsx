@@ -4,7 +4,7 @@ import clsx from 'clsx'
 
 type props = {
   isOpen: boolean
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>> | ((x: boolean) => void)
   title?: string
   children: React.ReactNode
   className?: string
