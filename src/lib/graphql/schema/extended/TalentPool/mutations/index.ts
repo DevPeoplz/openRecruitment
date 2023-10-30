@@ -1,0 +1,1 @@
+export { createOneTalentPoolMutationObject } from './createOne'

@@ -1,10 +1,11 @@
 import React from 'react'
-import HubTable, { createHubTable, DefaultColumnsExtendedProps } from '@/components/table/hub-table'
+import { createHubTable, DefaultColumnsExtendedProps } from '@/components/table/hub-table'
 import { useQuery } from '@apollo/client'
 import { GET_HUB_POOLS } from '@/graphql-operations/queries'
 import { useRouter } from 'next/router'
 import { ButtonIconSimpleModal } from '@/components/table/actions/add-candidate'
 import { AddTalentPoolView } from '@/components/views/talent-pools/add-talent-pool-view'
+import Link from 'next/link'
 
 type Job = {
   id: number
@@ -23,6 +24,7 @@ type Job = {
   }[]
   candidates: {
     candidate: {
+      id: number
       name: string
     }
     isHired: boolean
@@ -43,19 +45,23 @@ const defaultColumns: DefaultColumnsExtendedProps<Job> = [
     accessorFn: (originalRow) => {
       return originalRow.candidates
         .map((candidate) => {
-          return candidate.candidate?.name
+          return { id: candidate.candidate?.id, name: candidate.candidate?.name }
         })
-        .filter((e) => e)
+        .filter((e) => !!e.id)
     },
     id: 'candidates',
     header: 'Candidates',
     cell: (info) => {
-      const value = info.getValue() as string[]
+      const value = info.getValue() as { id: number; name: string }[]
       const row = info.row.id
       return (
         <ul className="list-disc">
           {value?.map((val, index) => (
-            <li key={btoa(`${row}${val}${index}`)}>{val}</li>
+            <li key={btoa(`${row}${val.id}${index}`)}>
+              <Link className="hover:text-primary-400" href={`/candidate/${val.id}`}>
+                {val.name}
+              </Link>
+            </li>
           ))}
         </ul>
       )
@@ -89,13 +95,7 @@ const ActivePools = () => {
   )
 
   return (
-    <HubTable
-      table={table}
-      tableStates={tableStates}
-      rowOnClick={async (row) => {
-        console.log(row)
-      }}
-    >
+    <HubTable table={table} tableStates={tableStates}>
       <HubTable.Toolbar>
         <ButtonIconSimpleModal
           tooltip={'Add Talent Pool'}
