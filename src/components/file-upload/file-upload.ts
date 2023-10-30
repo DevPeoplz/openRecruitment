@@ -1,7 +1,22 @@
-export const CandidateUploadFile = async (file: File, field: string, candidateId: string) => {
+export const uploadFileHelper = async (
+  file: File,
+  field: string,
+  id: string,
+  type = 'candidate'
+) => {
+  let query: { url: string; body: Record<string, string> } | null = null
+
+  if (type === 'candidate') {
+    query = { url: `/api/candidate/s3-upload-url`, body: { candidateId: id } }
+  } else if (type === 'company') {
+    query = { url: `/api/company/s3-upload-url`, body: { companyId: id } }
+  }
+
+  if (!query) throw new Error('Invalid type')
+
   try {
     // POST request to backend route handler
-    const res = await fetch(`/api/candidate/s3-upload-url`, {
+    const res = await fetch(query.url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -9,7 +24,7 @@ export const CandidateUploadFile = async (file: File, field: string, candidateId
         fileType: file.type,
         fileSize: file.size,
         field: field,
-        candidateId: candidateId,
+        ...query.body,
       }),
     })
 

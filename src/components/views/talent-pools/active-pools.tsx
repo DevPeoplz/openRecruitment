@@ -1,28 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import HubTable, {
-  createHubTable,
-  DefaultColumnsExtendedProps,
-  useHubTable,
-} from '@/components/table/hub-table'
-import { useLazyQuery, useQuery } from '@apollo/client'
-import {
-  GET_CANDIDATE_BY_ID,
-  GET_HUB_CANDIDATES,
-  GET_HUB_JOBS,
-  GET_HUB_POOLS,
-} from '@/graphql-operations/queries'
-import ViewCandidateModal from '@/components/modals/view-candidate-modal'
-import { LayoutSideMenu } from '@/components/layout/main/layout-side-menu'
-import AddCandidate from '@/components/table/actions/add-candidate'
-import { AUDIT_LOGS } from '@/utils/mockdata'
-import { Person } from '@/pages/candidates'
+import React from 'react'
+import HubTable, { createHubTable, DefaultColumnsExtendedProps } from '@/components/table/hub-table'
+import { useQuery } from '@apollo/client'
+import { GET_HUB_POOLS } from '@/graphql-operations/queries'
 import { PlusIcon } from '@heroicons/react/20/solid'
 import { Tooltip } from 'react-tooltip'
-import { ModalControlContext } from '@/hooks/contexts'
-import AddCandidateModal from '@/components/modals/add-candidate-modal'
-import { router } from 'next/client'
 import { useRouter } from 'next/router'
-import { CandidateType } from '@/components/views/candidate/candidate-view'
 
 type Job = {
   id: number
@@ -96,7 +78,9 @@ const defaultColumns: DefaultColumnsExtendedProps<Job> = [
 const ActivePools = () => {
   const router = useRouter()
   const { useHubTable, HubTable } = createHubTable<Job>()
-  const { data: dataHubPools, loading: loadingHubPools } = useQuery(GET_HUB_POOLS)
+  const { data: dataHubPools, loading: loadingHubPools } = useQuery(GET_HUB_POOLS, {
+    fetchPolicy: 'cache-and-network',
+  })
 
   const { table, tableStates } = useHubTable(
     'pools-hub',

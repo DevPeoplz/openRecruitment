@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react'
-import { useMutation, useQuery } from '@apollo/client'
+import { useApolloClient, useMutation, useQuery } from '@apollo/client'
 import { GET_ADD_CANDIDATE_DROPDOWNS } from '@/graphql-operations/queries'
 import clsx from 'clsx'
 import {
@@ -25,10 +25,18 @@ export const CandidateJobsUpdate: React.FC<{ field?: 'job' | 'talentPool' }> = (
   field = 'job',
 }) => {
   const [fieldState, setFieldState] = useState<
-    Record<string, { btnClicked?: boolean; saving?: boolean; value?: string }>
+    Record<
+      string,
+      {
+        btnClicked?: boolean
+        saving?: boolean
+        value?: string
+      }
+    >
   >({})
   const [candidate = { id: null, name: null, avatar: null }, refetchCandidate] =
     useContext(CandidateContext) ?? []
+  const client = useApolloClient()
 
   const { data: dataDropdown, loading: loadingDropdown } = useQuery(GET_ADD_CANDIDATE_DROPDOWNS, {
     fetchPolicy: 'cache-and-network',
@@ -57,7 +65,16 @@ export const CandidateJobsUpdate: React.FC<{ field?: 'job' | 'talentPool' }> = (
       setFieldState((prevState) => ({
         ...prevState,
         ...candidateJobsTalents.jobs.reduce(
-          (acc: Record<string, { btnClicked?: boolean; value?: string }>, job) => {
+          (
+            acc: Record<
+              string,
+              {
+                btnClicked?: boolean
+                value?: string
+              }
+            >,
+            job
+          ) => {
             acc[`${field}-${job?.id}`] = {
               value: job?.currentStage?.id,
             }
@@ -211,7 +228,13 @@ export const CandidateJobsUpdate: React.FC<{ field?: 'job' | 'talentPool' }> = (
         if (key) {
           updateFieldStateBoolean(key, 'saving', false)
         }
-        Alert({ message: 'Updated successfully!', type: 'success' }).then()
+        client
+          .refetchQueries({
+            include: ['GET_HUB_JOBS', 'GET_HUB_POOLS'],
+          })
+          .then(() => {
+            Alert({ message: 'Updated successfully!', type: 'success' }).then()
+          })
       })
     }
 

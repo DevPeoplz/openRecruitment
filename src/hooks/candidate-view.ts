@@ -1,6 +1,6 @@
 import { useId, useState } from 'react'
 import Alert from '@/components/alert'
-import { CandidateUploadFile } from '@/components/file-upload/file-upload'
+import { uploadFileHelper } from '@/components/file-upload/file-upload'
 import { useLazyQuery } from '@apollo/client'
 import { GET_CANDIDATE_BY_ID_FILES } from '@/graphql-operations/queries/dashboard-candidates'
 
@@ -25,7 +25,7 @@ export const useCandidateUpdateFile = (candidateId: string | number | null | und
         setUpdating(true)
         try {
           try {
-            await CandidateUploadFile(file, field, String(candidateId))
+            await uploadFileHelper(file, field, String(candidateId))
             loadCandidate().then(() => {
               Alert({ type: 'success', message: 'File updated successfully' }).then()
             })

@@ -14,7 +14,7 @@ import {
   GET_HUB_CANDIDATES,
   GET_TAGSOURCES,
 } from '@/graphql-operations/queries'
-import { CandidateUploadFile } from '@/components/file-upload/file-upload'
+import { uploadFileHelper } from '@/components/file-upload/file-upload'
 
 const optionsDefault = [
   { value: 1, label: 'Durward Reynolds' },
@@ -85,7 +85,7 @@ const AddCandidateView = () => {
             files.map(async (key) => {
               const blob = formData[key] as File
               if (blob) {
-                return CandidateUploadFile(blob, key, res.data.createOneCandidate.id)
+                return uploadFileHelper(blob, key, res.data.createOneCandidate.id)
               }
               return null
             })

@@ -165,7 +165,7 @@ export const UPDATE_CANDIDATE_BY_ID_JOBS_TALENT_POOLS = gql`
   ) {
     candidateJobTalents: updateOneCandidate(data: $data, where: $where) {
       id
-      candidateJobs: offers(orderBy: { offer: { createdAt: desc } }) {
+      offers(orderBy: { offer: { createdAt: desc } }) {
         id
         job: offer {
           id

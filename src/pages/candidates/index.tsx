@@ -20,8 +20,8 @@ export type Person = {
   progress: number
   status: 'relationship' | 'complicated' | 'single'
   subRows?: Person[]
-  job: { offer: { name: string }; stage: { category: string } }[]
-  talentPool: { talentPool: { name: string } }[]
+  candidateJobs: { job: { name: string }; currentStage: { category: string } }[]
+  talentPools: { talentPool: { name: string } }[]
   jobFitScore: number
 }
 
@@ -46,9 +46,9 @@ const defaultColumns: DefaultColumnsExtendedProps<Person> = [
   },
   {
     accessorFn: (originalRow) => {
-      return originalRow.job
-        .map((job) => {
-          return job.offer?.name
+      return originalRow.candidateJobs
+        ?.map((job) => {
+          return job.job?.name
         })
         .filter((e) => e)
     },
@@ -70,9 +70,9 @@ const defaultColumns: DefaultColumnsExtendedProps<Person> = [
   },
   {
     accessorFn: (originalRow) => {
-      return originalRow.job
-        .map((job) => {
-          return job.stage?.category
+      return originalRow.candidateJobs
+        ?.map((job) => {
+          return job.currentStage?.category
         })
         .filter((e) => e)
     },
@@ -129,8 +129,8 @@ const defaultColumns: DefaultColumnsExtendedProps<Person> = [
   },
   {
     accessorFn: (originalRow) => {
-      return originalRow.talentPool
-        .map((talentPool) => {
+      return originalRow.talentPools
+        ?.map((talentPool) => {
           return talentPool.talentPool?.name
         })
         .filter((e) => e)

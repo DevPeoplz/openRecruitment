@@ -102,6 +102,7 @@ export const get_tagSources_variables = (take = 5, order = 'desc') => {
 export const GET_CANDIDATES_CREATED_AT_BY_DATE = gql`
   query GET_CANDIDATES_CREATED_AT_BY_DATE($where: CandidateWhereInput) {
     findManyCandidate(where: $where) {
+      id
       createdAt
       referrer {
         name
@@ -154,23 +155,32 @@ export const GET_HUB_CANDIDATES = gql`
     findManyCandidate(where: $where, orderBy: { createdAt: desc }) {
       id: id
       name: name
-      averageScore: averageScore
+      averageScore
       jobFitScore
-      job: offers {
+      candidateJobs: offers(orderBy: { offer: { createdAt: desc } }) {
         id
-        stage {
-          id
-          category
-        }
-        offer {
+        job: offer {
           id
           name
+          pipelineTemplate {
+            id
+            stages(orderBy: { position: asc }) {
+              id
+              category
+              position
+            }
+          }
+        }
+        currentStage: stage {
+          id
+          category
+          position
         }
       }
       dateCreated: createdAt
       source: name
       tag: name
-      talentPool: talentPools {
+      talentPools {
         talentPool {
           id
           name
@@ -183,7 +193,7 @@ export const GET_HUB_CANDIDATES = gql`
       hireDate: createdAt
       startDate: name
       autoFitEnabled: name
-      status: lastName
+      status: createdAt
     }
   }
 `
