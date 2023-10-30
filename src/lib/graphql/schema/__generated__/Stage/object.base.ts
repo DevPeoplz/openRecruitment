@@ -62,7 +62,7 @@ export const StageValueFieldObject = defineFieldObject('Stage', {
 
 export const StageTemplateFieldObject = defineRelationObject('Stage', 'template', {
   description: undefined,
-  nullable: true,
+  nullable: false,
   args: undefined,
   query: undefined,
 });
@@ -70,7 +70,7 @@ export const StageTemplateFieldObject = defineRelationObject('Stage', 'template'
 export const StageTemplateIdFieldObject = defineFieldObject('Stage', {
   type: "Int",
   description: undefined,
-  nullable: true,
+  nullable: false,
   resolve: (parent) => parent.templateId,
 });
 

@@ -15,16 +15,20 @@ export const AttachmentObject = definePrismaObject('Attachment', {
     contentType: t.field(AttachmentContentTypeFieldObject),
     filename: t.field(AttachmentFilenameFieldObject),
     path: t.field(AttachmentPathFieldObject),
+    size: t.field(AttachmentSizeFieldObject),
     userProfilePhoto: t.relation('userProfilePhoto', AttachmentUserProfilePhotoFieldObject),
     candidateCv: t.relation('candidateCv', AttachmentCandidateCvFieldObject),
     candidateAvatar: t.relation('candidateAvatar', AttachmentCandidateAvatarFieldObject),
     candidateCoverLetter: t.relation('candidateCoverLetter', AttachmentCandidateCoverLetterFieldObject),
+    companyLogo: t.relation('companyLogo', AttachmentCompanyLogoFieldObject),
     uploader: t.relation('uploader', AttachmentUploaderFieldObject),
     uploaderId: t.field(AttachmentUploaderIdFieldObject),
     createdAt: t.field(AttachmentCreatedAtFieldObject),
     updatedAt: t.field(AttachmentUpdatedAtFieldObject),
     offerFiles: t.relation('offerFiles', AttachmentOfferFilesFieldObject(t)),
     talentPoolFiles: t.relation('talentPoolFiles', AttachmentTalentPoolFilesFieldObject(t)),
+    company: t.relation('company', AttachmentCompanyFieldObject),
+    companyId: t.field(AttachmentCompanyIdFieldObject),
   }),
 });
 
@@ -56,6 +60,13 @@ export const AttachmentPathFieldObject = defineFieldObject('Attachment', {
   resolve: (parent) => parent.path,
 });
 
+export const AttachmentSizeFieldObject = defineFieldObject('Attachment', {
+  type: "Int",
+  description: undefined,
+  nullable: true,
+  resolve: (parent) => parent.size,
+});
+
 export const AttachmentUserProfilePhotoFieldObject = defineRelationObject('Attachment', 'userProfilePhoto', {
   description: undefined,
   nullable: true,
@@ -78,6 +89,13 @@ export const AttachmentCandidateAvatarFieldObject = defineRelationObject('Attach
 });
 
 export const AttachmentCandidateCoverLetterFieldObject = defineRelationObject('Attachment', 'candidateCoverLetter', {
+  description: undefined,
+  nullable: true,
+  args: undefined,
+  query: undefined,
+});
+
+export const AttachmentCompanyLogoFieldObject = defineRelationObject('Attachment', 'companyLogo', {
   description: undefined,
   nullable: true,
   args: undefined,
@@ -161,3 +179,17 @@ export const AttachmentTalentPoolFilesFieldObject = defineRelationFunction('Atta
     }),
   }),
 );
+
+export const AttachmentCompanyFieldObject = defineRelationObject('Attachment', 'company', {
+  description: undefined,
+  nullable: false,
+  args: undefined,
+  query: undefined,
+});
+
+export const AttachmentCompanyIdFieldObject = defineFieldObject('Attachment', {
+  type: "String",
+  description: undefined,
+  nullable: false,
+  resolve: (parent) => parent.companyId,
+});

@@ -6,7 +6,7 @@ import { useQuery } from '@apollo/client'
 import {
   GET_CANDIDATES_CREATED_AT_BY_DATE,
   get_candidates_created_at_by_date_variables,
-} from '../graphql/queries'
+} from '@/graphql-operations/queries'
 import { countRecordsByDay } from '../utils/data-parsing'
 import Link from 'next/link'
 import Loader from '@/components/ui/loader'

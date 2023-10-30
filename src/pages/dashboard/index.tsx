@@ -20,7 +20,7 @@ import {
   GET_TAGSOURCES,
   get_recently_work_on_variables,
   GET_RECENTLY_WORK_ON,
-} from '@/components/graphql/queries'
+} from '@/graphql-operations/queries'
 import { BriefcaseIcon, UserGroupIcon, UserIcon } from '@heroicons/react/24/outline'
 import RecentlyWorkOn, { RecentlyWorkOnType } from '@/components/dashboard/recently-work-on'
 
@@ -98,7 +98,9 @@ const filterLogData = (
 const Dashboard: NextPageWithLayout = () => {
   const { data: session } = useSession()
   const { data: meCompany, loading } = useQuery(GET_ME_DATA_AND_COMPANIES)
-  const { data: counts, loading: loadingCounts } = useQuery(GET_DASHBOARD_COUNTS)
+  const { data: counts, loading: loadingCounts } = useQuery(GET_DASHBOARD_COUNTS, {
+    fetchPolicy: 'cache-and-network',
+  })
   const { data: tagSourceData } = useQuery(GET_TAGSOURCES, {
     variables: get_tagSources_variables(),
     fetchPolicy: 'cache-and-network',

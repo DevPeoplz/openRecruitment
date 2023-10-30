@@ -18,7 +18,6 @@ import * as EventScheduleInterviewer from './EventScheduleInterviewer';
 import * as EventScheduleEvaluation from './EventScheduleEvaluation';
 import * as Event from './Event';
 import * as EventInterviewer from './EventInterviewer';
-import * as EventEvaluation from './EventEvaluation';
 import * as Offer from './Offer';
 import * as OfferFile from './OfferFile';
 import * as Match from './Match';
@@ -33,9 +32,10 @@ import * as StageVisibility from './StageVisibility';
 import * as StageMetadata from './StageMetadata';
 import * as Candidate from './Candidate';
 import * as CandidateTag from './CandidateTag';
-import * as CandidateCustomFields from './CandidateCustomFields';
+import * as CandidateCustomField from './CandidateCustomField';
+import * as CustomField from './CustomField';
 import * as Evaluation from './Evaluation';
-import * as EvaluationAnswer from './EvaluationAnswer';
+import * as EvaluationQuestion from './EvaluationQuestion';
 import * as SharedCandidateLink from './SharedCandidateLink';
 import * as Task from './Task';
 import * as TaskMember from './TaskMember';
@@ -413,24 +413,6 @@ export const Cruds: Record<
       upsertOne: EventInterviewer.upsertOneEventInterviewerMutationObject,
     },
   },
-  EventEvaluation: {
-    Object: EventEvaluation.EventEvaluationObject,
-    queries: {
-      findFirst: EventEvaluation.findFirstEventEvaluationQueryObject,
-      findMany: EventEvaluation.findManyEventEvaluationQueryObject,
-      count: EventEvaluation.countEventEvaluationQueryObject,
-      findUnique: EventEvaluation.findUniqueEventEvaluationQueryObject,
-    },
-    mutations: {
-      createMany: EventEvaluation.createManyEventEvaluationMutationObject,
-      createOne: EventEvaluation.createOneEventEvaluationMutationObject,
-      deleteMany: EventEvaluation.deleteManyEventEvaluationMutationObject,
-      deleteOne: EventEvaluation.deleteOneEventEvaluationMutationObject,
-      updateMany: EventEvaluation.updateManyEventEvaluationMutationObject,
-      updateOne: EventEvaluation.updateOneEventEvaluationMutationObject,
-      upsertOne: EventEvaluation.upsertOneEventEvaluationMutationObject,
-    },
-  },
   Offer: {
     Object: Offer.OfferObject,
     queries: {
@@ -683,22 +665,40 @@ export const Cruds: Record<
       upsertOne: CandidateTag.upsertOneCandidateTagMutationObject,
     },
   },
-  CandidateCustomFields: {
-    Object: CandidateCustomFields.CandidateCustomFieldsObject,
+  CandidateCustomField: {
+    Object: CandidateCustomField.CandidateCustomFieldObject,
     queries: {
-      findFirst: CandidateCustomFields.findFirstCandidateCustomFieldsQueryObject,
-      findMany: CandidateCustomFields.findManyCandidateCustomFieldsQueryObject,
-      count: CandidateCustomFields.countCandidateCustomFieldsQueryObject,
-      findUnique: CandidateCustomFields.findUniqueCandidateCustomFieldsQueryObject,
+      findFirst: CandidateCustomField.findFirstCandidateCustomFieldQueryObject,
+      findMany: CandidateCustomField.findManyCandidateCustomFieldQueryObject,
+      count: CandidateCustomField.countCandidateCustomFieldQueryObject,
+      findUnique: CandidateCustomField.findUniqueCandidateCustomFieldQueryObject,
     },
     mutations: {
-      createMany: CandidateCustomFields.createManyCandidateCustomFieldsMutationObject,
-      createOne: CandidateCustomFields.createOneCandidateCustomFieldsMutationObject,
-      deleteMany: CandidateCustomFields.deleteManyCandidateCustomFieldsMutationObject,
-      deleteOne: CandidateCustomFields.deleteOneCandidateCustomFieldsMutationObject,
-      updateMany: CandidateCustomFields.updateManyCandidateCustomFieldsMutationObject,
-      updateOne: CandidateCustomFields.updateOneCandidateCustomFieldsMutationObject,
-      upsertOne: CandidateCustomFields.upsertOneCandidateCustomFieldsMutationObject,
+      createMany: CandidateCustomField.createManyCandidateCustomFieldMutationObject,
+      createOne: CandidateCustomField.createOneCandidateCustomFieldMutationObject,
+      deleteMany: CandidateCustomField.deleteManyCandidateCustomFieldMutationObject,
+      deleteOne: CandidateCustomField.deleteOneCandidateCustomFieldMutationObject,
+      updateMany: CandidateCustomField.updateManyCandidateCustomFieldMutationObject,
+      updateOne: CandidateCustomField.updateOneCandidateCustomFieldMutationObject,
+      upsertOne: CandidateCustomField.upsertOneCandidateCustomFieldMutationObject,
+    },
+  },
+  CustomField: {
+    Object: CustomField.CustomFieldObject,
+    queries: {
+      findFirst: CustomField.findFirstCustomFieldQueryObject,
+      findMany: CustomField.findManyCustomFieldQueryObject,
+      count: CustomField.countCustomFieldQueryObject,
+      findUnique: CustomField.findUniqueCustomFieldQueryObject,
+    },
+    mutations: {
+      createMany: CustomField.createManyCustomFieldMutationObject,
+      createOne: CustomField.createOneCustomFieldMutationObject,
+      deleteMany: CustomField.deleteManyCustomFieldMutationObject,
+      deleteOne: CustomField.deleteOneCustomFieldMutationObject,
+      updateMany: CustomField.updateManyCustomFieldMutationObject,
+      updateOne: CustomField.updateOneCustomFieldMutationObject,
+      upsertOne: CustomField.upsertOneCustomFieldMutationObject,
     },
   },
   Evaluation: {
@@ -719,22 +719,22 @@ export const Cruds: Record<
       upsertOne: Evaluation.upsertOneEvaluationMutationObject,
     },
   },
-  EvaluationAnswer: {
-    Object: EvaluationAnswer.EvaluationAnswerObject,
+  EvaluationQuestion: {
+    Object: EvaluationQuestion.EvaluationQuestionObject,
     queries: {
-      findFirst: EvaluationAnswer.findFirstEvaluationAnswerQueryObject,
-      findMany: EvaluationAnswer.findManyEvaluationAnswerQueryObject,
-      count: EvaluationAnswer.countEvaluationAnswerQueryObject,
-      findUnique: EvaluationAnswer.findUniqueEvaluationAnswerQueryObject,
+      findFirst: EvaluationQuestion.findFirstEvaluationQuestionQueryObject,
+      findMany: EvaluationQuestion.findManyEvaluationQuestionQueryObject,
+      count: EvaluationQuestion.countEvaluationQuestionQueryObject,
+      findUnique: EvaluationQuestion.findUniqueEvaluationQuestionQueryObject,
     },
     mutations: {
-      createMany: EvaluationAnswer.createManyEvaluationAnswerMutationObject,
-      createOne: EvaluationAnswer.createOneEvaluationAnswerMutationObject,
-      deleteMany: EvaluationAnswer.deleteManyEvaluationAnswerMutationObject,
-      deleteOne: EvaluationAnswer.deleteOneEvaluationAnswerMutationObject,
-      updateMany: EvaluationAnswer.updateManyEvaluationAnswerMutationObject,
-      updateOne: EvaluationAnswer.updateOneEvaluationAnswerMutationObject,
-      upsertOne: EvaluationAnswer.upsertOneEvaluationAnswerMutationObject,
+      createMany: EvaluationQuestion.createManyEvaluationQuestionMutationObject,
+      createOne: EvaluationQuestion.createOneEvaluationQuestionMutationObject,
+      deleteMany: EvaluationQuestion.deleteManyEvaluationQuestionMutationObject,
+      deleteOne: EvaluationQuestion.deleteOneEvaluationQuestionMutationObject,
+      updateMany: EvaluationQuestion.updateManyEvaluationQuestionMutationObject,
+      updateOne: EvaluationQuestion.updateOneEvaluationQuestionMutationObject,
+      upsertOne: EvaluationQuestion.upsertOneEvaluationQuestionMutationObject,
     },
   },
   SharedCandidateLink: {

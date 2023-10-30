@@ -5,8 +5,8 @@ import HubTable, {
   useHubTable,
 } from '@/components/table/hub-table'
 import { useLazyQuery, useQuery } from '@apollo/client'
-import { GET_CANDIDATE_BY_ID, GET_HUB_CANDIDATES, GET_HUB_JOBS } from '@/components/graphql/queries'
-import ViewCandidateModal, { CandidateType } from '@/components/modals/view-candidate-modal'
+import { GET_CANDIDATE_BY_ID, GET_HUB_CANDIDATES, GET_HUB_JOBS } from '@/graphql-operations/queries'
+import ViewCandidateModal from '@/components/modals/view-candidate-modal'
 import { LayoutSideMenu } from '@/components/layout/main/layout-side-menu'
 import AddCandidate from '@/components/table/actions/add-candidate'
 import { AUDIT_LOGS } from '@/utils/mockdata'
@@ -17,6 +17,7 @@ import { ModalControlContext } from '@/hooks/contexts'
 import AddCandidateModal from '@/components/modals/add-candidate-modal'
 import { router } from 'next/client'
 import { useRouter } from 'next/router'
+import { CandidateType } from '@/components/views/candidate/candidate-view'
 
 type Job = {
   id: number

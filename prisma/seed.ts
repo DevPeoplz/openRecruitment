@@ -1,4 +1,4 @@
-import { PrismaClient, TagSourceType } from '@prisma/client'
+import { PrismaClient, TagSourceType, TemplateTypes } from '@prisma/client'
 import { hash } from 'bcrypt'
 
 const prisma = new PrismaClient()
@@ -28,20 +28,6 @@ async function main() {
     },
   })
   console.log({ user1 })
-
-  const adminPhoto =
-    '1' ||
-    (await prisma.attachment.upsert({
-      where: { id: 1 },
-      update: {},
-      create: {
-        contentType: 'profilePhoto',
-        filename: 'photo1.png',
-        path: '/images/photo1.png',
-        uploaderId: 1,
-        updatedAt: new Date(),
-      },
-    }))
 
   const user2 = await prisma.user.upsert({
     where: { email: 'peter@admin.ad' },
@@ -78,6 +64,23 @@ async function main() {
     },
   })
   console.log({ company1 })
+
+  const logo1 = await prisma.attachment.upsert({
+    where: { id: 1 },
+    update: {},
+    create: {
+      contentType: 'image/png',
+      filename: 'company-1/logo/devpeoplz-logo.png',
+      size: 15877,
+      path: `https://${process.env.AWS_BUCKET_NAME}.s3.amazonaws.com/company-1/logo/devpeoplz-logo.png`,
+      companyId: company1.id,
+      companyLogo: {
+        connect: { id: company1.id },
+      },
+    },
+  })
+
+  console.log(logo1)
 
   const company2 = await prisma.company.upsert({
     where: { id: '2' },
@@ -190,9 +193,9 @@ async function main() {
       phone: '1234123123',
       educationLevel: 'Bachelors degree',
       socials: ['https://twitter.com/@candidate1'],
-      salaryExpectation: '5000',
+      salaryExpectation: 5000,
       companyId: company1.id,
-      birthDate: new Date('1993-01-01'),
+      birthday: new Date('1993-01-01'),
     },
   })
 
@@ -206,9 +209,9 @@ async function main() {
       phone: '1234123123',
       educationLevel: 'Bachelors degree',
       socials: ['https://twitter.com/@candidate2'],
-      salaryExpectation: '5000',
+      salaryExpectation: 5000,
       companyId: company1.id,
-      birthDate: new Date('1993-01-01'),
+      birthday: new Date('1993-01-01'),
     },
   })
 
@@ -222,9 +225,9 @@ async function main() {
       phone: '1234123123',
       educationLevel: 'Bachelors degree',
       socials: ['https://twitter.com/@candidate3'],
-      salaryExpectation: '5000',
+      salaryExpectation: 5000,
       companyId: company1.id,
-      birthDate: new Date('1993-01-01'),
+      birthday: new Date('1993-01-01'),
       createdAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000),
     },
   })
@@ -239,9 +242,9 @@ async function main() {
       phone: '1234123123',
       educationLevel: 'High School',
       socials: ['https://twitter.com/@candidate4'],
-      salaryExpectation: '1500',
+      salaryExpectation: 1500,
       companyId: company1.id,
-      birthDate: new Date('1994-01-01'),
+      birthday: new Date('1994-01-01'),
       createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
     },
   })
@@ -256,14 +259,59 @@ async function main() {
       phone: '1234123123',
       educationLevel: 'Postgraduate',
       socials: ['https://twitter.com/@candidate5'],
-      salaryExpectation: '10000',
+      salaryExpectation: 10000,
       companyId: company1.id,
-      birthDate: new Date('1995-01-01'),
+      birthday: new Date('1995-01-01'),
       createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
     },
   })
 
   console.log(candidate5)
+
+  const DefaultPipelineTemplate = await prisma.template.upsert({
+    where: { id: 1 },
+    update: {},
+    include: { stages: true },
+    create: {
+      companyId: company1.id,
+      name: 'Default Pipeline',
+      type: TemplateTypes.PIPELINE,
+      stages: {
+        create: [
+          {
+            category: 'Applied',
+            position: 1,
+          },
+          {
+            category: 'Phone Screen',
+            position: 2,
+          },
+          {
+            category: 'Interview',
+            position: 3,
+          },
+          {
+            category: 'Interview #2',
+            position: 4,
+          },
+          {
+            category: 'Offer',
+            position: 5,
+          },
+          {
+            category: 'Hired',
+            position: 6,
+          },
+          {
+            category: 'Rejected',
+            position: 7,
+          },
+        ],
+      },
+    },
+  })
+
+  console.log(DefaultPipelineTemplate)
 
   const offer1 = await prisma.offer.upsert({
     where: { id: 1 },
@@ -271,6 +319,7 @@ async function main() {
     create: {
       name: 'Offer 1',
       companyId: company1.id,
+      pipelineTemplateId: DefaultPipelineTemplate.id,
     },
   })
 
@@ -280,26 +329,11 @@ async function main() {
     create: {
       name: 'Offer 2',
       companyId: company1.id,
+      pipelineTemplateId: DefaultPipelineTemplate.id,
     },
   })
 
   console.log(offer2)
-
-  const stage1 = await prisma.stage.upsert({
-    where: { id: 1 },
-    update: {},
-    create: {
-      category: 'Test Stage 1',
-    },
-  })
-
-  const stage2 = await prisma.stage.upsert({
-    where: { id: 1 },
-    update: {},
-    create: {
-      category: 'Test Stage 2',
-    },
-  })
 
   const talentPool1 = await prisma.talentPool.upsert({
     where: { id: 1 },
@@ -318,7 +352,7 @@ async function main() {
     create: {
       candidateId: candidate1.id,
       offerId: offer1.id,
-      stageId: stage1.id,
+      stageId: DefaultPipelineTemplate.stages[0].id,
     },
   })
 
@@ -328,7 +362,7 @@ async function main() {
     create: {
       candidateId: candidate2.id,
       offerId: offer2.id,
-      stageId: stage2.id,
+      stageId: DefaultPipelineTemplate.stages[1].id,
     },
   })
 
@@ -338,7 +372,7 @@ async function main() {
     create: {
       candidateId: candidate2.id,
       offerId: offer1.id,
-      stageId: stage2.id,
+      stageId: DefaultPipelineTemplate.stages[3].id,
     },
   })
 

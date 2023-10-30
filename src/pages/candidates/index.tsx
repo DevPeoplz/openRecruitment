@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { LayoutSideMenu } from '@/components/layout/main/layout-side-menu'
 import { createHubTable, DefaultColumnsExtendedProps } from '@/components/table/hub-table'
-import { useLazyQuery, useQuery } from '@apollo/client'
-import { GET_CANDIDATE_BY_ID, GET_HUB_CANDIDATES } from '@/components/graphql/queries'
-import ViewCandidateModal, { CandidateType } from '@/components/modals/view-candidate-modal'
-import { AUDIT_LOGS } from '@/utils/mockdata'
+import { useQuery } from '@apollo/client'
+import { GET_HUB_CANDIDATES } from '@/graphql-operations/queries'
+import ViewCandidateModal from '@/components/modals/view-candidate-modal'
 import AddCandidate from '@/components/table/actions/add-candidate'
+import { BriefcaseIcon } from '@heroicons/react/20/solid'
+import { ListIcon } from '@/components/ui/list-icon'
+import { SparklesIcon } from '@heroicons/react/24/solid'
+import { FaForwardStep } from 'react-icons/fa6'
 
 export type Person = {
   id: number
@@ -55,11 +58,10 @@ const defaultColumns: DefaultColumnsExtendedProps<Person> = [
       const job = info.getValue() as string[]
       const row = info.row.id
       return (
-        <ul className="list-disc">
-          {job?.map((job) => (
-            <li key={btoa(`${row}${job}`)}>{job}</li>
-          ))}
-        </ul>
+        <ListIcon
+          icon={<BriefcaseIcon className="h-3 w-3 text-primary-500" />}
+          list={job?.map((job) => ({ key: btoa(`${row}${job}`), value: job }))}
+        />
       )
     },
     show: true,
@@ -80,11 +82,10 @@ const defaultColumns: DefaultColumnsExtendedProps<Person> = [
       const stage = info.getValue() as string[]
       const row = info.row.id
       return (
-        <ul className="list-disc">
-          {stage?.map((stage, index) => (
-            <li key={btoa(`${row}${stage}${index}`)}>{stage}</li>
-          ))}
-        </ul>
+        <ListIcon
+          icon={<FaForwardStep className="h-3 w-3 text-primary-900" />}
+          list={stage?.map((item, index) => ({ key: btoa(`${row}${stage}${index}`), value: item }))}
+        />
       )
     },
     show: true,
@@ -140,11 +141,10 @@ const defaultColumns: DefaultColumnsExtendedProps<Person> = [
       const talentPool = info.getValue() as string[]
       const row = info.row.id
       return (
-        <ul className="list-[square]">
-          {talentPool?.map((talentPool) => (
-            <li key={btoa(`${row}${talentPool}`)}>{talentPool}</li>
-          ))}
-        </ul>
+        <ListIcon
+          icon={<SparklesIcon className="h-3 w-3 text-primary-700" />}
+          list={talentPool?.map((item) => ({ key: btoa(`${row}${item}`), value: item }))}
+        />
       )
     },
     show: true,
@@ -220,29 +220,7 @@ const Page = () => {
     defaultColumns
   )
 
-  const [currentCandidate, setCurrentCandidate] = useState<CandidateType | null>(null)
-  const [currentRow, setCurrentRow] = useState<Person | null>(null)
-  const [
-    loadCandidate,
-    {
-      called: calledCandidate,
-      loading: loadingCandidate,
-      data: dataCandidate,
-      refetch: refetchCandidate,
-    },
-  ] = useLazyQuery(GET_CANDIDATE_BY_ID, {
-    fetchPolicy: 'cache-and-network',
-    variables: { where: { id: { equals: currentRow ? Number(currentRow.id) : 0 } } },
-  })
-
-  useEffect(() => {
-    const action = !calledCandidate ? loadCandidate : refetchCandidate
-    if (currentRow && currentRow?.id) {
-      action().then(() => {
-        setCurrentCandidate(rowToCandidate(currentRow, dataCandidate))
-      })
-    }
-  }, [calledCandidate, currentRow, currentRow?.id, dataCandidate, loadCandidate, refetchCandidate])
+  const [currentCandidate, setCurrentCandidate] = useState<number | undefined>(undefined)
 
   return (
     <LayoutSideMenu>
@@ -256,10 +234,7 @@ const Page = () => {
         table={table}
         tableStates={tableStates}
         rowOnClick={async (row) => {
-          setCurrentRow(row.original)
-          if (row.original.id !== currentCandidate?.id) {
-            setCurrentCandidate(null)
-          }
+          setCurrentCandidate(row.original.id)
           setSeeCandidate(true)
         }}
       >
@@ -270,32 +245,10 @@ const Page = () => {
       <ViewCandidateModal
         isOpen={seeCandidate}
         setIsOpen={setSeeCandidate}
-        candidate={currentCandidate}
-        logs={AUDIT_LOGS}
+        candidateId={currentCandidate}
       />
     </LayoutSideMenu>
   )
-}
-
-const rowToCandidate = (row: Person, data: any): CandidateType => {
-  const candidate = {
-    id: row.id,
-    name: row.name,
-    email: data?.findManyCandidate[0]?.email,
-    phone: data?.findManyCandidate[0]?.phone,
-    tagSource: {
-      tag: [
-        { id: 'tag1', name: 'tag1' },
-        { id: 'tag2', name: 'tag2' },
-      ],
-      source: [
-        { id: 'source1', name: 'source1' },
-        { id: 'source2', name: 'source2' },
-      ],
-    },
-  }
-
-  return candidate
 }
 
 Page.auth = {}

@@ -1,6 +1,6 @@
 import React from 'react'
 import { user } from '@/utils/mockdata'
-import Avatar from '@/components/ui/Avatar'
+import Avatar from '@/components/ui/avatar'
 import { Button } from '@/components/ui/Button'
 import TabsContainer from '@/components/layout/TabsContainer'
 import EmailSettings from '@/components/user/EmailSettings'

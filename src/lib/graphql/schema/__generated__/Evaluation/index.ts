@@ -9,12 +9,15 @@ export {
   EvaluationCandidateIdFieldObject,
   EvaluationTeamMemberFieldObject,
   EvaluationTeamMemberIdFieldObject,
-  EvaluationNoteFieldObject,
   EvaluationIsQuickEvalFieldObject,
+  EvaluationDescriptionFieldObject,
   EvaluationScoreFieldObject,
   EvaluationEventScheduleEvaluationsFieldObject,
-  EvaluationEventEvaluationsFieldObject,
-  EvaluationAnswersFieldObject
+  EvaluationEventFieldObject,
+  EvaluationEventIdFieldObject,
+  EvaluationAnswersFieldObject,
+  EvaluationCreatedAtFieldObject,
+  EvaluationUpdatedAtFieldObject
 } from './object.base';
 export {
   createManyEvaluationMutation,

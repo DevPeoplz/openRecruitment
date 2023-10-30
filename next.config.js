@@ -2,7 +2,12 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['randomuser.me', 'www.gstatic.com','upload.wikimedia.org'],
+    domains: [
+      'randomuser.me',
+      'www.gstatic.com',
+      'upload.wikimedia.org',
+      `${process.env.AWS_BUCKET_NAME}.s3.amazonaws.com`,
+    ],
   },
 }
 

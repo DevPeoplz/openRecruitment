@@ -1,5 +1,5 @@
 import React from 'react'
-import Avatar from '../Avatar'
+import Avatar from '../avatar'
 import Chip from '../Chip'
 import { GoPeople, GoCheck, GoKebabHorizontal } from 'react-icons/go'
 import { Button } from '../Button'

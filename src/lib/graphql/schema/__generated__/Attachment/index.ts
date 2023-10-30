@@ -4,16 +4,20 @@ export {
   AttachmentContentTypeFieldObject,
   AttachmentFilenameFieldObject,
   AttachmentPathFieldObject,
+  AttachmentSizeFieldObject,
   AttachmentUserProfilePhotoFieldObject,
   AttachmentCandidateCvFieldObject,
   AttachmentCandidateAvatarFieldObject,
   AttachmentCandidateCoverLetterFieldObject,
+  AttachmentCompanyLogoFieldObject,
   AttachmentUploaderFieldObject,
   AttachmentUploaderIdFieldObject,
   AttachmentCreatedAtFieldObject,
   AttachmentUpdatedAtFieldObject,
   AttachmentOfferFilesFieldObject,
-  AttachmentTalentPoolFilesFieldObject
+  AttachmentTalentPoolFilesFieldObject,
+  AttachmentCompanyFieldObject,
+  AttachmentCompanyIdFieldObject
 } from './object.base';
 export {
   createManyAttachmentMutation,

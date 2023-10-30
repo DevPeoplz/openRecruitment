@@ -3,7 +3,7 @@ import { useSession } from 'next-auth/react'
 import { useApolloClient, useQuery } from '@apollo/client'
 import { Select } from '@/components/ui/select'
 import { HiBuildingOffice2 } from 'react-icons/hi2'
-import { GET_ME_COMPANIES } from '../graphql/queries'
+import { GET_ME_COMPANIES } from '@/graphql-operations/queries'
 
 interface Company {
   id: string
@@ -76,7 +76,7 @@ export function SelectCompany() {
 
   return (
     <div className="flex items-center">
-      <HiBuildingOffice2 className="mr-2 h-6 w-6" />
+      <HiBuildingOffice2 className="mr-2 h-6 w-6 text-gray-600" />
       <Select
         selected={selectedCompanyId}
         list={companies}

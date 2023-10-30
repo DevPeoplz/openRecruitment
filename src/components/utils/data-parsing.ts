@@ -26,3 +26,54 @@ export function countRecordsByDay(
 
   return resultArray.map((count) => [new Date(count[0]), count[1]])
 }
+
+export function normalizePath(inputPath: string): string {
+  // Check if the inputPath starts with '/public'
+  if (inputPath.startsWith('/public')) {
+    // Remove '/public' from the beginning
+    inputPath = inputPath.substring('/public'.length)
+  }
+
+  // Ensure the path starts with '/'
+  if (!inputPath.startsWith('/')) {
+    inputPath = '/' + inputPath
+  }
+
+  // Ensure the path ends with a trailing slash
+  if (!inputPath.endsWith('/')) {
+    inputPath += '/'
+  }
+
+  return inputPath
+}
+
+export const parseGQLData = (
+  data: { id: number | string; name: string }[] | undefined,
+  suffix?: string
+) => {
+  if (!Array.isArray(data)) return []
+
+  return [
+    ...(data
+      .map((item) => {
+        if (!item) return null
+        const extra = suffix ? ` ${suffix}` : ''
+        return {
+          value: `${item.id}${extra}`,
+          label: `${item.name}${extra}`,
+        }
+      })
+      .filter((i) => i) as { value: string; label: string }[]),
+  ]
+}
+
+export const isValidURL = (url: string | null | undefined) => {
+  if (!url) return false
+
+  try {
+    new URL(url)
+    return true
+  } catch (error) {
+    return false
+  }
+}

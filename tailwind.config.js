@@ -63,6 +63,16 @@ module.exports = {
         panel: 'calc(100% - theme(width.52))',
         100: '35rem',
       },
+      dropShadow: {
+        'white-sm': '0 0 3px rgba(255, 255, 255, 1)',
+      },
+      gridTemplateColumns: {
+        'field-3': '8.33% 25% 66.66%',
+        'field-3.2': '0% 33.33% 66.66%',
+      },
+      gridTemplateRows: {
+        'field-3': 'auto',
+      },
     },
   },
   plugins: [],

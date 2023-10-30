@@ -48,6 +48,7 @@ import DropdownWithChecks from '@/components/ui/dropdown-with-checks'
 import { ArrowPathIcon, ViewColumnsIcon } from '@heroicons/react/24/outline'
 import { DebouncedInput } from '@/components/table/debounced-input'
 import { HubTableFilters } from '@/components/table/filters'
+import { StringParam, useQueryParam } from 'use-query-params'
 
 declare module '@tanstack/table-core' {
   interface FilterMeta {
@@ -223,7 +224,8 @@ export const useHubTable = <T,>(
   const { data: session } = useSession()
   const [columns] = useState(() => [...defaultColumns])
   const [sorting, setSorting] = useState<SortingState>([])
-  const [globalFilter, setGlobalFilter] = useState('')
+  const [queryString] = useQueryParam('global_search', StringParam)
+  const [globalFilter, setGlobalFilter] = useState(queryString ?? '')
 
   const defaultColumnVisibility = useMemo(() => {
     return defaultColumns.reduce((acc, col) => {
@@ -403,6 +405,15 @@ const createHubTableComponent = <T,>() => {
   const HubTable: HubTableSubComponents & React.FC<HubTableProps> = (props: HubTableProps) => {
     const { table, tableStates, rowOnClick, children } = props
     const filteredToolbar = getChildrenOnDisplayName(children, 'HubTable.Toolbar')
+    const [, setQueryString] = useQueryParam('global_search', StringParam)
+
+    const handleGlobalSearchChange = useCallback(
+      (value: string | number) => {
+        tableStates.setGlobalFilter(String(value))
+        setQueryString(String(value) === '' ? undefined : String(value))
+      },
+      [setQueryString, tableStates]
+    )
 
     return (
       <DndProvider backend={HTML5Backend}>
@@ -410,7 +421,7 @@ const createHubTableComponent = <T,>() => {
           <div className="flex flex-wrap items-center justify-between gap-1">
             <DebouncedInput
               value={tableStates.globalFilter ?? ''}
-              onChange={(value) => tableStates.setGlobalFilter(String(value))}
+              onChange={handleGlobalSearchChange}
               placeholder="Search all columns..."
             />
             <div className="flex flex-wrap gap-2">

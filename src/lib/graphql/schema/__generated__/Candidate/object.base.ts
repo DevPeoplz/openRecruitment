@@ -20,7 +20,7 @@ export const CandidateObject = definePrismaObject('Candidate', {
     mainLanguage: t.field(CandidateMainLanguageFieldObject),
     languages: t.field(CandidateLanguagesFieldObject),
     coverLetterText: t.field(CandidateCoverLetterTextFieldObject),
-    birthDate: t.field(CandidateBirthDateFieldObject),
+    birthday: t.field(CandidateBirthdayFieldObject),
     referrer: t.relation('referrer', CandidateReferrerFieldObject),
     referrerId: t.field(CandidateReferrerIdFieldObject),
     cv: t.relation('cv', CandidateCvFieldObject),
@@ -33,7 +33,6 @@ export const CandidateObject = definePrismaObject('Candidate', {
     socials: t.field(CandidateSocialsFieldObject),
     links: t.field(CandidateLinksFieldObject),
     salaryExpectation: t.field(CandidateSalaryExpectationFieldObject),
-    isHired: t.field(CandidateIsHiredFieldObject),
     hiredAt: t.relation('hiredAt', CandidateHiredAtFieldObject),
     hiredAtId: t.field(CandidateHiredAtIdFieldObject),
     hiredBy: t.relation('hiredBy', CandidateHiredByFieldObject),
@@ -42,8 +41,8 @@ export const CandidateObject = definePrismaObject('Candidate', {
     offers: t.relation('offers', CandidateOffersFieldObject(t)),
     talentPools: t.relation('talentPools', CandidateTalentPoolsFieldObject(t)),
     candidateTags: t.relation('candidateTags', CandidateCandidateTagsFieldObject(t)),
-    customFields: t.relation('customFields', CandidateCustomFieldsFieldObject(t)),
-    evaluation: t.relation('evaluation', CandidateEvaluationFieldObject(t)),
+    candidateCustomFields: t.relation('candidateCustomFields', CandidateCandidateCustomFieldsFieldObject(t)),
+    evaluations: t.relation('evaluations', CandidateEvaluationsFieldObject(t)),
     tasks: t.relation('tasks', CandidateTasksFieldObject(t)),
     follows: t.relation('follows', CandidateFollowsFieldObject(t)),
     SharedCandidateLink: t.relation('SharedCandidateLink', CandidateSharedCandidateLinkFieldObject(t)),
@@ -117,11 +116,11 @@ export const CandidateCoverLetterTextFieldObject = defineFieldObject('Candidate'
   resolve: (parent) => parent.coverLetterText,
 });
 
-export const CandidateBirthDateFieldObject = defineFieldObject('Candidate', {
+export const CandidateBirthdayFieldObject = defineFieldObject('Candidate', {
   type: Inputs.DateTime,
   description: undefined,
   nullable: true,
-  resolve: (parent) => parent.birthDate,
+  resolve: (parent) => parent.birthday,
 });
 
 export const CandidateReferrerFieldObject = defineRelationObject('Candidate', 'referrer', {
@@ -202,17 +201,10 @@ export const CandidateLinksFieldObject = defineFieldObject('Candidate', {
 });
 
 export const CandidateSalaryExpectationFieldObject = defineFieldObject('Candidate', {
-  type: "String",
+  type: "Int",
   description: undefined,
   nullable: true,
   resolve: (parent) => parent.salaryExpectation,
-});
-
-export const CandidateIsHiredFieldObject = defineFieldObject('Candidate', {
-  type: "Boolean",
-  description: undefined,
-  nullable: true,
-  resolve: (parent) => parent.isHired,
 });
 
 export const CandidateHiredAtFieldObject = defineRelationObject('Candidate', 'hiredAt', {
@@ -343,20 +335,20 @@ export const CandidateCandidateTagsFieldObject = defineRelationFunction('Candida
   }),
 );
 
-export const CandidateCustomFieldsFieldArgs = builder.args((t) => ({
-  where: t.field({ type: Inputs.CandidateCustomFieldsWhereInput, required: false }),
-  orderBy: t.field({ type: [Inputs.CandidateCustomFieldsOrderByWithRelationInput], required: false }),
-  cursor: t.field({ type: Inputs.CandidateCustomFieldsWhereUniqueInput, required: false }),
+export const CandidateCandidateCustomFieldsFieldArgs = builder.args((t) => ({
+  where: t.field({ type: Inputs.CandidateCustomFieldWhereInput, required: false }),
+  orderBy: t.field({ type: [Inputs.CandidateCustomFieldOrderByWithRelationInput], required: false }),
+  cursor: t.field({ type: Inputs.CandidateCustomFieldWhereUniqueInput, required: false }),
   take: t.field({ type: 'Int', required: false }),
   skip: t.field({ type: 'Int', required: false }),
-  distinct: t.field({ type: [Inputs.CandidateCustomFieldsScalarFieldEnum], required: false }),
+  distinct: t.field({ type: [Inputs.CandidateCustomFieldScalarFieldEnum], required: false }),
 }))
 
-export const CandidateCustomFieldsFieldObject = defineRelationFunction('Candidate', (t) =>
-  defineRelationObject('Candidate', 'customFields', {
+export const CandidateCandidateCustomFieldsFieldObject = defineRelationFunction('Candidate', (t) =>
+  defineRelationObject('Candidate', 'candidateCustomFields', {
     description: undefined,
     nullable: false,
-    args: CandidateCustomFieldsFieldArgs,
+    args: CandidateCandidateCustomFieldsFieldArgs,
     query: (args) => ({
       where: args.where || undefined,
       cursor: args.cursor || undefined,
@@ -368,7 +360,7 @@ export const CandidateCustomFieldsFieldObject = defineRelationFunction('Candidat
   }),
 );
 
-export const CandidateEvaluationFieldArgs = builder.args((t) => ({
+export const CandidateEvaluationsFieldArgs = builder.args((t) => ({
   where: t.field({ type: Inputs.EvaluationWhereInput, required: false }),
   orderBy: t.field({ type: [Inputs.EvaluationOrderByWithRelationInput], required: false }),
   cursor: t.field({ type: Inputs.EvaluationWhereUniqueInput, required: false }),
@@ -377,11 +369,11 @@ export const CandidateEvaluationFieldArgs = builder.args((t) => ({
   distinct: t.field({ type: [Inputs.EvaluationScalarFieldEnum], required: false }),
 }))
 
-export const CandidateEvaluationFieldObject = defineRelationFunction('Candidate', (t) =>
-  defineRelationObject('Candidate', 'evaluation', {
+export const CandidateEvaluationsFieldObject = defineRelationFunction('Candidate', (t) =>
+  defineRelationObject('Candidate', 'evaluations', {
     description: undefined,
     nullable: false,
-    args: CandidateEvaluationFieldArgs,
+    args: CandidateEvaluationsFieldArgs,
     query: (args) => ({
       where: args.where || undefined,
       cursor: args.cursor || undefined,

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { me } from './me'
+import { PrismaClientError } from '@prisma/engine-core/dist/common/errors/PrismaClientError'
 
 export const utils = {
   me,
@@ -12,7 +13,7 @@ export const defaultPrismaQueryOptions = async ({
   prisma,
   model,
   method,
-  defaultValue = {},
+  defaultValue,
 }: {
   query?: any
   context: any
@@ -23,12 +24,20 @@ export const defaultPrismaQueryOptions = async ({
   defaultValue?: any
 }) => {
   const selectedCompany = context?.session?.user?.selectedCompany
-  const whereCompanyFromSession = {
-    AND: {
-      ...args.where,
-      companyId: selectedCompany,
-    },
-  }
+  const whereCompanyFromSession =
+    method === 'findUnique'
+      ? {
+          ...args.where,
+          AND: {
+            companyId: selectedCompany,
+          },
+        }
+      : {
+          AND: {
+            ...args.where,
+            companyId: selectedCompany,
+          },
+        }
 
   const options = {
     where: whereCompanyFromSession,
@@ -38,6 +47,10 @@ export const defaultPrismaQueryOptions = async ({
     skip: args.skip || undefined,
     orderBy: args.orderBy || undefined,
     ...(query ?? {}),
+  }
+
+  if (!selectedCompany && !defaultValue) {
+    throw new Error('No company selected')
   }
 
   return !selectedCompany ? defaultValue : await prisma[model][method](options)

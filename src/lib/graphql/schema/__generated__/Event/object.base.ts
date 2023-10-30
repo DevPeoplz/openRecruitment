@@ -22,7 +22,7 @@ export const EventObject = definePrismaObject('Event', {
     company: t.relation('company', EventCompanyFieldObject),
     companyId: t.field(EventCompanyIdFieldObject),
     eventInterviewers: t.relation('eventInterviewers', EventEventInterviewersFieldObject(t)),
-    eventEvaluations: t.relation('eventEvaluations', EventEventEvaluationsFieldObject(t)),
+    evaluations: t.relation('evaluations', EventEvaluationsFieldObject(t)),
   }),
 });
 
@@ -121,20 +121,20 @@ export const EventEventInterviewersFieldObject = defineRelationFunction('Event',
   }),
 );
 
-export const EventEventEvaluationsFieldArgs = builder.args((t) => ({
-  where: t.field({ type: Inputs.EventEvaluationWhereInput, required: false }),
-  orderBy: t.field({ type: [Inputs.EventEvaluationOrderByWithRelationInput], required: false }),
-  cursor: t.field({ type: Inputs.EventEvaluationWhereUniqueInput, required: false }),
+export const EventEvaluationsFieldArgs = builder.args((t) => ({
+  where: t.field({ type: Inputs.EvaluationWhereInput, required: false }),
+  orderBy: t.field({ type: [Inputs.EvaluationOrderByWithRelationInput], required: false }),
+  cursor: t.field({ type: Inputs.EvaluationWhereUniqueInput, required: false }),
   take: t.field({ type: 'Int', required: false }),
   skip: t.field({ type: 'Int', required: false }),
-  distinct: t.field({ type: [Inputs.EventEvaluationScalarFieldEnum], required: false }),
+  distinct: t.field({ type: [Inputs.EvaluationScalarFieldEnum], required: false }),
 }))
 
-export const EventEventEvaluationsFieldObject = defineRelationFunction('Event', (t) =>
-  defineRelationObject('Event', 'eventEvaluations', {
+export const EventEvaluationsFieldObject = defineRelationFunction('Event', (t) =>
+  defineRelationObject('Event', 'evaluations', {
     description: undefined,
     nullable: false,
-    args: EventEventEvaluationsFieldArgs,
+    args: EventEvaluationsFieldArgs,
     query: (args) => ({
       where: args.where || undefined,
       cursor: args.cursor || undefined,

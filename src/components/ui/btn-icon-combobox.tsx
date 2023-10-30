@@ -1,11 +1,17 @@
-import React, { ReactNode, useEffect, useRef, useState } from 'react'
+import React, { ReactNode, useRef, useState } from 'react'
 import clsx from 'clsx'
 import { PlusIcon } from '@heroicons/react/20/solid'
 import ComboboxWithTags, { ComboboxWithTagsProps } from '@/components/ui/combobox-with-tags'
+import { ComboboxWithChecks, ComboboxWithChecksProps } from '@/components/ui/combobox-with-checks'
+
+type BtnIconTypesProps = {
+  tags: ComboboxWithTagsProps
+  checks: ComboboxWithChecksProps
+}
 
 type BtnIconComboboxProps = {
-  options: ComboboxWithTagsProps['options']
-  onSelectedOptionsChange?: ComboboxWithTagsProps['onSelectedOptionsChange']
+  options: BtnIconTypesProps[keyof BtnIconTypesProps]['options']
+  onSelectedOptionsChange?: BtnIconTypesProps[keyof BtnIconTypesProps]['onSelectedOptionsChange']
   hideBtnAfterClick?: boolean
   btnText?: string | ReactNode
   placeholderText?: string
@@ -13,9 +19,11 @@ type BtnIconComboboxProps = {
   spanClassName?: string
   plusClassName?: string
   icon?: React.ElementType
+  initialSelection?: BtnIconTypesProps[keyof BtnIconTypesProps]['initialSelection']
+  comboboxType?: keyof BtnIconTypesProps
 }
 
-const BtnIconCombobox: React.FC<BtnIconComboboxProps> = ({
+export const BtnIconCombobox: React.FC<BtnIconComboboxProps> = ({
   options,
   hideBtnAfterClick = true,
   onSelectedOptionsChange,
@@ -25,19 +33,21 @@ const BtnIconCombobox: React.FC<BtnIconComboboxProps> = ({
   spanClassName = 'flex w-24 items-center gap-2 rounded border border-gray-400 p-1',
   plusClassName = 'h-3 w-3',
   icon: Icon = PlusIcon,
+  comboboxType = 'tags',
+  initialSelection = [],
 }) => {
   const [btnClicked, setBtnClicked] = useState(false)
   const comboBtnRef = useRef<HTMLButtonElement>(null)
 
   const handleBtnClick = () => () => {
-    setBtnClicked(true)
-  }
+    setBtnClicked((prev) => {
+      if (!prev) {
+        comboBtnRef.current?.click()
+      }
 
-  useEffect(() => {
-    if (btnClicked) {
-      comboBtnRef.current?.click()
-    }
-  }, [btnClicked])
+      return !prev
+    })
+  }
 
   let btnIconComponent = <Icon className={plusClassName} />
 
@@ -62,16 +72,32 @@ const BtnIconCombobox: React.FC<BtnIconComboboxProps> = ({
       >
         {btnIconComponent}
       </button>
-      {btnClicked && (
-        <ComboboxWithTags
-          options={options}
-          comboBtnRef={comboBtnRef}
-          onSelectedOptionsChange={onSelectedOptionsChange}
-          placeholder={placeholderText}
-        />
-      )}
+      {btnClicked &&
+        (comboboxType === 'tags' ? (
+          <ComboboxWithTags
+            options={options}
+            comboBtnRef={comboBtnRef}
+            onSelectedOptionsChange={
+              onSelectedOptionsChange as BtnIconTypesProps[typeof comboboxType]['onSelectedOptionsChange']
+            }
+            placeholder={placeholderText}
+            initialSelection={
+              initialSelection as BtnIconTypesProps[typeof comboboxType]['initialSelection']
+            }
+          />
+        ) : (
+          <ComboboxWithChecks
+            options={options as BtnIconTypesProps[typeof comboboxType]['options']}
+            comboBtnRef={comboBtnRef}
+            onSelectedOptionsChange={
+              onSelectedOptionsChange as BtnIconTypesProps[typeof comboboxType]['onSelectedOptionsChange']
+            }
+            placeholder={placeholderText}
+            initialSelection={
+              initialSelection as BtnIconTypesProps[typeof comboboxType]['initialSelection']
+            }
+          />
+        ))}
     </>
   )
 }
-
-export default BtnIconCombobox

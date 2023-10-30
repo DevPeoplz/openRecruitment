@@ -18,9 +18,9 @@ export const TemplateObject = definePrismaObject('Template', {
     type: t.field(TemplateTypeFieldObject),
     name: t.field(TemplateNameFieldObject),
     category: t.field(TemplateCategoryFieldObject),
-    screeningQuestionsTemplate: t.relation('screeningQuestionsTemplate', TemplateScreeningQuestionsTemplateFieldObject),
-    pipelineTemplate: t.relation('pipelineTemplate', TemplatePipelineTemplateFieldObject),
-    autoConfirmationEmail: t.relation('autoConfirmationEmail', TemplateAutoConfirmationEmailFieldObject),
+    screeningQuestionsTemplate: t.relation('screeningQuestionsTemplate', TemplateScreeningQuestionsTemplateFieldObject(t)),
+    pipelineTemplate: t.relation('pipelineTemplate', TemplatePipelineTemplateFieldObject(t)),
+    autoConfirmationEmail: t.relation('autoConfirmationEmail', TemplateAutoConfirmationEmailFieldObject(t)),
     stages: t.relation('stages', TemplateStagesFieldObject(t)),
     evaluations: t.relation('evaluations', TemplateEvaluationsFieldObject(t)),
   }),
@@ -50,7 +50,7 @@ export const TemplateCompanyIdFieldObject = defineFieldObject('Template', {
 export const TemplateIsCompanyWideFieldObject = defineFieldObject('Template', {
   type: "Boolean",
   description: undefined,
-  nullable: false,
+  nullable: true,
   resolve: (parent) => parent.isCompanyWide,
 });
 
@@ -71,30 +71,84 @@ export const TemplateNameFieldObject = defineFieldObject('Template', {
 export const TemplateCategoryFieldObject = defineFieldObject('Template', {
   type: "String",
   description: undefined,
-  nullable: false,
+  nullable: true,
   resolve: (parent) => parent.category,
 });
 
-export const TemplateScreeningQuestionsTemplateFieldObject = defineRelationObject('Template', 'screeningQuestionsTemplate', {
-  description: undefined,
-  nullable: true,
-  args: undefined,
-  query: undefined,
-});
+export const TemplateScreeningQuestionsTemplateFieldArgs = builder.args((t) => ({
+  where: t.field({ type: Inputs.OfferWhereInput, required: false }),
+  orderBy: t.field({ type: [Inputs.OfferOrderByWithRelationInput], required: false }),
+  cursor: t.field({ type: Inputs.OfferWhereUniqueInput, required: false }),
+  take: t.field({ type: 'Int', required: false }),
+  skip: t.field({ type: 'Int', required: false }),
+  distinct: t.field({ type: [Inputs.OfferScalarFieldEnum], required: false }),
+}))
 
-export const TemplatePipelineTemplateFieldObject = defineRelationObject('Template', 'pipelineTemplate', {
-  description: undefined,
-  nullable: true,
-  args: undefined,
-  query: undefined,
-});
+export const TemplateScreeningQuestionsTemplateFieldObject = defineRelationFunction('Template', (t) =>
+  defineRelationObject('Template', 'screeningQuestionsTemplate', {
+    description: undefined,
+    nullable: false,
+    args: TemplateScreeningQuestionsTemplateFieldArgs,
+    query: (args) => ({
+      where: args.where || undefined,
+      cursor: args.cursor || undefined,
+      take: args.take || undefined,
+      distinct: args.distinct || undefined,
+      skip: args.skip || undefined,
+      orderBy: args.orderBy || undefined,
+    }),
+  }),
+);
 
-export const TemplateAutoConfirmationEmailFieldObject = defineRelationObject('Template', 'autoConfirmationEmail', {
-  description: undefined,
-  nullable: true,
-  args: undefined,
-  query: undefined,
-});
+export const TemplatePipelineTemplateFieldArgs = builder.args((t) => ({
+  where: t.field({ type: Inputs.OfferWhereInput, required: false }),
+  orderBy: t.field({ type: [Inputs.OfferOrderByWithRelationInput], required: false }),
+  cursor: t.field({ type: Inputs.OfferWhereUniqueInput, required: false }),
+  take: t.field({ type: 'Int', required: false }),
+  skip: t.field({ type: 'Int', required: false }),
+  distinct: t.field({ type: [Inputs.OfferScalarFieldEnum], required: false }),
+}))
+
+export const TemplatePipelineTemplateFieldObject = defineRelationFunction('Template', (t) =>
+  defineRelationObject('Template', 'pipelineTemplate', {
+    description: undefined,
+    nullable: false,
+    args: TemplatePipelineTemplateFieldArgs,
+    query: (args) => ({
+      where: args.where || undefined,
+      cursor: args.cursor || undefined,
+      take: args.take || undefined,
+      distinct: args.distinct || undefined,
+      skip: args.skip || undefined,
+      orderBy: args.orderBy || undefined,
+    }),
+  }),
+);
+
+export const TemplateAutoConfirmationEmailFieldArgs = builder.args((t) => ({
+  where: t.field({ type: Inputs.OfferWhereInput, required: false }),
+  orderBy: t.field({ type: [Inputs.OfferOrderByWithRelationInput], required: false }),
+  cursor: t.field({ type: Inputs.OfferWhereUniqueInput, required: false }),
+  take: t.field({ type: 'Int', required: false }),
+  skip: t.field({ type: 'Int', required: false }),
+  distinct: t.field({ type: [Inputs.OfferScalarFieldEnum], required: false }),
+}))
+
+export const TemplateAutoConfirmationEmailFieldObject = defineRelationFunction('Template', (t) =>
+  defineRelationObject('Template', 'autoConfirmationEmail', {
+    description: undefined,
+    nullable: false,
+    args: TemplateAutoConfirmationEmailFieldArgs,
+    query: (args) => ({
+      where: args.where || undefined,
+      cursor: args.cursor || undefined,
+      take: args.take || undefined,
+      distinct: args.distinct || undefined,
+      skip: args.skip || undefined,
+      orderBy: args.orderBy || undefined,
+    }),
+  }),
+);
 
 export const TemplateStagesFieldArgs = builder.args((t) => ({
   where: t.field({ type: Inputs.StageWhereInput, required: false }),

@@ -1,0 +1,1 @@
+export { createOneCustomFieldMutationObject } from './createOne'

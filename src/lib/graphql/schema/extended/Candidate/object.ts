@@ -11,7 +11,7 @@ export const CandidateObject = definePrismaObject('Candidate', {
     return {
       ...fields,
       // Add custom fields
-      customField: t.field({
+      testingCustomGQLField: t.field({
         authz: {
           rules: ['IsAuthenticated'],
         },
@@ -21,6 +21,10 @@ export const CandidateObject = definePrismaObject('Candidate', {
       name: t.field({
         type: 'String',
         resolve: (parent) => `${parent.firstName} ${parent.lastName}`,
+      }),
+      shortName: t.field({
+        type: 'String',
+        resolve: (parent) => `${parent.firstName.split(' ')[0]} ${parent.lastName.split(' ')[0]}`,
       }),
       averageScore: t.field({
         type: 'Float',

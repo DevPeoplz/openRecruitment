@@ -5,8 +5,7 @@ import CandidateView from '../views/candidate/candidate-view'
 type Props = {
   isOpen: boolean
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
-  candidate: CandidateType | null
-  logs: LogType[]
+  candidateId?: string | number
 }
 
 export type LogType = {
@@ -20,27 +19,14 @@ export type LogType = {
   }
 }
 
-export type CandidateType = {
-  id: number
-  name: string
-  email: string
-  phone: string
-  tagSource: {
-    tag: {
-      id: string
-      name: string
-    }[]
-    source: {
-      id: string
-      name: string
-    }[]
-  }
-}
-
-const ViewCandidateModal: React.FC<Props> = ({ isOpen, setIsOpen, candidate, logs }) => {
+const ViewCandidateModal: React.FC<Props> = ({ isOpen, setIsOpen, candidateId }) => {
   return (
-    <ModalContainer isOpen={isOpen} setIsOpen={setIsOpen} className="h-full py-0 pr-0">
-      <CandidateView candidate={candidate} logs={logs} />
+    <ModalContainer
+      isOpen={isOpen}
+      setIsOpen={setIsOpen}
+      className="h-[90vh] w-[900px] max-w-[95vw] py-0 pr-0"
+    >
+      <CandidateView candidateId={candidateId} />
     </ModalContainer>
   )
 }

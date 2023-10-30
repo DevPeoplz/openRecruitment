@@ -6,7 +6,7 @@ import BackgroundIllustration from '../layout/BackgroundIlustration'
 import { useMutation } from '@apollo/client'
 import Alert from '@/components/alert'
 import { signIn } from 'next-auth/react'
-import { SIGNUP_MUTATION } from '../graphql/mutations'
+import { SIGNUP_MUTATION } from '@/graphql-operations/mutations'
 
 const SignUpForm = () => {
   const [name, setName] = useState('')

@@ -1,5 +1,5 @@
 import React from 'react'
-import Avatar from '@/components/ui/Avatar'
+import Avatar from '@/components/ui/avatar'
 import { Button } from '@/components/ui/Button'
 import { signOut, useSession } from 'next-auth/react'
 import { BurgerMenu } from '@/components/ui/menu/burger-menu'

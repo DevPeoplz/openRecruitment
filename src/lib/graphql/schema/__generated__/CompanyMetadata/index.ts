@@ -3,8 +3,10 @@ export {
   CompanyMetadataIdFieldObject,
   CompanyMetadataCompanyFieldObject,
   CompanyMetadataCompanyIdFieldObject,
-  CompanyMetadataMetaKeyFieldObject,
-  CompanyMetadataMetaValueFieldObject
+  CompanyMetadataKeyFieldObject,
+  CompanyMetadataValueFieldObject,
+  CompanyMetadataSettingsFieldObject,
+  CompanyMetadataTypeFieldObject
 } from './object.base';
 export {
   createManyCompanyMetadataMutation,

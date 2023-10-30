@@ -11,7 +11,7 @@ export {
   EventCompanyFieldObject,
   EventCompanyIdFieldObject,
   EventEventInterviewersFieldObject,
-  EventEventEvaluationsFieldObject
+  EventEvaluationsFieldObject
 } from './object.base';
 export {
   createManyEventMutation,
