@@ -97,6 +97,7 @@ export const generateFullEditableCandidateTags = (
         attribute: field === 'tags' ? 'tags' : 'sources',
         placeholder: `Select a ${field === 'tags' ? 'tag' : 'source'}...`,
       }}
+      className={'z-30'}
     >
       <EditableField.Icon>
         <PlusIcon className="h-5 w-5 rounded-sm border" />
