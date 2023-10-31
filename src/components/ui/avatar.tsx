@@ -1,13 +1,21 @@
 import React from 'react'
 import Image from 'next/image'
+import clsx from 'clsx'
 
 interface Props {
   src?: string | null
   name?: string | null
   className?: string
+  size?: 'small' | 'medium' | 'large'
 }
 
-const Avatar: React.FC<Props> = ({ src, name, className }) => {
+const sizeClass = {
+  small: 'h-8 w-8',
+  medium: 'h-12 w-12',
+  large: 'h-16 w-16',
+}
+
+const Avatar: React.FC<Props> = ({ src, name, className, size = 'medium' }) => {
   const altName = name || 'avatar'
   return src ? (
     <Image
@@ -15,7 +23,7 @@ const Avatar: React.FC<Props> = ({ src, name, className }) => {
       alt={altName}
       width={40}
       height={40}
-      className={`${className} h-16 w-16 rounded-full border border-black object-cover`}
+      className={clsx(className, 'rounded-full border border-black object-cover', sizeClass[size])}
     />
   ) : (
     <div
