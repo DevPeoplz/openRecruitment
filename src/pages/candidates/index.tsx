@@ -226,7 +226,9 @@ const defaultColumns: DefaultColumnsExtendedProps<Person> = [
 
 const Page = () => {
   const { useHubTable, HubTable, HubTableFilters } = createHubTable<Person>()
-  const { data: dataHubCandidates, loading: loadingHubCandidates } = useQuery(GET_HUB_CANDIDATES)
+  const { data: dataHubCandidates, loading: loadingHubCandidates } = useQuery(GET_HUB_CANDIDATES, {
+    fetchPolicy: 'cache-and-network',
+  })
   const [seeCandidate, setSeeCandidate] = useState(false)
 
   const { table, tableStates } = useHubTable(
