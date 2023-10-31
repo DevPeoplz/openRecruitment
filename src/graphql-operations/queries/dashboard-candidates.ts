@@ -332,6 +332,21 @@ export const GET_HUB_POOLS = gql`
     }
   }
 `
+export const GET_HUB_EVENTS = gql`
+  query GET_HUB_EVENTS {
+    findManyEvent(orderBy: { date: desc }) {
+      id: id
+      # name: name
+      # candidates: matches {
+      #   candidate {
+      #     id
+      #     name
+      #   }
+      # }
+      # createdAt: createdAt
+    }
+  }
+`
 
 export const GET_CANDIDATE_BY_ID_FILES = gql`
   query GET_CANDIDATE_BY_ID_FILES($where: CandidateWhereUniqueInput!) {

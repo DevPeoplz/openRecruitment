@@ -14,6 +14,8 @@ import ButtonDropdown from '@/components/ui/btn-dropdown'
 import { BarsArrowDownIcon } from '@heroicons/react/24/outline'
 import { compareAsc } from 'date-fns'
 import { Event } from '@/components/views/events/event-card'
+import { useMutation, useQuery } from '@apollo/client'
+import { GET_HUB_EVENTS } from '@/graphql-operations/queries/dashboard-candidates'
 
 const LIST_TYPES = ['meeting', 'interview', 'call', 'all events']
 const EVENT_TYPES = ['meeting', 'interview', 'call']
@@ -237,6 +239,13 @@ const Events: NextPageWithLayout = () => {
   const [openModal, setOpenModal] = useState(false)
   const [filter, setFilter] = useState('')
   const [dateSelected, setDateSelected] = useState<Date>()
+
+  const { data: dataHubEvents, loading: loadingHubPools } = useQuery(GET_HUB_EVENTS, {
+    fetchPolicy: 'cache-and-network',
+  })
+  const [createEntity, { loading, error, data }] = useMutation(ADD_TALENT_POOL_MUTATION)
+
+  console.log('data', dataHubEvents)
 
   const currentTime = new Date().getTime()
 
