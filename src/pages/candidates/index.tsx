@@ -10,6 +10,7 @@ import { SparklesIcon } from '@heroicons/react/24/solid'
 import { FaForwardStep } from 'react-icons/fa6'
 import { ButtonIconSimpleModal } from '@/components/table/actions/add-candidate'
 import { AddCandidateView } from '@/components/views/candidate/add-candidate-view'
+import { DeleteRecord } from '@/components/views/delete-record'
 
 export type Person = {
   id: number
@@ -106,17 +107,6 @@ const defaultColumns: DefaultColumnsExtendedProps<Person> = [
     filterComponent: 'select',
   },
   {
-    accessorKey: 'dateCreated',
-    id: 'dateCreated',
-    header: 'Date Created',
-    cell: (info) => {
-      // convert iso string to date on local time with date-fns
-      const date = new Date(info.getValue() as string)
-      return date.toLocaleString()
-    },
-    show: true,
-  },
-  {
     accessorKey: 'source',
     id: 'source',
     header: 'Source',
@@ -151,6 +141,17 @@ const defaultColumns: DefaultColumnsExtendedProps<Person> = [
     show: true,
     filterFn: 'arrIncludesSome',
     filterComponent: 'select',
+  },
+  {
+    accessorKey: 'dateCreated',
+    id: 'dateCreated',
+    header: 'Date Created',
+    cell: (info) => {
+      // convert iso string to date on local time with date-fns
+      const date = new Date(info.getValue() as string)
+      return date.toLocaleString()
+    },
+    show: true,
   },
   {
     accessorKey: 'disqualifiedBy',
@@ -203,10 +204,23 @@ const defaultColumns: DefaultColumnsExtendedProps<Person> = [
     filterComponent: 'checkbox',
     defaultCheckboxOptions: [
       { label: 'Qualified', value: 'qualified' },
-      { label: 'Disqualified', value: 'disqualified' },
+      {
+        label: 'Disqualified',
+        value: 'disqualified',
+      },
       { label: 'New', value: 'new' },
       { label: 'Overdue', value: 'overdue' },
     ],
+  },
+  {
+    accessorKey: 'edit',
+    id: 'edit',
+    header: 'Edit',
+    cell: (info) => {
+      const id = info.row.original.id
+      return <DeleteRecord id={id} name={info.row.original.name} />
+    },
+    show: true,
   },
 ]
 

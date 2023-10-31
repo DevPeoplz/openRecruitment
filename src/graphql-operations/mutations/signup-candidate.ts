@@ -241,3 +241,36 @@ export const ADD_TALENT_POOL_MUTATION = gql`
     }
   }
 `
+
+export const DELETE_CANDIDATE_BY_ID = gql`
+  mutation DELETE_CANDIDATE_BY_ID($where: CandidateWhereUniqueInput!) {
+    candidate: deleteOneCandidate(where: $where) {
+      id
+      name
+    }
+  }
+`
+export const DELETE_JOB_BY_ID = gql`
+  mutation DELETE_JOB_BY_ID($where: OfferWhereUniqueInput!) {
+    job: deleteOneOffer(where: $where) {
+      id
+      name
+    }
+  }
+`
+export const DELETE_TALENT_POOL_BY_ID = gql`
+  mutation DELETE_TALENT_POOL_BY_ID($where: TalentPoolWhereUniqueInput!) {
+    talentPool: deleteOneTalentPool(where: $where) {
+      id
+      name
+    }
+  }
+`
+export const DELETE_EVENT_BY_ID = gql`
+  mutation DELETE_EVENT_BY_ID($where: EventWhereUniqueInput!) {
+    event: deleteOneEvent(where: $where) {
+      id
+      name
+    }
+  }
+`

@@ -20,7 +20,7 @@ import * as AuditLog from './AuditLog'
 // import * as EventSchedule from './EventSchedule'
 // import * as EventScheduleInterviewer from './EventScheduleInterviewer'
 // import * as EventScheduleEvaluation from './EventScheduleEvaluation'
-// import * as Event from './Event'
+import * as Event from './Event'
 // import * as EventInterviewer from './EventInterviewer'
 // import * as EventEvaluation from './EventEvaluation'
 import * as Offer from './Offer'
@@ -96,6 +96,7 @@ export const Cruds: Record<
       ...AutoCruds.Candidate.mutations,
       createOne: Candidate.createOneCandidateMutationObject,
       updateOne: Candidate.updateOneCandidateMutationObject,
+      deleteOne: Candidate.deleteOneCandidateMutationObject,
     },
   },
   Offer: {
@@ -108,6 +109,7 @@ export const Cruds: Record<
     mutations: {
       ...AutoCruds.Offer.mutations,
       createOne: Offer.createOneOfferMutationObject,
+      deleteOne: Offer.deleteOneOfferMutationObject,
     },
   },
   TalentPool: {
@@ -120,6 +122,7 @@ export const Cruds: Record<
     mutations: {
       ...AutoCruds.TalentPool.mutations,
       createOne: TalentPool.createOneTalentPoolMutationObject,
+      deleteOne: TalentPool.deleteOneTalentPoolMutationObject,
     },
   },
   TagSource: {
@@ -147,6 +150,18 @@ export const Cruds: Record<
     mutations: {
       ...AutoCruds.Evaluation.mutations,
       createOne: Evaluation.createOneEvaluationMutationObject,
+    },
+  },
+  Event: {
+    Object: AutoCruds.Event.Object,
+    queries: {
+      ...AutoCruds.Event.queries,
+      findMany: Event.findManyEventQueryObject,
+    },
+    mutations: {
+      ...AutoCruds.Event.mutations,
+      createOne: Event.createOneEventMutationObject,
+      deleteOne: Event.deleteOneEventMutationObject,
     },
   },
 }

@@ -1,2 +1,2 @@
 export { countTalentPoolQueryObject, findManyTalentPoolQueryObject } from './queries'
-export { createOneTalentPoolMutationObject } from './mutations'
+export { createOneTalentPoolMutationObject, deleteOneTalentPoolMutationObject } from './mutations'

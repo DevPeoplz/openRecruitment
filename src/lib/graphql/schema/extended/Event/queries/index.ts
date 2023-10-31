@@ -1,0 +1,1 @@
+export { findManyEventQueryObject } from './findMany'
