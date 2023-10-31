@@ -6,6 +6,7 @@ import { useRouter } from 'next/router'
 import { ButtonIconSimpleModal } from '@/components/table/actions/add-candidate'
 import { AddTalentPoolView } from '@/components/views/talent-pools/add-talent-pool-view'
 import Link from 'next/link'
+import { DeleteRecord } from '@/components/views/delete-record'
 
 type Job = {
   id: number
@@ -76,6 +77,16 @@ const defaultColumns: DefaultColumnsExtendedProps<Job> = [
       // convert iso string to date on local time with date-fns
       const date = new Date(info.getValue() as string)
       return date.toLocaleString()
+    },
+    show: true,
+  },
+  {
+    accessorKey: 'edit',
+    id: 'edit',
+    header: 'Edit',
+    cell: (info) => {
+      const id = info.row.original.id
+      return <DeleteRecord id={id} name={info.row.original.name} type={'talentPool'} />
     },
     show: true,
   },

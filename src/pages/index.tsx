@@ -7,8 +7,8 @@ import { authOptions } from '@/pages/api/auth/[...nextauth]'
 export default function Home() {
   return (
     <div>
-      <h1>Work in progress</h1>
-      <Link href='/dashboard'>Home...</Link>
+      <h1>Open Recruitment</h1>
+      <Link href="#about">@Devpeoplz</Link>
     </div>
   )
 }

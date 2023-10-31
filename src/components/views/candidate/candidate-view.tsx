@@ -99,7 +99,7 @@ const CandidateView: FC<Props> = ({ candidateId }) => {
     <CandidateContext.Provider value={[candidate, refetchCandidate]}>
       <div className="flex h-full w-full gap-0.5">
         <div className="w-8/12 overflow-y-auto p-2">
-          <div className="flex items-center justify-between gap-16">
+          <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="group relative flex h-16 w-16 items-center justify-center overflow-hidden rounded-full">
                 <SimpleImageViewer name={candidate.name} src={candidate.avatar}>
@@ -121,7 +121,7 @@ const CandidateView: FC<Props> = ({ candidateId }) => {
                 <p className="text-gray-600">{`Added ${createdAgo}`}</p>
               </div>
             </div>
-            <div className="flex flex-wrap gap-1">
+            <div className="flex flex-nowrap gap-1">
               <CopyLinkToClipboard url={`${window.location.origin}/candidate/${candidateId}`} />
               <OpenNewTabCircleButton url={`${window.location.origin}/candidate/${candidateId}`} />
             </div>

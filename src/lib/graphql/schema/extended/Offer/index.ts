@@ -1,2 +1,2 @@
 export { countOfferQueryObject, findManyOfferQueryObject } from './queries'
-export { createOneOfferMutationObject } from './mutations'
+export { createOneOfferMutationObject, deleteOneOfferMutationObject } from './mutations'

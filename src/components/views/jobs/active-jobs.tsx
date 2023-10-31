@@ -6,6 +6,7 @@ import { useRouter } from 'next/router'
 import { ButtonIconSimpleModal } from '@/components/table/actions/add-candidate'
 import { AddJobView } from '@/components/views/jobs/add-job-view'
 import Link from 'next/link'
+import { DeleteRecord } from '@/components/views/delete-record'
 
 type Job = {
   id: number
@@ -159,6 +160,16 @@ const defaultColumns: DefaultColumnsExtendedProps<Job> = [
           ))}
         </div>
       )
+    },
+    show: true,
+  },
+  {
+    accessorKey: 'edit',
+    id: 'edit',
+    header: 'Edit',
+    cell: (info) => {
+      const id = info.row.original.id
+      return <DeleteRecord id={id} name={info.row.original.name} type={'job'} />
     },
     show: true,
   },
