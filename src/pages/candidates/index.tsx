@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { LayoutSideMenu } from '@/components/layout/main/layout-side-menu'
-import { createHubTable, DefaultColumnsExtendedProps } from '@/components/table/hub-table'
+import useCreateHubTable, { DefaultColumnsExtendedProps } from '@/components/table/hub-table'
 import { useQuery } from '@apollo/client'
 import { GET_HUB_CANDIDATES } from '@/graphql-operations/queries'
 import ViewCandidateModal from '@/components/modals/view-candidate-modal'
@@ -225,7 +225,7 @@ const defaultColumns: DefaultColumnsExtendedProps<Person> = [
 ]
 
 const Page = () => {
-  const { useHubTable, HubTable, HubTableFilters } = createHubTable<Person>()
+  const { useHubTable, HubTable, HubTableFilters } = useCreateHubTable<Person>()
   const { data: dataHubCandidates, loading: loadingHubCandidates } = useQuery(GET_HUB_CANDIDATES, {
     fetchPolicy: 'cache-and-network',
   })

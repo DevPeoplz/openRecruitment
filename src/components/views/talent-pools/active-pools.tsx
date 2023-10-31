@@ -1,5 +1,5 @@
 import React from 'react'
-import { createHubTable, DefaultColumnsExtendedProps } from '@/components/table/hub-table'
+import useCreateHubTable, { DefaultColumnsExtendedProps } from '@/components/table/hub-table'
 import { useQuery } from '@apollo/client'
 import { GET_HUB_POOLS } from '@/graphql-operations/queries'
 import { useRouter } from 'next/router'
@@ -94,7 +94,7 @@ const defaultColumns: DefaultColumnsExtendedProps<Job> = [
 
 const ActivePools = () => {
   const router = useRouter()
-  const { useHubTable, HubTable } = createHubTable<Job>()
+  const { useHubTable, HubTable } = useCreateHubTable<Job>()
   const { data: dataHubPools, loading: loadingHubPools } = useQuery(GET_HUB_POOLS, {
     fetchPolicy: 'cache-and-network',
   })

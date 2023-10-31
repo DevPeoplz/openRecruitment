@@ -582,12 +582,15 @@ const createHubTableComponent = <T,>() => {
   return HubTable
 }
 
-export const createHubTable = <T,>() => {
-  return {
-    useHubTable: useHubTable<T>,
-    HubTable: createHubTableComponent<T>(),
-    HubTableFilters: HubTableFilters<T>,
-  }
+const useCreateHubTable = <T,>() => {
+  return useMemo(
+    () => ({
+      useHubTable: useHubTable<T>,
+      HubTable: createHubTableComponent<T>(),
+      HubTableFilters: HubTableFilters<T>,
+    }),
+    []
+  )
 }
 
-export default createHubTable
+export default useCreateHubTable
