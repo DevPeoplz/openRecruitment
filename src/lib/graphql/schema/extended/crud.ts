@@ -150,6 +150,7 @@ export const Cruds: Record<
     mutations: {
       ...AutoCruds.Evaluation.mutations,
       createOne: Evaluation.createOneEvaluationMutationObject,
+      deleteOne: Evaluation.deleteOneEvaluationMutationObject,
     },
   },
   Event: {

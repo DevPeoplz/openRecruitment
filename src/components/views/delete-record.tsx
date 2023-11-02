@@ -6,16 +6,18 @@ import Alert from '@/components/alert'
 import { useMutation } from '@apollo/client'
 import {
   DELETE_CANDIDATE_BY_ID,
+  DELETE_EVALUATION_BY_ID,
   DELETE_EVENT_BY_ID,
   DELETE_JOB_BY_ID,
   DELETE_TALENT_POOL_BY_ID,
 } from '@/graphql-operations/mutations'
 import { GET_HUB_CANDIDATES, GET_HUB_JOBS, GET_HUB_POOLS } from '@/graphql-operations/queries'
+import { GET_CANDIDATE_BY_ID_QUICK_EVALUATIONS } from '@/graphql-operations/queries/dashboard-candidates'
 
 type DeleteRecordProps = {
   id: number | string | null | undefined
   name?: string | null | undefined
-  type?: 'candidate' | 'job' | 'talentPool' | 'event'
+  type?: 'candidate' | 'job' | 'talentPool' | 'event' | 'evaluation'
 }
 
 export const DeleteRecord: React.FC<DeleteRecordProps> = ({ id, name, type = 'candidate' }) => {
@@ -39,6 +41,11 @@ export const DeleteRecord: React.FC<DeleteRecordProps> = ({ id, name, type = 'ca
       title: 'Event',
       mutation: DELETE_EVENT_BY_ID,
       refetchQueries: ['GET_HUB_EVENTS'],
+    },
+    evaluation: {
+      title: 'Evaluation',
+      mutation: DELETE_EVALUATION_BY_ID,
+      refetchQueries: [GET_CANDIDATE_BY_ID_QUICK_EVALUATIONS],
     },
   }
 

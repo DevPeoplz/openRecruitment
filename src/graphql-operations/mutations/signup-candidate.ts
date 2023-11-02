@@ -274,3 +274,10 @@ export const DELETE_EVENT_BY_ID = gql`
     }
   }
 `
+export const DELETE_EVALUATION_BY_ID = gql`
+  mutation DELETE_EVALUATION_BY_ID($where: EvaluationWhereUniqueInput!) {
+    event: deleteOneEvaluation(where: $where) {
+      id
+    }
+  }
+`
