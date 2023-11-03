@@ -49,6 +49,7 @@ import { ArrowPathIcon, ViewColumnsIcon } from '@heroicons/react/24/outline'
 import { DebouncedInput } from '@/components/table/debounced-input'
 import { HubTableFilters } from '@/components/table/filters'
 import { StringParam, useQueryParam } from 'use-query-params'
+import Loader from '@/components/ui/loader'
 
 declare module '@tanstack/table-core' {
   interface FilterMeta {
@@ -215,7 +216,8 @@ export type DefaultColumnsExtendedProps<T> = ({
 
 export const useHubTable = <T,>(
   localStorageKey: string,
-  data: T[],
+  loading: boolean,
+  data: T[] | undefined | null,
   defaultColumns: DefaultColumnsExtendedProps<T>
 ): {
   table: Table<T>
@@ -327,7 +329,7 @@ export const useHubTable = <T,>(
   const manualPagination = false
 
   const table = useReactTable({
-    data,
+    data: !data || data.length < 1 ? [] : data,
     columns,
     state: {
       pagination,
@@ -359,6 +361,7 @@ export const useHubTable = <T,>(
   return {
     table,
     tableStates: {
+      loadingData: loading,
       columnVisibility,
       columnOrder,
       sorting,
@@ -374,6 +377,7 @@ export const useHubTable = <T,>(
 }
 
 export interface TableStatesType {
+  loadingData: boolean
   columnVisibility: Record<string, boolean>
   columnOrder: ColumnOrderState
   sorting: SortingState
@@ -475,27 +479,45 @@ const createHubTableComponent = <T,>() => {
                       ))}
                     </thead>
                     <tbody className="flex w-full flex-wrap divide-y divide-gray-200 bg-white lg:table-row-group">
-                      {table.getRowModel().rows.map((row) => (
-                        <tr
-                          onClick={rowOnClick ? () => rowOnClick(row) : undefined}
-                          key={row.id}
-                          className={clsx(
-                            'flex w-full  even:bg-gray-50 lg:table-row',
-                            rowOnClick ? 'cursor-pointer' : ''
-                          )}
-                        >
-                          {row.getVisibleCells().map((cell) => (
-                            <td
-                              key={cell.id}
-                              className={clsx(
-                                'flex w-full grow whitespace-nowrap px-3 py-4 text-sm text-gray-500 sm:w-auto lg:table-cell'
-                              )}
-                            >
-                              {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                            </td>
-                          ))}
+                      {tableStates.loadingData ? (
+                        <tr>
+                          <td colSpan={table.getFlatHeaders().length}>
+                            <div className={'flex w-full items-center justify-center p-2'}>
+                              <Loader size="h-8 w-8" fullScreen={false} />
+                            </div>
+                          </td>
                         </tr>
-                      ))}
+                      ) : table.getRowModel().rows.length < 1 ? (
+                        <tr>
+                          <td colSpan={table.getFlatHeaders().length}>
+                            <div className={'flex w-full items-center justify-center p-2'}>
+                              <div>No rows to display...</div>
+                            </div>
+                          </td>
+                        </tr>
+                      ) : (
+                        table.getRowModel().rows.map((row) => (
+                          <tr
+                            onClick={rowOnClick ? () => rowOnClick(row) : undefined}
+                            key={row.id}
+                            className={clsx(
+                              'flex w-full  even:bg-gray-50 lg:table-row',
+                              rowOnClick ? 'cursor-pointer' : ''
+                            )}
+                          >
+                            {row.getVisibleCells().map((cell) => (
+                              <td
+                                key={cell.id}
+                                className={clsx(
+                                  'flex w-full grow whitespace-nowrap px-3 py-4 text-sm text-gray-500 sm:w-auto lg:table-cell'
+                                )}
+                              >
+                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                              </td>
+                            ))}
+                          </tr>
+                        ))
+                      )}
                     </tbody>
                   </table>
                 </div>

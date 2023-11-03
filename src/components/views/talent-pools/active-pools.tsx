@@ -101,7 +101,8 @@ const ActivePools = () => {
 
   const { table, tableStates } = useHubTable(
     'pools-hub',
-    loadingHubPools ? [] : dataHubPools?.findManyTalentPool ?? [],
+    loadingHubPools,
+    dataHubPools?.findManyTalentPool,
     defaultColumns
   )
 

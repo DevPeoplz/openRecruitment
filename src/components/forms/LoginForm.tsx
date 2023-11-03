@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Button } from '@/components/ui/Button'
-import { TextField } from '@/components/ui/fields'
+import { PasswordField, TextField } from '@/components/ui/fields'
 import Link from 'next/link'
 import BackgroundIllustration from '../layout/BackgroundIlustration'
 import { signIn } from 'next-auth/react'
@@ -66,11 +66,10 @@ const LoginForm = ({ providers }: InferGetServerSidePropsType<typeof getServerSi
                 setEmail(e.target.value)
               }}
             />
-            <TextField
+            <PasswordField
               label="Password"
               id="password"
               name="password"
-              type="password"
               autoComplete="current-password"
               required
               onChange={(e) => {

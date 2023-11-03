@@ -1,10 +1,16 @@
-import React, { InputHTMLAttributes, ReactNode } from 'react'
+import React, { InputHTMLAttributes, ReactNode, useState } from 'react'
 import clsx from 'clsx'
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 import { PiBuildingsBold } from 'react-icons/pi'
 import Avatar from './avatar'
-import { PencilSquareIcon, ArrowUpTrayIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import {
+  PencilSquareIcon,
+  ArrowUpTrayIcon,
+  XMarkIcon,
+  EyeIcon,
+  EyeSlashIcon,
+} from '@heroicons/react/24/outline'
 
 export const formClasses =
   'block w-full rounded-lg border border-gray-200 bg-white py-[calc(theme(spacing.2)-1px)] px-[calc(theme(spacing.3)-1px)] text-gray-900 placeholder:text-gray-400 focus:border-cyan-500 focus:outline-none focus:ring-cyan-500 sm:text-sm'
@@ -88,6 +94,26 @@ export function TextField({ id, label, type = 'text', className, ...props }: Tex
     <div className={className}>
       {label && <Label id={id}>{label}</Label>}
       <input id={id} type={type} {...props} className={formClasses} />
+    </div>
+  )
+}
+
+export function PasswordField({ id, label, className, ...props }: TextFieldProps) {
+  const [show, setShow] = useState(false)
+  const Icon = show ? EyeSlashIcon : EyeIcon
+
+  return (
+    <div className={className}>
+      {label && <Label id={id}>{label}</Label>}
+      <div className={' flex flex-nowrap items-center justify-evenly'}>
+        <input id={id} type={show ? 'text' : 'password'} {...props} className={formClasses} />
+        <button
+          className="ml-1 flex h-8 w-8 items-center justify-center rounded border border-gray-200 p-2"
+          onClick={() => setShow((prev) => !prev)}
+        >
+          <Icon className="h-full w-full" />
+        </button>
+      </div>
     </div>
   )
 }

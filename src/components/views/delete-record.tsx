@@ -1,6 +1,6 @@
-import { XMarkIcon } from '@heroicons/react/24/outline'
+import { TrashIcon } from '@heroicons/react/24/outline'
 import { Tooltip } from 'react-tooltip'
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import Swal from 'sweetalert2'
 import Alert from '@/components/alert'
 import { useMutation } from '@apollo/client'
@@ -13,6 +13,7 @@ import {
 } from '@/graphql-operations/mutations'
 import { GET_HUB_CANDIDATES, GET_HUB_JOBS, GET_HUB_POOLS } from '@/graphql-operations/queries'
 import { GET_CANDIDATE_BY_ID_QUICK_EVALUATIONS } from '@/graphql-operations/queries/dashboard-candidates'
+import Loader from '@/components/ui/loader'
 
 type DeleteRecordProps = {
   id: number | string | null | undefined
@@ -21,6 +22,7 @@ type DeleteRecordProps = {
 }
 
 export const DeleteRecord: React.FC<DeleteRecordProps> = ({ id, name, type = 'candidate' }) => {
+  const [deleting, setDeleting] = useState(false)
   const recordData = {
     candidate: {
       title: 'Candidate',
@@ -84,9 +86,14 @@ export const DeleteRecord: React.FC<DeleteRecordProps> = ({ id, name, type = 'ca
     })
       .then((result) => {
         if (result.isConfirmed) {
-          handleDelete().then(() => {
-            Alert({ message: 'Deleted successfully!', type: 'success' }).then()
-          })
+          setDeleting(true)
+          handleDelete()
+            .then(() => {
+              Alert({ message: 'Deleted successfully!', type: 'success' }).then()
+            })
+            .finally(() => {
+              setDeleting(false)
+            })
         }
       })
       .catch((error) => {
@@ -99,12 +106,16 @@ export const DeleteRecord: React.FC<DeleteRecordProps> = ({ id, name, type = 'ca
     <>
       <button
         type="button"
-        className={'rounded border border-gray-400 bg-red-500 p-0.5 hover:shadow-inner'}
+        className={'rounded bg-red-500 p-0.5 hover:bg-red-600 hover:shadow-inner'}
         onClick={handleClickDelete}
         data-tooltip-id={`delete-${type}-${id}-tooltip`}
         data-tooltip-content={'Delete'}
       >
-        <XMarkIcon className={'h-4 w-4 text-white'} />
+        {deleting ? (
+          <Loader size="h-4 w-4" fullScreen={false} />
+        ) : (
+          <TrashIcon className={'h-4 w-4 text-white'} />
+        )}
         <Tooltip id={`delete-${type}-${id}-tooltip`} />
       </button>
     </>

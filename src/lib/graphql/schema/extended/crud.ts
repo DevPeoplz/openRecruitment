@@ -66,6 +66,7 @@ export const Cruds: Record<
     mutations: {
       ...AutoCruds.User.mutations,
       signUp: User.signUpUserMutationObject,
+      updatePassword: User.updatePasswordUserMutationObject,
     },
   },
   Company: {

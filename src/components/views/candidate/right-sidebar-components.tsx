@@ -7,7 +7,7 @@ import {
   CloudArrowUpIcon,
   PencilIcon,
   PlusIcon,
-  XMarkIcon,
+  TrashIcon,
 } from '@heroicons/react/24/outline'
 import { Tooltip } from 'react-tooltip'
 import { CandidateContext } from '@/components/views/candidate/candidate-view'
@@ -328,7 +328,7 @@ export const CandidateJobsUpdate: React.FC<{ field?: 'job' | 'talentPool' }> = (
                         data-tooltip-id={`${field}-remove`}
                         data-tooltip-content={'Remove'}
                       >
-                        <XMarkIcon className={'h-4 w-4 text-white'} />
+                        <TrashIcon className={'h-4 w-4 text-white'} />
                         <Tooltip id={`${field}-remove`} />
                       </button>
                       {field === 'job' && (

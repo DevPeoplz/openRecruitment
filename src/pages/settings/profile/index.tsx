@@ -12,6 +12,7 @@ import EditProfileModal from '@/components/modals/EditProfileModal'
 import UpdatePasswordModal from '@/components/modals/UpdatePasswordModal'
 import { GoCalendar, GoGear, GoKey, GoLock, GoMail, GoOrganization } from 'react-icons/go'
 import { LayoutSideMenu } from '@/components/layout/main/layout-side-menu'
+import { useSession } from 'next-auth/react'
 
 const tabs = [
   {
@@ -42,19 +43,20 @@ const tabs = [
 ]
 
 const Profile = () => {
+  const { data: session } = useSession()
   const [isEditProfileModalOpen, setIsEditProfileModalOpen] = React.useState(false)
   const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = React.useState(false)
   return (
     <LayoutSideMenu menu={'settings'}>
       <div className="flex w-full flex-col items-center justify-between  gap-2  md:gap-8 lg:flex-row  ">
         <div className="flex items-end gap-4">
-          <Avatar src={user.avatar} name={user.name} />
+          <Avatar src={user.avatar} name={session?.user?.name} />
           <div className="flex flex-col ">
-            <h1 className="text-2xl font-bold">{user.name}</h1>
+            <h1 className="text-2xl font-bold">{session?.user?.name}</h1>
             <p className="text-gray-500">{user.tel}</p>
           </div>
           <div>
-            <p className="text-gray-500">{user.email}</p>
+            <p className="text-gray-500">{session?.user?.email}</p>
             <p className="text-gray-500">{user.role}</p>
           </div>
         </div>

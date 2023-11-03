@@ -233,7 +233,8 @@ const Page = () => {
 
   const { table, tableStates } = useHubTable(
     'candidate-hub',
-    loadingHubCandidates ? [] : dataHubCandidates?.findManyCandidate ?? [],
+    loadingHubCandidates,
+    dataHubCandidates?.findManyCandidate,
     defaultColumns
   )
 

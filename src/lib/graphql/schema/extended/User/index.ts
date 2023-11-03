@@ -1,6 +1,2 @@
-export {
-  UserObject,
-} from './object.base'
-export {
-  signUpUserMutationObject,
-} from './mutations'
+export { UserObject } from './object'
+export { signUpUserMutationObject, updatePasswordUserMutationObject } from './mutations'

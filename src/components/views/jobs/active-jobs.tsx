@@ -184,7 +184,8 @@ const ActiveJobs = () => {
 
   const { table, tableStates } = useHubTable(
     'jobs-hub',
-    loadingHubOffers ? [] : dataHubOffers?.findManyOffer ?? [],
+    loadingHubOffers,
+    dataHubOffers?.findManyOffer,
     defaultColumns
   )
 

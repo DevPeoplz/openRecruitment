@@ -1,9 +1,12 @@
 import React from 'react'
 import ModalContainer from './modal-container'
 import UserCard from '@/components/ui/cards/UserCard'
-import { TextField } from '@/components/ui/fields'
+import { PasswordField } from '@/components/ui/fields'
 import { Button } from '@/components/ui/Button'
 import Alert from '@/components/alert'
+import { UPDATE_USER_PASSWORD_MUTATION } from '@/graphql-operations/mutations'
+import Loader from '@/components/ui/loader'
+import { useMutation } from '@apollo/client'
 
 type props = {
   isOpen: boolean
@@ -11,98 +14,102 @@ type props = {
 }
 
 const UpdatePasswordModal: React.FC<props> = ({ isOpen, setIsOpen }) => {
-  const [password, setPassword] = React.useState('')
+  const [password, setPassword] = React.useState<{
+    password?: string
+    new_password?: string
+    confirm_password?: string
+  }>({})
   const [isVerified, setIsVerified] = React.useState(false)
 
-  const checkPassword = (password: string) => {
-    //this is temporal
-    if (password === '123') {
-      setIsVerified(true)
-    } else {
-      Alert({ message: 'Wrong password', type: 'error' })
-      setPassword('')
-    }
+  const [updateUserPassword, { data, loading, error }] = useMutation(UPDATE_USER_PASSWORD_MUTATION)
+
+  const checkNewPassword = () => {
+    return !!(
+      password.new_password &&
+      password.new_password === password.confirm_password &&
+      password.password !== password.new_password
+    )
   }
 
   const cancel = () => {
-    setPassword('')
+    setPassword({})
     setIsVerified(false)
     setIsOpen(false)
   }
 
-  return (
-    <ModalContainer
-      isOpen={isOpen}
-      setIsOpen={setIsOpen}
-      title={isVerified ? 'Update Password' : 'Verify your identity'}
-    >
-      <UserCard />
-      {isVerified ? (
-        <div>
-          <div className="mt-4 flex flex-col gap-4">
-            <p>Choose a new password</p>
-            <TextField
-              label="New Password"
-              id="password"
-              name="password"
-              type="password"
-              autoComplete="current-password"
-              required
-            />
-            <TextField
-              label="Confirm Password"
-              id="confirm_password"
-              name="confirm_password"
-              type="password"
-              autoComplete="current-password"
-              required
-            />
-          </div>
+  const handlePasswordUpdate = () => {
+    if (password.password && checkNewPassword()) {
+      updateUserPassword({
+        variables: {
+          data: {
+            password: password.password,
+            newPassword: password.new_password,
+            confirmPassword: password.confirm_password,
+          },
+        },
+      })
+        .then(() => {
+          Alert({ message: 'Password updated', type: 'success' }).then()
+          cancel()
+        })
+        .catch((err) => {
+          Alert({ message: err.message, type: 'error' }).then()
+        })
+    } else {
+      Alert({ message: 'Password Confirmation Failed!', type: 'error' }).then()
+    }
+  }
 
-          <div className="mt-4 flex justify-end gap-2">
-            <Button variant="noborder" color="primary" size="small" onClick={() => cancel()}>
-              Cancel
-            </Button>
-            <Button variant="solid" color="gray" size="small">
-              Continue
-            </Button>
-          </div>
-        </div>
-      ) : (
-        <div>
-          <p className="mb-4 text-base text-gray-500 duration-300 ease-in">
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword({ ...password, [e.target.name]: e.target.value })
+  }
+
+  return (
+    <ModalContainer isOpen={isOpen} setIsOpen={setIsOpen} title="Update Password">
+      <UserCard />
+      <div>
+        <div className="mt-4 flex flex-col gap-4">
+          <p className="mb-2 text-base text-gray-500 duration-300 ease-in">
             Verify that it&apos;s you in order to continue
           </p>
-          <TextField
+          <PasswordField
             label="Current Password"
             id="password"
             name="password"
-            type="password"
             autoComplete="current-password"
             required
-            value={password}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+            value={password.password}
+            onChange={handlePasswordChange}
           />
-          <div className="mt-4 flex justify-end gap-2">
-            <Button
-              variant="noborder"
-              color="primary"
-              size="small"
-              onClick={() => setIsOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="solid"
-              color="gray"
-              size="small"
-              onClick={() => checkPassword(password)}
-            >
-              Continue
-            </Button>
-          </div>
+          <p className="mb-2 text-base text-gray-500 duration-300 ease-in">
+            Choose a new password:
+          </p>
+          <PasswordField
+            label="New Password"
+            id="new_password"
+            name="new_password"
+            autoComplete="new-password"
+            required
+            onChange={handlePasswordChange}
+          />
+          <PasswordField
+            label="Confirm Password"
+            id="confirm_password"
+            name="confirm_password"
+            required
+            onChange={handlePasswordChange}
+          />
         </div>
-      )}
+
+        <div className="mt-4 flex justify-end gap-2">
+          <Button variant="noborder" color="primary" size="small" onClick={() => cancel()}>
+            Cancel
+          </Button>
+          <Button variant="solid" color="gray" size="small" onClick={handlePasswordUpdate}>
+            {loading ? <Loader size="h-4 w-4" fullScreen={false} /> : 'Continue'}
+          </Button>
+        </div>
+      </div>
     </ModalContainer>
   )
 }
