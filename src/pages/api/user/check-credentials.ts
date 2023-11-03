@@ -24,7 +24,7 @@ export const getUserWithCredentials = async (
       accept: 'application/json',
     },
     body: Object.entries(credentials ?? [])
-      .map((e) => e.join('='))
+      .map((e) => e.map((e) => encodeURIComponent(e)).join('='))
       .join('&'),
   })
     .then((res) => res.json())

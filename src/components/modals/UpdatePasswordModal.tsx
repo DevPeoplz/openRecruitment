@@ -102,10 +102,10 @@ const UpdatePasswordModal: React.FC<props> = ({ isOpen, setIsOpen }) => {
         </div>
 
         <div className="mt-4 flex justify-end gap-2">
-          <Button variant="noborder" color="primary" size="small" onClick={() => cancel()}>
+          <Button variant="noborder" color="gray" size="small" onClick={() => cancel()}>
             Cancel
           </Button>
-          <Button variant="solid" color="gray" size="small" onClick={handlePasswordUpdate}>
+          <Button variant="solid" color="primary" size="small" onClick={handlePasswordUpdate}>
             {loading ? <Loader size="h-4 w-4" fullScreen={false} /> : 'Continue'}
           </Button>
         </div>

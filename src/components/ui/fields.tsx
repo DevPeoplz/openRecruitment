@@ -108,6 +108,7 @@ export function PasswordField({ id, label, className, ...props }: TextFieldProps
       <div className={' flex flex-nowrap items-center justify-evenly'}>
         <input id={id} type={show ? 'text' : 'password'} {...props} className={formClasses} />
         <button
+          type="button"
           className="ml-1 flex h-8 w-8 items-center justify-center rounded border border-gray-200 p-2"
           onClick={() => setShow((prev) => !prev)}
         >
