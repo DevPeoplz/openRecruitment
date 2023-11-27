@@ -114,7 +114,7 @@ export const AddCandidateView = () => {
       .finally(async () => {
         setOnSubmitLoading(false)
         await client.refetchQueries({
-          include: ['GET_HUB_CANDIDATES', 'GET_TAGSOURCES'],
+          include: ['GET_HUB_CANDIDATES', 'GET_TAGSOURCES', 'GET_JOB_BY_ID'],
         })
         setIsOpen(false)
       })

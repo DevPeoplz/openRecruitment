@@ -11,6 +11,7 @@ import { useRouter } from 'next/router'
 import Alert from '@/components/alert'
 import { QueryParamProvider } from 'use-query-params'
 import NextAdapterPages from 'next-query-params'
+import Head from 'next/head'
 
 export type NextPageWithLayout<P = Record<string, never>, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode
@@ -34,17 +35,22 @@ export default function App({
   const getLayout = Component.getLayout ?? ((page) => <Layout>{page}</Layout>)
 
   return (
-    <ApolloProvider client={client}>
-      <SessionProvider session={session}>
-        <QueryParamProvider adapter={NextAdapterPages}>
-          {Component.auth ? (
-            <Auth options={Component.auth}>{getLayout(<Component {...pageProps} />)}</Auth>
-          ) : (
-            getLayout(<Component {...pageProps} />)
-          )}
-        </QueryParamProvider>
-      </SessionProvider>
-    </ApolloProvider>
+    <>
+      <Head>
+        <title>Open Recruitment</title>
+      </Head>
+      <ApolloProvider client={client}>
+        <SessionProvider session={session}>
+          <QueryParamProvider adapter={NextAdapterPages}>
+            {Component.auth ? (
+              <Auth options={Component.auth}>{getLayout(<Component {...pageProps} />)}</Auth>
+            ) : (
+              getLayout(<Component {...pageProps} />)
+            )}
+          </QueryParamProvider>
+        </SessionProvider>
+      </ApolloProvider>
+    </>
   )
 }
 

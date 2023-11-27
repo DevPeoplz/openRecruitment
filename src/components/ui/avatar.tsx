@@ -29,7 +29,7 @@ const Avatar: React.FC<Props> = ({ src, name, className, size = 'medium' }) => {
     <div
       className={`${className} m-0.5 flex h-10 w-10 items-center justify-center rounded-full border border-black bg-primary-500 text-white`}
     >
-      <p>{altName?.charAt(0)}</p>
+      <p>{altName?.charAt(0).toUpperCase()}</p>
     </div>
   )
 }

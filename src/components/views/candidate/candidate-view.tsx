@@ -1,5 +1,5 @@
 import React, { FC, Fragment, useMemo, useState } from 'react'
-import { ActivityTab, EmailTab, EvaluationTab, FileTab } from './tabs'
+import { ActivityTab, EmailTab, EvaluationTab, FileTab, OverviewTab } from './tabs'
 import { AddQuickEvaluation } from './evaluation'
 import Loader from '@/components/ui/loader'
 import { ApolloQueryResult, useQuery } from '@apollo/client'
@@ -7,7 +7,6 @@ import { GET_CANDIDATE_BY_ID } from '@/graphql-operations/queries'
 import { find } from 'lodash'
 import { AUDIT_LOGS } from '@/utils/mockdata'
 import { CopyLinkToClipboard, OpenNewTabCircleButton } from '@/components/ui/copy-link-to-clipboard'
-import OverviewTab from '@/components/views/candidate/tabs/overview-tab'
 import { formatDistance } from 'date-fns'
 import { EditableFile } from '@/components/ui/edit/editable-file'
 import { Tabs } from '@/components/ui/tabs'
@@ -128,11 +127,7 @@ const CandidateView: FC<Props> = ({ candidateId }) => {
             <div>Following</div>
           </div>
           <div className="mb-4 mt-2">
-            <Tabs
-              tabs={tabs}
-              current={tabSelected}
-              onTabClick={(tab) => setTabSelected(tab)}
-            ></Tabs>
+            <Tabs tabs={tabs} current={tabSelected} onTabClick={(tab) => setTabSelected(tab)} />
           </div>
           <div className={'w-full'}>{<Tab {...props} />}</div>
         </div>

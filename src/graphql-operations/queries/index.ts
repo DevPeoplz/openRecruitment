@@ -16,3 +16,5 @@ export {
   GET_HUB_JOBS,
   GET_HUB_POOLS,
 } from './dashboard-candidates'
+
+export { GET_JOB_BY_ID } from './jobs'

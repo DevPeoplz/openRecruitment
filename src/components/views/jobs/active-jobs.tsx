@@ -115,7 +115,7 @@ const defaultColumns: DefaultColumnsExtendedProps<Job> = [
   },
   {
     accessorKey: 'scheduledPublish',
-    id: 'scheduledPublish',
+    id: 'createdAt',
     header: 'Scheduled Publish',
     cell: (info) => {
       // convert iso string to date on local time with date-fns
@@ -190,7 +190,12 @@ const ActiveJobs = () => {
   )
 
   return (
-    <HubTable table={table} tableStates={tableStates}>
+    <HubTable
+      table={table}
+      tableStates={tableStates}
+      enableCardView={true}
+      linkGenerator={(x) => `/job/${x}`}
+    >
       <HubTable.Toolbar>
         <ButtonIconSimpleModal
           tooltip={'Add a Job'}

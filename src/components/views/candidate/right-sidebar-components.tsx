@@ -230,7 +230,7 @@ export const CandidateJobsUpdate: React.FC<{ field?: 'job' | 'talentPool' }> = (
         }
         client
           .refetchQueries({
-            include: ['GET_HUB_JOBS', 'GET_HUB_POOLS'],
+            include: ['GET_HUB_JOBS', 'GET_HUB_POOLS', 'GET_JOB_BY_ID'],
           })
           .then(() => {
             Alert({ message: 'Updated successfully!', type: 'success' }).then()
