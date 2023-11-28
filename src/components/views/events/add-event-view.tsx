@@ -99,7 +99,6 @@ const AddEventView = () => {
           type: 'success',
           message: 'Event created successfully',
         })
-        setIsOpen(false)
       })
       .catch((err) => {
         Alert({
@@ -109,6 +108,8 @@ const AddEventView = () => {
         console.error(err)
       })
       .finally(async () => {
+        setIsOpen(false)
+
         setOnSubmitLoading(false)
       })
   }
@@ -188,14 +189,6 @@ const AddEventView = () => {
                 },
               ],
             },
-
-            // interviewers: {
-            //   connect: [
-            //     {
-            //       userId: String(e),
-            //     },
-            //   ],
-            // },
           })
         }
       />
