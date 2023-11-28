@@ -1,3 +1,4 @@
+import DeleteEventModal from '@/components/modals/delete-event-modal'
 import Avatar from '@/components/ui/avatar'
 import {
   CalendarDaysIcon,
@@ -11,9 +12,10 @@ import React, { FC, useState } from 'react'
 import { Tooltip } from 'react-tooltip'
 
 export type Event = {
+  id: string
   date: Date
-  time: string
-  candidate: string
+  duration: number
+  candidates: { id: string; name: string }[]
   description: string
   location: string
   note?: string
@@ -39,24 +41,26 @@ type Inteviewer = {
 
 const EventsCard: FC<Props> = ({ event }) => {
   const [showNotes, setShowNotes] = useState(false)
+  const [openDeleteEventModal, setOpenDeleteEventModal] = useState(false)
+
   return (
     <div className="flex flex-col gap-2  rounded-md border py-2 shadow-md">
       <div className="grid grid-cols-12 px-4">
         <div className="col-span-2 ">
-          <Avatar src={event.candidateAvatar} name={event.candidate} />
+          <Avatar src={event.candidateAvatar} name={event.candidates[0]?.name} />
         </div>
         <div className="col-span-9 flex flex-col ">
           <h3 className="font-bold capitalize">
-            {event.type} - {event.candidate}:
+            {event.type} - {event?.candidates[0]?.name}:
           </h3>
           <div className="grid grid-cols-3">
             <span className="col-span-1 flex items-center gap-1">
               <CalendarDaysIcon className="h-5 w-5 text-gray-500" />
-              <p className="capitalize">{event.date.toLocaleDateString()}</p>
+              <p className="capitalize">{new Date(event.date).toLocaleString()}</p>
             </span>
             <span className="col-span-1 flex items-center gap-1">
               <ClockIcon className="h-5 w-5 text-gray-500" />
-              <p className="capitalize">{event.time}</p>
+              <p className="capitalize">{`${event.duration / 60} min`}</p>
             </span>
             <span className="col-span-1 flex items-center gap-1">
               <MapPinIcon className="h-5 w-5 text-gray-500" />
@@ -74,9 +78,18 @@ const EventsCard: FC<Props> = ({ event }) => {
             <span className="text-xs ">Delete event</span>
           </Tooltip>
 
-          <button data-tooltip-id="delete-event-tooltip" data-tooltip-content="Delete event">
+          <button
+            data-tooltip-id="delete-event-tooltip"
+            data-tooltip-content="Delete event"
+            onClick={() => setOpenDeleteEventModal(true)}
+          >
             <XMarkIcon className="h-5 w-5" />
           </button>
+          <DeleteEventModal
+            isOpen={openDeleteEventModal}
+            setIsOpen={setOpenDeleteEventModal}
+            id={event.id}
+          />
           <button onClick={() => setShowNotes(!showNotes)}>
             {showNotes ? (
               <ChevronUpIcon className="h-5 w-5" />

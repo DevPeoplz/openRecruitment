@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { NextPageWithLayout } from '../_app'
 import LayoutAuthenticated from '@/components/layout/layout-authenticated'
 import { LayoutSideMenu } from '@/components/layout/main/layout-side-menu'
@@ -15,7 +15,7 @@ import { BarsArrowDownIcon } from '@heroicons/react/24/outline'
 import { compareAsc } from 'date-fns'
 import { Event } from '@/components/views/events/event-card'
 import { useMutation, useQuery } from '@apollo/client'
-import { GET_HUB_EVENTS } from '@/graphql-operations/queries/dashboard-candidates'
+import { GET_HUB_EVENTS } from '@/graphql-operations/queries'
 
 const LIST_TYPES = ['meeting', 'interview', 'call', 'all events']
 const EVENT_TYPES = ['meeting', 'interview', 'call']
@@ -239,30 +239,34 @@ const Events: NextPageWithLayout = () => {
   const [openModal, setOpenModal] = useState(false)
   const [filter, setFilter] = useState('')
   const [dateSelected, setDateSelected] = useState<Date>()
+  const [events, setEvents] = useState<Event[]>([])
 
-  const { data: dataHubEvents, loading: loadingHubPools } = useQuery(GET_HUB_EVENTS, {
+  const { data: dataHubEvents, loading: loadingHubEvents } = useQuery(GET_HUB_EVENTS, {
     fetchPolicy: 'cache-and-network',
   })
-  const [createEntity, { loading, error, data }] = useMutation(ADD_TALENT_POOL_MUTATION)
 
-  console.log('data', dataHubEvents)
+  useEffect(() => {
+    console.log('dataHubEvents', dataHubEvents)
+    setEvents(
+      dataHubEvents?.findManyEvent
+      // dataHubEvents?.findManyEvent.filter((event: any) => {
+      //   if (dateSelected) return compareAsc(event.date, dateSelected) === 0
+      //   if (filter === 'all events') return true
+      //   if (filter === '')
+      //     return currentTab === 'upcoming' && event.date
+      //       ? event.date > currentTime
+      //       : event.date < currentTime
+      //   return (
+      //     event.type === filter &&
+      //     (currentTab === 'upcoming' ? event.date > currentTime : event.date < currentTime)
+      //   )
+      // })
+    )
+  }, [dataHubEvents, currentTab])
+
+  console.log('data', events)
 
   const currentTime = new Date().getTime()
-
-  const events = EVENTS.filter((event) => {
-    if (dateSelected) return compareAsc(event.date, dateSelected) === 0
-    if (filter === 'all events') return true
-    if (filter === '')
-      return currentTab === 'upcoming'
-        ? event.date.getTime() > currentTime
-        : event.date.getTime() < currentTime
-    return (
-      event.type === filter &&
-      (currentTab === 'upcoming'
-        ? event.date.getTime() > currentTime
-        : event.date.getTime() < currentTime)
-    )
-  })
 
   const selectFilter = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (e.currentTarget.innerText.toLowerCase() === 'all events') {
@@ -280,51 +284,54 @@ const Events: NextPageWithLayout = () => {
   }
 
   return (
-    <LayoutSideMenu>
-      <h2 className="w-8/12 justify-self-start">Events</h2>
-      <div className="grid w-8/12 grid-cols-6 gap-4">
-        <div className="col-span-4 flex flex-col gap-2">
-          <div className="flex justify-between">
-            <EventsTags tabs={TABS} currentTab={currentTab} setCurrentTab={handleTab} />
-            <div className="flex items-center gap-1">
-              <ButtonDropdown
-                list={LIST_TYPES}
-                label={filter ? filter.charAt(0).toUpperCase() + filter.slice(1) : 'My events'}
-                Icon={BarsArrowDownIcon}
-                selectOption={selectFilter}
-              />
-              <Button
-                variant="solid"
-                color="primary"
-                size="small"
-                icon={<GoCalendar />}
-                onClick={() => setOpenModal(true)}
-              >
-                Schedule
-              </Button>
+    !loadingHubEvents &&
+    events && (
+      <LayoutSideMenu>
+        <h2 className="w-8/12 justify-self-start">Events</h2>
+        <div className="grid w-8/12 grid-cols-6 gap-4">
+          <div className="col-span-4 flex flex-col gap-2">
+            <div className="flex justify-between">
+              <EventsTags tabs={TABS} currentTab={currentTab} setCurrentTab={handleTab} />
+              <div className="flex items-center gap-1">
+                <ButtonDropdown
+                  list={LIST_TYPES}
+                  label={filter ? filter.charAt(0).toUpperCase() + filter.slice(1) : 'My events'}
+                  Icon={BarsArrowDownIcon}
+                  selectOption={selectFilter}
+                />
+                <Button
+                  variant="solid"
+                  color="primary"
+                  size="small"
+                  icon={<GoCalendar />}
+                  onClick={() => setOpenModal(true)}
+                >
+                  Schedule
+                </Button>
+              </div>
+            </div>
+            <div className="mt-2 flex flex-col gap-2 overflow-y-hidden">
+              <p className="text-xl font-bold">{dateSelected?.toDateString()}</p>
+              {events.length == 0 ? (
+                <EmptyState tab={currentTab} />
+              ) : (
+                events.map((event: Event) => {
+                  return <EventsCard key={event.type} event={event} />
+                })
+              )}
             </div>
           </div>
-          <div className="mt-2 flex flex-col gap-2 overflow-y-hidden">
-            <p className="text-xl font-bold">{dateSelected?.toDateString()}</p>
-            {events.length == 0 ? (
-              <EmptyState tab={currentTab} />
-            ) : (
-              events.map((event: Event) => {
-                return <EventsCard key={event.type} event={event} />
-              })
-            )}
+          <div className="col-span-2">
+            <DateSelector
+              selectDate={setDateSelected}
+              dateSelected={dateSelected ? dateSelected.toDateString() : ''}
+              events={EVENTS}
+            />
           </div>
         </div>
-        <div className="col-span-2">
-          <DateSelector
-            selectDate={setDateSelected}
-            dateSelected={dateSelected ? dateSelected.toDateString() : ''}
-            events={EVENTS}
-          />
-        </div>
-      </div>
-      <AddEventModal isOpen={openModal} setIsOpen={setOpenModal} />
-    </LayoutSideMenu>
+        <AddEventModal isOpen={openModal} setIsOpen={setOpenModal} />
+      </LayoutSideMenu>
+    )
   )
 }
 

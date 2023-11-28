@@ -17,10 +17,10 @@ const ModalContainer: React.FC<props> = ({ isOpen, setIsOpen, children, title, c
       <div className="fixed  inset-0 my-2 flex items-center justify-center overflow-auto">
         <Dialog.Panel
           className={clsx(
-            `mx-auto max-h-[90vh]  min-h-[200px] min-w-[400px] overflow-y-auto overflow-x-hidden scroll-smooth rounded-xl bg-white p-4 ${className}`
+            `mx-auto max-h-[90vh]  min-h-[100px] min-w-[400px] overflow-y-auto overflow-x-hidden scroll-smooth rounded-xl bg-white p-4 ${className}`
           )}
         >
-          {title && <Dialog.Title className="p-2 text-2xl font-bold">{title}</Dialog.Title>}
+          {title && <Dialog.Title className="py-2 text-2xl font-bold">{title}</Dialog.Title>}
           {children}
         </Dialog.Panel>
       </div>

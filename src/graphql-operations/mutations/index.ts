@@ -6,3 +6,5 @@ export {
   DELETE_TALENT_POOL_BY_ID,
   DELETE_EVENT_BY_ID,
 } from './signup-candidate'
+
+export { ADD_EVENT_MUTATION, DELETE_EVENT_MUTATION } from './events'

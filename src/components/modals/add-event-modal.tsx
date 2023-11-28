@@ -1,6 +1,5 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import ModalContainer from './modal-container'
-import { ModalControlContext } from '@/hooks/contexts'
 import AddEventView from '../views/events/add-event-view'
 
 type Props = {
