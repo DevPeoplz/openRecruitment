@@ -18,3 +18,5 @@ export {
 } from './dashboard-candidates'
 
 export { GET_JOB_BY_ID } from './jobs'
+
+export { GET_COMPANY_BY_ID } from './company'
