@@ -246,7 +246,6 @@ const Events: NextPageWithLayout = () => {
   })
 
   useEffect(() => {
-    console.log('dataHubEvents', dataHubEvents)
     setEvents(
       dataHubEvents?.findManyEvent
       // dataHubEvents?.findManyEvent.filter((event: any) => {
@@ -262,7 +261,7 @@ const Events: NextPageWithLayout = () => {
       //   )
       // })
     )
-  }, [dataHubEvents, currentTab])
+  }, [dataHubEvents?.findManyEvent, currentTab])
 
   console.log('data', events)
 

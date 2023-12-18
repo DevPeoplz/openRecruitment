@@ -2,10 +2,10 @@ import DeleteEventModal from '@/components/modals/delete-event-modal'
 import Avatar from '@/components/ui/avatar'
 import {
   CalendarDaysIcon,
-  MapPinIcon,
-  ClockIcon,
-  ChevronUpIcon,
   ChevronDownIcon,
+  ChevronUpIcon,
+  ClockIcon,
+  MapPinIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline'
 import React, { FC, useState } from 'react'
@@ -23,20 +23,18 @@ export type Event = {
   type: string
   privateNote?: string
   interviewers: {
-    id: string | number
-    name: string
-    avatar: string
+    user: {
+      id: string
+      photo: {
+        path: string
+      }
+      name: string
+    }
   }[]
 }
 
 type Props = {
   event: Event
-}
-
-type Inteviewer = {
-  id: string | number
-  name: string
-  avatar: string
 }
 
 const EventsCard: FC<Props> = ({ event }) => {
@@ -114,16 +112,22 @@ const EventsCard: FC<Props> = ({ event }) => {
             </div>
           )}
           <div className="flex -space-x-1 self-end overflow-hidden">
-            {event.interviewers.map((interviewer: Inteviewer) => (
-              <Avatar
-                size="small"
-                src={interviewer.avatar}
-                name={interviewer.name}
-                className="inline-block cursor-pointer"
-                data-tooltip-id={`interviewer-${interviewer.id}`}
-                data-tooltip-content={interviewer.name}
-                key={interviewer.id}
-              />
+            {event.interviewers.map((interviewer: Event['interviewers'][0]) => (
+              <>
+                <div data-tooltip-id={`interviewer-${interviewer.user.id}`}>
+                  <Avatar
+                    size="small"
+                    src={interviewer.user.photo?.path}
+                    name={interviewer.user.name}
+                    className="inline-block cursor-pointer"
+                    key={interviewer.user.id}
+                  />
+                  <Tooltip
+                    id={`interviewer-${interviewer.user.id}`}
+                    content={interviewer.user.name}
+                  />
+                </div>
+              </>
             ))}
           </div>
         </div>

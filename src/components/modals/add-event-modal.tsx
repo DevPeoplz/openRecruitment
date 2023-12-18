@@ -1,6 +1,6 @@
 import React from 'react'
-import ModalContainer from './modal-container'
 import AddEventView from '../views/events/add-event-view'
+import { SimpleModalContainer } from '@/components/modals/simple-modal-container'
 
 type Props = {
   isOpen: boolean
@@ -9,9 +9,9 @@ type Props = {
 
 const AddEventModal: React.FC<Props> = ({ isOpen, setIsOpen }) => {
   return (
-    <ModalContainer isOpen={isOpen} setIsOpen={setIsOpen} title="Add Event">
+    <SimpleModalContainer state={[isOpen, setIsOpen]} title={'Add Event'}>
       <AddEventView />
-    </ModalContainer>
+    </SimpleModalContainer>
   )
 }
 

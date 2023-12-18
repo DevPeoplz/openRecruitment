@@ -1,9 +1,10 @@
 import React from 'react'
 import ModalContainer from './modal-container'
 import { Button } from '../ui/Button'
-import { useMutation } from '@apollo/client'
+import { useApolloClient, useMutation } from '@apollo/client'
 import { DELETE_EVENT_MUTATION } from '@/graphql-operations/mutations'
 import Alert from '../alert'
+import { GET_HUB_EVENTS } from '@/graphql-operations/queries'
 
 type Props = {
   isOpen: boolean
@@ -12,23 +13,30 @@ type Props = {
 }
 
 const DeleteEventModal: React.FC<Props> = ({ isOpen, setIsOpen, id }) => {
-  const [createEntity] = useMutation(DELETE_EVENT_MUTATION)
+  const client = useApolloClient()
+  const [deleteEvent] = useMutation(DELETE_EVENT_MUTATION)
 
   const deleteMutation = async () => {
-    try {
-      const res = await createEntity({
-        variables: {
-          where: {
-            id: Number(id),
-          },
+    deleteEvent({
+      variables: {
+        where: {
+          id: Number(id),
         },
+      },
+    })
+      .then(() => {
+        Alert({ message: 'Event deleted', type: 'success' }).then()
       })
-      Alert({ message: 'Event deleted', type: 'success' })
-      setIsOpen(false)
-    } catch (err) {
-      Alert({ message: 'Error deleting event', type: 'error' })
-      console.error(err)
-    }
+      .catch((err) => {
+        Alert({ message: 'Error deleting event', type: 'error' }).then()
+        console.error(err)
+      })
+      .finally(() => {
+        setIsOpen(false)
+        client.refetchQueries({
+          include: [GET_HUB_EVENTS],
+        })
+      })
   }
 
   return (
