@@ -29,7 +29,5 @@ const Page = () => {
   )
 }
 
-Page.auth = {
-  permission: 'SUPERADMIN',
-}
+Page.auth = {}
 export default Page
