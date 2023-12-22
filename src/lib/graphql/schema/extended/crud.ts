@@ -166,18 +166,6 @@ export const Cruds: Record<
       deleteOne: Event.deleteOneEventMutationObject,
     },
   },
-  Event: {
-    Object: AutoCruds.Event.Object,
-    queries: {
-      ...AutoCruds.Event.queries,
-      findMany: Event.findManyEventQueryObject,
-    },
-    mutations: {
-      ...AutoCruds.Event.mutations,
-      createOne: Event.createOneEventMutationObject,
-      deleteOne: Event.deleteOneEventMutationObject,
-    },
-  },
   HiringRole: {
     Object: AutoCruds.HiringRole.Object,
     queries: {
