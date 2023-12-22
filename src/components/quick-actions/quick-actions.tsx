@@ -7,6 +7,7 @@ import { SimpleModalContainer } from '@/components/modals/simple-modal-container
 import { AddCandidateView } from '@/components/views/candidate/add-candidate-view'
 import { AddJobView } from '@/components/views/jobs/add-job-view'
 import { AddTalentPoolView } from '@/components/views/talent-pools/add-talent-pool-view'
+import AddEventView from '../views/events/add-event-view'
 
 const QuickActionsToolbar = () => {
   const [openModal, setOpenModal] = useState<string | null>(null)
@@ -71,6 +72,7 @@ const QuickActionsToolbar = () => {
                   title: 'Add Job',
                 },
                 { key: 'add-candidate-view', title: 'Add Candidate' },
+                { key: 'add-event-view', title: 'Add Event' },
               ].map((item) => {
                 return (
                   <Menu.Item key={item.key}>
@@ -104,6 +106,9 @@ const QuickActionsToolbar = () => {
         title={'Add New Talent Pool'}
       >
         <AddTalentPoolView />
+      </SimpleModalContainer>
+      <SimpleModalContainer state={getModalState('add-event-view')} title={'Add New Event'}>
+        <AddEventView />
       </SimpleModalContainer>
     </div>
   )

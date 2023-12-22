@@ -1,7 +1,6 @@
-import React, { useContext } from 'react'
-import ModalContainer from './modal-container'
-import { ModalControlContext } from '@/hooks/contexts'
+import React from 'react'
 import AddEventView from '../views/events/add-event-view'
+import { SimpleModalContainer } from '@/components/modals/simple-modal-container'
 
 type Props = {
   isOpen: boolean
@@ -10,9 +9,9 @@ type Props = {
 
 const AddEventModal: React.FC<Props> = ({ isOpen, setIsOpen }) => {
   return (
-    <ModalContainer isOpen={isOpen} setIsOpen={setIsOpen} title="Add Event">
+    <SimpleModalContainer state={[isOpen, setIsOpen]} title={'Add Event'}>
       <AddEventView />
-    </ModalContainer>
+    </SimpleModalContainer>
   )
 }
 

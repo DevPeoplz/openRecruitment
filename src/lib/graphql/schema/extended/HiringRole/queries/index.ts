@@ -1,0 +1,1 @@
+export { findManyHiringRoleQueryObject } from './findMany'

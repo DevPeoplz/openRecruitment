@@ -50,6 +50,7 @@ export const CandidateObject = definePrismaObject('Candidate', {
     companyId: t.field(CandidateCompanyIdFieldObject),
     createdAt: t.field(CandidateCreatedAtFieldObject),
     updatedAt: t.field(CandidateUpdatedAtFieldObject),
+    events: t.relation('events', CandidateEventsFieldObject(t)),
   }),
 });
 
@@ -487,3 +488,28 @@ export const CandidateUpdatedAtFieldObject = defineFieldObject('Candidate', {
   nullable: false,
   resolve: (parent) => parent.updatedAt,
 });
+
+export const CandidateEventsFieldArgs = builder.args((t) => ({
+  where: t.field({ type: Inputs.EventWhereInput, required: false }),
+  orderBy: t.field({ type: [Inputs.EventOrderByWithRelationInput], required: false }),
+  cursor: t.field({ type: Inputs.EventWhereUniqueInput, required: false }),
+  take: t.field({ type: 'Int', required: false }),
+  skip: t.field({ type: 'Int', required: false }),
+  distinct: t.field({ type: [Inputs.EventScalarFieldEnum], required: false }),
+}))
+
+export const CandidateEventsFieldObject = defineRelationFunction('Candidate', (t) =>
+  defineRelationObject('Candidate', 'events', {
+    description: undefined,
+    nullable: false,
+    args: CandidateEventsFieldArgs,
+    query: (args) => ({
+      where: args.where || undefined,
+      cursor: args.cursor || undefined,
+      take: args.take || undefined,
+      distinct: args.distinct || undefined,
+      skip: args.skip || undefined,
+      orderBy: args.orderBy || undefined,
+    }),
+  }),
+);

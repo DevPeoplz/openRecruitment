@@ -21,18 +21,19 @@ export const HiringRoleObject = definePrismaObject('HiringRole', {
     attachments: t.relation('attachments', HiringRoleAttachmentsFieldObject(t)),
     extraAbilities: t.field(HiringRoleExtraAbilitiesFieldObject),
     auditLogs: t.relation('auditLogs', HiringRoleAuditLogsFieldObject(t)),
-    eventScheduleInterviewer: t.relation('eventScheduleInterviewer', HiringRoleEventScheduleInterviewerFieldObject(t)),
-    eventInterviewer: t.relation('eventInterviewer', HiringRoleEventInterviewerFieldObject(t)),
+    eventScheduleInterviewers: t.relation('eventScheduleInterviewers', HiringRoleEventScheduleInterviewersFieldObject(t)),
+    createdEvents: t.relation('createdEvents', HiringRoleCreatedEventsFieldObject(t)),
     createdAt: t.field(HiringRoleCreatedAtFieldObject),
     updatedAt: t.field(HiringRoleUpdatedAtFieldObject),
     offerRecruiter: t.relation('offerRecruiter', HiringRoleOfferRecruiterFieldObject),
     offerHiringManager: t.relation('offerHiringManager', HiringRoleOfferHiringManagerFieldObject),
     memberships: t.relation('memberships', HiringRoleMembershipsFieldObject(t)),
-    stageVisibility: t.relation('stageVisibility', HiringRoleStageVisibilityFieldObject(t)),
+    stageVisibilities: t.relation('stageVisibilities', HiringRoleStageVisibilitiesFieldObject(t)),
     hiredCandidates: t.relation('hiredCandidates', HiringRoleHiredCandidatesFieldObject(t)),
     evaluations: t.relation('evaluations', HiringRoleEvaluationsFieldObject(t)),
     tasks: t.relation('tasks', HiringRoleTasksFieldObject(t)),
     follows: t.relation('follows', HiringRoleFollowsFieldObject(t)),
+    interviewerEvents: t.relation('interviewerEvents', HiringRoleInterviewerEventsFieldObject(t)),
   }),
 });
 
@@ -142,7 +143,7 @@ export const HiringRoleAuditLogsFieldObject = defineRelationFunction('HiringRole
   }),
 );
 
-export const HiringRoleEventScheduleInterviewerFieldArgs = builder.args((t) => ({
+export const HiringRoleEventScheduleInterviewersFieldArgs = builder.args((t) => ({
   where: t.field({ type: Inputs.EventScheduleInterviewerWhereInput, required: false }),
   orderBy: t.field({ type: [Inputs.EventScheduleInterviewerOrderByWithRelationInput], required: false }),
   cursor: t.field({ type: Inputs.EventScheduleInterviewerWhereUniqueInput, required: false }),
@@ -151,11 +152,11 @@ export const HiringRoleEventScheduleInterviewerFieldArgs = builder.args((t) => (
   distinct: t.field({ type: [Inputs.EventScheduleInterviewerScalarFieldEnum], required: false }),
 }))
 
-export const HiringRoleEventScheduleInterviewerFieldObject = defineRelationFunction('HiringRole', (t) =>
-  defineRelationObject('HiringRole', 'eventScheduleInterviewer', {
+export const HiringRoleEventScheduleInterviewersFieldObject = defineRelationFunction('HiringRole', (t) =>
+  defineRelationObject('HiringRole', 'eventScheduleInterviewers', {
     description: undefined,
     nullable: false,
-    args: HiringRoleEventScheduleInterviewerFieldArgs,
+    args: HiringRoleEventScheduleInterviewersFieldArgs,
     query: (args) => ({
       where: args.where || undefined,
       cursor: args.cursor || undefined,
@@ -167,20 +168,20 @@ export const HiringRoleEventScheduleInterviewerFieldObject = defineRelationFunct
   }),
 );
 
-export const HiringRoleEventInterviewerFieldArgs = builder.args((t) => ({
-  where: t.field({ type: Inputs.EventInterviewerWhereInput, required: false }),
-  orderBy: t.field({ type: [Inputs.EventInterviewerOrderByWithRelationInput], required: false }),
-  cursor: t.field({ type: Inputs.EventInterviewerWhereUniqueInput, required: false }),
+export const HiringRoleCreatedEventsFieldArgs = builder.args((t) => ({
+  where: t.field({ type: Inputs.EventWhereInput, required: false }),
+  orderBy: t.field({ type: [Inputs.EventOrderByWithRelationInput], required: false }),
+  cursor: t.field({ type: Inputs.EventWhereUniqueInput, required: false }),
   take: t.field({ type: 'Int', required: false }),
   skip: t.field({ type: 'Int', required: false }),
-  distinct: t.field({ type: [Inputs.EventInterviewerScalarFieldEnum], required: false }),
+  distinct: t.field({ type: [Inputs.EventScalarFieldEnum], required: false }),
 }))
 
-export const HiringRoleEventInterviewerFieldObject = defineRelationFunction('HiringRole', (t) =>
-  defineRelationObject('HiringRole', 'eventInterviewer', {
+export const HiringRoleCreatedEventsFieldObject = defineRelationFunction('HiringRole', (t) =>
+  defineRelationObject('HiringRole', 'createdEvents', {
     description: undefined,
     nullable: false,
-    args: HiringRoleEventInterviewerFieldArgs,
+    args: HiringRoleCreatedEventsFieldArgs,
     query: (args) => ({
       where: args.where || undefined,
       cursor: args.cursor || undefined,
@@ -245,7 +246,7 @@ export const HiringRoleMembershipsFieldObject = defineRelationFunction('HiringRo
   }),
 );
 
-export const HiringRoleStageVisibilityFieldArgs = builder.args((t) => ({
+export const HiringRoleStageVisibilitiesFieldArgs = builder.args((t) => ({
   where: t.field({ type: Inputs.StageVisibilityWhereInput, required: false }),
   orderBy: t.field({ type: [Inputs.StageVisibilityOrderByWithRelationInput], required: false }),
   cursor: t.field({ type: Inputs.StageVisibilityWhereUniqueInput, required: false }),
@@ -254,11 +255,11 @@ export const HiringRoleStageVisibilityFieldArgs = builder.args((t) => ({
   distinct: t.field({ type: [Inputs.StageVisibilityScalarFieldEnum], required: false }),
 }))
 
-export const HiringRoleStageVisibilityFieldObject = defineRelationFunction('HiringRole', (t) =>
-  defineRelationObject('HiringRole', 'stageVisibility', {
+export const HiringRoleStageVisibilitiesFieldObject = defineRelationFunction('HiringRole', (t) =>
+  defineRelationObject('HiringRole', 'stageVisibilities', {
     description: undefined,
     nullable: false,
-    args: HiringRoleStageVisibilityFieldArgs,
+    args: HiringRoleStageVisibilitiesFieldArgs,
     query: (args) => ({
       where: args.where || undefined,
       cursor: args.cursor || undefined,
@@ -359,6 +360,31 @@ export const HiringRoleFollowsFieldObject = defineRelationFunction('HiringRole',
     description: undefined,
     nullable: false,
     args: HiringRoleFollowsFieldArgs,
+    query: (args) => ({
+      where: args.where || undefined,
+      cursor: args.cursor || undefined,
+      take: args.take || undefined,
+      distinct: args.distinct || undefined,
+      skip: args.skip || undefined,
+      orderBy: args.orderBy || undefined,
+    }),
+  }),
+);
+
+export const HiringRoleInterviewerEventsFieldArgs = builder.args((t) => ({
+  where: t.field({ type: Inputs.EventWhereInput, required: false }),
+  orderBy: t.field({ type: [Inputs.EventOrderByWithRelationInput], required: false }),
+  cursor: t.field({ type: Inputs.EventWhereUniqueInput, required: false }),
+  take: t.field({ type: 'Int', required: false }),
+  skip: t.field({ type: 'Int', required: false }),
+  distinct: t.field({ type: [Inputs.EventScalarFieldEnum], required: false }),
+}))
+
+export const HiringRoleInterviewerEventsFieldObject = defineRelationFunction('HiringRole', (t) =>
+  defineRelationObject('HiringRole', 'interviewerEvents', {
+    description: undefined,
+    nullable: false,
+    args: HiringRoleInterviewerEventsFieldArgs,
     query: (args) => ({
       where: args.where || undefined,
       cursor: args.cursor || undefined,

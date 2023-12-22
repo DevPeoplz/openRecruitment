@@ -10,18 +10,19 @@ export {
   HiringRoleAttachmentsFieldObject,
   HiringRoleExtraAbilitiesFieldObject,
   HiringRoleAuditLogsFieldObject,
-  HiringRoleEventScheduleInterviewerFieldObject,
-  HiringRoleEventInterviewerFieldObject,
+  HiringRoleEventScheduleInterviewersFieldObject,
+  HiringRoleCreatedEventsFieldObject,
   HiringRoleCreatedAtFieldObject,
   HiringRoleUpdatedAtFieldObject,
   HiringRoleOfferRecruiterFieldObject,
   HiringRoleOfferHiringManagerFieldObject,
   HiringRoleMembershipsFieldObject,
-  HiringRoleStageVisibilityFieldObject,
+  HiringRoleStageVisibilitiesFieldObject,
   HiringRoleHiredCandidatesFieldObject,
   HiringRoleEvaluationsFieldObject,
   HiringRoleTasksFieldObject,
-  HiringRoleFollowsFieldObject
+  HiringRoleFollowsFieldObject,
+  HiringRoleInterviewerEventsFieldObject
 } from './object.base';
 export {
   createManyHiringRoleMutation,

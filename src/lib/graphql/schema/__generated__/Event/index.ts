@@ -2,7 +2,6 @@ export {
   EventObject,
   EventIdFieldObject,
   EventDateFieldObject,
-  EventTimeFieldObject,
   EventDurationFieldObject,
   EventTypeFieldObject,
   EventLocationFieldObject,
@@ -10,8 +9,13 @@ export {
   EventPrivateNoteFieldObject,
   EventCompanyFieldObject,
   EventCompanyIdFieldObject,
-  EventEventInterviewersFieldObject,
-  EventEvaluationsFieldObject
+  EventInterviewersFieldObject,
+  EventEvaluationsFieldObject,
+  EventCandidatesFieldObject,
+  EventCreatedAtFieldObject,
+  EventUpdatedAtFieldObject,
+  EventCreatedByFieldObject,
+  EventCreatedByIdFieldObject
 } from './object.base';
 export {
   createManyEventMutation,

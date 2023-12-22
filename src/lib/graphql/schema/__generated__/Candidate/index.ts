@@ -38,7 +38,8 @@ export {
   CandidateCompanyFieldObject,
   CandidateCompanyIdFieldObject,
   CandidateCreatedAtFieldObject,
-  CandidateUpdatedAtFieldObject
+  CandidateUpdatedAtFieldObject,
+  CandidateEventsFieldObject
 } from './object.base';
 export {
   createManyCandidateMutation,
