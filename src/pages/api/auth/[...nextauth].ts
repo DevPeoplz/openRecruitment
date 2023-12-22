@@ -6,6 +6,7 @@ import { prisma } from '@/lib/prisma'
 import { userBelongsToCompany } from '@/utils/backend'
 import { getURL } from '@/utils/dual'
 import { omit } from 'lodash'
+import { getUserWithCredentials } from '@/pages/api/user/check-credentials'
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -20,22 +21,8 @@ export const authOptions: NextAuthOptions = {
         },
         password: { label: 'Password', type: 'password' },
       },
-      authorize: async function(credentials) {
-        const user = await fetch(getURL('/api/user/check-credentials'), {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            accept: 'application/json',
-          },
-          body: Object.entries(credentials ?? [])
-            .map((e) => e.join('='))
-            .join('&'),
-        })
-          .then((res) => res.json())
-          .catch((err) => {
-            console.log(err)
-            return null
-          })
+      authorize: async function (credentials) {
+        const user = await getUserWithCredentials(credentials)
 
         if (user) {
           return user

@@ -340,6 +340,7 @@ model Event {
 }
 
 // Could be implicit relation
+<<<<<<< HEAD
 // model EventInterviewer {
 //   id           Int        @id @default(autoincrement())
 //   event        Event      @relation(fields: [eventId], references: [id], onDelete: Cascade)
@@ -347,6 +348,15 @@ model Event {
 //   teamMember   HiringRole @relation(fields: [teamMemberId], references: [id], onDelete: Cascade)
 //   teamMemberId Int
 // }
+=======
+model EventInterviewer {
+  id           Int        @id @default(autoincrement())
+  event        Event      @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  eventId      Int
+  teamMember   HiringRole @relation(fields: [teamMemberId], references: [id], onDelete: Cascade)
+  teamMemberId Int
+}
+>>>>>>> origin/develop
 
 model Offer {
   id                           Int                @id @default(autoincrement())
@@ -630,9 +640,9 @@ model Evaluation {
   templateId               Int?
   offer                    Offer?                    @relation(fields: [offerId], references: [id])
   offerId                  Int?
-  candidate                Candidate                 @relation(fields: [candidateId], references: [id])
+  candidate                Candidate                 @relation(fields: [candidateId], references: [id], onDelete: Cascade)
   candidateId              Int
-  teamMember               HiringRole                @relation(fields: [teamMemberId], references: [id])
+  teamMember               HiringRole                @relation(fields: [teamMemberId], references: [id], onDelete: Cascade)
   teamMemberId             Int
   isQuickEval              Boolean                   @default(false)
   description              String?

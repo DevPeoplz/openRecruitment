@@ -7,7 +7,7 @@ import {
   PlusIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline'
-import React, { useState } from 'react'
+import React, { useCallback, useContext, useState } from 'react'
 import { Editor, EditorProvider } from 'react-simple-wysiwyg'
 import { Tooltip } from 'react-tooltip'
 import clsx from 'clsx'
@@ -16,6 +16,7 @@ import { useMutation } from '@apollo/client'
 import { UPDATE_CANDIDATE_BY_ID_QUICK_EVALUATION } from '@/graphql-operations/mutations/signup-candidate'
 import { useSession } from 'next-auth/react'
 import Alert from '@/components/alert'
+import { CandidateContext } from '@/components/views/candidate/candidate-view'
 
 type QuickNoteType = {
   description?: string
@@ -24,6 +25,8 @@ type QuickNoteType = {
 
 export const AddQuickEvaluation = () => {
   const { data: session } = useSession()
+  const [candidate = { id: null, name: null, avatar: null }, refetchCandidate] =
+    useContext(CandidateContext) ?? []
   const [btnClicked, setBtnClicked] = useState(false)
   const [editing, setEditing] = useState(false)
   const [saving, setSaving] = useState(false)
@@ -46,7 +49,7 @@ export const AddQuickEvaluation = () => {
 
   const [updateCandidateQuickEvaluations] = useMutation(UPDATE_CANDIDATE_BY_ID_QUICK_EVALUATION)
 
-  const handleSave = () => {
+  const handleSave = useCallback(() => {
     setSaving(true)
 
     updateCandidateQuickEvaluations({
@@ -70,16 +73,15 @@ export const AddQuickEvaluation = () => {
           },
         },
         where: {
-          id: 1,
+          id: parseInt(String(candidate.id)),
         },
       },
     })
       .then((res) => {
         if (res.data?.candidateQuickEvaluation?.id) {
-          Alert({ message: 'Quick Evaluation Saved!', type: 'success' }).then(() => {
-            setQuickEvaluation({ description: '', score: 'NEUTRAL' })
-            setEditing(false)
-          })
+          setQuickEvaluation({ description: '', score: 'NEUTRAL' })
+          setEditing(false)
+          Alert({ message: 'Quick Evaluation Saved!', type: 'success' }).then()
         }
       })
       .catch((e) => {
@@ -90,7 +92,13 @@ export const AddQuickEvaluation = () => {
         setBtnClicked(false)
         setSaving(false)
       })
-  }
+  }, [
+    candidate.id,
+    quickEvaluation.description,
+    quickEvaluation.score,
+    session?.user?.email,
+    updateCandidateQuickEvaluations,
+  ])
 
   return (
     <div className="w-full px-1 py-2">

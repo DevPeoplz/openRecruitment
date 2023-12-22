@@ -66,6 +66,7 @@ export const Cruds: Record<
     mutations: {
       ...AutoCruds.User.mutations,
       signUp: User.signUpUserMutationObject,
+      updatePassword: User.updatePasswordUserMutationObject,
     },
   },
   Company: {
@@ -150,6 +151,19 @@ export const Cruds: Record<
     mutations: {
       ...AutoCruds.Evaluation.mutations,
       createOne: Evaluation.createOneEvaluationMutationObject,
+      deleteOne: Evaluation.deleteOneEvaluationMutationObject,
+    },
+  },
+  Event: {
+    Object: AutoCruds.Event.Object,
+    queries: {
+      ...AutoCruds.Event.queries,
+      findMany: Event.findManyEventQueryObject,
+    },
+    mutations: {
+      ...AutoCruds.Event.mutations,
+      createOne: Event.createOneEventMutationObject,
+      deleteOne: Event.deleteOneEventMutationObject,
     },
   },
   Event: {

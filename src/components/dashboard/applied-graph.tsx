@@ -95,7 +95,7 @@ const filterTagSourceDataByReferrer = (candidatesData: { referrer: { name: strin
 
   filterTags.set('referral', {
     type: 'Referral',
-    label: 'Source',
+    label: 'Referral',
     count: 0,
   })
 

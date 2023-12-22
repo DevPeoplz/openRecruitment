@@ -12,6 +12,7 @@ import {
   HandThumbUpIcon,
 } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
+import { DeleteRecord } from '@/components/views/delete-record'
 
 const EvaluationTab = () => {
   const [candidate, refetchCandidate] = useContext(CandidateContext) ?? []
@@ -44,7 +45,7 @@ const EvaluationTab = () => {
             return (
               <div
                 key={evaluation.id}
-                className={'relative min-h-[60px] rounded-xl border border-gray-200 p-1'}
+                className={'group relative min-h-[60px] rounded-xl border border-gray-200 p-1'}
               >
                 <div className="flex h-full w-full flex-wrap items-center">
                   <div className="flex min-h-[60px] w-2/12 items-center justify-center">{icon}</div>
@@ -61,6 +62,9 @@ const EvaluationTab = () => {
                     <Avatar className={'h-7 w-7'} name={evaluation.teamMember?.user?.name}></Avatar>
                     <Tooltip id={`eval-avatar-${evaluation.id}`} />
                   </div>
+                </div>
+                <div className="absolute right-0 top-0 hidden items-center justify-end p-1 group-hover:flex">
+                  <DeleteRecord id={evaluation.id} type={'evaluation'} />
                 </div>
               </div>
             )

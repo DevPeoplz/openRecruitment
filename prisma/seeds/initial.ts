@@ -10,7 +10,7 @@ async function main() {
     create: {
       id: 'dev1',
       email: 'jamesr@devpeoplz.com',
-      password: await hash('jamesr@recruitment', 12),
+      password: await hash('mrk6MKR.yev2ruw3bpx', 12),
       name: 'James',
       phone: '3213213213',
       firstName: 'James',
@@ -32,7 +32,7 @@ async function main() {
     create: {
       id: 'dev2',
       email: 'alejo.lpaz@devpeoplz.com',
-      password: await hash('alejo.lpaz@recruitment', 12),
+      password: await hash('eqb!NCW5wrf.yft5ejx', 12),
       name: 'Alejo',
       phone: '3213213213',
       firstName: 'Alejandro',
@@ -54,7 +54,7 @@ async function main() {
     create: {
       id: 'dev3',
       email: 'luis.ramirez@devpeoplz.com',
-      password: await hash('luis.ramirez@recruitment', 12),
+      password: await hash('zpt@etn8aqn!xbr3FTV', 12),
       name: 'Luis',
       phone: '3213213213',
       firstName: 'Luis',
@@ -76,7 +76,7 @@ async function main() {
     create: {
       id: 'dev4',
       email: 'melissa.valez@devpeoplz.com',
-      password: await hash('melissa.valez@recruitment', 12),
+      password: await hash('mfd!gnc2fhy9ztb2VEP', 12),
       name: 'Melissa',
       phone: '3213213213',
       firstName: 'Melissa',

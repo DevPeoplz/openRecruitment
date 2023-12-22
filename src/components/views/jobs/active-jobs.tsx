@@ -1,5 +1,5 @@
 import React from 'react'
-import HubTable, { createHubTable, DefaultColumnsExtendedProps } from '@/components/table/hub-table'
+import useCreateHubTable, { DefaultColumnsExtendedProps } from '@/components/table/hub-table'
 import { useQuery } from '@apollo/client'
 import { GET_HUB_JOBS } from '@/graphql-operations/queries'
 import { useRouter } from 'next/router'
@@ -115,7 +115,7 @@ const defaultColumns: DefaultColumnsExtendedProps<Job> = [
   },
   {
     accessorKey: 'scheduledPublish',
-    id: 'scheduledPublish',
+    id: 'createdAt',
     header: 'Scheduled Publish',
     cell: (info) => {
       // convert iso string to date on local time with date-fns
@@ -177,19 +177,25 @@ const defaultColumns: DefaultColumnsExtendedProps<Job> = [
 
 const ActiveJobs = () => {
   const router = useRouter()
-  const { useHubTable, HubTable } = createHubTable<Job>()
+  const { useHubTable, HubTable } = useCreateHubTable<Job>()
   const { data: dataHubOffers, loading: loadingHubOffers } = useQuery(GET_HUB_JOBS, {
     fetchPolicy: 'cache-and-network',
   })
 
   const { table, tableStates } = useHubTable(
     'jobs-hub',
-    loadingHubOffers ? [] : dataHubOffers?.findManyOffer ?? [],
+    loadingHubOffers,
+    dataHubOffers?.findManyOffer,
     defaultColumns
   )
 
   return (
-    <HubTable table={table} tableStates={tableStates}>
+    <HubTable
+      table={table}
+      tableStates={tableStates}
+      enableCardView={true}
+      linkGenerator={(x) => `/job/${x}`}
+    >
       <HubTable.Toolbar>
         <ButtonIconSimpleModal
           tooltip={'Add a Job'}

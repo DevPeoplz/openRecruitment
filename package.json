@@ -16,7 +16,9 @@
     "prismaDBReset": "dotenv -e .env.local -- npx prisma db push --force-reset && dotenv -e .env.local -- npx prisma db seed",
     "prismaStudio": "dotenv -e .env.local -- npx prisma studio",
     "vercelBuildReset": "npx prisma migrate reset --force && npx prisma generate && next build",
-    "vercelBuild": "npx prisma migrate diff --from-schema-datamodel prisma/schema.prisma --to-schema-datamodel prisma/schema.prisma --script > down.sql && npx prisma generate && next build"
+    "vercelBuild": "npx prisma migrate diff --from-schema-datamodel prisma/schema.prisma --to-schema-datamodel prisma/schema.prisma --script > down.sql && npx prisma generate && next build",
+    "vercelBuildWithMigrations": "npx prisma migrate deploy && npx prisma generate && next build",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@apollo/client": "^3.7.17",
@@ -41,10 +43,12 @@
     "next-query-params": "^4.2.3",
     "postcss": "8.4.23",
     "react": "18.2.0",
+    "react-beautiful-dnd": "^13.1.1",
     "react-big-calendar": "1.8.4",
     "react-calendar": "4.6.0",
     "react-dnd": "16.0.1",
     "react-dnd-html5-backend": "16.0.1",
+    "react-dnd-touch-backend": "^16.0.1",
     "react-dom": "18.2.0",
     "react-google-charts": "4.0.1",
     "react-icons": "4.10.1",
