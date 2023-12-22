@@ -203,6 +203,15 @@ export const get_hub_candidates_variables = (variables: OperationVariables) => {
   return { where: {} }
 }
 
+export const GET_CANDIDATES_DROPDOWN = gql`
+  query GET_CANDIDATES_DROPDOWN {
+    findManyCandidate(orderBy: { firstName: asc }) {
+      id
+      name
+    }
+  }
+`
+
 export const GET_CANDIDATE_BY_ID = gql`
   query GET_CANDIDATE_BY_ID($where: CandidateWhereUniqueInput!) {
     findUniqueCandidate(where: $where) {
@@ -332,7 +341,6 @@ export const GET_HUB_POOLS = gql`
     }
   }
 `
-
 export const GET_CANDIDATE_BY_ID_FILES = gql`
   query GET_CANDIDATE_BY_ID_FILES($where: CandidateWhereUniqueInput!) {
     findUniqueCandidate(where: $where) {

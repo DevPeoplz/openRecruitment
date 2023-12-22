@@ -1,7 +1,7 @@
 import React, { useState, useEffect, FC } from 'react'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
-import { compareAsc } from 'date-fns'
+import { compareAsc, isSameDay } from 'date-fns'
 import { Event } from './event-card'
 
 type DaysInCalendar = {
@@ -58,14 +58,13 @@ const DateSelector: FC<Props> = ({ selectDate, dateSelected, events }) => {
       } else {
         const day = i - firstDay + 1
         const date = new Date(currentYear, currentMonth, day)
-
         return {
           date,
           isCurrentMonth: true,
           isToday: compareAsc(date, new Date(currentYear, new Date().getMonth(), currentDay)) === 0,
           isSelected: compareAsc(date, new Date(dateSelected)) === 0,
-          thereIsEvent: events.some((event: Event) => {
-            return compareAsc(date, new Date(event.date)) === 0
+          thereIsEvent: events?.some((event: Event) => {
+            return isSameDay(date, new Date(event.date))
           }),
           year: currentYear,
           month: currentMonth + 1,
@@ -92,6 +91,7 @@ const DateSelector: FC<Props> = ({ selectDate, dateSelected, events }) => {
       setMonth(months[monthIndex - 1])
     }
   }
+
   return (
     <div>
       <div className="flex items-center  text-center text-gray-900">

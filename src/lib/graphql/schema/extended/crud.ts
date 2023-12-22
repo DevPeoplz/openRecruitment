@@ -6,7 +6,7 @@ import * as User from './User'
 // import * as Session from './Session'
 // import * as VerificationToken from './VerificationToken'
 // import * as Attachment from './Attachment'
-// import * as HiringRole from './HiringRole'
+import * as HiringRole from './HiringRole'
 // import * as Role from './Role'
 import * as Company from './Company'
 import * as CustomField from './CustomField'
@@ -165,6 +165,14 @@ export const Cruds: Record<
       createOne: Event.createOneEventMutationObject,
       deleteOne: Event.deleteOneEventMutationObject,
     },
+  },
+  HiringRole: {
+    Object: AutoCruds.HiringRole.Object,
+    queries: {
+      ...AutoCruds.HiringRole.queries,
+      findMany: HiringRole.findManyHiringRoleQueryObject,
+    },
+    mutations: AutoCruds.HiringRole.mutations,
   },
 }
 

@@ -14,19 +14,49 @@ export const findManyEventQueryObject = defineQueryFunction(() =>
     nullable: false,
     args: findManyEventQueryArgs,
     resolve: async (query, _root, args, _context) => {
-      const selectedCompany = _context?.session?.user?.selectedCompany
+      const { userRole, selectedCompany, hiringRoleId } = _context?.session?.user || {}
 
-      return !selectedCompany
-        ? []
-        : await prisma.event.findMany({
-            ...query,
-            where: args.where || undefined,
-            cursor: args.cursor || undefined,
-            take: args.take || undefined,
-            distinct: args.distinct || undefined,
-            skip: args.skip || undefined,
-            orderBy: args.orderBy || undefined,
-          })
+      if (!selectedCompany) throw new Error('No company selected')
+
+      let whereExtended = args.where
+
+      // TODO: if (userRole !== 'SUPERADMIN') {
+      whereExtended = {
+        AND: [
+          {
+            OR: [
+              {
+                createdById: hiringRoleId,
+              },
+              {
+                interviewers: {
+                  some: {
+                    id: hiringRoleId,
+                  },
+                },
+              },
+            ],
+          },
+          { ...whereExtended },
+        ],
+      }
+
+      whereExtended = {
+        AND: {
+          ...whereExtended,
+          companyId: selectedCompany,
+        },
+      }
+
+      return prisma.event.findMany({
+        ...query,
+        where: whereExtended,
+        cursor: args.cursor || undefined,
+        take: args.take || undefined,
+        distinct: args.distinct || undefined,
+        skip: args.skip || undefined,
+        orderBy: args.orderBy || undefined,
+      })
     },
   })
 )

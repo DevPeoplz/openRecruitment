@@ -133,11 +133,7 @@ export const EventScheduleEvaluationScalarFieldEnum = builder.enumType('EventSch
 });
 
 export const EventScalarFieldEnum = builder.enumType('EventScalarFieldEnum', {
-  values: ["id","date","time","duration","type","location","note","privateNote","companyId"] as const,
-});
-
-export const EventInterviewerScalarFieldEnum = builder.enumType('EventInterviewerScalarFieldEnum', {
-  values: ["id","eventId","teamMemberId"] as const,
+  values: ["id","date","duration","type","location","note","privateNote","companyId","createdAt","updatedAt","createdById"] as const,
 });
 
 export const OfferScalarFieldEnum = builder.enumType('OfferScalarFieldEnum', {
@@ -803,16 +799,17 @@ export const HiringRoleWhereInputFields = (t: any) => ({
   company: t.field({"required":false,"type":CompanyWhereInput}),
   attachments: t.field({"required":false,"type":AttachmentListRelationFilter}),
   auditLogs: t.field({"required":false,"type":AuditLogListRelationFilter}),
-  eventScheduleInterviewer: t.field({"required":false,"type":EventScheduleInterviewerListRelationFilter}),
-  eventInterviewer: t.field({"required":false,"type":EventInterviewerListRelationFilter}),
+  eventScheduleInterviewers: t.field({"required":false,"type":EventScheduleInterviewerListRelationFilter}),
+  createdEvents: t.field({"required":false,"type":EventListRelationFilter}),
   offerRecruiter: t.field({"required":false,"type":OfferWhereInput}),
   offerHiringManager: t.field({"required":false,"type":OfferWhereInput}),
   memberships: t.field({"required":false,"type":MembershipListRelationFilter}),
-  stageVisibility: t.field({"required":false,"type":StageVisibilityListRelationFilter}),
+  stageVisibilities: t.field({"required":false,"type":StageVisibilityListRelationFilter}),
   hiredCandidates: t.field({"required":false,"type":CandidateListRelationFilter}),
   evaluations: t.field({"required":false,"type":EvaluationListRelationFilter}),
   tasks: t.field({"required":false,"type":TaskMemberListRelationFilter}),
   follows: t.field({"required":false,"type":FollowListRelationFilter}),
+  interviewerEvents: t.field({"required":false,"type":EventListRelationFilter}),
 });
 export const HiringRoleWhereInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleWhereInput>>('HiringRoleWhereInput').implement({
   fields: HiringRoleWhereInputFields,
@@ -831,16 +828,17 @@ export const HiringRoleOrderByWithRelationInputFields = (t: any) => ({
   company: t.field({"required":false,"type":CompanyOrderByWithRelationInput}),
   attachments: t.field({"required":false,"type":AttachmentOrderByRelationAggregateInput}),
   auditLogs: t.field({"required":false,"type":AuditLogOrderByRelationAggregateInput}),
-  eventScheduleInterviewer: t.field({"required":false,"type":EventScheduleInterviewerOrderByRelationAggregateInput}),
-  eventInterviewer: t.field({"required":false,"type":EventInterviewerOrderByRelationAggregateInput}),
+  eventScheduleInterviewers: t.field({"required":false,"type":EventScheduleInterviewerOrderByRelationAggregateInput}),
+  createdEvents: t.field({"required":false,"type":EventOrderByRelationAggregateInput}),
   offerRecruiter: t.field({"required":false,"type":OfferOrderByWithRelationInput}),
   offerHiringManager: t.field({"required":false,"type":OfferOrderByWithRelationInput}),
   memberships: t.field({"required":false,"type":MembershipOrderByRelationAggregateInput}),
-  stageVisibility: t.field({"required":false,"type":StageVisibilityOrderByRelationAggregateInput}),
+  stageVisibilities: t.field({"required":false,"type":StageVisibilityOrderByRelationAggregateInput}),
   hiredCandidates: t.field({"required":false,"type":CandidateOrderByRelationAggregateInput}),
   evaluations: t.field({"required":false,"type":EvaluationOrderByRelationAggregateInput}),
   tasks: t.field({"required":false,"type":TaskMemberOrderByRelationAggregateInput}),
   follows: t.field({"required":false,"type":FollowOrderByRelationAggregateInput}),
+  interviewerEvents: t.field({"required":false,"type":EventOrderByRelationAggregateInput}),
 });
 export const HiringRoleOrderByWithRelationInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleOrderByWithRelationInput>>('HiringRoleOrderByWithRelationInput').implement({
   fields: HiringRoleOrderByWithRelationInputFields,
@@ -863,16 +861,17 @@ export const HiringRoleWhereUniqueInputFields = (t: any) => ({
   company: t.field({"required":false,"type":CompanyWhereInput}),
   attachments: t.field({"required":false,"type":AttachmentListRelationFilter}),
   auditLogs: t.field({"required":false,"type":AuditLogListRelationFilter}),
-  eventScheduleInterviewer: t.field({"required":false,"type":EventScheduleInterviewerListRelationFilter}),
-  eventInterviewer: t.field({"required":false,"type":EventInterviewerListRelationFilter}),
+  eventScheduleInterviewers: t.field({"required":false,"type":EventScheduleInterviewerListRelationFilter}),
+  createdEvents: t.field({"required":false,"type":EventListRelationFilter}),
   offerRecruiter: t.field({"required":false,"type":OfferWhereInput}),
   offerHiringManager: t.field({"required":false,"type":OfferWhereInput}),
   memberships: t.field({"required":false,"type":MembershipListRelationFilter}),
-  stageVisibility: t.field({"required":false,"type":StageVisibilityListRelationFilter}),
+  stageVisibilities: t.field({"required":false,"type":StageVisibilityListRelationFilter}),
   hiredCandidates: t.field({"required":false,"type":CandidateListRelationFilter}),
   evaluations: t.field({"required":false,"type":EvaluationListRelationFilter}),
   tasks: t.field({"required":false,"type":TaskMemberListRelationFilter}),
   follows: t.field({"required":false,"type":FollowListRelationFilter}),
+  interviewerEvents: t.field({"required":false,"type":EventListRelationFilter}),
 });
 export const HiringRoleWhereUniqueInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleWhereUniqueInput>>('HiringRoleWhereUniqueInput').implement({
   fields: HiringRoleWhereUniqueInputFields,
@@ -2016,16 +2015,20 @@ export const EventWhereInputFields = (t: any) => ({
   NOT: t.field({"required":false,"type":[EventWhereInput]}),
   id: t.field({"required":false,"type":IntFilter}),
   date: t.field({"required":false,"type":DateTimeFilter}),
-  time: t.field({"required":false,"type":IntFilter}),
-  duration: t.field({"required":false,"type":IntFilter}),
+  duration: t.field({"required":false,"type":IntNullableFilter}),
   type: t.field({"required":false,"type":StringFilter}),
-  location: t.field({"required":false,"type":StringFilter}),
-  note: t.field({"required":false,"type":StringFilter}),
-  privateNote: t.field({"required":false,"type":StringFilter}),
+  location: t.field({"required":false,"type":StringNullableFilter}),
+  note: t.field({"required":false,"type":StringNullableFilter}),
+  privateNote: t.field({"required":false,"type":StringNullableFilter}),
   companyId: t.field({"required":false,"type":StringFilter}),
+  createdAt: t.field({"required":false,"type":DateTimeFilter}),
+  updatedAt: t.field({"required":false,"type":DateTimeFilter}),
+  createdById: t.field({"required":false,"type":IntFilter}),
   company: t.field({"required":false,"type":CompanyWhereInput}),
-  eventInterviewers: t.field({"required":false,"type":EventInterviewerListRelationFilter}),
+  interviewers: t.field({"required":false,"type":HiringRoleListRelationFilter}),
   evaluations: t.field({"required":false,"type":EvaluationListRelationFilter}),
+  candidates: t.field({"required":false,"type":CandidateListRelationFilter}),
+  createdBy: t.field({"required":false,"type":HiringRoleWhereInput}),
 });
 export const EventWhereInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventWhereInput>>('EventWhereInput').implement({
   fields: EventWhereInputFields,
@@ -2034,16 +2037,20 @@ export const EventWhereInput = builder.inputRef<PrismaUpdateOperationsInputFilte
 export const EventOrderByWithRelationInputFields = (t: any) => ({
   id: t.field({"required":false,"type":SortOrder}),
   date: t.field({"required":false,"type":SortOrder}),
-  time: t.field({"required":false,"type":SortOrder}),
   duration: t.field({"required":false,"type":SortOrder}),
   type: t.field({"required":false,"type":SortOrder}),
   location: t.field({"required":false,"type":SortOrder}),
   note: t.field({"required":false,"type":SortOrder}),
   privateNote: t.field({"required":false,"type":SortOrder}),
   companyId: t.field({"required":false,"type":SortOrder}),
+  createdAt: t.field({"required":false,"type":SortOrder}),
+  updatedAt: t.field({"required":false,"type":SortOrder}),
+  createdById: t.field({"required":false,"type":SortOrder}),
   company: t.field({"required":false,"type":CompanyOrderByWithRelationInput}),
-  eventInterviewers: t.field({"required":false,"type":EventInterviewerOrderByRelationAggregateInput}),
+  interviewers: t.field({"required":false,"type":HiringRoleOrderByRelationAggregateInput}),
   evaluations: t.field({"required":false,"type":EvaluationOrderByRelationAggregateInput}),
+  candidates: t.field({"required":false,"type":CandidateOrderByRelationAggregateInput}),
+  createdBy: t.field({"required":false,"type":HiringRoleOrderByWithRelationInput}),
 });
 export const EventOrderByWithRelationInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventOrderByWithRelationInput>>('EventOrderByWithRelationInput').implement({
   fields: EventOrderByWithRelationInputFields,
@@ -2055,16 +2062,20 @@ export const EventWhereUniqueInputFields = (t: any) => ({
   OR: t.field({"required":false,"type":[EventWhereInput]}),
   NOT: t.field({"required":false,"type":[EventWhereInput]}),
   date: t.field({"required":false,"type":DateTimeFilter}),
-  time: t.field({"required":false,"type":IntFilter}),
-  duration: t.field({"required":false,"type":IntFilter}),
+  duration: t.field({"required":false,"type":IntNullableFilter}),
   type: t.field({"required":false,"type":StringFilter}),
-  location: t.field({"required":false,"type":StringFilter}),
-  note: t.field({"required":false,"type":StringFilter}),
-  privateNote: t.field({"required":false,"type":StringFilter}),
+  location: t.field({"required":false,"type":StringNullableFilter}),
+  note: t.field({"required":false,"type":StringNullableFilter}),
+  privateNote: t.field({"required":false,"type":StringNullableFilter}),
   companyId: t.field({"required":false,"type":StringFilter}),
+  createdAt: t.field({"required":false,"type":DateTimeFilter}),
+  updatedAt: t.field({"required":false,"type":DateTimeFilter}),
+  createdById: t.field({"required":false,"type":IntFilter}),
   company: t.field({"required":false,"type":CompanyWhereInput}),
-  eventInterviewers: t.field({"required":false,"type":EventInterviewerListRelationFilter}),
+  interviewers: t.field({"required":false,"type":HiringRoleListRelationFilter}),
   evaluations: t.field({"required":false,"type":EvaluationListRelationFilter}),
+  candidates: t.field({"required":false,"type":CandidateListRelationFilter}),
+  createdBy: t.field({"required":false,"type":HiringRoleWhereInput}),
 });
 export const EventWhereUniqueInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventWhereUniqueInput>>('EventWhereUniqueInput').implement({
   fields: EventWhereUniqueInputFields,
@@ -2073,13 +2084,15 @@ export const EventWhereUniqueInput = builder.inputRef<PrismaUpdateOperationsInpu
 export const EventOrderByWithAggregationInputFields = (t: any) => ({
   id: t.field({"required":false,"type":SortOrder}),
   date: t.field({"required":false,"type":SortOrder}),
-  time: t.field({"required":false,"type":SortOrder}),
   duration: t.field({"required":false,"type":SortOrder}),
   type: t.field({"required":false,"type":SortOrder}),
   location: t.field({"required":false,"type":SortOrder}),
   note: t.field({"required":false,"type":SortOrder}),
   privateNote: t.field({"required":false,"type":SortOrder}),
   companyId: t.field({"required":false,"type":SortOrder}),
+  createdAt: t.field({"required":false,"type":SortOrder}),
+  updatedAt: t.field({"required":false,"type":SortOrder}),
+  createdById: t.field({"required":false,"type":SortOrder}),
   _count: t.field({"required":false,"type":EventCountOrderByAggregateInput}),
   _avg: t.field({"required":false,"type":EventAvgOrderByAggregateInput}),
   _max: t.field({"required":false,"type":EventMaxOrderByAggregateInput}),
@@ -2096,81 +2109,18 @@ export const EventScalarWhereWithAggregatesInputFields = (t: any) => ({
   NOT: t.field({"required":false,"type":[EventScalarWhereWithAggregatesInput]}),
   id: t.field({"required":false,"type":IntWithAggregatesFilter}),
   date: t.field({"required":false,"type":DateTimeWithAggregatesFilter}),
-  time: t.field({"required":false,"type":IntWithAggregatesFilter}),
-  duration: t.field({"required":false,"type":IntWithAggregatesFilter}),
+  duration: t.field({"required":false,"type":IntNullableWithAggregatesFilter}),
   type: t.field({"required":false,"type":StringWithAggregatesFilter}),
-  location: t.field({"required":false,"type":StringWithAggregatesFilter}),
-  note: t.field({"required":false,"type":StringWithAggregatesFilter}),
-  privateNote: t.field({"required":false,"type":StringWithAggregatesFilter}),
+  location: t.field({"required":false,"type":StringNullableWithAggregatesFilter}),
+  note: t.field({"required":false,"type":StringNullableWithAggregatesFilter}),
+  privateNote: t.field({"required":false,"type":StringNullableWithAggregatesFilter}),
   companyId: t.field({"required":false,"type":StringWithAggregatesFilter}),
+  createdAt: t.field({"required":false,"type":DateTimeWithAggregatesFilter}),
+  updatedAt: t.field({"required":false,"type":DateTimeWithAggregatesFilter}),
+  createdById: t.field({"required":false,"type":IntWithAggregatesFilter}),
 });
 export const EventScalarWhereWithAggregatesInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventScalarWhereWithAggregatesInput>>('EventScalarWhereWithAggregatesInput').implement({
   fields: EventScalarWhereWithAggregatesInputFields,
-});
-
-export const EventInterviewerWhereInputFields = (t: any) => ({
-  AND: t.field({"required":false,"type":[EventInterviewerWhereInput]}),
-  OR: t.field({"required":false,"type":[EventInterviewerWhereInput]}),
-  NOT: t.field({"required":false,"type":[EventInterviewerWhereInput]}),
-  id: t.field({"required":false,"type":IntFilter}),
-  eventId: t.field({"required":false,"type":IntFilter}),
-  teamMemberId: t.field({"required":false,"type":IntFilter}),
-  event: t.field({"required":false,"type":EventWhereInput}),
-  teamMember: t.field({"required":false,"type":HiringRoleWhereInput}),
-});
-export const EventInterviewerWhereInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventInterviewerWhereInput>>('EventInterviewerWhereInput').implement({
-  fields: EventInterviewerWhereInputFields,
-});
-
-export const EventInterviewerOrderByWithRelationInputFields = (t: any) => ({
-  id: t.field({"required":false,"type":SortOrder}),
-  eventId: t.field({"required":false,"type":SortOrder}),
-  teamMemberId: t.field({"required":false,"type":SortOrder}),
-  event: t.field({"required":false,"type":EventOrderByWithRelationInput}),
-  teamMember: t.field({"required":false,"type":HiringRoleOrderByWithRelationInput}),
-});
-export const EventInterviewerOrderByWithRelationInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventInterviewerOrderByWithRelationInput>>('EventInterviewerOrderByWithRelationInput').implement({
-  fields: EventInterviewerOrderByWithRelationInputFields,
-});
-
-export const EventInterviewerWhereUniqueInputFields = (t: any) => ({
-  id: t.int({"required":false}),
-  AND: t.field({"required":false,"type":[EventInterviewerWhereInput]}),
-  OR: t.field({"required":false,"type":[EventInterviewerWhereInput]}),
-  NOT: t.field({"required":false,"type":[EventInterviewerWhereInput]}),
-  eventId: t.field({"required":false,"type":IntFilter}),
-  teamMemberId: t.field({"required":false,"type":IntFilter}),
-  event: t.field({"required":false,"type":EventWhereInput}),
-  teamMember: t.field({"required":false,"type":HiringRoleWhereInput}),
-});
-export const EventInterviewerWhereUniqueInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventInterviewerWhereUniqueInput>>('EventInterviewerWhereUniqueInput').implement({
-  fields: EventInterviewerWhereUniqueInputFields,
-});
-
-export const EventInterviewerOrderByWithAggregationInputFields = (t: any) => ({
-  id: t.field({"required":false,"type":SortOrder}),
-  eventId: t.field({"required":false,"type":SortOrder}),
-  teamMemberId: t.field({"required":false,"type":SortOrder}),
-  _count: t.field({"required":false,"type":EventInterviewerCountOrderByAggregateInput}),
-  _avg: t.field({"required":false,"type":EventInterviewerAvgOrderByAggregateInput}),
-  _max: t.field({"required":false,"type":EventInterviewerMaxOrderByAggregateInput}),
-  _min: t.field({"required":false,"type":EventInterviewerMinOrderByAggregateInput}),
-  _sum: t.field({"required":false,"type":EventInterviewerSumOrderByAggregateInput}),
-});
-export const EventInterviewerOrderByWithAggregationInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventInterviewerOrderByWithAggregationInput>>('EventInterviewerOrderByWithAggregationInput').implement({
-  fields: EventInterviewerOrderByWithAggregationInputFields,
-});
-
-export const EventInterviewerScalarWhereWithAggregatesInputFields = (t: any) => ({
-  AND: t.field({"required":false,"type":[EventInterviewerScalarWhereWithAggregatesInput]}),
-  OR: t.field({"required":false,"type":[EventInterviewerScalarWhereWithAggregatesInput]}),
-  NOT: t.field({"required":false,"type":[EventInterviewerScalarWhereWithAggregatesInput]}),
-  id: t.field({"required":false,"type":IntWithAggregatesFilter}),
-  eventId: t.field({"required":false,"type":IntWithAggregatesFilter}),
-  teamMemberId: t.field({"required":false,"type":IntWithAggregatesFilter}),
-});
-export const EventInterviewerScalarWhereWithAggregatesInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventInterviewerScalarWhereWithAggregatesInput>>('EventInterviewerScalarWhereWithAggregatesInput').implement({
-  fields: EventInterviewerScalarWhereWithAggregatesInputFields,
 });
 
 export const OfferWhereInputFields = (t: any) => ({
@@ -3310,6 +3260,7 @@ export const CandidateWhereInputFields = (t: any) => ({
   follows: t.field({"required":false,"type":FollowListRelationFilter}),
   SharedCandidateLink: t.field({"required":false,"type":SharedCandidateLinkListRelationFilter}),
   company: t.field({"required":false,"type":CompanyWhereInput}),
+  events: t.field({"required":false,"type":EventListRelationFilter}),
 });
 export const CandidateWhereInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateWhereInput>>('CandidateWhereInput').implement({
   fields: CandidateWhereInputFields,
@@ -3355,6 +3306,7 @@ export const CandidateOrderByWithRelationInputFields = (t: any) => ({
   follows: t.field({"required":false,"type":FollowOrderByRelationAggregateInput}),
   SharedCandidateLink: t.field({"required":false,"type":SharedCandidateLinkOrderByRelationAggregateInput}),
   company: t.field({"required":false,"type":CompanyOrderByWithRelationInput}),
+  events: t.field({"required":false,"type":EventOrderByRelationAggregateInput}),
 });
 export const CandidateOrderByWithRelationInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateOrderByWithRelationInput>>('CandidateOrderByWithRelationInput').implement({
   fields: CandidateOrderByWithRelationInputFields,
@@ -3404,6 +3356,7 @@ export const CandidateWhereUniqueInputFields = (t: any) => ({
   follows: t.field({"required":false,"type":FollowListRelationFilter}),
   SharedCandidateLink: t.field({"required":false,"type":SharedCandidateLinkListRelationFilter}),
   company: t.field({"required":false,"type":CompanyWhereInput}),
+  events: t.field({"required":false,"type":EventListRelationFilter}),
 });
 export const CandidateWhereUniqueInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateWhereUniqueInput>>('CandidateWhereUniqueInput').implement({
   fields: CandidateWhereUniqueInputFields,
@@ -4535,16 +4488,17 @@ export const HiringRoleCreateInputFields = (t: any) => ({
   company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutHiringRolesInput}),
   attachments: t.field({"required":false,"type":AttachmentCreateNestedManyWithoutUploaderInput}),
   auditLogs: t.field({"required":false,"type":AuditLogCreateNestedManyWithoutUserInput}),
-  eventScheduleInterviewer: t.field({"required":false,"type":EventScheduleInterviewerCreateNestedManyWithoutTeamMemberInput}),
-  eventInterviewer: t.field({"required":false,"type":EventInterviewerCreateNestedManyWithoutTeamMemberInput}),
+  eventScheduleInterviewers: t.field({"required":false,"type":EventScheduleInterviewerCreateNestedManyWithoutTeamMemberInput}),
+  createdEvents: t.field({"required":false,"type":EventCreateNestedManyWithoutCreatedByInput}),
   offerRecruiter: t.field({"required":false,"type":OfferCreateNestedOneWithoutRecruiterInput}),
   offerHiringManager: t.field({"required":false,"type":OfferCreateNestedOneWithoutHiringManagerInput}),
   memberships: t.field({"required":false,"type":MembershipCreateNestedManyWithoutTeamMemberInput}),
-  stageVisibility: t.field({"required":false,"type":StageVisibilityCreateNestedManyWithoutTeamMemberInput}),
+  stageVisibilities: t.field({"required":false,"type":StageVisibilityCreateNestedManyWithoutTeamMemberInput}),
   hiredCandidates: t.field({"required":false,"type":CandidateCreateNestedManyWithoutHiredByInput}),
   evaluations: t.field({"required":false,"type":EvaluationCreateNestedManyWithoutTeamMemberInput}),
   tasks: t.field({"required":false,"type":TaskMemberCreateNestedManyWithoutTeamMemberInput}),
   follows: t.field({"required":false,"type":FollowCreateNestedManyWithoutTeamMemberInput}),
+  interviewerEvents: t.field({"required":false,"type":EventCreateNestedManyWithoutInterviewersInput}),
 });
 export const HiringRoleCreateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleCreateInput>>('HiringRoleCreateInput').implement({
   fields: HiringRoleCreateInputFields,
@@ -4559,16 +4513,17 @@ export const HiringRoleUpdateInputFields = (t: any) => ({
   company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutHiringRolesNestedInput}),
   attachments: t.field({"required":false,"type":AttachmentUpdateManyWithoutUploaderNestedInput}),
   auditLogs: t.field({"required":false,"type":AuditLogUpdateManyWithoutUserNestedInput}),
-  eventScheduleInterviewer: t.field({"required":false,"type":EventScheduleInterviewerUpdateManyWithoutTeamMemberNestedInput}),
-  eventInterviewer: t.field({"required":false,"type":EventInterviewerUpdateManyWithoutTeamMemberNestedInput}),
+  eventScheduleInterviewers: t.field({"required":false,"type":EventScheduleInterviewerUpdateManyWithoutTeamMemberNestedInput}),
+  createdEvents: t.field({"required":false,"type":EventUpdateManyWithoutCreatedByNestedInput}),
   offerRecruiter: t.field({"required":false,"type":OfferUpdateOneWithoutRecruiterNestedInput}),
   offerHiringManager: t.field({"required":false,"type":OfferUpdateOneWithoutHiringManagerNestedInput}),
   memberships: t.field({"required":false,"type":MembershipUpdateManyWithoutTeamMemberNestedInput}),
-  stageVisibility: t.field({"required":false,"type":StageVisibilityUpdateManyWithoutTeamMemberNestedInput}),
+  stageVisibilities: t.field({"required":false,"type":StageVisibilityUpdateManyWithoutTeamMemberNestedInput}),
   hiredCandidates: t.field({"required":false,"type":CandidateUpdateManyWithoutHiredByNestedInput}),
   evaluations: t.field({"required":false,"type":EvaluationUpdateManyWithoutTeamMemberNestedInput}),
   tasks: t.field({"required":false,"type":TaskMemberUpdateManyWithoutTeamMemberNestedInput}),
   follows: t.field({"required":false,"type":FollowUpdateManyWithoutTeamMemberNestedInput}),
+  interviewerEvents: t.field({"required":false,"type":EventUpdateManyWithoutInterviewersNestedInput}),
 });
 export const HiringRoleUpdateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpdateInput>>('HiringRoleUpdateInput').implement({
   fields: HiringRoleUpdateInputFields,
@@ -5170,7 +5125,7 @@ export const EventScheduleUpdateManyMutationInput = builder.inputRef<PrismaUpdat
 export const EventScheduleInterviewerCreateInputFields = (t: any) => ({
   availability: t.field({"required":true,"type":Json}),
   eventSchedule: t.field({"required":true,"type":EventScheduleCreateNestedOneWithoutEventScheduleInterviewersInput}),
-  teamMember: t.field({"required":true,"type":HiringRoleCreateNestedOneWithoutEventScheduleInterviewerInput}),
+  teamMember: t.field({"required":true,"type":HiringRoleCreateNestedOneWithoutEventScheduleInterviewersInput}),
 });
 export const EventScheduleInterviewerCreateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventScheduleInterviewerCreateInput>>('EventScheduleInterviewerCreateInput').implement({
   fields: EventScheduleInterviewerCreateInputFields,
@@ -5179,7 +5134,7 @@ export const EventScheduleInterviewerCreateInput = builder.inputRef<PrismaUpdate
 export const EventScheduleInterviewerUpdateInputFields = (t: any) => ({
   availability: t.field({"required":false,"type":Json}),
   eventSchedule: t.field({"required":false,"type":EventScheduleUpdateOneRequiredWithoutEventScheduleInterviewersNestedInput}),
-  teamMember: t.field({"required":false,"type":HiringRoleUpdateOneRequiredWithoutEventScheduleInterviewerNestedInput}),
+  teamMember: t.field({"required":false,"type":HiringRoleUpdateOneRequiredWithoutEventScheduleInterviewersNestedInput}),
 });
 export const EventScheduleInterviewerUpdateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventScheduleInterviewerUpdateInput>>('EventScheduleInterviewerUpdateInput').implement({
   fields: EventScheduleInterviewerUpdateInputFields,
@@ -5236,15 +5191,18 @@ export const EventScheduleEvaluationUpdateManyMutationInput = builder.inputRef<P
 
 export const EventCreateInputFields = (t: any) => ({
   date: t.field({"required":true,"type":DateTime}),
-  time: t.int({"required":true}),
-  duration: t.int({"required":true}),
+  duration: t.int({"required":false}),
   type: t.string({"required":true}),
-  location: t.string({"required":true}),
-  note: t.string({"required":true}),
-  privateNote: t.string({"required":true}),
+  location: t.string({"required":false}),
+  note: t.string({"required":false}),
+  privateNote: t.string({"required":false}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+  updatedAt: t.field({"required":false,"type":DateTime}),
   company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutEventsInput}),
-  eventInterviewers: t.field({"required":false,"type":EventInterviewerCreateNestedManyWithoutEventInput}),
+  interviewers: t.field({"required":false,"type":HiringRoleCreateNestedManyWithoutInterviewerEventsInput}),
   evaluations: t.field({"required":false,"type":EvaluationCreateNestedManyWithoutEventInput}),
+  candidates: t.field({"required":false,"type":CandidateCreateNestedManyWithoutEventsInput}),
+  createdBy: t.field({"required":true,"type":HiringRoleCreateNestedOneWithoutCreatedEventsInput}),
 });
 export const EventCreateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventCreateInput>>('EventCreateInput').implement({
   fields: EventCreateInputFields,
@@ -5252,15 +5210,18 @@ export const EventCreateInput = builder.inputRef<PrismaUpdateOperationsInputFilt
 
 export const EventUpdateInputFields = (t: any) => ({
   date: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
-  time: t.field({"required":false,"type":IntFieldUpdateOperationsInput}),
-  duration: t.field({"required":false,"type":IntFieldUpdateOperationsInput}),
+  duration: t.field({"required":false,"type":NullableIntFieldUpdateOperationsInput}),
   type: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
-  location: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
-  note: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
-  privateNote: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  location: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  note: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  privateNote: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutEventsNestedInput}),
-  eventInterviewers: t.field({"required":false,"type":EventInterviewerUpdateManyWithoutEventNestedInput}),
+  interviewers: t.field({"required":false,"type":HiringRoleUpdateManyWithoutInterviewerEventsNestedInput}),
   evaluations: t.field({"required":false,"type":EvaluationUpdateManyWithoutEventNestedInput}),
+  candidates: t.field({"required":false,"type":CandidateUpdateManyWithoutEventsNestedInput}),
+  createdBy: t.field({"required":false,"type":HiringRoleUpdateOneRequiredWithoutCreatedEventsNestedInput}),
 });
 export const EventUpdateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventUpdateInput>>('EventUpdateInput').implement({
   fields: EventUpdateInputFields,
@@ -5269,13 +5230,15 @@ export const EventUpdateInput = builder.inputRef<PrismaUpdateOperationsInputFilt
 export const EventCreateManyInputFields = (t: any) => ({
   id: t.int({"required":false}),
   date: t.field({"required":true,"type":DateTime}),
-  time: t.int({"required":true}),
-  duration: t.int({"required":true}),
+  duration: t.int({"required":false}),
   type: t.string({"required":true}),
-  location: t.string({"required":true}),
-  note: t.string({"required":true}),
-  privateNote: t.string({"required":true}),
+  location: t.string({"required":false}),
+  note: t.string({"required":false}),
+  privateNote: t.string({"required":false}),
   companyId: t.string({"required":true}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+  updatedAt: t.field({"required":false,"type":DateTime}),
+  createdById: t.int({"required":true}),
 });
 export const EventCreateManyInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventCreateManyInput>>('EventCreateManyInput').implement({
   fields: EventCreateManyInputFields,
@@ -5283,47 +5246,16 @@ export const EventCreateManyInput = builder.inputRef<PrismaUpdateOperationsInput
 
 export const EventUpdateManyMutationInputFields = (t: any) => ({
   date: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
-  time: t.field({"required":false,"type":IntFieldUpdateOperationsInput}),
-  duration: t.field({"required":false,"type":IntFieldUpdateOperationsInput}),
+  duration: t.field({"required":false,"type":NullableIntFieldUpdateOperationsInput}),
   type: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
-  location: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
-  note: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
-  privateNote: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  location: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  note: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  privateNote: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
 });
 export const EventUpdateManyMutationInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventUpdateManyMutationInput>>('EventUpdateManyMutationInput').implement({
   fields: EventUpdateManyMutationInputFields,
-});
-
-export const EventInterviewerCreateInputFields = (t: any) => ({
-  event: t.field({"required":true,"type":EventCreateNestedOneWithoutEventInterviewersInput}),
-  teamMember: t.field({"required":true,"type":HiringRoleCreateNestedOneWithoutEventInterviewerInput}),
-});
-export const EventInterviewerCreateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventInterviewerCreateInput>>('EventInterviewerCreateInput').implement({
-  fields: EventInterviewerCreateInputFields,
-});
-
-export const EventInterviewerUpdateInputFields = (t: any) => ({
-  event: t.field({"required":false,"type":EventUpdateOneRequiredWithoutEventInterviewersNestedInput}),
-  teamMember: t.field({"required":false,"type":HiringRoleUpdateOneRequiredWithoutEventInterviewerNestedInput}),
-});
-export const EventInterviewerUpdateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventInterviewerUpdateInput>>('EventInterviewerUpdateInput').implement({
-  fields: EventInterviewerUpdateInputFields,
-});
-
-export const EventInterviewerCreateManyInputFields = (t: any) => ({
-  id: t.int({"required":false}),
-  eventId: t.int({"required":true}),
-  teamMemberId: t.int({"required":true}),
-});
-export const EventInterviewerCreateManyInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventInterviewerCreateManyInput>>('EventInterviewerCreateManyInput').implement({
-  fields: EventInterviewerCreateManyInputFields,
-});
-
-export const EventInterviewerUpdateManyMutationInputFields = (t: any) => ({
-  _: t.field({ type: NEVER }),
-});
-export const EventInterviewerUpdateManyMutationInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventInterviewerUpdateManyMutationInput>>('EventInterviewerUpdateManyMutationInput').implement({
-  fields: EventInterviewerUpdateManyMutationInputFields,
 });
 
 export const OfferCreateInputFields = (t: any) => ({
@@ -5858,7 +5790,7 @@ export const StageUpdateManyMutationInput = builder.inputRef<PrismaUpdateOperati
 
 export const StageVisibilityCreateInputFields = (t: any) => ({
   type: t.field({"required":true,"type":MembershipTypes}),
-  teamMember: t.field({"required":false,"type":HiringRoleCreateNestedOneWithoutStageVisibilityInput}),
+  teamMember: t.field({"required":false,"type":HiringRoleCreateNestedOneWithoutStageVisibilitiesInput}),
   role: t.field({"required":false,"type":RoleCreateNestedOneWithoutStageVisibilityInput}),
   stage: t.field({"required":true,"type":StageCreateNestedOneWithoutVisibilityInput}),
 });
@@ -5868,7 +5800,7 @@ export const StageVisibilityCreateInput = builder.inputRef<PrismaUpdateOperation
 
 export const StageVisibilityUpdateInputFields = (t: any) => ({
   type: t.field({"required":false,"type":EnumMembershipTypesFieldUpdateOperationsInput}),
-  teamMember: t.field({"required":false,"type":HiringRoleUpdateOneWithoutStageVisibilityNestedInput}),
+  teamMember: t.field({"required":false,"type":HiringRoleUpdateOneWithoutStageVisibilitiesNestedInput}),
   role: t.field({"required":false,"type":RoleUpdateOneWithoutStageVisibilityNestedInput}),
   stage: t.field({"required":false,"type":StageUpdateOneRequiredWithoutVisibilityNestedInput}),
 });
@@ -5962,6 +5894,7 @@ export const CandidateCreateInputFields = (t: any) => ({
   follows: t.field({"required":false,"type":FollowCreateNestedManyWithoutCandidateInput}),
   SharedCandidateLink: t.field({"required":false,"type":SharedCandidateLinkCreateNestedManyWithoutCandidateInput}),
   company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutCandidatesInput}),
+  events: t.field({"required":false,"type":EventCreateNestedManyWithoutCandidatesInput}),
 });
 export const CandidateCreateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateCreateInput>>('CandidateCreateInput').implement({
   fields: CandidateCreateInputFields,
@@ -5999,6 +5932,7 @@ export const CandidateUpdateInputFields = (t: any) => ({
   follows: t.field({"required":false,"type":FollowUpdateManyWithoutCandidateNestedInput}),
   SharedCandidateLink: t.field({"required":false,"type":SharedCandidateLinkUpdateManyWithoutCandidateNestedInput}),
   company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutCandidatesNestedInput}),
+  events: t.field({"required":false,"type":EventUpdateManyWithoutCandidatesNestedInput}),
 });
 export const CandidateUpdateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateUpdateInput>>('CandidateUpdateInput').implement({
   fields: CandidateUpdateInputFields,
@@ -7220,13 +7154,13 @@ export const EventScheduleInterviewerListRelationFilter = builder.inputRef<Prism
   fields: EventScheduleInterviewerListRelationFilterFields,
 });
 
-export const EventInterviewerListRelationFilterFields = (t: any) => ({
-  every: t.field({"required":false,"type":EventInterviewerWhereInput}),
-  some: t.field({"required":false,"type":EventInterviewerWhereInput}),
-  none: t.field({"required":false,"type":EventInterviewerWhereInput}),
+export const EventListRelationFilterFields = (t: any) => ({
+  every: t.field({"required":false,"type":EventWhereInput}),
+  some: t.field({"required":false,"type":EventWhereInput}),
+  none: t.field({"required":false,"type":EventWhereInput}),
 });
-export const EventInterviewerListRelationFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventInterviewerListRelationFilter>>('EventInterviewerListRelationFilter').implement({
-  fields: EventInterviewerListRelationFilterFields,
+export const EventListRelationFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventListRelationFilter>>('EventListRelationFilter').implement({
+  fields: EventListRelationFilterFields,
 });
 
 export const OfferNullableRelationFilterFields = (t: any) => ({
@@ -7312,11 +7246,11 @@ export const EventScheduleInterviewerOrderByRelationAggregateInput = builder.inp
   fields: EventScheduleInterviewerOrderByRelationAggregateInputFields,
 });
 
-export const EventInterviewerOrderByRelationAggregateInputFields = (t: any) => ({
+export const EventOrderByRelationAggregateInputFields = (t: any) => ({
   _count: t.field({"required":false,"type":SortOrder}),
 });
-export const EventInterviewerOrderByRelationAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventInterviewerOrderByRelationAggregateInput>>('EventInterviewerOrderByRelationAggregateInput').implement({
-  fields: EventInterviewerOrderByRelationAggregateInputFields,
+export const EventOrderByRelationAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventOrderByRelationAggregateInput>>('EventOrderByRelationAggregateInput').implement({
+  fields: EventOrderByRelationAggregateInputFields,
 });
 
 export const MembershipOrderByRelationAggregateInputFields = (t: any) => ({
@@ -7522,15 +7456,6 @@ export const EventScheduleListRelationFilter = builder.inputRef<PrismaUpdateOper
   fields: EventScheduleListRelationFilterFields,
 });
 
-export const EventListRelationFilterFields = (t: any) => ({
-  every: t.field({"required":false,"type":EventWhereInput}),
-  some: t.field({"required":false,"type":EventWhereInput}),
-  none: t.field({"required":false,"type":EventWhereInput}),
-});
-export const EventListRelationFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventListRelationFilter>>('EventListRelationFilter').implement({
-  fields: EventListRelationFilterFields,
-});
-
 export const DepartmentListRelationFilterFields = (t: any) => ({
   every: t.field({"required":false,"type":DepartmentWhereInput}),
   some: t.field({"required":false,"type":DepartmentWhereInput}),
@@ -7629,13 +7554,6 @@ export const EventScheduleOrderByRelationAggregateInputFields = (t: any) => ({
 });
 export const EventScheduleOrderByRelationAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventScheduleOrderByRelationAggregateInput>>('EventScheduleOrderByRelationAggregateInput').implement({
   fields: EventScheduleOrderByRelationAggregateInputFields,
-});
-
-export const EventOrderByRelationAggregateInputFields = (t: any) => ({
-  _count: t.field({"required":false,"type":SortOrder}),
-});
-export const EventOrderByRelationAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventOrderByRelationAggregateInput>>('EventOrderByRelationAggregateInput').implement({
-  fields: EventOrderByRelationAggregateInputFields,
 });
 
 export const DepartmentOrderByRelationAggregateInputFields = (t: any) => ({
@@ -8489,13 +8407,15 @@ export const EventScheduleEvaluationSumOrderByAggregateInput = builder.inputRef<
 export const EventCountOrderByAggregateInputFields = (t: any) => ({
   id: t.field({"required":false,"type":SortOrder}),
   date: t.field({"required":false,"type":SortOrder}),
-  time: t.field({"required":false,"type":SortOrder}),
   duration: t.field({"required":false,"type":SortOrder}),
   type: t.field({"required":false,"type":SortOrder}),
   location: t.field({"required":false,"type":SortOrder}),
   note: t.field({"required":false,"type":SortOrder}),
   privateNote: t.field({"required":false,"type":SortOrder}),
   companyId: t.field({"required":false,"type":SortOrder}),
+  createdAt: t.field({"required":false,"type":SortOrder}),
+  updatedAt: t.field({"required":false,"type":SortOrder}),
+  createdById: t.field({"required":false,"type":SortOrder}),
 });
 export const EventCountOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventCountOrderByAggregateInput>>('EventCountOrderByAggregateInput').implement({
   fields: EventCountOrderByAggregateInputFields,
@@ -8503,8 +8423,8 @@ export const EventCountOrderByAggregateInput = builder.inputRef<PrismaUpdateOper
 
 export const EventAvgOrderByAggregateInputFields = (t: any) => ({
   id: t.field({"required":false,"type":SortOrder}),
-  time: t.field({"required":false,"type":SortOrder}),
   duration: t.field({"required":false,"type":SortOrder}),
+  createdById: t.field({"required":false,"type":SortOrder}),
 });
 export const EventAvgOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventAvgOrderByAggregateInput>>('EventAvgOrderByAggregateInput').implement({
   fields: EventAvgOrderByAggregateInputFields,
@@ -8513,13 +8433,15 @@ export const EventAvgOrderByAggregateInput = builder.inputRef<PrismaUpdateOperat
 export const EventMaxOrderByAggregateInputFields = (t: any) => ({
   id: t.field({"required":false,"type":SortOrder}),
   date: t.field({"required":false,"type":SortOrder}),
-  time: t.field({"required":false,"type":SortOrder}),
   duration: t.field({"required":false,"type":SortOrder}),
   type: t.field({"required":false,"type":SortOrder}),
   location: t.field({"required":false,"type":SortOrder}),
   note: t.field({"required":false,"type":SortOrder}),
   privateNote: t.field({"required":false,"type":SortOrder}),
   companyId: t.field({"required":false,"type":SortOrder}),
+  createdAt: t.field({"required":false,"type":SortOrder}),
+  updatedAt: t.field({"required":false,"type":SortOrder}),
+  createdById: t.field({"required":false,"type":SortOrder}),
 });
 export const EventMaxOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventMaxOrderByAggregateInput>>('EventMaxOrderByAggregateInput').implement({
   fields: EventMaxOrderByAggregateInputFields,
@@ -8528,13 +8450,15 @@ export const EventMaxOrderByAggregateInput = builder.inputRef<PrismaUpdateOperat
 export const EventMinOrderByAggregateInputFields = (t: any) => ({
   id: t.field({"required":false,"type":SortOrder}),
   date: t.field({"required":false,"type":SortOrder}),
-  time: t.field({"required":false,"type":SortOrder}),
   duration: t.field({"required":false,"type":SortOrder}),
   type: t.field({"required":false,"type":SortOrder}),
   location: t.field({"required":false,"type":SortOrder}),
   note: t.field({"required":false,"type":SortOrder}),
   privateNote: t.field({"required":false,"type":SortOrder}),
   companyId: t.field({"required":false,"type":SortOrder}),
+  createdAt: t.field({"required":false,"type":SortOrder}),
+  updatedAt: t.field({"required":false,"type":SortOrder}),
+  createdById: t.field({"required":false,"type":SortOrder}),
 });
 export const EventMinOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventMinOrderByAggregateInput>>('EventMinOrderByAggregateInput').implement({
   fields: EventMinOrderByAggregateInputFields,
@@ -8542,64 +8466,11 @@ export const EventMinOrderByAggregateInput = builder.inputRef<PrismaUpdateOperat
 
 export const EventSumOrderByAggregateInputFields = (t: any) => ({
   id: t.field({"required":false,"type":SortOrder}),
-  time: t.field({"required":false,"type":SortOrder}),
   duration: t.field({"required":false,"type":SortOrder}),
+  createdById: t.field({"required":false,"type":SortOrder}),
 });
 export const EventSumOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventSumOrderByAggregateInput>>('EventSumOrderByAggregateInput').implement({
   fields: EventSumOrderByAggregateInputFields,
-});
-
-export const EventRelationFilterFields = (t: any) => ({
-  is: t.field({"required":false,"type":EventWhereInput}),
-  isNot: t.field({"required":false,"type":EventWhereInput}),
-});
-export const EventRelationFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventRelationFilter>>('EventRelationFilter').implement({
-  fields: EventRelationFilterFields,
-});
-
-export const EventInterviewerCountOrderByAggregateInputFields = (t: any) => ({
-  id: t.field({"required":false,"type":SortOrder}),
-  eventId: t.field({"required":false,"type":SortOrder}),
-  teamMemberId: t.field({"required":false,"type":SortOrder}),
-});
-export const EventInterviewerCountOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventInterviewerCountOrderByAggregateInput>>('EventInterviewerCountOrderByAggregateInput').implement({
-  fields: EventInterviewerCountOrderByAggregateInputFields,
-});
-
-export const EventInterviewerAvgOrderByAggregateInputFields = (t: any) => ({
-  id: t.field({"required":false,"type":SortOrder}),
-  eventId: t.field({"required":false,"type":SortOrder}),
-  teamMemberId: t.field({"required":false,"type":SortOrder}),
-});
-export const EventInterviewerAvgOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventInterviewerAvgOrderByAggregateInput>>('EventInterviewerAvgOrderByAggregateInput').implement({
-  fields: EventInterviewerAvgOrderByAggregateInputFields,
-});
-
-export const EventInterviewerMaxOrderByAggregateInputFields = (t: any) => ({
-  id: t.field({"required":false,"type":SortOrder}),
-  eventId: t.field({"required":false,"type":SortOrder}),
-  teamMemberId: t.field({"required":false,"type":SortOrder}),
-});
-export const EventInterviewerMaxOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventInterviewerMaxOrderByAggregateInput>>('EventInterviewerMaxOrderByAggregateInput').implement({
-  fields: EventInterviewerMaxOrderByAggregateInputFields,
-});
-
-export const EventInterviewerMinOrderByAggregateInputFields = (t: any) => ({
-  id: t.field({"required":false,"type":SortOrder}),
-  eventId: t.field({"required":false,"type":SortOrder}),
-  teamMemberId: t.field({"required":false,"type":SortOrder}),
-});
-export const EventInterviewerMinOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventInterviewerMinOrderByAggregateInput>>('EventInterviewerMinOrderByAggregateInput').implement({
-  fields: EventInterviewerMinOrderByAggregateInputFields,
-});
-
-export const EventInterviewerSumOrderByAggregateInputFields = (t: any) => ({
-  id: t.field({"required":false,"type":SortOrder}),
-  eventId: t.field({"required":false,"type":SortOrder}),
-  teamMemberId: t.field({"required":false,"type":SortOrder}),
-});
-export const EventInterviewerSumOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventInterviewerSumOrderByAggregateInput>>('EventInterviewerSumOrderByAggregateInput').implement({
-  fields: EventInterviewerSumOrderByAggregateInputFields,
 });
 
 export const EnumOfferPersonalItemsFilterFields = (t: any) => ({
@@ -10773,14 +10644,14 @@ export const EventScheduleInterviewerCreateNestedManyWithoutTeamMemberInput = bu
   fields: EventScheduleInterviewerCreateNestedManyWithoutTeamMemberInputFields,
 });
 
-export const EventInterviewerCreateNestedManyWithoutTeamMemberInputFields = (t: any) => ({
-  create: t.field({"required":false,"type":[EventInterviewerCreateWithoutTeamMemberInput]}),
-  connectOrCreate: t.field({"required":false,"type":[EventInterviewerCreateOrConnectWithoutTeamMemberInput]}),
-  createMany: t.field({"required":false,"type":EventInterviewerCreateManyTeamMemberInputEnvelope}),
-  connect: t.field({"required":false,"type":[EventInterviewerWhereUniqueInput]}),
+export const EventCreateNestedManyWithoutCreatedByInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":[EventCreateWithoutCreatedByInput]}),
+  connectOrCreate: t.field({"required":false,"type":[EventCreateOrConnectWithoutCreatedByInput]}),
+  createMany: t.field({"required":false,"type":EventCreateManyCreatedByInputEnvelope}),
+  connect: t.field({"required":false,"type":[EventWhereUniqueInput]}),
 });
-export const EventInterviewerCreateNestedManyWithoutTeamMemberInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventInterviewerCreateNestedManyWithoutTeamMemberInput>>('EventInterviewerCreateNestedManyWithoutTeamMemberInput').implement({
-  fields: EventInterviewerCreateNestedManyWithoutTeamMemberInputFields,
+export const EventCreateNestedManyWithoutCreatedByInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventCreateNestedManyWithoutCreatedByInput>>('EventCreateNestedManyWithoutCreatedByInput').implement({
+  fields: EventCreateNestedManyWithoutCreatedByInputFields,
 });
 
 export const OfferCreateNestedOneWithoutRecruiterInputFields = (t: any) => ({
@@ -10859,6 +10730,15 @@ export const FollowCreateNestedManyWithoutTeamMemberInputFields = (t: any) => ({
 });
 export const FollowCreateNestedManyWithoutTeamMemberInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.FollowCreateNestedManyWithoutTeamMemberInput>>('FollowCreateNestedManyWithoutTeamMemberInput').implement({
   fields: FollowCreateNestedManyWithoutTeamMemberInputFields,
+});
+
+export const EventCreateNestedManyWithoutInterviewersInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":[EventCreateWithoutInterviewersInput]}),
+  connectOrCreate: t.field({"required":false,"type":[EventCreateOrConnectWithoutInterviewersInput]}),
+  connect: t.field({"required":false,"type":[EventWhereUniqueInput]}),
+});
+export const EventCreateNestedManyWithoutInterviewersInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventCreateNestedManyWithoutInterviewersInput>>('EventCreateNestedManyWithoutInterviewersInput').implement({
+  fields: EventCreateNestedManyWithoutInterviewersInputFields,
 });
 
 export const HiringRoleUpdateextraAbilitiesInputFields = (t: any) => ({
@@ -10953,21 +10833,21 @@ export const EventScheduleInterviewerUpdateManyWithoutTeamMemberNestedInput = bu
   fields: EventScheduleInterviewerUpdateManyWithoutTeamMemberNestedInputFields,
 });
 
-export const EventInterviewerUpdateManyWithoutTeamMemberNestedInputFields = (t: any) => ({
-  create: t.field({"required":false,"type":[EventInterviewerCreateWithoutTeamMemberInput]}),
-  connectOrCreate: t.field({"required":false,"type":[EventInterviewerCreateOrConnectWithoutTeamMemberInput]}),
-  upsert: t.field({"required":false,"type":[EventInterviewerUpsertWithWhereUniqueWithoutTeamMemberInput]}),
-  createMany: t.field({"required":false,"type":EventInterviewerCreateManyTeamMemberInputEnvelope}),
-  set: t.field({"required":false,"type":[EventInterviewerWhereUniqueInput]}),
-  disconnect: t.field({"required":false,"type":[EventInterviewerWhereUniqueInput]}),
-  delete: t.field({"required":false,"type":[EventInterviewerWhereUniqueInput]}),
-  connect: t.field({"required":false,"type":[EventInterviewerWhereUniqueInput]}),
-  update: t.field({"required":false,"type":[EventInterviewerUpdateWithWhereUniqueWithoutTeamMemberInput]}),
-  updateMany: t.field({"required":false,"type":[EventInterviewerUpdateManyWithWhereWithoutTeamMemberInput]}),
-  deleteMany: t.field({"required":false,"type":[EventInterviewerScalarWhereInput]}),
+export const EventUpdateManyWithoutCreatedByNestedInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":[EventCreateWithoutCreatedByInput]}),
+  connectOrCreate: t.field({"required":false,"type":[EventCreateOrConnectWithoutCreatedByInput]}),
+  upsert: t.field({"required":false,"type":[EventUpsertWithWhereUniqueWithoutCreatedByInput]}),
+  createMany: t.field({"required":false,"type":EventCreateManyCreatedByInputEnvelope}),
+  set: t.field({"required":false,"type":[EventWhereUniqueInput]}),
+  disconnect: t.field({"required":false,"type":[EventWhereUniqueInput]}),
+  delete: t.field({"required":false,"type":[EventWhereUniqueInput]}),
+  connect: t.field({"required":false,"type":[EventWhereUniqueInput]}),
+  update: t.field({"required":false,"type":[EventUpdateWithWhereUniqueWithoutCreatedByInput]}),
+  updateMany: t.field({"required":false,"type":[EventUpdateManyWithWhereWithoutCreatedByInput]}),
+  deleteMany: t.field({"required":false,"type":[EventScalarWhereInput]}),
 });
-export const EventInterviewerUpdateManyWithoutTeamMemberNestedInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventInterviewerUpdateManyWithoutTeamMemberNestedInput>>('EventInterviewerUpdateManyWithoutTeamMemberNestedInput').implement({
-  fields: EventInterviewerUpdateManyWithoutTeamMemberNestedInputFields,
+export const EventUpdateManyWithoutCreatedByNestedInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventUpdateManyWithoutCreatedByNestedInput>>('EventUpdateManyWithoutCreatedByNestedInput').implement({
+  fields: EventUpdateManyWithoutCreatedByNestedInputFields,
 });
 
 export const OfferUpdateOneWithoutRecruiterNestedInputFields = (t: any) => ({
@@ -11096,6 +10976,22 @@ export const FollowUpdateManyWithoutTeamMemberNestedInputFields = (t: any) => ({
 });
 export const FollowUpdateManyWithoutTeamMemberNestedInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.FollowUpdateManyWithoutTeamMemberNestedInput>>('FollowUpdateManyWithoutTeamMemberNestedInput').implement({
   fields: FollowUpdateManyWithoutTeamMemberNestedInputFields,
+});
+
+export const EventUpdateManyWithoutInterviewersNestedInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":[EventCreateWithoutInterviewersInput]}),
+  connectOrCreate: t.field({"required":false,"type":[EventCreateOrConnectWithoutInterviewersInput]}),
+  upsert: t.field({"required":false,"type":[EventUpsertWithWhereUniqueWithoutInterviewersInput]}),
+  set: t.field({"required":false,"type":[EventWhereUniqueInput]}),
+  disconnect: t.field({"required":false,"type":[EventWhereUniqueInput]}),
+  delete: t.field({"required":false,"type":[EventWhereUniqueInput]}),
+  connect: t.field({"required":false,"type":[EventWhereUniqueInput]}),
+  update: t.field({"required":false,"type":[EventUpdateWithWhereUniqueWithoutInterviewersInput]}),
+  updateMany: t.field({"required":false,"type":[EventUpdateManyWithWhereWithoutInterviewersInput]}),
+  deleteMany: t.field({"required":false,"type":[EventScalarWhereInput]}),
+});
+export const EventUpdateManyWithoutInterviewersNestedInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventUpdateManyWithoutInterviewersNestedInput>>('EventUpdateManyWithoutInterviewersNestedInput').implement({
+  fields: EventUpdateManyWithoutInterviewersNestedInputFields,
 });
 
 export const RoleCreateabilitiesInputFields = (t: any) => ({
@@ -12175,13 +12071,13 @@ export const EventScheduleCreateNestedOneWithoutEventScheduleInterviewersInput =
   fields: EventScheduleCreateNestedOneWithoutEventScheduleInterviewersInputFields,
 });
 
-export const HiringRoleCreateNestedOneWithoutEventScheduleInterviewerInputFields = (t: any) => ({
-  create: t.field({"required":false,"type":HiringRoleCreateWithoutEventScheduleInterviewerInput}),
-  connectOrCreate: t.field({"required":false,"type":HiringRoleCreateOrConnectWithoutEventScheduleInterviewerInput}),
+export const HiringRoleCreateNestedOneWithoutEventScheduleInterviewersInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":HiringRoleCreateWithoutEventScheduleInterviewersInput}),
+  connectOrCreate: t.field({"required":false,"type":HiringRoleCreateOrConnectWithoutEventScheduleInterviewersInput}),
   connect: t.field({"required":false,"type":HiringRoleWhereUniqueInput}),
 });
-export const HiringRoleCreateNestedOneWithoutEventScheduleInterviewerInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleCreateNestedOneWithoutEventScheduleInterviewerInput>>('HiringRoleCreateNestedOneWithoutEventScheduleInterviewerInput').implement({
-  fields: HiringRoleCreateNestedOneWithoutEventScheduleInterviewerInputFields,
+export const HiringRoleCreateNestedOneWithoutEventScheduleInterviewersInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleCreateNestedOneWithoutEventScheduleInterviewersInput>>('HiringRoleCreateNestedOneWithoutEventScheduleInterviewersInput').implement({
+  fields: HiringRoleCreateNestedOneWithoutEventScheduleInterviewersInputFields,
 });
 
 export const EventScheduleUpdateOneRequiredWithoutEventScheduleInterviewersNestedInputFields = (t: any) => ({
@@ -12195,15 +12091,15 @@ export const EventScheduleUpdateOneRequiredWithoutEventScheduleInterviewersNeste
   fields: EventScheduleUpdateOneRequiredWithoutEventScheduleInterviewersNestedInputFields,
 });
 
-export const HiringRoleUpdateOneRequiredWithoutEventScheduleInterviewerNestedInputFields = (t: any) => ({
-  create: t.field({"required":false,"type":HiringRoleCreateWithoutEventScheduleInterviewerInput}),
-  connectOrCreate: t.field({"required":false,"type":HiringRoleCreateOrConnectWithoutEventScheduleInterviewerInput}),
-  upsert: t.field({"required":false,"type":HiringRoleUpsertWithoutEventScheduleInterviewerInput}),
+export const HiringRoleUpdateOneRequiredWithoutEventScheduleInterviewersNestedInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":HiringRoleCreateWithoutEventScheduleInterviewersInput}),
+  connectOrCreate: t.field({"required":false,"type":HiringRoleCreateOrConnectWithoutEventScheduleInterviewersInput}),
+  upsert: t.field({"required":false,"type":HiringRoleUpsertWithoutEventScheduleInterviewersInput}),
   connect: t.field({"required":false,"type":HiringRoleWhereUniqueInput}),
-  update: t.field({"required":false,"type":HiringRoleUpdateToOneWithWhereWithoutEventScheduleInterviewerInput}),
+  update: t.field({"required":false,"type":HiringRoleUpdateToOneWithWhereWithoutEventScheduleInterviewersInput}),
 });
-export const HiringRoleUpdateOneRequiredWithoutEventScheduleInterviewerNestedInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpdateOneRequiredWithoutEventScheduleInterviewerNestedInput>>('HiringRoleUpdateOneRequiredWithoutEventScheduleInterviewerNestedInput').implement({
-  fields: HiringRoleUpdateOneRequiredWithoutEventScheduleInterviewerNestedInputFields,
+export const HiringRoleUpdateOneRequiredWithoutEventScheduleInterviewersNestedInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpdateOneRequiredWithoutEventScheduleInterviewersNestedInput>>('HiringRoleUpdateOneRequiredWithoutEventScheduleInterviewersNestedInput').implement({
+  fields: HiringRoleUpdateOneRequiredWithoutEventScheduleInterviewersNestedInputFields,
 });
 
 export const EventScheduleCreateNestedOneWithoutEventScheduleEvaluationsInputFields = (t: any) => ({
@@ -12255,14 +12151,13 @@ export const CompanyCreateNestedOneWithoutEventsInput = builder.inputRef<PrismaU
   fields: CompanyCreateNestedOneWithoutEventsInputFields,
 });
 
-export const EventInterviewerCreateNestedManyWithoutEventInputFields = (t: any) => ({
-  create: t.field({"required":false,"type":[EventInterviewerCreateWithoutEventInput]}),
-  connectOrCreate: t.field({"required":false,"type":[EventInterviewerCreateOrConnectWithoutEventInput]}),
-  createMany: t.field({"required":false,"type":EventInterviewerCreateManyEventInputEnvelope}),
-  connect: t.field({"required":false,"type":[EventInterviewerWhereUniqueInput]}),
+export const HiringRoleCreateNestedManyWithoutInterviewerEventsInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":[HiringRoleCreateWithoutInterviewerEventsInput]}),
+  connectOrCreate: t.field({"required":false,"type":[HiringRoleCreateOrConnectWithoutInterviewerEventsInput]}),
+  connect: t.field({"required":false,"type":[HiringRoleWhereUniqueInput]}),
 });
-export const EventInterviewerCreateNestedManyWithoutEventInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventInterviewerCreateNestedManyWithoutEventInput>>('EventInterviewerCreateNestedManyWithoutEventInput').implement({
-  fields: EventInterviewerCreateNestedManyWithoutEventInputFields,
+export const HiringRoleCreateNestedManyWithoutInterviewerEventsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleCreateNestedManyWithoutInterviewerEventsInput>>('HiringRoleCreateNestedManyWithoutInterviewerEventsInput').implement({
+  fields: HiringRoleCreateNestedManyWithoutInterviewerEventsInputFields,
 });
 
 export const EvaluationCreateNestedManyWithoutEventInputFields = (t: any) => ({
@@ -12273,6 +12168,24 @@ export const EvaluationCreateNestedManyWithoutEventInputFields = (t: any) => ({
 });
 export const EvaluationCreateNestedManyWithoutEventInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EvaluationCreateNestedManyWithoutEventInput>>('EvaluationCreateNestedManyWithoutEventInput').implement({
   fields: EvaluationCreateNestedManyWithoutEventInputFields,
+});
+
+export const CandidateCreateNestedManyWithoutEventsInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":[CandidateCreateWithoutEventsInput]}),
+  connectOrCreate: t.field({"required":false,"type":[CandidateCreateOrConnectWithoutEventsInput]}),
+  connect: t.field({"required":false,"type":[CandidateWhereUniqueInput]}),
+});
+export const CandidateCreateNestedManyWithoutEventsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateCreateNestedManyWithoutEventsInput>>('CandidateCreateNestedManyWithoutEventsInput').implement({
+  fields: CandidateCreateNestedManyWithoutEventsInputFields,
+});
+
+export const HiringRoleCreateNestedOneWithoutCreatedEventsInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":HiringRoleCreateWithoutCreatedEventsInput}),
+  connectOrCreate: t.field({"required":false,"type":HiringRoleCreateOrConnectWithoutCreatedEventsInput}),
+  connect: t.field({"required":false,"type":HiringRoleWhereUniqueInput}),
+});
+export const HiringRoleCreateNestedOneWithoutCreatedEventsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleCreateNestedOneWithoutCreatedEventsInput>>('HiringRoleCreateNestedOneWithoutCreatedEventsInput').implement({
+  fields: HiringRoleCreateNestedOneWithoutCreatedEventsInputFields,
 });
 
 export const CompanyUpdateOneRequiredWithoutEventsNestedInputFields = (t: any) => ({
@@ -12286,21 +12199,20 @@ export const CompanyUpdateOneRequiredWithoutEventsNestedInput = builder.inputRef
   fields: CompanyUpdateOneRequiredWithoutEventsNestedInputFields,
 });
 
-export const EventInterviewerUpdateManyWithoutEventNestedInputFields = (t: any) => ({
-  create: t.field({"required":false,"type":[EventInterviewerCreateWithoutEventInput]}),
-  connectOrCreate: t.field({"required":false,"type":[EventInterviewerCreateOrConnectWithoutEventInput]}),
-  upsert: t.field({"required":false,"type":[EventInterviewerUpsertWithWhereUniqueWithoutEventInput]}),
-  createMany: t.field({"required":false,"type":EventInterviewerCreateManyEventInputEnvelope}),
-  set: t.field({"required":false,"type":[EventInterviewerWhereUniqueInput]}),
-  disconnect: t.field({"required":false,"type":[EventInterviewerWhereUniqueInput]}),
-  delete: t.field({"required":false,"type":[EventInterviewerWhereUniqueInput]}),
-  connect: t.field({"required":false,"type":[EventInterviewerWhereUniqueInput]}),
-  update: t.field({"required":false,"type":[EventInterviewerUpdateWithWhereUniqueWithoutEventInput]}),
-  updateMany: t.field({"required":false,"type":[EventInterviewerUpdateManyWithWhereWithoutEventInput]}),
-  deleteMany: t.field({"required":false,"type":[EventInterviewerScalarWhereInput]}),
+export const HiringRoleUpdateManyWithoutInterviewerEventsNestedInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":[HiringRoleCreateWithoutInterviewerEventsInput]}),
+  connectOrCreate: t.field({"required":false,"type":[HiringRoleCreateOrConnectWithoutInterviewerEventsInput]}),
+  upsert: t.field({"required":false,"type":[HiringRoleUpsertWithWhereUniqueWithoutInterviewerEventsInput]}),
+  set: t.field({"required":false,"type":[HiringRoleWhereUniqueInput]}),
+  disconnect: t.field({"required":false,"type":[HiringRoleWhereUniqueInput]}),
+  delete: t.field({"required":false,"type":[HiringRoleWhereUniqueInput]}),
+  connect: t.field({"required":false,"type":[HiringRoleWhereUniqueInput]}),
+  update: t.field({"required":false,"type":[HiringRoleUpdateWithWhereUniqueWithoutInterviewerEventsInput]}),
+  updateMany: t.field({"required":false,"type":[HiringRoleUpdateManyWithWhereWithoutInterviewerEventsInput]}),
+  deleteMany: t.field({"required":false,"type":[HiringRoleScalarWhereInput]}),
 });
-export const EventInterviewerUpdateManyWithoutEventNestedInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventInterviewerUpdateManyWithoutEventNestedInput>>('EventInterviewerUpdateManyWithoutEventNestedInput').implement({
-  fields: EventInterviewerUpdateManyWithoutEventNestedInputFields,
+export const HiringRoleUpdateManyWithoutInterviewerEventsNestedInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpdateManyWithoutInterviewerEventsNestedInput>>('HiringRoleUpdateManyWithoutInterviewerEventsNestedInput').implement({
+  fields: HiringRoleUpdateManyWithoutInterviewerEventsNestedInputFields,
 });
 
 export const EvaluationUpdateManyWithoutEventNestedInputFields = (t: any) => ({
@@ -12320,44 +12232,31 @@ export const EvaluationUpdateManyWithoutEventNestedInput = builder.inputRef<Pris
   fields: EvaluationUpdateManyWithoutEventNestedInputFields,
 });
 
-export const EventCreateNestedOneWithoutEventInterviewersInputFields = (t: any) => ({
-  create: t.field({"required":false,"type":EventCreateWithoutEventInterviewersInput}),
-  connectOrCreate: t.field({"required":false,"type":EventCreateOrConnectWithoutEventInterviewersInput}),
-  connect: t.field({"required":false,"type":EventWhereUniqueInput}),
+export const CandidateUpdateManyWithoutEventsNestedInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":[CandidateCreateWithoutEventsInput]}),
+  connectOrCreate: t.field({"required":false,"type":[CandidateCreateOrConnectWithoutEventsInput]}),
+  upsert: t.field({"required":false,"type":[CandidateUpsertWithWhereUniqueWithoutEventsInput]}),
+  set: t.field({"required":false,"type":[CandidateWhereUniqueInput]}),
+  disconnect: t.field({"required":false,"type":[CandidateWhereUniqueInput]}),
+  delete: t.field({"required":false,"type":[CandidateWhereUniqueInput]}),
+  connect: t.field({"required":false,"type":[CandidateWhereUniqueInput]}),
+  update: t.field({"required":false,"type":[CandidateUpdateWithWhereUniqueWithoutEventsInput]}),
+  updateMany: t.field({"required":false,"type":[CandidateUpdateManyWithWhereWithoutEventsInput]}),
+  deleteMany: t.field({"required":false,"type":[CandidateScalarWhereInput]}),
 });
-export const EventCreateNestedOneWithoutEventInterviewersInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventCreateNestedOneWithoutEventInterviewersInput>>('EventCreateNestedOneWithoutEventInterviewersInput').implement({
-  fields: EventCreateNestedOneWithoutEventInterviewersInputFields,
+export const CandidateUpdateManyWithoutEventsNestedInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateUpdateManyWithoutEventsNestedInput>>('CandidateUpdateManyWithoutEventsNestedInput').implement({
+  fields: CandidateUpdateManyWithoutEventsNestedInputFields,
 });
 
-export const HiringRoleCreateNestedOneWithoutEventInterviewerInputFields = (t: any) => ({
-  create: t.field({"required":false,"type":HiringRoleCreateWithoutEventInterviewerInput}),
-  connectOrCreate: t.field({"required":false,"type":HiringRoleCreateOrConnectWithoutEventInterviewerInput}),
+export const HiringRoleUpdateOneRequiredWithoutCreatedEventsNestedInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":HiringRoleCreateWithoutCreatedEventsInput}),
+  connectOrCreate: t.field({"required":false,"type":HiringRoleCreateOrConnectWithoutCreatedEventsInput}),
+  upsert: t.field({"required":false,"type":HiringRoleUpsertWithoutCreatedEventsInput}),
   connect: t.field({"required":false,"type":HiringRoleWhereUniqueInput}),
+  update: t.field({"required":false,"type":HiringRoleUpdateToOneWithWhereWithoutCreatedEventsInput}),
 });
-export const HiringRoleCreateNestedOneWithoutEventInterviewerInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleCreateNestedOneWithoutEventInterviewerInput>>('HiringRoleCreateNestedOneWithoutEventInterviewerInput').implement({
-  fields: HiringRoleCreateNestedOneWithoutEventInterviewerInputFields,
-});
-
-export const EventUpdateOneRequiredWithoutEventInterviewersNestedInputFields = (t: any) => ({
-  create: t.field({"required":false,"type":EventCreateWithoutEventInterviewersInput}),
-  connectOrCreate: t.field({"required":false,"type":EventCreateOrConnectWithoutEventInterviewersInput}),
-  upsert: t.field({"required":false,"type":EventUpsertWithoutEventInterviewersInput}),
-  connect: t.field({"required":false,"type":EventWhereUniqueInput}),
-  update: t.field({"required":false,"type":EventUpdateToOneWithWhereWithoutEventInterviewersInput}),
-});
-export const EventUpdateOneRequiredWithoutEventInterviewersNestedInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventUpdateOneRequiredWithoutEventInterviewersNestedInput>>('EventUpdateOneRequiredWithoutEventInterviewersNestedInput').implement({
-  fields: EventUpdateOneRequiredWithoutEventInterviewersNestedInputFields,
-});
-
-export const HiringRoleUpdateOneRequiredWithoutEventInterviewerNestedInputFields = (t: any) => ({
-  create: t.field({"required":false,"type":HiringRoleCreateWithoutEventInterviewerInput}),
-  connectOrCreate: t.field({"required":false,"type":HiringRoleCreateOrConnectWithoutEventInterviewerInput}),
-  upsert: t.field({"required":false,"type":HiringRoleUpsertWithoutEventInterviewerInput}),
-  connect: t.field({"required":false,"type":HiringRoleWhereUniqueInput}),
-  update: t.field({"required":false,"type":HiringRoleUpdateToOneWithWhereWithoutEventInterviewerInput}),
-});
-export const HiringRoleUpdateOneRequiredWithoutEventInterviewerNestedInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpdateOneRequiredWithoutEventInterviewerNestedInput>>('HiringRoleUpdateOneRequiredWithoutEventInterviewerNestedInput').implement({
-  fields: HiringRoleUpdateOneRequiredWithoutEventInterviewerNestedInputFields,
+export const HiringRoleUpdateOneRequiredWithoutCreatedEventsNestedInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpdateOneRequiredWithoutCreatedEventsNestedInput>>('HiringRoleUpdateOneRequiredWithoutCreatedEventsNestedInput').implement({
+  fields: HiringRoleUpdateOneRequiredWithoutCreatedEventsNestedInputFields,
 });
 
 export const CompanyCreateNestedOneWithoutOffersInputFields = (t: any) => ({
@@ -13414,13 +13313,13 @@ export const StageMetadataUpdateManyWithoutStageNestedInput = builder.inputRef<P
   fields: StageMetadataUpdateManyWithoutStageNestedInputFields,
 });
 
-export const HiringRoleCreateNestedOneWithoutStageVisibilityInputFields = (t: any) => ({
-  create: t.field({"required":false,"type":HiringRoleCreateWithoutStageVisibilityInput}),
-  connectOrCreate: t.field({"required":false,"type":HiringRoleCreateOrConnectWithoutStageVisibilityInput}),
+export const HiringRoleCreateNestedOneWithoutStageVisibilitiesInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":HiringRoleCreateWithoutStageVisibilitiesInput}),
+  connectOrCreate: t.field({"required":false,"type":HiringRoleCreateOrConnectWithoutStageVisibilitiesInput}),
   connect: t.field({"required":false,"type":HiringRoleWhereUniqueInput}),
 });
-export const HiringRoleCreateNestedOneWithoutStageVisibilityInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleCreateNestedOneWithoutStageVisibilityInput>>('HiringRoleCreateNestedOneWithoutStageVisibilityInput').implement({
-  fields: HiringRoleCreateNestedOneWithoutStageVisibilityInputFields,
+export const HiringRoleCreateNestedOneWithoutStageVisibilitiesInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleCreateNestedOneWithoutStageVisibilitiesInput>>('HiringRoleCreateNestedOneWithoutStageVisibilitiesInput').implement({
+  fields: HiringRoleCreateNestedOneWithoutStageVisibilitiesInputFields,
 });
 
 export const RoleCreateNestedOneWithoutStageVisibilityInputFields = (t: any) => ({
@@ -13441,17 +13340,17 @@ export const StageCreateNestedOneWithoutVisibilityInput = builder.inputRef<Prism
   fields: StageCreateNestedOneWithoutVisibilityInputFields,
 });
 
-export const HiringRoleUpdateOneWithoutStageVisibilityNestedInputFields = (t: any) => ({
-  create: t.field({"required":false,"type":HiringRoleCreateWithoutStageVisibilityInput}),
-  connectOrCreate: t.field({"required":false,"type":HiringRoleCreateOrConnectWithoutStageVisibilityInput}),
-  upsert: t.field({"required":false,"type":HiringRoleUpsertWithoutStageVisibilityInput}),
+export const HiringRoleUpdateOneWithoutStageVisibilitiesNestedInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":HiringRoleCreateWithoutStageVisibilitiesInput}),
+  connectOrCreate: t.field({"required":false,"type":HiringRoleCreateOrConnectWithoutStageVisibilitiesInput}),
+  upsert: t.field({"required":false,"type":HiringRoleUpsertWithoutStageVisibilitiesInput}),
   disconnect: t.field({"required":false,"type":HiringRoleWhereInput}),
   delete: t.field({"required":false,"type":HiringRoleWhereInput}),
   connect: t.field({"required":false,"type":HiringRoleWhereUniqueInput}),
-  update: t.field({"required":false,"type":HiringRoleUpdateToOneWithWhereWithoutStageVisibilityInput}),
+  update: t.field({"required":false,"type":HiringRoleUpdateToOneWithWhereWithoutStageVisibilitiesInput}),
 });
-export const HiringRoleUpdateOneWithoutStageVisibilityNestedInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpdateOneWithoutStageVisibilityNestedInput>>('HiringRoleUpdateOneWithoutStageVisibilityNestedInput').implement({
-  fields: HiringRoleUpdateOneWithoutStageVisibilityNestedInputFields,
+export const HiringRoleUpdateOneWithoutStageVisibilitiesNestedInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpdateOneWithoutStageVisibilitiesNestedInput>>('HiringRoleUpdateOneWithoutStageVisibilitiesNestedInput').implement({
+  fields: HiringRoleUpdateOneWithoutStageVisibilitiesNestedInputFields,
 });
 
 export const RoleUpdateOneWithoutStageVisibilityNestedInputFields = (t: any) => ({
@@ -13677,6 +13576,15 @@ export const CompanyCreateNestedOneWithoutCandidatesInputFields = (t: any) => ({
 });
 export const CompanyCreateNestedOneWithoutCandidatesInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CompanyCreateNestedOneWithoutCandidatesInput>>('CompanyCreateNestedOneWithoutCandidatesInput').implement({
   fields: CompanyCreateNestedOneWithoutCandidatesInputFields,
+});
+
+export const EventCreateNestedManyWithoutCandidatesInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":[EventCreateWithoutCandidatesInput]}),
+  connectOrCreate: t.field({"required":false,"type":[EventCreateOrConnectWithoutCandidatesInput]}),
+  connect: t.field({"required":false,"type":[EventWhereUniqueInput]}),
+});
+export const EventCreateNestedManyWithoutCandidatesInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventCreateNestedManyWithoutCandidatesInput>>('EventCreateNestedManyWithoutCandidatesInput').implement({
+  fields: EventCreateNestedManyWithoutCandidatesInputFields,
 });
 
 export const CandidateUpdateskillsInputFields = (t: any) => ({
@@ -13951,6 +13859,22 @@ export const CompanyUpdateOneRequiredWithoutCandidatesNestedInputFields = (t: an
 });
 export const CompanyUpdateOneRequiredWithoutCandidatesNestedInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CompanyUpdateOneRequiredWithoutCandidatesNestedInput>>('CompanyUpdateOneRequiredWithoutCandidatesNestedInput').implement({
   fields: CompanyUpdateOneRequiredWithoutCandidatesNestedInputFields,
+});
+
+export const EventUpdateManyWithoutCandidatesNestedInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":[EventCreateWithoutCandidatesInput]}),
+  connectOrCreate: t.field({"required":false,"type":[EventCreateOrConnectWithoutCandidatesInput]}),
+  upsert: t.field({"required":false,"type":[EventUpsertWithWhereUniqueWithoutCandidatesInput]}),
+  set: t.field({"required":false,"type":[EventWhereUniqueInput]}),
+  disconnect: t.field({"required":false,"type":[EventWhereUniqueInput]}),
+  delete: t.field({"required":false,"type":[EventWhereUniqueInput]}),
+  connect: t.field({"required":false,"type":[EventWhereUniqueInput]}),
+  update: t.field({"required":false,"type":[EventUpdateWithWhereUniqueWithoutCandidatesInput]}),
+  updateMany: t.field({"required":false,"type":[EventUpdateManyWithWhereWithoutCandidatesInput]}),
+  deleteMany: t.field({"required":false,"type":[EventScalarWhereInput]}),
+});
+export const EventUpdateManyWithoutCandidatesNestedInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventUpdateManyWithoutCandidatesNestedInput>>('EventUpdateManyWithoutCandidatesNestedInput').implement({
+  fields: EventUpdateManyWithoutCandidatesNestedInputFields,
 });
 
 export const CandidateCreateNestedOneWithoutCandidateTagsInputFields = (t: any) => ({
@@ -15050,16 +14974,17 @@ export const HiringRoleCreateWithoutUserInputFields = (t: any) => ({
   company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutHiringRolesInput}),
   attachments: t.field({"required":false,"type":AttachmentCreateNestedManyWithoutUploaderInput}),
   auditLogs: t.field({"required":false,"type":AuditLogCreateNestedManyWithoutUserInput}),
-  eventScheduleInterviewer: t.field({"required":false,"type":EventScheduleInterviewerCreateNestedManyWithoutTeamMemberInput}),
-  eventInterviewer: t.field({"required":false,"type":EventInterviewerCreateNestedManyWithoutTeamMemberInput}),
+  eventScheduleInterviewers: t.field({"required":false,"type":EventScheduleInterviewerCreateNestedManyWithoutTeamMemberInput}),
+  createdEvents: t.field({"required":false,"type":EventCreateNestedManyWithoutCreatedByInput}),
   offerRecruiter: t.field({"required":false,"type":OfferCreateNestedOneWithoutRecruiterInput}),
   offerHiringManager: t.field({"required":false,"type":OfferCreateNestedOneWithoutHiringManagerInput}),
   memberships: t.field({"required":false,"type":MembershipCreateNestedManyWithoutTeamMemberInput}),
-  stageVisibility: t.field({"required":false,"type":StageVisibilityCreateNestedManyWithoutTeamMemberInput}),
+  stageVisibilities: t.field({"required":false,"type":StageVisibilityCreateNestedManyWithoutTeamMemberInput}),
   hiredCandidates: t.field({"required":false,"type":CandidateCreateNestedManyWithoutHiredByInput}),
   evaluations: t.field({"required":false,"type":EvaluationCreateNestedManyWithoutTeamMemberInput}),
   tasks: t.field({"required":false,"type":TaskMemberCreateNestedManyWithoutTeamMemberInput}),
   follows: t.field({"required":false,"type":FollowCreateNestedManyWithoutTeamMemberInput}),
+  interviewerEvents: t.field({"required":false,"type":EventCreateNestedManyWithoutInterviewersInput}),
 });
 export const HiringRoleCreateWithoutUserInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleCreateWithoutUserInput>>('HiringRoleCreateWithoutUserInput').implement({
   fields: HiringRoleCreateWithoutUserInputFields,
@@ -15589,6 +15514,7 @@ export const CandidateCreateWithoutCvInputFields = (t: any) => ({
   follows: t.field({"required":false,"type":FollowCreateNestedManyWithoutCandidateInput}),
   SharedCandidateLink: t.field({"required":false,"type":SharedCandidateLinkCreateNestedManyWithoutCandidateInput}),
   company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutCandidatesInput}),
+  events: t.field({"required":false,"type":EventCreateNestedManyWithoutCandidatesInput}),
 });
 export const CandidateCreateWithoutCvInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateCreateWithoutCvInput>>('CandidateCreateWithoutCvInput').implement({
   fields: CandidateCreateWithoutCvInputFields,
@@ -15633,6 +15559,7 @@ export const CandidateCreateWithoutAvatarInputFields = (t: any) => ({
   follows: t.field({"required":false,"type":FollowCreateNestedManyWithoutCandidateInput}),
   SharedCandidateLink: t.field({"required":false,"type":SharedCandidateLinkCreateNestedManyWithoutCandidateInput}),
   company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutCandidatesInput}),
+  events: t.field({"required":false,"type":EventCreateNestedManyWithoutCandidatesInput}),
 });
 export const CandidateCreateWithoutAvatarInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateCreateWithoutAvatarInput>>('CandidateCreateWithoutAvatarInput').implement({
   fields: CandidateCreateWithoutAvatarInputFields,
@@ -15677,6 +15604,7 @@ export const CandidateCreateWithoutCoverLetterInputFields = (t: any) => ({
   follows: t.field({"required":false,"type":FollowCreateNestedManyWithoutCandidateInput}),
   SharedCandidateLink: t.field({"required":false,"type":SharedCandidateLinkCreateNestedManyWithoutCandidateInput}),
   company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutCandidatesInput}),
+  events: t.field({"required":false,"type":EventCreateNestedManyWithoutCandidatesInput}),
 });
 export const CandidateCreateWithoutCoverLetterInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateCreateWithoutCoverLetterInput>>('CandidateCreateWithoutCoverLetterInput').implement({
   fields: CandidateCreateWithoutCoverLetterInputFields,
@@ -15746,16 +15674,17 @@ export const HiringRoleCreateWithoutAttachmentsInputFields = (t: any) => ({
   role: t.field({"required":true,"type":RoleCreateNestedOneWithoutHiringRolesInput}),
   company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutHiringRolesInput}),
   auditLogs: t.field({"required":false,"type":AuditLogCreateNestedManyWithoutUserInput}),
-  eventScheduleInterviewer: t.field({"required":false,"type":EventScheduleInterviewerCreateNestedManyWithoutTeamMemberInput}),
-  eventInterviewer: t.field({"required":false,"type":EventInterviewerCreateNestedManyWithoutTeamMemberInput}),
+  eventScheduleInterviewers: t.field({"required":false,"type":EventScheduleInterviewerCreateNestedManyWithoutTeamMemberInput}),
+  createdEvents: t.field({"required":false,"type":EventCreateNestedManyWithoutCreatedByInput}),
   offerRecruiter: t.field({"required":false,"type":OfferCreateNestedOneWithoutRecruiterInput}),
   offerHiringManager: t.field({"required":false,"type":OfferCreateNestedOneWithoutHiringManagerInput}),
   memberships: t.field({"required":false,"type":MembershipCreateNestedManyWithoutTeamMemberInput}),
-  stageVisibility: t.field({"required":false,"type":StageVisibilityCreateNestedManyWithoutTeamMemberInput}),
+  stageVisibilities: t.field({"required":false,"type":StageVisibilityCreateNestedManyWithoutTeamMemberInput}),
   hiredCandidates: t.field({"required":false,"type":CandidateCreateNestedManyWithoutHiredByInput}),
   evaluations: t.field({"required":false,"type":EvaluationCreateNestedManyWithoutTeamMemberInput}),
   tasks: t.field({"required":false,"type":TaskMemberCreateNestedManyWithoutTeamMemberInput}),
   follows: t.field({"required":false,"type":FollowCreateNestedManyWithoutTeamMemberInput}),
+  interviewerEvents: t.field({"required":false,"type":EventCreateNestedManyWithoutInterviewersInput}),
 });
 export const HiringRoleCreateWithoutAttachmentsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleCreateWithoutAttachmentsInput>>('HiringRoleCreateWithoutAttachmentsInput').implement({
   fields: HiringRoleCreateWithoutAttachmentsInputFields,
@@ -15958,6 +15887,7 @@ export const CandidateUpdateWithoutCvInputFields = (t: any) => ({
   follows: t.field({"required":false,"type":FollowUpdateManyWithoutCandidateNestedInput}),
   SharedCandidateLink: t.field({"required":false,"type":SharedCandidateLinkUpdateManyWithoutCandidateNestedInput}),
   company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutCandidatesNestedInput}),
+  events: t.field({"required":false,"type":EventUpdateManyWithoutCandidatesNestedInput}),
 });
 export const CandidateUpdateWithoutCvInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateUpdateWithoutCvInput>>('CandidateUpdateWithoutCvInput').implement({
   fields: CandidateUpdateWithoutCvInputFields,
@@ -16011,6 +15941,7 @@ export const CandidateUpdateWithoutAvatarInputFields = (t: any) => ({
   follows: t.field({"required":false,"type":FollowUpdateManyWithoutCandidateNestedInput}),
   SharedCandidateLink: t.field({"required":false,"type":SharedCandidateLinkUpdateManyWithoutCandidateNestedInput}),
   company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutCandidatesNestedInput}),
+  events: t.field({"required":false,"type":EventUpdateManyWithoutCandidatesNestedInput}),
 });
 export const CandidateUpdateWithoutAvatarInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateUpdateWithoutAvatarInput>>('CandidateUpdateWithoutAvatarInput').implement({
   fields: CandidateUpdateWithoutAvatarInputFields,
@@ -16064,6 +15995,7 @@ export const CandidateUpdateWithoutCoverLetterInputFields = (t: any) => ({
   follows: t.field({"required":false,"type":FollowUpdateManyWithoutCandidateNestedInput}),
   SharedCandidateLink: t.field({"required":false,"type":SharedCandidateLinkUpdateManyWithoutCandidateNestedInput}),
   company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutCandidatesNestedInput}),
+  events: t.field({"required":false,"type":EventUpdateManyWithoutCandidatesNestedInput}),
 });
 export const CandidateUpdateWithoutCoverLetterInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateUpdateWithoutCoverLetterInput>>('CandidateUpdateWithoutCoverLetterInput').implement({
   fields: CandidateUpdateWithoutCoverLetterInputFields,
@@ -16151,16 +16083,17 @@ export const HiringRoleUpdateWithoutAttachmentsInputFields = (t: any) => ({
   role: t.field({"required":false,"type":RoleUpdateOneRequiredWithoutHiringRolesNestedInput}),
   company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutHiringRolesNestedInput}),
   auditLogs: t.field({"required":false,"type":AuditLogUpdateManyWithoutUserNestedInput}),
-  eventScheduleInterviewer: t.field({"required":false,"type":EventScheduleInterviewerUpdateManyWithoutTeamMemberNestedInput}),
-  eventInterviewer: t.field({"required":false,"type":EventInterviewerUpdateManyWithoutTeamMemberNestedInput}),
+  eventScheduleInterviewers: t.field({"required":false,"type":EventScheduleInterviewerUpdateManyWithoutTeamMemberNestedInput}),
+  createdEvents: t.field({"required":false,"type":EventUpdateManyWithoutCreatedByNestedInput}),
   offerRecruiter: t.field({"required":false,"type":OfferUpdateOneWithoutRecruiterNestedInput}),
   offerHiringManager: t.field({"required":false,"type":OfferUpdateOneWithoutHiringManagerNestedInput}),
   memberships: t.field({"required":false,"type":MembershipUpdateManyWithoutTeamMemberNestedInput}),
-  stageVisibility: t.field({"required":false,"type":StageVisibilityUpdateManyWithoutTeamMemberNestedInput}),
+  stageVisibilities: t.field({"required":false,"type":StageVisibilityUpdateManyWithoutTeamMemberNestedInput}),
   hiredCandidates: t.field({"required":false,"type":CandidateUpdateManyWithoutHiredByNestedInput}),
   evaluations: t.field({"required":false,"type":EvaluationUpdateManyWithoutTeamMemberNestedInput}),
   tasks: t.field({"required":false,"type":TaskMemberUpdateManyWithoutTeamMemberNestedInput}),
   follows: t.field({"required":false,"type":FollowUpdateManyWithoutTeamMemberNestedInput}),
+  interviewerEvents: t.field({"required":false,"type":EventUpdateManyWithoutInterviewersNestedInput}),
 });
 export const HiringRoleUpdateWithoutAttachmentsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpdateWithoutAttachmentsInput>>('HiringRoleUpdateWithoutAttachmentsInput').implement({
   fields: HiringRoleUpdateWithoutAttachmentsInputFields,
@@ -16495,27 +16428,38 @@ export const EventScheduleInterviewerCreateManyTeamMemberInputEnvelope = builder
   fields: EventScheduleInterviewerCreateManyTeamMemberInputEnvelopeFields,
 });
 
-export const EventInterviewerCreateWithoutTeamMemberInputFields = (t: any) => ({
-  event: t.field({"required":true,"type":EventCreateNestedOneWithoutEventInterviewersInput}),
+export const EventCreateWithoutCreatedByInputFields = (t: any) => ({
+  date: t.field({"required":true,"type":DateTime}),
+  duration: t.int({"required":false}),
+  type: t.string({"required":true}),
+  location: t.string({"required":false}),
+  note: t.string({"required":false}),
+  privateNote: t.string({"required":false}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+  updatedAt: t.field({"required":false,"type":DateTime}),
+  company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutEventsInput}),
+  interviewers: t.field({"required":false,"type":HiringRoleCreateNestedManyWithoutInterviewerEventsInput}),
+  evaluations: t.field({"required":false,"type":EvaluationCreateNestedManyWithoutEventInput}),
+  candidates: t.field({"required":false,"type":CandidateCreateNestedManyWithoutEventsInput}),
 });
-export const EventInterviewerCreateWithoutTeamMemberInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventInterviewerCreateWithoutTeamMemberInput>>('EventInterviewerCreateWithoutTeamMemberInput').implement({
-  fields: EventInterviewerCreateWithoutTeamMemberInputFields,
+export const EventCreateWithoutCreatedByInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventCreateWithoutCreatedByInput>>('EventCreateWithoutCreatedByInput').implement({
+  fields: EventCreateWithoutCreatedByInputFields,
 });
 
-export const EventInterviewerCreateOrConnectWithoutTeamMemberInputFields = (t: any) => ({
-  where: t.field({"required":true,"type":EventInterviewerWhereUniqueInput}),
-  create: t.field({"required":true,"type":EventInterviewerCreateWithoutTeamMemberInput}),
+export const EventCreateOrConnectWithoutCreatedByInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":EventWhereUniqueInput}),
+  create: t.field({"required":true,"type":EventCreateWithoutCreatedByInput}),
 });
-export const EventInterviewerCreateOrConnectWithoutTeamMemberInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventInterviewerCreateOrConnectWithoutTeamMemberInput>>('EventInterviewerCreateOrConnectWithoutTeamMemberInput').implement({
-  fields: EventInterviewerCreateOrConnectWithoutTeamMemberInputFields,
+export const EventCreateOrConnectWithoutCreatedByInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventCreateOrConnectWithoutCreatedByInput>>('EventCreateOrConnectWithoutCreatedByInput').implement({
+  fields: EventCreateOrConnectWithoutCreatedByInputFields,
 });
 
-export const EventInterviewerCreateManyTeamMemberInputEnvelopeFields = (t: any) => ({
-  data: t.field({"required":true,"type":[EventInterviewerCreateManyTeamMemberInput]}),
+export const EventCreateManyCreatedByInputEnvelopeFields = (t: any) => ({
+  data: t.field({"required":true,"type":[EventCreateManyCreatedByInput]}),
   skipDuplicates: t.boolean({"required":false}),
 });
-export const EventInterviewerCreateManyTeamMemberInputEnvelope = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventInterviewerCreateManyTeamMemberInputEnvelope>>('EventInterviewerCreateManyTeamMemberInputEnvelope').implement({
-  fields: EventInterviewerCreateManyTeamMemberInputEnvelopeFields,
+export const EventCreateManyCreatedByInputEnvelope = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventCreateManyCreatedByInputEnvelope>>('EventCreateManyCreatedByInputEnvelope').implement({
+  fields: EventCreateManyCreatedByInputEnvelopeFields,
 });
 
 export const OfferCreateWithoutRecruiterInputFields = (t: any) => ({
@@ -16707,6 +16651,7 @@ export const CandidateCreateWithoutHiredByInputFields = (t: any) => ({
   follows: t.field({"required":false,"type":FollowCreateNestedManyWithoutCandidateInput}),
   SharedCandidateLink: t.field({"required":false,"type":SharedCandidateLinkCreateNestedManyWithoutCandidateInput}),
   company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutCandidatesInput}),
+  events: t.field({"required":false,"type":EventCreateNestedManyWithoutCandidatesInput}),
 });
 export const CandidateCreateWithoutHiredByInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateCreateWithoutHiredByInput>>('CandidateCreateWithoutHiredByInput').implement({
   fields: CandidateCreateWithoutHiredByInputFields,
@@ -16807,6 +16752,32 @@ export const FollowCreateManyTeamMemberInputEnvelopeFields = (t: any) => ({
 });
 export const FollowCreateManyTeamMemberInputEnvelope = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.FollowCreateManyTeamMemberInputEnvelope>>('FollowCreateManyTeamMemberInputEnvelope').implement({
   fields: FollowCreateManyTeamMemberInputEnvelopeFields,
+});
+
+export const EventCreateWithoutInterviewersInputFields = (t: any) => ({
+  date: t.field({"required":true,"type":DateTime}),
+  duration: t.int({"required":false}),
+  type: t.string({"required":true}),
+  location: t.string({"required":false}),
+  note: t.string({"required":false}),
+  privateNote: t.string({"required":false}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+  updatedAt: t.field({"required":false,"type":DateTime}),
+  company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutEventsInput}),
+  evaluations: t.field({"required":false,"type":EvaluationCreateNestedManyWithoutEventInput}),
+  candidates: t.field({"required":false,"type":CandidateCreateNestedManyWithoutEventsInput}),
+  createdBy: t.field({"required":true,"type":HiringRoleCreateNestedOneWithoutCreatedEventsInput}),
+});
+export const EventCreateWithoutInterviewersInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventCreateWithoutInterviewersInput>>('EventCreateWithoutInterviewersInput').implement({
+  fields: EventCreateWithoutInterviewersInputFields,
+});
+
+export const EventCreateOrConnectWithoutInterviewersInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":EventWhereUniqueInput}),
+  create: t.field({"required":true,"type":EventCreateWithoutInterviewersInput}),
+});
+export const EventCreateOrConnectWithoutInterviewersInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventCreateOrConnectWithoutInterviewersInput>>('EventCreateOrConnectWithoutInterviewersInput').implement({
+  fields: EventCreateOrConnectWithoutInterviewersInputFields,
 });
 
 export const UserUpsertWithoutHiringRolesInputFields = (t: any) => ({
@@ -17069,41 +17040,49 @@ export const EventScheduleInterviewerScalarWhereInput = builder.inputRef<PrismaU
   fields: EventScheduleInterviewerScalarWhereInputFields,
 });
 
-export const EventInterviewerUpsertWithWhereUniqueWithoutTeamMemberInputFields = (t: any) => ({
-  where: t.field({"required":true,"type":EventInterviewerWhereUniqueInput}),
-  update: t.field({"required":true,"type":EventInterviewerUpdateWithoutTeamMemberInput}),
-  create: t.field({"required":true,"type":EventInterviewerCreateWithoutTeamMemberInput}),
+export const EventUpsertWithWhereUniqueWithoutCreatedByInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":EventWhereUniqueInput}),
+  update: t.field({"required":true,"type":EventUpdateWithoutCreatedByInput}),
+  create: t.field({"required":true,"type":EventCreateWithoutCreatedByInput}),
 });
-export const EventInterviewerUpsertWithWhereUniqueWithoutTeamMemberInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventInterviewerUpsertWithWhereUniqueWithoutTeamMemberInput>>('EventInterviewerUpsertWithWhereUniqueWithoutTeamMemberInput').implement({
-  fields: EventInterviewerUpsertWithWhereUniqueWithoutTeamMemberInputFields,
-});
-
-export const EventInterviewerUpdateWithWhereUniqueWithoutTeamMemberInputFields = (t: any) => ({
-  where: t.field({"required":true,"type":EventInterviewerWhereUniqueInput}),
-  data: t.field({"required":true,"type":EventInterviewerUpdateWithoutTeamMemberInput}),
-});
-export const EventInterviewerUpdateWithWhereUniqueWithoutTeamMemberInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventInterviewerUpdateWithWhereUniqueWithoutTeamMemberInput>>('EventInterviewerUpdateWithWhereUniqueWithoutTeamMemberInput').implement({
-  fields: EventInterviewerUpdateWithWhereUniqueWithoutTeamMemberInputFields,
+export const EventUpsertWithWhereUniqueWithoutCreatedByInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventUpsertWithWhereUniqueWithoutCreatedByInput>>('EventUpsertWithWhereUniqueWithoutCreatedByInput').implement({
+  fields: EventUpsertWithWhereUniqueWithoutCreatedByInputFields,
 });
 
-export const EventInterviewerUpdateManyWithWhereWithoutTeamMemberInputFields = (t: any) => ({
-  where: t.field({"required":true,"type":EventInterviewerScalarWhereInput}),
-  data: t.field({"required":true,"type":EventInterviewerUpdateManyMutationInput}),
+export const EventUpdateWithWhereUniqueWithoutCreatedByInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":EventWhereUniqueInput}),
+  data: t.field({"required":true,"type":EventUpdateWithoutCreatedByInput}),
 });
-export const EventInterviewerUpdateManyWithWhereWithoutTeamMemberInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventInterviewerUpdateManyWithWhereWithoutTeamMemberInput>>('EventInterviewerUpdateManyWithWhereWithoutTeamMemberInput').implement({
-  fields: EventInterviewerUpdateManyWithWhereWithoutTeamMemberInputFields,
+export const EventUpdateWithWhereUniqueWithoutCreatedByInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventUpdateWithWhereUniqueWithoutCreatedByInput>>('EventUpdateWithWhereUniqueWithoutCreatedByInput').implement({
+  fields: EventUpdateWithWhereUniqueWithoutCreatedByInputFields,
 });
 
-export const EventInterviewerScalarWhereInputFields = (t: any) => ({
-  AND: t.field({"required":false,"type":[EventInterviewerScalarWhereInput]}),
-  OR: t.field({"required":false,"type":[EventInterviewerScalarWhereInput]}),
-  NOT: t.field({"required":false,"type":[EventInterviewerScalarWhereInput]}),
+export const EventUpdateManyWithWhereWithoutCreatedByInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":EventScalarWhereInput}),
+  data: t.field({"required":true,"type":EventUpdateManyMutationInput}),
+});
+export const EventUpdateManyWithWhereWithoutCreatedByInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventUpdateManyWithWhereWithoutCreatedByInput>>('EventUpdateManyWithWhereWithoutCreatedByInput').implement({
+  fields: EventUpdateManyWithWhereWithoutCreatedByInputFields,
+});
+
+export const EventScalarWhereInputFields = (t: any) => ({
+  AND: t.field({"required":false,"type":[EventScalarWhereInput]}),
+  OR: t.field({"required":false,"type":[EventScalarWhereInput]}),
+  NOT: t.field({"required":false,"type":[EventScalarWhereInput]}),
   id: t.field({"required":false,"type":IntFilter}),
-  eventId: t.field({"required":false,"type":IntFilter}),
-  teamMemberId: t.field({"required":false,"type":IntFilter}),
+  date: t.field({"required":false,"type":DateTimeFilter}),
+  duration: t.field({"required":false,"type":IntNullableFilter}),
+  type: t.field({"required":false,"type":StringFilter}),
+  location: t.field({"required":false,"type":StringNullableFilter}),
+  note: t.field({"required":false,"type":StringNullableFilter}),
+  privateNote: t.field({"required":false,"type":StringNullableFilter}),
+  companyId: t.field({"required":false,"type":StringFilter}),
+  createdAt: t.field({"required":false,"type":DateTimeFilter}),
+  updatedAt: t.field({"required":false,"type":DateTimeFilter}),
+  createdById: t.field({"required":false,"type":IntFilter}),
 });
-export const EventInterviewerScalarWhereInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventInterviewerScalarWhereInput>>('EventInterviewerScalarWhereInput').implement({
-  fields: EventInterviewerScalarWhereInputFields,
+export const EventScalarWhereInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventScalarWhereInput>>('EventScalarWhereInput').implement({
+  fields: EventScalarWhereInputFields,
 });
 
 export const OfferUpsertWithoutRecruiterInputFields = (t: any) => ({
@@ -17488,6 +17467,31 @@ export const FollowScalarWhereInput = builder.inputRef<PrismaUpdateOperationsInp
   fields: FollowScalarWhereInputFields,
 });
 
+export const EventUpsertWithWhereUniqueWithoutInterviewersInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":EventWhereUniqueInput}),
+  update: t.field({"required":true,"type":EventUpdateWithoutInterviewersInput}),
+  create: t.field({"required":true,"type":EventCreateWithoutInterviewersInput}),
+});
+export const EventUpsertWithWhereUniqueWithoutInterviewersInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventUpsertWithWhereUniqueWithoutInterviewersInput>>('EventUpsertWithWhereUniqueWithoutInterviewersInput').implement({
+  fields: EventUpsertWithWhereUniqueWithoutInterviewersInputFields,
+});
+
+export const EventUpdateWithWhereUniqueWithoutInterviewersInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":EventWhereUniqueInput}),
+  data: t.field({"required":true,"type":EventUpdateWithoutInterviewersInput}),
+});
+export const EventUpdateWithWhereUniqueWithoutInterviewersInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventUpdateWithWhereUniqueWithoutInterviewersInput>>('EventUpdateWithWhereUniqueWithoutInterviewersInput').implement({
+  fields: EventUpdateWithWhereUniqueWithoutInterviewersInputFields,
+});
+
+export const EventUpdateManyWithWhereWithoutInterviewersInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":EventScalarWhereInput}),
+  data: t.field({"required":true,"type":EventUpdateManyMutationInput}),
+});
+export const EventUpdateManyWithWhereWithoutInterviewersInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventUpdateManyWithWhereWithoutInterviewersInput>>('EventUpdateManyWithWhereWithoutInterviewersInput').implement({
+  fields: EventUpdateManyWithWhereWithoutInterviewersInputFields,
+});
+
 export const CompanyCreateWithoutRolesInputFields = (t: any) => ({
   id: t.string({"required":false}),
   name: t.string({"required":true}),
@@ -17544,16 +17548,17 @@ export const HiringRoleCreateWithoutRoleInputFields = (t: any) => ({
   company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutHiringRolesInput}),
   attachments: t.field({"required":false,"type":AttachmentCreateNestedManyWithoutUploaderInput}),
   auditLogs: t.field({"required":false,"type":AuditLogCreateNestedManyWithoutUserInput}),
-  eventScheduleInterviewer: t.field({"required":false,"type":EventScheduleInterviewerCreateNestedManyWithoutTeamMemberInput}),
-  eventInterviewer: t.field({"required":false,"type":EventInterviewerCreateNestedManyWithoutTeamMemberInput}),
+  eventScheduleInterviewers: t.field({"required":false,"type":EventScheduleInterviewerCreateNestedManyWithoutTeamMemberInput}),
+  createdEvents: t.field({"required":false,"type":EventCreateNestedManyWithoutCreatedByInput}),
   offerRecruiter: t.field({"required":false,"type":OfferCreateNestedOneWithoutRecruiterInput}),
   offerHiringManager: t.field({"required":false,"type":OfferCreateNestedOneWithoutHiringManagerInput}),
   memberships: t.field({"required":false,"type":MembershipCreateNestedManyWithoutTeamMemberInput}),
-  stageVisibility: t.field({"required":false,"type":StageVisibilityCreateNestedManyWithoutTeamMemberInput}),
+  stageVisibilities: t.field({"required":false,"type":StageVisibilityCreateNestedManyWithoutTeamMemberInput}),
   hiredCandidates: t.field({"required":false,"type":CandidateCreateNestedManyWithoutHiredByInput}),
   evaluations: t.field({"required":false,"type":EvaluationCreateNestedManyWithoutTeamMemberInput}),
   tasks: t.field({"required":false,"type":TaskMemberCreateNestedManyWithoutTeamMemberInput}),
   follows: t.field({"required":false,"type":FollowCreateNestedManyWithoutTeamMemberInput}),
+  interviewerEvents: t.field({"required":false,"type":EventCreateNestedManyWithoutInterviewersInput}),
 });
 export const HiringRoleCreateWithoutRoleInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleCreateWithoutRoleInput>>('HiringRoleCreateWithoutRoleInput').implement({
   fields: HiringRoleCreateWithoutRoleInputFields,
@@ -17602,7 +17607,7 @@ export const MembershipCreateManyRoleInputEnvelope = builder.inputRef<PrismaUpda
 
 export const StageVisibilityCreateWithoutRoleInputFields = (t: any) => ({
   type: t.field({"required":true,"type":MembershipTypes}),
-  teamMember: t.field({"required":false,"type":HiringRoleCreateNestedOneWithoutStageVisibilityInput}),
+  teamMember: t.field({"required":false,"type":HiringRoleCreateNestedOneWithoutStageVisibilitiesInput}),
   stage: t.field({"required":true,"type":StageCreateNestedOneWithoutVisibilityInput}),
 });
 export const StageVisibilityCreateWithoutRoleInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.StageVisibilityCreateWithoutRoleInput>>('StageVisibilityCreateWithoutRoleInput').implement({
@@ -17896,14 +17901,17 @@ export const EventScheduleCreateManyCompanyInputEnvelope = builder.inputRef<Pris
 
 export const EventCreateWithoutCompanyInputFields = (t: any) => ({
   date: t.field({"required":true,"type":DateTime}),
-  time: t.int({"required":true}),
-  duration: t.int({"required":true}),
+  duration: t.int({"required":false}),
   type: t.string({"required":true}),
-  location: t.string({"required":true}),
-  note: t.string({"required":true}),
-  privateNote: t.string({"required":true}),
-  eventInterviewers: t.field({"required":false,"type":EventInterviewerCreateNestedManyWithoutEventInput}),
+  location: t.string({"required":false}),
+  note: t.string({"required":false}),
+  privateNote: t.string({"required":false}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+  updatedAt: t.field({"required":false,"type":DateTime}),
+  interviewers: t.field({"required":false,"type":HiringRoleCreateNestedManyWithoutInterviewerEventsInput}),
   evaluations: t.field({"required":false,"type":EvaluationCreateNestedManyWithoutEventInput}),
+  candidates: t.field({"required":false,"type":CandidateCreateNestedManyWithoutEventsInput}),
+  createdBy: t.field({"required":true,"type":HiringRoleCreateNestedOneWithoutCreatedEventsInput}),
 });
 export const EventCreateWithoutCompanyInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventCreateWithoutCompanyInput>>('EventCreateWithoutCompanyInput').implement({
   fields: EventCreateWithoutCompanyInputFields,
@@ -18199,16 +18207,17 @@ export const HiringRoleCreateWithoutCompanyInputFields = (t: any) => ({
   role: t.field({"required":true,"type":RoleCreateNestedOneWithoutHiringRolesInput}),
   attachments: t.field({"required":false,"type":AttachmentCreateNestedManyWithoutUploaderInput}),
   auditLogs: t.field({"required":false,"type":AuditLogCreateNestedManyWithoutUserInput}),
-  eventScheduleInterviewer: t.field({"required":false,"type":EventScheduleInterviewerCreateNestedManyWithoutTeamMemberInput}),
-  eventInterviewer: t.field({"required":false,"type":EventInterviewerCreateNestedManyWithoutTeamMemberInput}),
+  eventScheduleInterviewers: t.field({"required":false,"type":EventScheduleInterviewerCreateNestedManyWithoutTeamMemberInput}),
+  createdEvents: t.field({"required":false,"type":EventCreateNestedManyWithoutCreatedByInput}),
   offerRecruiter: t.field({"required":false,"type":OfferCreateNestedOneWithoutRecruiterInput}),
   offerHiringManager: t.field({"required":false,"type":OfferCreateNestedOneWithoutHiringManagerInput}),
   memberships: t.field({"required":false,"type":MembershipCreateNestedManyWithoutTeamMemberInput}),
-  stageVisibility: t.field({"required":false,"type":StageVisibilityCreateNestedManyWithoutTeamMemberInput}),
+  stageVisibilities: t.field({"required":false,"type":StageVisibilityCreateNestedManyWithoutTeamMemberInput}),
   hiredCandidates: t.field({"required":false,"type":CandidateCreateNestedManyWithoutHiredByInput}),
   evaluations: t.field({"required":false,"type":EvaluationCreateNestedManyWithoutTeamMemberInput}),
   tasks: t.field({"required":false,"type":TaskMemberCreateNestedManyWithoutTeamMemberInput}),
   follows: t.field({"required":false,"type":FollowCreateNestedManyWithoutTeamMemberInput}),
+  interviewerEvents: t.field({"required":false,"type":EventCreateNestedManyWithoutInterviewersInput}),
 });
 export const HiringRoleCreateWithoutCompanyInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleCreateWithoutCompanyInput>>('HiringRoleCreateWithoutCompanyInput').implement({
   fields: HiringRoleCreateWithoutCompanyInputFields,
@@ -18261,6 +18270,7 @@ export const CandidateCreateWithoutCompanyInputFields = (t: any) => ({
   tasks: t.field({"required":false,"type":TaskCreateNestedManyWithoutCandidateInput}),
   follows: t.field({"required":false,"type":FollowCreateNestedManyWithoutCandidateInput}),
   SharedCandidateLink: t.field({"required":false,"type":SharedCandidateLinkCreateNestedManyWithoutCandidateInput}),
+  events: t.field({"required":false,"type":EventCreateNestedManyWithoutCandidatesInput}),
 });
 export const CandidateCreateWithoutCompanyInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateCreateWithoutCompanyInput>>('CandidateCreateWithoutCompanyInput').implement({
   fields: CandidateCreateWithoutCompanyInputFields,
@@ -18622,24 +18632,6 @@ export const EventUpdateManyWithWhereWithoutCompanyInputFields = (t: any) => ({
 });
 export const EventUpdateManyWithWhereWithoutCompanyInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventUpdateManyWithWhereWithoutCompanyInput>>('EventUpdateManyWithWhereWithoutCompanyInput').implement({
   fields: EventUpdateManyWithWhereWithoutCompanyInputFields,
-});
-
-export const EventScalarWhereInputFields = (t: any) => ({
-  AND: t.field({"required":false,"type":[EventScalarWhereInput]}),
-  OR: t.field({"required":false,"type":[EventScalarWhereInput]}),
-  NOT: t.field({"required":false,"type":[EventScalarWhereInput]}),
-  id: t.field({"required":false,"type":IntFilter}),
-  date: t.field({"required":false,"type":DateTimeFilter}),
-  time: t.field({"required":false,"type":IntFilter}),
-  duration: t.field({"required":false,"type":IntFilter}),
-  type: t.field({"required":false,"type":StringFilter}),
-  location: t.field({"required":false,"type":StringFilter}),
-  note: t.field({"required":false,"type":StringFilter}),
-  privateNote: t.field({"required":false,"type":StringFilter}),
-  companyId: t.field({"required":false,"type":StringFilter}),
-});
-export const EventScalarWhereInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventScalarWhereInput>>('EventScalarWhereInput').implement({
-  fields: EventScalarWhereInputFields,
 });
 
 export const DepartmentUpsertWithWhereUniqueWithoutCompanyInputFields = (t: any) => ({
@@ -19843,6 +19835,7 @@ export const CandidateCreateWithoutReferrerInputFields = (t: any) => ({
   follows: t.field({"required":false,"type":FollowCreateNestedManyWithoutCandidateInput}),
   SharedCandidateLink: t.field({"required":false,"type":SharedCandidateLinkCreateNestedManyWithoutCandidateInput}),
   company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutCandidatesInput}),
+  events: t.field({"required":false,"type":EventCreateNestedManyWithoutCandidatesInput}),
 });
 export const CandidateCreateWithoutReferrerInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateCreateWithoutReferrerInput>>('CandidateCreateWithoutReferrerInput').implement({
   fields: CandidateCreateWithoutReferrerInputFields,
@@ -20097,16 +20090,17 @@ export const HiringRoleCreateWithoutAuditLogsInputFields = (t: any) => ({
   role: t.field({"required":true,"type":RoleCreateNestedOneWithoutHiringRolesInput}),
   company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutHiringRolesInput}),
   attachments: t.field({"required":false,"type":AttachmentCreateNestedManyWithoutUploaderInput}),
-  eventScheduleInterviewer: t.field({"required":false,"type":EventScheduleInterviewerCreateNestedManyWithoutTeamMemberInput}),
-  eventInterviewer: t.field({"required":false,"type":EventInterviewerCreateNestedManyWithoutTeamMemberInput}),
+  eventScheduleInterviewers: t.field({"required":false,"type":EventScheduleInterviewerCreateNestedManyWithoutTeamMemberInput}),
+  createdEvents: t.field({"required":false,"type":EventCreateNestedManyWithoutCreatedByInput}),
   offerRecruiter: t.field({"required":false,"type":OfferCreateNestedOneWithoutRecruiterInput}),
   offerHiringManager: t.field({"required":false,"type":OfferCreateNestedOneWithoutHiringManagerInput}),
   memberships: t.field({"required":false,"type":MembershipCreateNestedManyWithoutTeamMemberInput}),
-  stageVisibility: t.field({"required":false,"type":StageVisibilityCreateNestedManyWithoutTeamMemberInput}),
+  stageVisibilities: t.field({"required":false,"type":StageVisibilityCreateNestedManyWithoutTeamMemberInput}),
   hiredCandidates: t.field({"required":false,"type":CandidateCreateNestedManyWithoutHiredByInput}),
   evaluations: t.field({"required":false,"type":EvaluationCreateNestedManyWithoutTeamMemberInput}),
   tasks: t.field({"required":false,"type":TaskMemberCreateNestedManyWithoutTeamMemberInput}),
   follows: t.field({"required":false,"type":FollowCreateNestedManyWithoutTeamMemberInput}),
+  interviewerEvents: t.field({"required":false,"type":EventCreateNestedManyWithoutInterviewersInput}),
 });
 export const HiringRoleCreateWithoutAuditLogsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleCreateWithoutAuditLogsInput>>('HiringRoleCreateWithoutAuditLogsInput').implement({
   fields: HiringRoleCreateWithoutAuditLogsInputFields,
@@ -20205,6 +20199,7 @@ export const CandidateCreateWithoutAuditLogsInputFields = (t: any) => ({
   follows: t.field({"required":false,"type":FollowCreateNestedManyWithoutCandidateInput}),
   SharedCandidateLink: t.field({"required":false,"type":SharedCandidateLinkCreateNestedManyWithoutCandidateInput}),
   company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutCandidatesInput}),
+  events: t.field({"required":false,"type":EventCreateNestedManyWithoutCandidatesInput}),
 });
 export const CandidateCreateWithoutAuditLogsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateCreateWithoutAuditLogsInput>>('CandidateCreateWithoutAuditLogsInput').implement({
   fields: CandidateCreateWithoutAuditLogsInputFields,
@@ -20300,16 +20295,17 @@ export const HiringRoleUpdateWithoutAuditLogsInputFields = (t: any) => ({
   role: t.field({"required":false,"type":RoleUpdateOneRequiredWithoutHiringRolesNestedInput}),
   company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutHiringRolesNestedInput}),
   attachments: t.field({"required":false,"type":AttachmentUpdateManyWithoutUploaderNestedInput}),
-  eventScheduleInterviewer: t.field({"required":false,"type":EventScheduleInterviewerUpdateManyWithoutTeamMemberNestedInput}),
-  eventInterviewer: t.field({"required":false,"type":EventInterviewerUpdateManyWithoutTeamMemberNestedInput}),
+  eventScheduleInterviewers: t.field({"required":false,"type":EventScheduleInterviewerUpdateManyWithoutTeamMemberNestedInput}),
+  createdEvents: t.field({"required":false,"type":EventUpdateManyWithoutCreatedByNestedInput}),
   offerRecruiter: t.field({"required":false,"type":OfferUpdateOneWithoutRecruiterNestedInput}),
   offerHiringManager: t.field({"required":false,"type":OfferUpdateOneWithoutHiringManagerNestedInput}),
   memberships: t.field({"required":false,"type":MembershipUpdateManyWithoutTeamMemberNestedInput}),
-  stageVisibility: t.field({"required":false,"type":StageVisibilityUpdateManyWithoutTeamMemberNestedInput}),
+  stageVisibilities: t.field({"required":false,"type":StageVisibilityUpdateManyWithoutTeamMemberNestedInput}),
   hiredCandidates: t.field({"required":false,"type":CandidateUpdateManyWithoutHiredByNestedInput}),
   evaluations: t.field({"required":false,"type":EvaluationUpdateManyWithoutTeamMemberNestedInput}),
   tasks: t.field({"required":false,"type":TaskMemberUpdateManyWithoutTeamMemberNestedInput}),
   follows: t.field({"required":false,"type":FollowUpdateManyWithoutTeamMemberNestedInput}),
+  interviewerEvents: t.field({"required":false,"type":EventUpdateManyWithoutInterviewersNestedInput}),
 });
 export const HiringRoleUpdateWithoutAuditLogsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpdateWithoutAuditLogsInput>>('HiringRoleUpdateWithoutAuditLogsInput').implement({
   fields: HiringRoleUpdateWithoutAuditLogsInputFields,
@@ -20426,6 +20422,7 @@ export const CandidateUpdateWithoutAuditLogsInputFields = (t: any) => ({
   follows: t.field({"required":false,"type":FollowUpdateManyWithoutCandidateNestedInput}),
   SharedCandidateLink: t.field({"required":false,"type":SharedCandidateLinkUpdateManyWithoutCandidateNestedInput}),
   company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutCandidatesNestedInput}),
+  events: t.field({"required":false,"type":EventUpdateManyWithoutCandidatesNestedInput}),
 });
 export const CandidateUpdateWithoutAuditLogsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateUpdateWithoutAuditLogsInput>>('CandidateUpdateWithoutAuditLogsInput').implement({
   fields: CandidateUpdateWithoutAuditLogsInputFields,
@@ -20586,7 +20583,7 @@ export const CompanyCreateOrConnectWithoutEventScheduleInput = builder.inputRef<
 
 export const EventScheduleInterviewerCreateWithoutEventScheduleInputFields = (t: any) => ({
   availability: t.field({"required":true,"type":Json}),
-  teamMember: t.field({"required":true,"type":HiringRoleCreateNestedOneWithoutEventScheduleInterviewerInput}),
+  teamMember: t.field({"required":true,"type":HiringRoleCreateNestedOneWithoutEventScheduleInterviewersInput}),
 });
 export const EventScheduleInterviewerCreateWithoutEventScheduleInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventScheduleInterviewerCreateWithoutEventScheduleInput>>('EventScheduleInterviewerCreateWithoutEventScheduleInput').implement({
   fields: EventScheduleInterviewerCreateWithoutEventScheduleInputFields,
@@ -20781,7 +20778,7 @@ export const EventScheduleCreateOrConnectWithoutEventScheduleInterviewersInput =
   fields: EventScheduleCreateOrConnectWithoutEventScheduleInterviewersInputFields,
 });
 
-export const HiringRoleCreateWithoutEventScheduleInterviewerInputFields = (t: any) => ({
+export const HiringRoleCreateWithoutEventScheduleInterviewersInputFields = (t: any) => ({
   extraAbilities: t.stringList({"required":false}),
   createdAt: t.field({"required":false,"type":DateTime}),
   updatedAt: t.field({"required":false,"type":DateTime}),
@@ -20790,26 +20787,27 @@ export const HiringRoleCreateWithoutEventScheduleInterviewerInputFields = (t: an
   company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutHiringRolesInput}),
   attachments: t.field({"required":false,"type":AttachmentCreateNestedManyWithoutUploaderInput}),
   auditLogs: t.field({"required":false,"type":AuditLogCreateNestedManyWithoutUserInput}),
-  eventInterviewer: t.field({"required":false,"type":EventInterviewerCreateNestedManyWithoutTeamMemberInput}),
+  createdEvents: t.field({"required":false,"type":EventCreateNestedManyWithoutCreatedByInput}),
   offerRecruiter: t.field({"required":false,"type":OfferCreateNestedOneWithoutRecruiterInput}),
   offerHiringManager: t.field({"required":false,"type":OfferCreateNestedOneWithoutHiringManagerInput}),
   memberships: t.field({"required":false,"type":MembershipCreateNestedManyWithoutTeamMemberInput}),
-  stageVisibility: t.field({"required":false,"type":StageVisibilityCreateNestedManyWithoutTeamMemberInput}),
+  stageVisibilities: t.field({"required":false,"type":StageVisibilityCreateNestedManyWithoutTeamMemberInput}),
   hiredCandidates: t.field({"required":false,"type":CandidateCreateNestedManyWithoutHiredByInput}),
   evaluations: t.field({"required":false,"type":EvaluationCreateNestedManyWithoutTeamMemberInput}),
   tasks: t.field({"required":false,"type":TaskMemberCreateNestedManyWithoutTeamMemberInput}),
   follows: t.field({"required":false,"type":FollowCreateNestedManyWithoutTeamMemberInput}),
+  interviewerEvents: t.field({"required":false,"type":EventCreateNestedManyWithoutInterviewersInput}),
 });
-export const HiringRoleCreateWithoutEventScheduleInterviewerInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleCreateWithoutEventScheduleInterviewerInput>>('HiringRoleCreateWithoutEventScheduleInterviewerInput').implement({
-  fields: HiringRoleCreateWithoutEventScheduleInterviewerInputFields,
+export const HiringRoleCreateWithoutEventScheduleInterviewersInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleCreateWithoutEventScheduleInterviewersInput>>('HiringRoleCreateWithoutEventScheduleInterviewersInput').implement({
+  fields: HiringRoleCreateWithoutEventScheduleInterviewersInputFields,
 });
 
-export const HiringRoleCreateOrConnectWithoutEventScheduleInterviewerInputFields = (t: any) => ({
+export const HiringRoleCreateOrConnectWithoutEventScheduleInterviewersInputFields = (t: any) => ({
   where: t.field({"required":true,"type":HiringRoleWhereUniqueInput}),
-  create: t.field({"required":true,"type":HiringRoleCreateWithoutEventScheduleInterviewerInput}),
+  create: t.field({"required":true,"type":HiringRoleCreateWithoutEventScheduleInterviewersInput}),
 });
-export const HiringRoleCreateOrConnectWithoutEventScheduleInterviewerInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleCreateOrConnectWithoutEventScheduleInterviewerInput>>('HiringRoleCreateOrConnectWithoutEventScheduleInterviewerInput').implement({
-  fields: HiringRoleCreateOrConnectWithoutEventScheduleInterviewerInputFields,
+export const HiringRoleCreateOrConnectWithoutEventScheduleInterviewersInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleCreateOrConnectWithoutEventScheduleInterviewersInput>>('HiringRoleCreateOrConnectWithoutEventScheduleInterviewersInput').implement({
+  fields: HiringRoleCreateOrConnectWithoutEventScheduleInterviewersInputFields,
 });
 
 export const EventScheduleUpsertWithoutEventScheduleInterviewersInputFields = (t: any) => ({
@@ -20852,24 +20850,24 @@ export const EventScheduleUpdateWithoutEventScheduleInterviewersInput = builder.
   fields: EventScheduleUpdateWithoutEventScheduleInterviewersInputFields,
 });
 
-export const HiringRoleUpsertWithoutEventScheduleInterviewerInputFields = (t: any) => ({
-  update: t.field({"required":true,"type":HiringRoleUpdateWithoutEventScheduleInterviewerInput}),
-  create: t.field({"required":true,"type":HiringRoleCreateWithoutEventScheduleInterviewerInput}),
+export const HiringRoleUpsertWithoutEventScheduleInterviewersInputFields = (t: any) => ({
+  update: t.field({"required":true,"type":HiringRoleUpdateWithoutEventScheduleInterviewersInput}),
+  create: t.field({"required":true,"type":HiringRoleCreateWithoutEventScheduleInterviewersInput}),
   where: t.field({"required":false,"type":HiringRoleWhereInput}),
 });
-export const HiringRoleUpsertWithoutEventScheduleInterviewerInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpsertWithoutEventScheduleInterviewerInput>>('HiringRoleUpsertWithoutEventScheduleInterviewerInput').implement({
-  fields: HiringRoleUpsertWithoutEventScheduleInterviewerInputFields,
+export const HiringRoleUpsertWithoutEventScheduleInterviewersInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpsertWithoutEventScheduleInterviewersInput>>('HiringRoleUpsertWithoutEventScheduleInterviewersInput').implement({
+  fields: HiringRoleUpsertWithoutEventScheduleInterviewersInputFields,
 });
 
-export const HiringRoleUpdateToOneWithWhereWithoutEventScheduleInterviewerInputFields = (t: any) => ({
+export const HiringRoleUpdateToOneWithWhereWithoutEventScheduleInterviewersInputFields = (t: any) => ({
   where: t.field({"required":false,"type":HiringRoleWhereInput}),
-  data: t.field({"required":true,"type":HiringRoleUpdateWithoutEventScheduleInterviewerInput}),
+  data: t.field({"required":true,"type":HiringRoleUpdateWithoutEventScheduleInterviewersInput}),
 });
-export const HiringRoleUpdateToOneWithWhereWithoutEventScheduleInterviewerInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpdateToOneWithWhereWithoutEventScheduleInterviewerInput>>('HiringRoleUpdateToOneWithWhereWithoutEventScheduleInterviewerInput').implement({
-  fields: HiringRoleUpdateToOneWithWhereWithoutEventScheduleInterviewerInputFields,
+export const HiringRoleUpdateToOneWithWhereWithoutEventScheduleInterviewersInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpdateToOneWithWhereWithoutEventScheduleInterviewersInput>>('HiringRoleUpdateToOneWithWhereWithoutEventScheduleInterviewersInput').implement({
+  fields: HiringRoleUpdateToOneWithWhereWithoutEventScheduleInterviewersInputFields,
 });
 
-export const HiringRoleUpdateWithoutEventScheduleInterviewerInputFields = (t: any) => ({
+export const HiringRoleUpdateWithoutEventScheduleInterviewersInputFields = (t: any) => ({
   extraAbilities: t.stringList({"required":false}),
   createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
@@ -20878,18 +20876,19 @@ export const HiringRoleUpdateWithoutEventScheduleInterviewerInputFields = (t: an
   company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutHiringRolesNestedInput}),
   attachments: t.field({"required":false,"type":AttachmentUpdateManyWithoutUploaderNestedInput}),
   auditLogs: t.field({"required":false,"type":AuditLogUpdateManyWithoutUserNestedInput}),
-  eventInterviewer: t.field({"required":false,"type":EventInterviewerUpdateManyWithoutTeamMemberNestedInput}),
+  createdEvents: t.field({"required":false,"type":EventUpdateManyWithoutCreatedByNestedInput}),
   offerRecruiter: t.field({"required":false,"type":OfferUpdateOneWithoutRecruiterNestedInput}),
   offerHiringManager: t.field({"required":false,"type":OfferUpdateOneWithoutHiringManagerNestedInput}),
   memberships: t.field({"required":false,"type":MembershipUpdateManyWithoutTeamMemberNestedInput}),
-  stageVisibility: t.field({"required":false,"type":StageVisibilityUpdateManyWithoutTeamMemberNestedInput}),
+  stageVisibilities: t.field({"required":false,"type":StageVisibilityUpdateManyWithoutTeamMemberNestedInput}),
   hiredCandidates: t.field({"required":false,"type":CandidateUpdateManyWithoutHiredByNestedInput}),
   evaluations: t.field({"required":false,"type":EvaluationUpdateManyWithoutTeamMemberNestedInput}),
   tasks: t.field({"required":false,"type":TaskMemberUpdateManyWithoutTeamMemberNestedInput}),
   follows: t.field({"required":false,"type":FollowUpdateManyWithoutTeamMemberNestedInput}),
+  interviewerEvents: t.field({"required":false,"type":EventUpdateManyWithoutInterviewersNestedInput}),
 });
-export const HiringRoleUpdateWithoutEventScheduleInterviewerInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpdateWithoutEventScheduleInterviewerInput>>('HiringRoleUpdateWithoutEventScheduleInterviewerInput').implement({
-  fields: HiringRoleUpdateWithoutEventScheduleInterviewerInputFields,
+export const HiringRoleUpdateWithoutEventScheduleInterviewersInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpdateWithoutEventScheduleInterviewersInput>>('HiringRoleUpdateWithoutEventScheduleInterviewersInput').implement({
+  fields: HiringRoleUpdateWithoutEventScheduleInterviewersInputFields,
 });
 
 export const EventScheduleCreateWithoutEventScheduleEvaluationsInputFields = (t: any) => ({
@@ -21070,27 +21069,36 @@ export const CompanyCreateOrConnectWithoutEventsInput = builder.inputRef<PrismaU
   fields: CompanyCreateOrConnectWithoutEventsInputFields,
 });
 
-export const EventInterviewerCreateWithoutEventInputFields = (t: any) => ({
-  teamMember: t.field({"required":true,"type":HiringRoleCreateNestedOneWithoutEventInterviewerInput}),
+export const HiringRoleCreateWithoutInterviewerEventsInputFields = (t: any) => ({
+  extraAbilities: t.stringList({"required":false}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+  updatedAt: t.field({"required":false,"type":DateTime}),
+  user: t.field({"required":true,"type":UserCreateNestedOneWithoutHiringRolesInput}),
+  role: t.field({"required":true,"type":RoleCreateNestedOneWithoutHiringRolesInput}),
+  company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutHiringRolesInput}),
+  attachments: t.field({"required":false,"type":AttachmentCreateNestedManyWithoutUploaderInput}),
+  auditLogs: t.field({"required":false,"type":AuditLogCreateNestedManyWithoutUserInput}),
+  eventScheduleInterviewers: t.field({"required":false,"type":EventScheduleInterviewerCreateNestedManyWithoutTeamMemberInput}),
+  createdEvents: t.field({"required":false,"type":EventCreateNestedManyWithoutCreatedByInput}),
+  offerRecruiter: t.field({"required":false,"type":OfferCreateNestedOneWithoutRecruiterInput}),
+  offerHiringManager: t.field({"required":false,"type":OfferCreateNestedOneWithoutHiringManagerInput}),
+  memberships: t.field({"required":false,"type":MembershipCreateNestedManyWithoutTeamMemberInput}),
+  stageVisibilities: t.field({"required":false,"type":StageVisibilityCreateNestedManyWithoutTeamMemberInput}),
+  hiredCandidates: t.field({"required":false,"type":CandidateCreateNestedManyWithoutHiredByInput}),
+  evaluations: t.field({"required":false,"type":EvaluationCreateNestedManyWithoutTeamMemberInput}),
+  tasks: t.field({"required":false,"type":TaskMemberCreateNestedManyWithoutTeamMemberInput}),
+  follows: t.field({"required":false,"type":FollowCreateNestedManyWithoutTeamMemberInput}),
 });
-export const EventInterviewerCreateWithoutEventInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventInterviewerCreateWithoutEventInput>>('EventInterviewerCreateWithoutEventInput').implement({
-  fields: EventInterviewerCreateWithoutEventInputFields,
+export const HiringRoleCreateWithoutInterviewerEventsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleCreateWithoutInterviewerEventsInput>>('HiringRoleCreateWithoutInterviewerEventsInput').implement({
+  fields: HiringRoleCreateWithoutInterviewerEventsInputFields,
 });
 
-export const EventInterviewerCreateOrConnectWithoutEventInputFields = (t: any) => ({
-  where: t.field({"required":true,"type":EventInterviewerWhereUniqueInput}),
-  create: t.field({"required":true,"type":EventInterviewerCreateWithoutEventInput}),
+export const HiringRoleCreateOrConnectWithoutInterviewerEventsInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":HiringRoleWhereUniqueInput}),
+  create: t.field({"required":true,"type":HiringRoleCreateWithoutInterviewerEventsInput}),
 });
-export const EventInterviewerCreateOrConnectWithoutEventInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventInterviewerCreateOrConnectWithoutEventInput>>('EventInterviewerCreateOrConnectWithoutEventInput').implement({
-  fields: EventInterviewerCreateOrConnectWithoutEventInputFields,
-});
-
-export const EventInterviewerCreateManyEventInputEnvelopeFields = (t: any) => ({
-  data: t.field({"required":true,"type":[EventInterviewerCreateManyEventInput]}),
-  skipDuplicates: t.boolean({"required":false}),
-});
-export const EventInterviewerCreateManyEventInputEnvelope = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventInterviewerCreateManyEventInputEnvelope>>('EventInterviewerCreateManyEventInputEnvelope').implement({
-  fields: EventInterviewerCreateManyEventInputEnvelopeFields,
+export const HiringRoleCreateOrConnectWithoutInterviewerEventsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleCreateOrConnectWithoutInterviewerEventsInput>>('HiringRoleCreateOrConnectWithoutInterviewerEventsInput').implement({
+  fields: HiringRoleCreateOrConnectWithoutInterviewerEventsInputFields,
 });
 
 export const EvaluationCreateWithoutEventInputFields = (t: any) => ({
@@ -21124,6 +21132,83 @@ export const EvaluationCreateManyEventInputEnvelopeFields = (t: any) => ({
 });
 export const EvaluationCreateManyEventInputEnvelope = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EvaluationCreateManyEventInputEnvelope>>('EvaluationCreateManyEventInputEnvelope').implement({
   fields: EvaluationCreateManyEventInputEnvelopeFields,
+});
+
+export const CandidateCreateWithoutEventsInputFields = (t: any) => ({
+  firstName: t.string({"required":true}),
+  lastName: t.string({"required":true}),
+  email: t.string({"required":true}),
+  phone: t.string({"required":false}),
+  skills: t.stringList({"required":false}),
+  mainLanguage: t.string({"required":false}),
+  languages: t.stringList({"required":false}),
+  coverLetterText: t.string({"required":false}),
+  birthday: t.field({"required":false,"type":DateTime}),
+  educationLevel: t.string({"required":false}),
+  socials: t.stringList({"required":false}),
+  links: t.stringList({"required":false}),
+  salaryExpectation: t.int({"required":false}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+  updatedAt: t.field({"required":false,"type":DateTime}),
+  referrer: t.field({"required":false,"type":TagSourceCreateNestedOneWithoutCandidateReferrerInput}),
+  cv: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateCvInput}),
+  avatar: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateAvatarInput}),
+  coverLetter: t.field({"required":false,"type":AttachmentCreateNestedOneWithoutCandidateCoverLetterInput}),
+  hiredAt: t.field({"required":false,"type":OfferCreateNestedOneWithoutHiredInput}),
+  hiredBy: t.field({"required":false,"type":HiringRoleCreateNestedOneWithoutHiredCandidatesInput}),
+  auditLogs: t.field({"required":false,"type":AuditLogCreateNestedManyWithoutCandidateInput}),
+  offers: t.field({"required":false,"type":MatchCreateNestedManyWithoutCandidateInput}),
+  talentPools: t.field({"required":false,"type":TalentPoolMatchCreateNestedManyWithoutCandidateInput}),
+  candidateTags: t.field({"required":false,"type":CandidateTagCreateNestedManyWithoutCandidateInput}),
+  candidateCustomFields: t.field({"required":false,"type":CandidateCustomFieldCreateNestedManyWithoutCandidateInput}),
+  evaluations: t.field({"required":false,"type":EvaluationCreateNestedManyWithoutCandidateInput}),
+  tasks: t.field({"required":false,"type":TaskCreateNestedManyWithoutCandidateInput}),
+  follows: t.field({"required":false,"type":FollowCreateNestedManyWithoutCandidateInput}),
+  SharedCandidateLink: t.field({"required":false,"type":SharedCandidateLinkCreateNestedManyWithoutCandidateInput}),
+  company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutCandidatesInput}),
+});
+export const CandidateCreateWithoutEventsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateCreateWithoutEventsInput>>('CandidateCreateWithoutEventsInput').implement({
+  fields: CandidateCreateWithoutEventsInputFields,
+});
+
+export const CandidateCreateOrConnectWithoutEventsInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":CandidateWhereUniqueInput}),
+  create: t.field({"required":true,"type":CandidateCreateWithoutEventsInput}),
+});
+export const CandidateCreateOrConnectWithoutEventsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateCreateOrConnectWithoutEventsInput>>('CandidateCreateOrConnectWithoutEventsInput').implement({
+  fields: CandidateCreateOrConnectWithoutEventsInputFields,
+});
+
+export const HiringRoleCreateWithoutCreatedEventsInputFields = (t: any) => ({
+  extraAbilities: t.stringList({"required":false}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+  updatedAt: t.field({"required":false,"type":DateTime}),
+  user: t.field({"required":true,"type":UserCreateNestedOneWithoutHiringRolesInput}),
+  role: t.field({"required":true,"type":RoleCreateNestedOneWithoutHiringRolesInput}),
+  company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutHiringRolesInput}),
+  attachments: t.field({"required":false,"type":AttachmentCreateNestedManyWithoutUploaderInput}),
+  auditLogs: t.field({"required":false,"type":AuditLogCreateNestedManyWithoutUserInput}),
+  eventScheduleInterviewers: t.field({"required":false,"type":EventScheduleInterviewerCreateNestedManyWithoutTeamMemberInput}),
+  offerRecruiter: t.field({"required":false,"type":OfferCreateNestedOneWithoutRecruiterInput}),
+  offerHiringManager: t.field({"required":false,"type":OfferCreateNestedOneWithoutHiringManagerInput}),
+  memberships: t.field({"required":false,"type":MembershipCreateNestedManyWithoutTeamMemberInput}),
+  stageVisibilities: t.field({"required":false,"type":StageVisibilityCreateNestedManyWithoutTeamMemberInput}),
+  hiredCandidates: t.field({"required":false,"type":CandidateCreateNestedManyWithoutHiredByInput}),
+  evaluations: t.field({"required":false,"type":EvaluationCreateNestedManyWithoutTeamMemberInput}),
+  tasks: t.field({"required":false,"type":TaskMemberCreateNestedManyWithoutTeamMemberInput}),
+  follows: t.field({"required":false,"type":FollowCreateNestedManyWithoutTeamMemberInput}),
+  interviewerEvents: t.field({"required":false,"type":EventCreateNestedManyWithoutInterviewersInput}),
+});
+export const HiringRoleCreateWithoutCreatedEventsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleCreateWithoutCreatedEventsInput>>('HiringRoleCreateWithoutCreatedEventsInput').implement({
+  fields: HiringRoleCreateWithoutCreatedEventsInputFields,
+});
+
+export const HiringRoleCreateOrConnectWithoutCreatedEventsInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":HiringRoleWhereUniqueInput}),
+  create: t.field({"required":true,"type":HiringRoleCreateWithoutCreatedEventsInput}),
+});
+export const HiringRoleCreateOrConnectWithoutCreatedEventsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleCreateOrConnectWithoutCreatedEventsInput>>('HiringRoleCreateOrConnectWithoutCreatedEventsInput').implement({
+  fields: HiringRoleCreateOrConnectWithoutCreatedEventsInputFields,
 });
 
 export const CompanyUpsertWithoutEventsInputFields = (t: any) => ({
@@ -21183,29 +21268,29 @@ export const CompanyUpdateWithoutEventsInput = builder.inputRef<PrismaUpdateOper
   fields: CompanyUpdateWithoutEventsInputFields,
 });
 
-export const EventInterviewerUpsertWithWhereUniqueWithoutEventInputFields = (t: any) => ({
-  where: t.field({"required":true,"type":EventInterviewerWhereUniqueInput}),
-  update: t.field({"required":true,"type":EventInterviewerUpdateWithoutEventInput}),
-  create: t.field({"required":true,"type":EventInterviewerCreateWithoutEventInput}),
+export const HiringRoleUpsertWithWhereUniqueWithoutInterviewerEventsInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":HiringRoleWhereUniqueInput}),
+  update: t.field({"required":true,"type":HiringRoleUpdateWithoutInterviewerEventsInput}),
+  create: t.field({"required":true,"type":HiringRoleCreateWithoutInterviewerEventsInput}),
 });
-export const EventInterviewerUpsertWithWhereUniqueWithoutEventInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventInterviewerUpsertWithWhereUniqueWithoutEventInput>>('EventInterviewerUpsertWithWhereUniqueWithoutEventInput').implement({
-  fields: EventInterviewerUpsertWithWhereUniqueWithoutEventInputFields,
-});
-
-export const EventInterviewerUpdateWithWhereUniqueWithoutEventInputFields = (t: any) => ({
-  where: t.field({"required":true,"type":EventInterviewerWhereUniqueInput}),
-  data: t.field({"required":true,"type":EventInterviewerUpdateWithoutEventInput}),
-});
-export const EventInterviewerUpdateWithWhereUniqueWithoutEventInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventInterviewerUpdateWithWhereUniqueWithoutEventInput>>('EventInterviewerUpdateWithWhereUniqueWithoutEventInput').implement({
-  fields: EventInterviewerUpdateWithWhereUniqueWithoutEventInputFields,
+export const HiringRoleUpsertWithWhereUniqueWithoutInterviewerEventsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpsertWithWhereUniqueWithoutInterviewerEventsInput>>('HiringRoleUpsertWithWhereUniqueWithoutInterviewerEventsInput').implement({
+  fields: HiringRoleUpsertWithWhereUniqueWithoutInterviewerEventsInputFields,
 });
 
-export const EventInterviewerUpdateManyWithWhereWithoutEventInputFields = (t: any) => ({
-  where: t.field({"required":true,"type":EventInterviewerScalarWhereInput}),
-  data: t.field({"required":true,"type":EventInterviewerUpdateManyMutationInput}),
+export const HiringRoleUpdateWithWhereUniqueWithoutInterviewerEventsInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":HiringRoleWhereUniqueInput}),
+  data: t.field({"required":true,"type":HiringRoleUpdateWithoutInterviewerEventsInput}),
 });
-export const EventInterviewerUpdateManyWithWhereWithoutEventInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventInterviewerUpdateManyWithWhereWithoutEventInput>>('EventInterviewerUpdateManyWithWhereWithoutEventInput').implement({
-  fields: EventInterviewerUpdateManyWithWhereWithoutEventInputFields,
+export const HiringRoleUpdateWithWhereUniqueWithoutInterviewerEventsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpdateWithWhereUniqueWithoutInterviewerEventsInput>>('HiringRoleUpdateWithWhereUniqueWithoutInterviewerEventsInput').implement({
+  fields: HiringRoleUpdateWithWhereUniqueWithoutInterviewerEventsInputFields,
+});
+
+export const HiringRoleUpdateManyWithWhereWithoutInterviewerEventsInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":HiringRoleScalarWhereInput}),
+  data: t.field({"required":true,"type":HiringRoleUpdateManyMutationInput}),
+});
+export const HiringRoleUpdateManyWithWhereWithoutInterviewerEventsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpdateManyWithWhereWithoutInterviewerEventsInput>>('HiringRoleUpdateManyWithWhereWithoutInterviewerEventsInput').implement({
+  fields: HiringRoleUpdateManyWithWhereWithoutInterviewerEventsInputFields,
 });
 
 export const EvaluationUpsertWithWhereUniqueWithoutEventInputFields = (t: any) => ({
@@ -21233,110 +21318,49 @@ export const EvaluationUpdateManyWithWhereWithoutEventInput = builder.inputRef<P
   fields: EvaluationUpdateManyWithWhereWithoutEventInputFields,
 });
 
-export const EventCreateWithoutEventInterviewersInputFields = (t: any) => ({
-  date: t.field({"required":true,"type":DateTime}),
-  time: t.int({"required":true}),
-  duration: t.int({"required":true}),
-  type: t.string({"required":true}),
-  location: t.string({"required":true}),
-  note: t.string({"required":true}),
-  privateNote: t.string({"required":true}),
-  company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutEventsInput}),
-  evaluations: t.field({"required":false,"type":EvaluationCreateNestedManyWithoutEventInput}),
+export const CandidateUpsertWithWhereUniqueWithoutEventsInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":CandidateWhereUniqueInput}),
+  update: t.field({"required":true,"type":CandidateUpdateWithoutEventsInput}),
+  create: t.field({"required":true,"type":CandidateCreateWithoutEventsInput}),
 });
-export const EventCreateWithoutEventInterviewersInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventCreateWithoutEventInterviewersInput>>('EventCreateWithoutEventInterviewersInput').implement({
-  fields: EventCreateWithoutEventInterviewersInputFields,
+export const CandidateUpsertWithWhereUniqueWithoutEventsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateUpsertWithWhereUniqueWithoutEventsInput>>('CandidateUpsertWithWhereUniqueWithoutEventsInput').implement({
+  fields: CandidateUpsertWithWhereUniqueWithoutEventsInputFields,
 });
 
-export const EventCreateOrConnectWithoutEventInterviewersInputFields = (t: any) => ({
-  where: t.field({"required":true,"type":EventWhereUniqueInput}),
-  create: t.field({"required":true,"type":EventCreateWithoutEventInterviewersInput}),
+export const CandidateUpdateWithWhereUniqueWithoutEventsInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":CandidateWhereUniqueInput}),
+  data: t.field({"required":true,"type":CandidateUpdateWithoutEventsInput}),
 });
-export const EventCreateOrConnectWithoutEventInterviewersInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventCreateOrConnectWithoutEventInterviewersInput>>('EventCreateOrConnectWithoutEventInterviewersInput').implement({
-  fields: EventCreateOrConnectWithoutEventInterviewersInputFields,
-});
-
-export const HiringRoleCreateWithoutEventInterviewerInputFields = (t: any) => ({
-  extraAbilities: t.stringList({"required":false}),
-  createdAt: t.field({"required":false,"type":DateTime}),
-  updatedAt: t.field({"required":false,"type":DateTime}),
-  user: t.field({"required":true,"type":UserCreateNestedOneWithoutHiringRolesInput}),
-  role: t.field({"required":true,"type":RoleCreateNestedOneWithoutHiringRolesInput}),
-  company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutHiringRolesInput}),
-  attachments: t.field({"required":false,"type":AttachmentCreateNestedManyWithoutUploaderInput}),
-  auditLogs: t.field({"required":false,"type":AuditLogCreateNestedManyWithoutUserInput}),
-  eventScheduleInterviewer: t.field({"required":false,"type":EventScheduleInterviewerCreateNestedManyWithoutTeamMemberInput}),
-  offerRecruiter: t.field({"required":false,"type":OfferCreateNestedOneWithoutRecruiterInput}),
-  offerHiringManager: t.field({"required":false,"type":OfferCreateNestedOneWithoutHiringManagerInput}),
-  memberships: t.field({"required":false,"type":MembershipCreateNestedManyWithoutTeamMemberInput}),
-  stageVisibility: t.field({"required":false,"type":StageVisibilityCreateNestedManyWithoutTeamMemberInput}),
-  hiredCandidates: t.field({"required":false,"type":CandidateCreateNestedManyWithoutHiredByInput}),
-  evaluations: t.field({"required":false,"type":EvaluationCreateNestedManyWithoutTeamMemberInput}),
-  tasks: t.field({"required":false,"type":TaskMemberCreateNestedManyWithoutTeamMemberInput}),
-  follows: t.field({"required":false,"type":FollowCreateNestedManyWithoutTeamMemberInput}),
-});
-export const HiringRoleCreateWithoutEventInterviewerInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleCreateWithoutEventInterviewerInput>>('HiringRoleCreateWithoutEventInterviewerInput').implement({
-  fields: HiringRoleCreateWithoutEventInterviewerInputFields,
+export const CandidateUpdateWithWhereUniqueWithoutEventsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateUpdateWithWhereUniqueWithoutEventsInput>>('CandidateUpdateWithWhereUniqueWithoutEventsInput').implement({
+  fields: CandidateUpdateWithWhereUniqueWithoutEventsInputFields,
 });
 
-export const HiringRoleCreateOrConnectWithoutEventInterviewerInputFields = (t: any) => ({
-  where: t.field({"required":true,"type":HiringRoleWhereUniqueInput}),
-  create: t.field({"required":true,"type":HiringRoleCreateWithoutEventInterviewerInput}),
+export const CandidateUpdateManyWithWhereWithoutEventsInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":CandidateScalarWhereInput}),
+  data: t.field({"required":true,"type":CandidateUpdateManyMutationInput}),
 });
-export const HiringRoleCreateOrConnectWithoutEventInterviewerInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleCreateOrConnectWithoutEventInterviewerInput>>('HiringRoleCreateOrConnectWithoutEventInterviewerInput').implement({
-  fields: HiringRoleCreateOrConnectWithoutEventInterviewerInputFields,
-});
-
-export const EventUpsertWithoutEventInterviewersInputFields = (t: any) => ({
-  update: t.field({"required":true,"type":EventUpdateWithoutEventInterviewersInput}),
-  create: t.field({"required":true,"type":EventCreateWithoutEventInterviewersInput}),
-  where: t.field({"required":false,"type":EventWhereInput}),
-});
-export const EventUpsertWithoutEventInterviewersInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventUpsertWithoutEventInterviewersInput>>('EventUpsertWithoutEventInterviewersInput').implement({
-  fields: EventUpsertWithoutEventInterviewersInputFields,
+export const CandidateUpdateManyWithWhereWithoutEventsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateUpdateManyWithWhereWithoutEventsInput>>('CandidateUpdateManyWithWhereWithoutEventsInput').implement({
+  fields: CandidateUpdateManyWithWhereWithoutEventsInputFields,
 });
 
-export const EventUpdateToOneWithWhereWithoutEventInterviewersInputFields = (t: any) => ({
-  where: t.field({"required":false,"type":EventWhereInput}),
-  data: t.field({"required":true,"type":EventUpdateWithoutEventInterviewersInput}),
-});
-export const EventUpdateToOneWithWhereWithoutEventInterviewersInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventUpdateToOneWithWhereWithoutEventInterviewersInput>>('EventUpdateToOneWithWhereWithoutEventInterviewersInput').implement({
-  fields: EventUpdateToOneWithWhereWithoutEventInterviewersInputFields,
-});
-
-export const EventUpdateWithoutEventInterviewersInputFields = (t: any) => ({
-  date: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
-  time: t.field({"required":false,"type":IntFieldUpdateOperationsInput}),
-  duration: t.field({"required":false,"type":IntFieldUpdateOperationsInput}),
-  type: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
-  location: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
-  note: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
-  privateNote: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
-  company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutEventsNestedInput}),
-  evaluations: t.field({"required":false,"type":EvaluationUpdateManyWithoutEventNestedInput}),
-});
-export const EventUpdateWithoutEventInterviewersInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventUpdateWithoutEventInterviewersInput>>('EventUpdateWithoutEventInterviewersInput').implement({
-  fields: EventUpdateWithoutEventInterviewersInputFields,
-});
-
-export const HiringRoleUpsertWithoutEventInterviewerInputFields = (t: any) => ({
-  update: t.field({"required":true,"type":HiringRoleUpdateWithoutEventInterviewerInput}),
-  create: t.field({"required":true,"type":HiringRoleCreateWithoutEventInterviewerInput}),
+export const HiringRoleUpsertWithoutCreatedEventsInputFields = (t: any) => ({
+  update: t.field({"required":true,"type":HiringRoleUpdateWithoutCreatedEventsInput}),
+  create: t.field({"required":true,"type":HiringRoleCreateWithoutCreatedEventsInput}),
   where: t.field({"required":false,"type":HiringRoleWhereInput}),
 });
-export const HiringRoleUpsertWithoutEventInterviewerInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpsertWithoutEventInterviewerInput>>('HiringRoleUpsertWithoutEventInterviewerInput').implement({
-  fields: HiringRoleUpsertWithoutEventInterviewerInputFields,
+export const HiringRoleUpsertWithoutCreatedEventsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpsertWithoutCreatedEventsInput>>('HiringRoleUpsertWithoutCreatedEventsInput').implement({
+  fields: HiringRoleUpsertWithoutCreatedEventsInputFields,
 });
 
-export const HiringRoleUpdateToOneWithWhereWithoutEventInterviewerInputFields = (t: any) => ({
+export const HiringRoleUpdateToOneWithWhereWithoutCreatedEventsInputFields = (t: any) => ({
   where: t.field({"required":false,"type":HiringRoleWhereInput}),
-  data: t.field({"required":true,"type":HiringRoleUpdateWithoutEventInterviewerInput}),
+  data: t.field({"required":true,"type":HiringRoleUpdateWithoutCreatedEventsInput}),
 });
-export const HiringRoleUpdateToOneWithWhereWithoutEventInterviewerInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpdateToOneWithWhereWithoutEventInterviewerInput>>('HiringRoleUpdateToOneWithWhereWithoutEventInterviewerInput').implement({
-  fields: HiringRoleUpdateToOneWithWhereWithoutEventInterviewerInputFields,
+export const HiringRoleUpdateToOneWithWhereWithoutCreatedEventsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpdateToOneWithWhereWithoutCreatedEventsInput>>('HiringRoleUpdateToOneWithWhereWithoutCreatedEventsInput').implement({
+  fields: HiringRoleUpdateToOneWithWhereWithoutCreatedEventsInputFields,
 });
 
-export const HiringRoleUpdateWithoutEventInterviewerInputFields = (t: any) => ({
+export const HiringRoleUpdateWithoutCreatedEventsInputFields = (t: any) => ({
   extraAbilities: t.stringList({"required":false}),
   createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
@@ -21345,18 +21369,19 @@ export const HiringRoleUpdateWithoutEventInterviewerInputFields = (t: any) => ({
   company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutHiringRolesNestedInput}),
   attachments: t.field({"required":false,"type":AttachmentUpdateManyWithoutUploaderNestedInput}),
   auditLogs: t.field({"required":false,"type":AuditLogUpdateManyWithoutUserNestedInput}),
-  eventScheduleInterviewer: t.field({"required":false,"type":EventScheduleInterviewerUpdateManyWithoutTeamMemberNestedInput}),
+  eventScheduleInterviewers: t.field({"required":false,"type":EventScheduleInterviewerUpdateManyWithoutTeamMemberNestedInput}),
   offerRecruiter: t.field({"required":false,"type":OfferUpdateOneWithoutRecruiterNestedInput}),
   offerHiringManager: t.field({"required":false,"type":OfferUpdateOneWithoutHiringManagerNestedInput}),
   memberships: t.field({"required":false,"type":MembershipUpdateManyWithoutTeamMemberNestedInput}),
-  stageVisibility: t.field({"required":false,"type":StageVisibilityUpdateManyWithoutTeamMemberNestedInput}),
+  stageVisibilities: t.field({"required":false,"type":StageVisibilityUpdateManyWithoutTeamMemberNestedInput}),
   hiredCandidates: t.field({"required":false,"type":CandidateUpdateManyWithoutHiredByNestedInput}),
   evaluations: t.field({"required":false,"type":EvaluationUpdateManyWithoutTeamMemberNestedInput}),
   tasks: t.field({"required":false,"type":TaskMemberUpdateManyWithoutTeamMemberNestedInput}),
   follows: t.field({"required":false,"type":FollowUpdateManyWithoutTeamMemberNestedInput}),
+  interviewerEvents: t.field({"required":false,"type":EventUpdateManyWithoutInterviewersNestedInput}),
 });
-export const HiringRoleUpdateWithoutEventInterviewerInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpdateWithoutEventInterviewerInput>>('HiringRoleUpdateWithoutEventInterviewerInput').implement({
-  fields: HiringRoleUpdateWithoutEventInterviewerInputFields,
+export const HiringRoleUpdateWithoutCreatedEventsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpdateWithoutCreatedEventsInput>>('HiringRoleUpdateWithoutCreatedEventsInput').implement({
+  fields: HiringRoleUpdateWithoutCreatedEventsInputFields,
 });
 
 export const CompanyCreateWithoutOffersInputFields = (t: any) => ({
@@ -21432,15 +21457,16 @@ export const HiringRoleCreateWithoutOfferRecruiterInputFields = (t: any) => ({
   company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutHiringRolesInput}),
   attachments: t.field({"required":false,"type":AttachmentCreateNestedManyWithoutUploaderInput}),
   auditLogs: t.field({"required":false,"type":AuditLogCreateNestedManyWithoutUserInput}),
-  eventScheduleInterviewer: t.field({"required":false,"type":EventScheduleInterviewerCreateNestedManyWithoutTeamMemberInput}),
-  eventInterviewer: t.field({"required":false,"type":EventInterviewerCreateNestedManyWithoutTeamMemberInput}),
+  eventScheduleInterviewers: t.field({"required":false,"type":EventScheduleInterviewerCreateNestedManyWithoutTeamMemberInput}),
+  createdEvents: t.field({"required":false,"type":EventCreateNestedManyWithoutCreatedByInput}),
   offerHiringManager: t.field({"required":false,"type":OfferCreateNestedOneWithoutHiringManagerInput}),
   memberships: t.field({"required":false,"type":MembershipCreateNestedManyWithoutTeamMemberInput}),
-  stageVisibility: t.field({"required":false,"type":StageVisibilityCreateNestedManyWithoutTeamMemberInput}),
+  stageVisibilities: t.field({"required":false,"type":StageVisibilityCreateNestedManyWithoutTeamMemberInput}),
   hiredCandidates: t.field({"required":false,"type":CandidateCreateNestedManyWithoutHiredByInput}),
   evaluations: t.field({"required":false,"type":EvaluationCreateNestedManyWithoutTeamMemberInput}),
   tasks: t.field({"required":false,"type":TaskMemberCreateNestedManyWithoutTeamMemberInput}),
   follows: t.field({"required":false,"type":FollowCreateNestedManyWithoutTeamMemberInput}),
+  interviewerEvents: t.field({"required":false,"type":EventCreateNestedManyWithoutInterviewersInput}),
 });
 export const HiringRoleCreateWithoutOfferRecruiterInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleCreateWithoutOfferRecruiterInput>>('HiringRoleCreateWithoutOfferRecruiterInput').implement({
   fields: HiringRoleCreateWithoutOfferRecruiterInputFields,
@@ -21463,15 +21489,16 @@ export const HiringRoleCreateWithoutOfferHiringManagerInputFields = (t: any) => 
   company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutHiringRolesInput}),
   attachments: t.field({"required":false,"type":AttachmentCreateNestedManyWithoutUploaderInput}),
   auditLogs: t.field({"required":false,"type":AuditLogCreateNestedManyWithoutUserInput}),
-  eventScheduleInterviewer: t.field({"required":false,"type":EventScheduleInterviewerCreateNestedManyWithoutTeamMemberInput}),
-  eventInterviewer: t.field({"required":false,"type":EventInterviewerCreateNestedManyWithoutTeamMemberInput}),
+  eventScheduleInterviewers: t.field({"required":false,"type":EventScheduleInterviewerCreateNestedManyWithoutTeamMemberInput}),
+  createdEvents: t.field({"required":false,"type":EventCreateNestedManyWithoutCreatedByInput}),
   offerRecruiter: t.field({"required":false,"type":OfferCreateNestedOneWithoutRecruiterInput}),
   memberships: t.field({"required":false,"type":MembershipCreateNestedManyWithoutTeamMemberInput}),
-  stageVisibility: t.field({"required":false,"type":StageVisibilityCreateNestedManyWithoutTeamMemberInput}),
+  stageVisibilities: t.field({"required":false,"type":StageVisibilityCreateNestedManyWithoutTeamMemberInput}),
   hiredCandidates: t.field({"required":false,"type":CandidateCreateNestedManyWithoutHiredByInput}),
   evaluations: t.field({"required":false,"type":EvaluationCreateNestedManyWithoutTeamMemberInput}),
   tasks: t.field({"required":false,"type":TaskMemberCreateNestedManyWithoutTeamMemberInput}),
   follows: t.field({"required":false,"type":FollowCreateNestedManyWithoutTeamMemberInput}),
+  interviewerEvents: t.field({"required":false,"type":EventCreateNestedManyWithoutInterviewersInput}),
 });
 export const HiringRoleCreateWithoutOfferHiringManagerInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleCreateWithoutOfferHiringManagerInput>>('HiringRoleCreateWithoutOfferHiringManagerInput').implement({
   fields: HiringRoleCreateWithoutOfferHiringManagerInputFields,
@@ -21713,6 +21740,7 @@ export const CandidateCreateWithoutHiredAtInputFields = (t: any) => ({
   follows: t.field({"required":false,"type":FollowCreateNestedManyWithoutCandidateInput}),
   SharedCandidateLink: t.field({"required":false,"type":SharedCandidateLinkCreateNestedManyWithoutCandidateInput}),
   company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutCandidatesInput}),
+  events: t.field({"required":false,"type":EventCreateNestedManyWithoutCandidatesInput}),
 });
 export const CandidateCreateWithoutHiredAtInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateCreateWithoutHiredAtInput>>('CandidateCreateWithoutHiredAtInput').implement({
   fields: CandidateCreateWithoutHiredAtInputFields,
@@ -21900,15 +21928,16 @@ export const HiringRoleUpdateWithoutOfferRecruiterInputFields = (t: any) => ({
   company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutHiringRolesNestedInput}),
   attachments: t.field({"required":false,"type":AttachmentUpdateManyWithoutUploaderNestedInput}),
   auditLogs: t.field({"required":false,"type":AuditLogUpdateManyWithoutUserNestedInput}),
-  eventScheduleInterviewer: t.field({"required":false,"type":EventScheduleInterviewerUpdateManyWithoutTeamMemberNestedInput}),
-  eventInterviewer: t.field({"required":false,"type":EventInterviewerUpdateManyWithoutTeamMemberNestedInput}),
+  eventScheduleInterviewers: t.field({"required":false,"type":EventScheduleInterviewerUpdateManyWithoutTeamMemberNestedInput}),
+  createdEvents: t.field({"required":false,"type":EventUpdateManyWithoutCreatedByNestedInput}),
   offerHiringManager: t.field({"required":false,"type":OfferUpdateOneWithoutHiringManagerNestedInput}),
   memberships: t.field({"required":false,"type":MembershipUpdateManyWithoutTeamMemberNestedInput}),
-  stageVisibility: t.field({"required":false,"type":StageVisibilityUpdateManyWithoutTeamMemberNestedInput}),
+  stageVisibilities: t.field({"required":false,"type":StageVisibilityUpdateManyWithoutTeamMemberNestedInput}),
   hiredCandidates: t.field({"required":false,"type":CandidateUpdateManyWithoutHiredByNestedInput}),
   evaluations: t.field({"required":false,"type":EvaluationUpdateManyWithoutTeamMemberNestedInput}),
   tasks: t.field({"required":false,"type":TaskMemberUpdateManyWithoutTeamMemberNestedInput}),
   follows: t.field({"required":false,"type":FollowUpdateManyWithoutTeamMemberNestedInput}),
+  interviewerEvents: t.field({"required":false,"type":EventUpdateManyWithoutInterviewersNestedInput}),
 });
 export const HiringRoleUpdateWithoutOfferRecruiterInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpdateWithoutOfferRecruiterInput>>('HiringRoleUpdateWithoutOfferRecruiterInput').implement({
   fields: HiringRoleUpdateWithoutOfferRecruiterInputFields,
@@ -21940,15 +21969,16 @@ export const HiringRoleUpdateWithoutOfferHiringManagerInputFields = (t: any) => 
   company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutHiringRolesNestedInput}),
   attachments: t.field({"required":false,"type":AttachmentUpdateManyWithoutUploaderNestedInput}),
   auditLogs: t.field({"required":false,"type":AuditLogUpdateManyWithoutUserNestedInput}),
-  eventScheduleInterviewer: t.field({"required":false,"type":EventScheduleInterviewerUpdateManyWithoutTeamMemberNestedInput}),
-  eventInterviewer: t.field({"required":false,"type":EventInterviewerUpdateManyWithoutTeamMemberNestedInput}),
+  eventScheduleInterviewers: t.field({"required":false,"type":EventScheduleInterviewerUpdateManyWithoutTeamMemberNestedInput}),
+  createdEvents: t.field({"required":false,"type":EventUpdateManyWithoutCreatedByNestedInput}),
   offerRecruiter: t.field({"required":false,"type":OfferUpdateOneWithoutRecruiterNestedInput}),
   memberships: t.field({"required":false,"type":MembershipUpdateManyWithoutTeamMemberNestedInput}),
-  stageVisibility: t.field({"required":false,"type":StageVisibilityUpdateManyWithoutTeamMemberNestedInput}),
+  stageVisibilities: t.field({"required":false,"type":StageVisibilityUpdateManyWithoutTeamMemberNestedInput}),
   hiredCandidates: t.field({"required":false,"type":CandidateUpdateManyWithoutHiredByNestedInput}),
   evaluations: t.field({"required":false,"type":EvaluationUpdateManyWithoutTeamMemberNestedInput}),
   tasks: t.field({"required":false,"type":TaskMemberUpdateManyWithoutTeamMemberNestedInput}),
   follows: t.field({"required":false,"type":FollowUpdateManyWithoutTeamMemberNestedInput}),
+  interviewerEvents: t.field({"required":false,"type":EventUpdateManyWithoutInterviewersNestedInput}),
 });
 export const HiringRoleUpdateWithoutOfferHiringManagerInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpdateWithoutOfferHiringManagerInput>>('HiringRoleUpdateWithoutOfferHiringManagerInput').implement({
   fields: HiringRoleUpdateWithoutOfferHiringManagerInputFields,
@@ -22517,6 +22547,7 @@ export const CandidateCreateWithoutOffersInputFields = (t: any) => ({
   follows: t.field({"required":false,"type":FollowCreateNestedManyWithoutCandidateInput}),
   SharedCandidateLink: t.field({"required":false,"type":SharedCandidateLinkCreateNestedManyWithoutCandidateInput}),
   company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutCandidatesInput}),
+  events: t.field({"required":false,"type":EventCreateNestedManyWithoutCandidatesInput}),
 });
 export const CandidateCreateWithoutOffersInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateCreateWithoutOffersInput>>('CandidateCreateWithoutOffersInput').implement({
   fields: CandidateCreateWithoutOffersInputFields,
@@ -22680,6 +22711,7 @@ export const CandidateUpdateWithoutOffersInputFields = (t: any) => ({
   follows: t.field({"required":false,"type":FollowUpdateManyWithoutCandidateNestedInput}),
   SharedCandidateLink: t.field({"required":false,"type":SharedCandidateLinkUpdateManyWithoutCandidateNestedInput}),
   company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutCandidatesNestedInput}),
+  events: t.field({"required":false,"type":EventUpdateManyWithoutCandidatesNestedInput}),
 });
 export const CandidateUpdateWithoutOffersInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateUpdateWithoutOffersInput>>('CandidateUpdateWithoutOffersInput').implement({
   fields: CandidateUpdateWithoutOffersInputFields,
@@ -22915,15 +22947,16 @@ export const HiringRoleCreateWithoutMembershipsInputFields = (t: any) => ({
   company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutHiringRolesInput}),
   attachments: t.field({"required":false,"type":AttachmentCreateNestedManyWithoutUploaderInput}),
   auditLogs: t.field({"required":false,"type":AuditLogCreateNestedManyWithoutUserInput}),
-  eventScheduleInterviewer: t.field({"required":false,"type":EventScheduleInterviewerCreateNestedManyWithoutTeamMemberInput}),
-  eventInterviewer: t.field({"required":false,"type":EventInterviewerCreateNestedManyWithoutTeamMemberInput}),
+  eventScheduleInterviewers: t.field({"required":false,"type":EventScheduleInterviewerCreateNestedManyWithoutTeamMemberInput}),
+  createdEvents: t.field({"required":false,"type":EventCreateNestedManyWithoutCreatedByInput}),
   offerRecruiter: t.field({"required":false,"type":OfferCreateNestedOneWithoutRecruiterInput}),
   offerHiringManager: t.field({"required":false,"type":OfferCreateNestedOneWithoutHiringManagerInput}),
-  stageVisibility: t.field({"required":false,"type":StageVisibilityCreateNestedManyWithoutTeamMemberInput}),
+  stageVisibilities: t.field({"required":false,"type":StageVisibilityCreateNestedManyWithoutTeamMemberInput}),
   hiredCandidates: t.field({"required":false,"type":CandidateCreateNestedManyWithoutHiredByInput}),
   evaluations: t.field({"required":false,"type":EvaluationCreateNestedManyWithoutTeamMemberInput}),
   tasks: t.field({"required":false,"type":TaskMemberCreateNestedManyWithoutTeamMemberInput}),
   follows: t.field({"required":false,"type":FollowCreateNestedManyWithoutTeamMemberInput}),
+  interviewerEvents: t.field({"required":false,"type":EventCreateNestedManyWithoutInterviewersInput}),
 });
 export const HiringRoleCreateWithoutMembershipsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleCreateWithoutMembershipsInput>>('HiringRoleCreateWithoutMembershipsInput').implement({
   fields: HiringRoleCreateWithoutMembershipsInputFields,
@@ -23038,15 +23071,16 @@ export const HiringRoleUpdateWithoutMembershipsInputFields = (t: any) => ({
   company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutHiringRolesNestedInput}),
   attachments: t.field({"required":false,"type":AttachmentUpdateManyWithoutUploaderNestedInput}),
   auditLogs: t.field({"required":false,"type":AuditLogUpdateManyWithoutUserNestedInput}),
-  eventScheduleInterviewer: t.field({"required":false,"type":EventScheduleInterviewerUpdateManyWithoutTeamMemberNestedInput}),
-  eventInterviewer: t.field({"required":false,"type":EventInterviewerUpdateManyWithoutTeamMemberNestedInput}),
+  eventScheduleInterviewers: t.field({"required":false,"type":EventScheduleInterviewerUpdateManyWithoutTeamMemberNestedInput}),
+  createdEvents: t.field({"required":false,"type":EventUpdateManyWithoutCreatedByNestedInput}),
   offerRecruiter: t.field({"required":false,"type":OfferUpdateOneWithoutRecruiterNestedInput}),
   offerHiringManager: t.field({"required":false,"type":OfferUpdateOneWithoutHiringManagerNestedInput}),
-  stageVisibility: t.field({"required":false,"type":StageVisibilityUpdateManyWithoutTeamMemberNestedInput}),
+  stageVisibilities: t.field({"required":false,"type":StageVisibilityUpdateManyWithoutTeamMemberNestedInput}),
   hiredCandidates: t.field({"required":false,"type":CandidateUpdateManyWithoutHiredByNestedInput}),
   evaluations: t.field({"required":false,"type":EvaluationUpdateManyWithoutTeamMemberNestedInput}),
   tasks: t.field({"required":false,"type":TaskMemberUpdateManyWithoutTeamMemberNestedInput}),
   follows: t.field({"required":false,"type":FollowUpdateManyWithoutTeamMemberNestedInput}),
+  interviewerEvents: t.field({"required":false,"type":EventUpdateManyWithoutInterviewersNestedInput}),
 });
 export const HiringRoleUpdateWithoutMembershipsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpdateWithoutMembershipsInput>>('HiringRoleUpdateWithoutMembershipsInput').implement({
   fields: HiringRoleUpdateWithoutMembershipsInputFields,
@@ -23576,6 +23610,7 @@ export const CandidateCreateWithoutTalentPoolsInputFields = (t: any) => ({
   follows: t.field({"required":false,"type":FollowCreateNestedManyWithoutCandidateInput}),
   SharedCandidateLink: t.field({"required":false,"type":SharedCandidateLinkCreateNestedManyWithoutCandidateInput}),
   company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutCandidatesInput}),
+  events: t.field({"required":false,"type":EventCreateNestedManyWithoutCandidatesInput}),
 });
 export const CandidateCreateWithoutTalentPoolsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateCreateWithoutTalentPoolsInput>>('CandidateCreateWithoutTalentPoolsInput').implement({
   fields: CandidateCreateWithoutTalentPoolsInputFields,
@@ -23667,6 +23702,7 @@ export const CandidateUpdateWithoutTalentPoolsInputFields = (t: any) => ({
   follows: t.field({"required":false,"type":FollowUpdateManyWithoutCandidateNestedInput}),
   SharedCandidateLink: t.field({"required":false,"type":SharedCandidateLinkUpdateManyWithoutCandidateNestedInput}),
   company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutCandidatesNestedInput}),
+  events: t.field({"required":false,"type":EventUpdateManyWithoutCandidatesNestedInput}),
 });
 export const CandidateUpdateWithoutTalentPoolsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateUpdateWithoutTalentPoolsInput>>('CandidateUpdateWithoutTalentPoolsInput').implement({
   fields: CandidateUpdateWithoutTalentPoolsInputFields,
@@ -24218,7 +24254,7 @@ export const MatchCreateManyStageInputEnvelope = builder.inputRef<PrismaUpdateOp
 
 export const StageVisibilityCreateWithoutStageInputFields = (t: any) => ({
   type: t.field({"required":true,"type":MembershipTypes}),
-  teamMember: t.field({"required":false,"type":HiringRoleCreateNestedOneWithoutStageVisibilityInput}),
+  teamMember: t.field({"required":false,"type":HiringRoleCreateNestedOneWithoutStageVisibilitiesInput}),
   role: t.field({"required":false,"type":RoleCreateNestedOneWithoutStageVisibilityInput}),
 });
 export const StageVisibilityCreateWithoutStageInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.StageVisibilityCreateWithoutStageInput>>('StageVisibilityCreateWithoutStageInput').implement({
@@ -24385,7 +24421,7 @@ export const StageMetadataScalarWhereInput = builder.inputRef<PrismaUpdateOperat
   fields: StageMetadataScalarWhereInputFields,
 });
 
-export const HiringRoleCreateWithoutStageVisibilityInputFields = (t: any) => ({
+export const HiringRoleCreateWithoutStageVisibilitiesInputFields = (t: any) => ({
   extraAbilities: t.stringList({"required":false}),
   createdAt: t.field({"required":false,"type":DateTime}),
   updatedAt: t.field({"required":false,"type":DateTime}),
@@ -24394,8 +24430,8 @@ export const HiringRoleCreateWithoutStageVisibilityInputFields = (t: any) => ({
   company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutHiringRolesInput}),
   attachments: t.field({"required":false,"type":AttachmentCreateNestedManyWithoutUploaderInput}),
   auditLogs: t.field({"required":false,"type":AuditLogCreateNestedManyWithoutUserInput}),
-  eventScheduleInterviewer: t.field({"required":false,"type":EventScheduleInterviewerCreateNestedManyWithoutTeamMemberInput}),
-  eventInterviewer: t.field({"required":false,"type":EventInterviewerCreateNestedManyWithoutTeamMemberInput}),
+  eventScheduleInterviewers: t.field({"required":false,"type":EventScheduleInterviewerCreateNestedManyWithoutTeamMemberInput}),
+  createdEvents: t.field({"required":false,"type":EventCreateNestedManyWithoutCreatedByInput}),
   offerRecruiter: t.field({"required":false,"type":OfferCreateNestedOneWithoutRecruiterInput}),
   offerHiringManager: t.field({"required":false,"type":OfferCreateNestedOneWithoutHiringManagerInput}),
   memberships: t.field({"required":false,"type":MembershipCreateNestedManyWithoutTeamMemberInput}),
@@ -24403,17 +24439,18 @@ export const HiringRoleCreateWithoutStageVisibilityInputFields = (t: any) => ({
   evaluations: t.field({"required":false,"type":EvaluationCreateNestedManyWithoutTeamMemberInput}),
   tasks: t.field({"required":false,"type":TaskMemberCreateNestedManyWithoutTeamMemberInput}),
   follows: t.field({"required":false,"type":FollowCreateNestedManyWithoutTeamMemberInput}),
+  interviewerEvents: t.field({"required":false,"type":EventCreateNestedManyWithoutInterviewersInput}),
 });
-export const HiringRoleCreateWithoutStageVisibilityInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleCreateWithoutStageVisibilityInput>>('HiringRoleCreateWithoutStageVisibilityInput').implement({
-  fields: HiringRoleCreateWithoutStageVisibilityInputFields,
+export const HiringRoleCreateWithoutStageVisibilitiesInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleCreateWithoutStageVisibilitiesInput>>('HiringRoleCreateWithoutStageVisibilitiesInput').implement({
+  fields: HiringRoleCreateWithoutStageVisibilitiesInputFields,
 });
 
-export const HiringRoleCreateOrConnectWithoutStageVisibilityInputFields = (t: any) => ({
+export const HiringRoleCreateOrConnectWithoutStageVisibilitiesInputFields = (t: any) => ({
   where: t.field({"required":true,"type":HiringRoleWhereUniqueInput}),
-  create: t.field({"required":true,"type":HiringRoleCreateWithoutStageVisibilityInput}),
+  create: t.field({"required":true,"type":HiringRoleCreateWithoutStageVisibilitiesInput}),
 });
-export const HiringRoleCreateOrConnectWithoutStageVisibilityInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleCreateOrConnectWithoutStageVisibilityInput>>('HiringRoleCreateOrConnectWithoutStageVisibilityInput').implement({
-  fields: HiringRoleCreateOrConnectWithoutStageVisibilityInputFields,
+export const HiringRoleCreateOrConnectWithoutStageVisibilitiesInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleCreateOrConnectWithoutStageVisibilitiesInput>>('HiringRoleCreateOrConnectWithoutStageVisibilitiesInput').implement({
+  fields: HiringRoleCreateOrConnectWithoutStageVisibilitiesInputFields,
 });
 
 export const RoleCreateWithoutStageVisibilityInputFields = (t: any) => ({
@@ -24459,24 +24496,24 @@ export const StageCreateOrConnectWithoutVisibilityInput = builder.inputRef<Prism
   fields: StageCreateOrConnectWithoutVisibilityInputFields,
 });
 
-export const HiringRoleUpsertWithoutStageVisibilityInputFields = (t: any) => ({
-  update: t.field({"required":true,"type":HiringRoleUpdateWithoutStageVisibilityInput}),
-  create: t.field({"required":true,"type":HiringRoleCreateWithoutStageVisibilityInput}),
+export const HiringRoleUpsertWithoutStageVisibilitiesInputFields = (t: any) => ({
+  update: t.field({"required":true,"type":HiringRoleUpdateWithoutStageVisibilitiesInput}),
+  create: t.field({"required":true,"type":HiringRoleCreateWithoutStageVisibilitiesInput}),
   where: t.field({"required":false,"type":HiringRoleWhereInput}),
 });
-export const HiringRoleUpsertWithoutStageVisibilityInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpsertWithoutStageVisibilityInput>>('HiringRoleUpsertWithoutStageVisibilityInput').implement({
-  fields: HiringRoleUpsertWithoutStageVisibilityInputFields,
+export const HiringRoleUpsertWithoutStageVisibilitiesInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpsertWithoutStageVisibilitiesInput>>('HiringRoleUpsertWithoutStageVisibilitiesInput').implement({
+  fields: HiringRoleUpsertWithoutStageVisibilitiesInputFields,
 });
 
-export const HiringRoleUpdateToOneWithWhereWithoutStageVisibilityInputFields = (t: any) => ({
+export const HiringRoleUpdateToOneWithWhereWithoutStageVisibilitiesInputFields = (t: any) => ({
   where: t.field({"required":false,"type":HiringRoleWhereInput}),
-  data: t.field({"required":true,"type":HiringRoleUpdateWithoutStageVisibilityInput}),
+  data: t.field({"required":true,"type":HiringRoleUpdateWithoutStageVisibilitiesInput}),
 });
-export const HiringRoleUpdateToOneWithWhereWithoutStageVisibilityInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpdateToOneWithWhereWithoutStageVisibilityInput>>('HiringRoleUpdateToOneWithWhereWithoutStageVisibilityInput').implement({
-  fields: HiringRoleUpdateToOneWithWhereWithoutStageVisibilityInputFields,
+export const HiringRoleUpdateToOneWithWhereWithoutStageVisibilitiesInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpdateToOneWithWhereWithoutStageVisibilitiesInput>>('HiringRoleUpdateToOneWithWhereWithoutStageVisibilitiesInput').implement({
+  fields: HiringRoleUpdateToOneWithWhereWithoutStageVisibilitiesInputFields,
 });
 
-export const HiringRoleUpdateWithoutStageVisibilityInputFields = (t: any) => ({
+export const HiringRoleUpdateWithoutStageVisibilitiesInputFields = (t: any) => ({
   extraAbilities: t.stringList({"required":false}),
   createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
@@ -24485,8 +24522,8 @@ export const HiringRoleUpdateWithoutStageVisibilityInputFields = (t: any) => ({
   company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutHiringRolesNestedInput}),
   attachments: t.field({"required":false,"type":AttachmentUpdateManyWithoutUploaderNestedInput}),
   auditLogs: t.field({"required":false,"type":AuditLogUpdateManyWithoutUserNestedInput}),
-  eventScheduleInterviewer: t.field({"required":false,"type":EventScheduleInterviewerUpdateManyWithoutTeamMemberNestedInput}),
-  eventInterviewer: t.field({"required":false,"type":EventInterviewerUpdateManyWithoutTeamMemberNestedInput}),
+  eventScheduleInterviewers: t.field({"required":false,"type":EventScheduleInterviewerUpdateManyWithoutTeamMemberNestedInput}),
+  createdEvents: t.field({"required":false,"type":EventUpdateManyWithoutCreatedByNestedInput}),
   offerRecruiter: t.field({"required":false,"type":OfferUpdateOneWithoutRecruiterNestedInput}),
   offerHiringManager: t.field({"required":false,"type":OfferUpdateOneWithoutHiringManagerNestedInput}),
   memberships: t.field({"required":false,"type":MembershipUpdateManyWithoutTeamMemberNestedInput}),
@@ -24494,9 +24531,10 @@ export const HiringRoleUpdateWithoutStageVisibilityInputFields = (t: any) => ({
   evaluations: t.field({"required":false,"type":EvaluationUpdateManyWithoutTeamMemberNestedInput}),
   tasks: t.field({"required":false,"type":TaskMemberUpdateManyWithoutTeamMemberNestedInput}),
   follows: t.field({"required":false,"type":FollowUpdateManyWithoutTeamMemberNestedInput}),
+  interviewerEvents: t.field({"required":false,"type":EventUpdateManyWithoutInterviewersNestedInput}),
 });
-export const HiringRoleUpdateWithoutStageVisibilityInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpdateWithoutStageVisibilityInput>>('HiringRoleUpdateWithoutStageVisibilityInput').implement({
-  fields: HiringRoleUpdateWithoutStageVisibilityInputFields,
+export const HiringRoleUpdateWithoutStageVisibilitiesInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpdateWithoutStageVisibilitiesInput>>('HiringRoleUpdateWithoutStageVisibilitiesInput').implement({
+  fields: HiringRoleUpdateWithoutStageVisibilitiesInputFields,
 });
 
 export const RoleUpsertWithoutStageVisibilityInputFields = (t: any) => ({
@@ -24779,15 +24817,16 @@ export const HiringRoleCreateWithoutHiredCandidatesInputFields = (t: any) => ({
   company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutHiringRolesInput}),
   attachments: t.field({"required":false,"type":AttachmentCreateNestedManyWithoutUploaderInput}),
   auditLogs: t.field({"required":false,"type":AuditLogCreateNestedManyWithoutUserInput}),
-  eventScheduleInterviewer: t.field({"required":false,"type":EventScheduleInterviewerCreateNestedManyWithoutTeamMemberInput}),
-  eventInterviewer: t.field({"required":false,"type":EventInterviewerCreateNestedManyWithoutTeamMemberInput}),
+  eventScheduleInterviewers: t.field({"required":false,"type":EventScheduleInterviewerCreateNestedManyWithoutTeamMemberInput}),
+  createdEvents: t.field({"required":false,"type":EventCreateNestedManyWithoutCreatedByInput}),
   offerRecruiter: t.field({"required":false,"type":OfferCreateNestedOneWithoutRecruiterInput}),
   offerHiringManager: t.field({"required":false,"type":OfferCreateNestedOneWithoutHiringManagerInput}),
   memberships: t.field({"required":false,"type":MembershipCreateNestedManyWithoutTeamMemberInput}),
-  stageVisibility: t.field({"required":false,"type":StageVisibilityCreateNestedManyWithoutTeamMemberInput}),
+  stageVisibilities: t.field({"required":false,"type":StageVisibilityCreateNestedManyWithoutTeamMemberInput}),
   evaluations: t.field({"required":false,"type":EvaluationCreateNestedManyWithoutTeamMemberInput}),
   tasks: t.field({"required":false,"type":TaskMemberCreateNestedManyWithoutTeamMemberInput}),
   follows: t.field({"required":false,"type":FollowCreateNestedManyWithoutTeamMemberInput}),
+  interviewerEvents: t.field({"required":false,"type":EventCreateNestedManyWithoutInterviewersInput}),
 });
 export const HiringRoleCreateWithoutHiredCandidatesInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleCreateWithoutHiredCandidatesInput>>('HiringRoleCreateWithoutHiredCandidatesInput').implement({
   fields: HiringRoleCreateWithoutHiredCandidatesInputFields,
@@ -25089,6 +25128,32 @@ export const CompanyCreateOrConnectWithoutCandidatesInput = builder.inputRef<Pri
   fields: CompanyCreateOrConnectWithoutCandidatesInputFields,
 });
 
+export const EventCreateWithoutCandidatesInputFields = (t: any) => ({
+  date: t.field({"required":true,"type":DateTime}),
+  duration: t.int({"required":false}),
+  type: t.string({"required":true}),
+  location: t.string({"required":false}),
+  note: t.string({"required":false}),
+  privateNote: t.string({"required":false}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+  updatedAt: t.field({"required":false,"type":DateTime}),
+  company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutEventsInput}),
+  interviewers: t.field({"required":false,"type":HiringRoleCreateNestedManyWithoutInterviewerEventsInput}),
+  evaluations: t.field({"required":false,"type":EvaluationCreateNestedManyWithoutEventInput}),
+  createdBy: t.field({"required":true,"type":HiringRoleCreateNestedOneWithoutCreatedEventsInput}),
+});
+export const EventCreateWithoutCandidatesInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventCreateWithoutCandidatesInput>>('EventCreateWithoutCandidatesInput').implement({
+  fields: EventCreateWithoutCandidatesInputFields,
+});
+
+export const EventCreateOrConnectWithoutCandidatesInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":EventWhereUniqueInput}),
+  create: t.field({"required":true,"type":EventCreateWithoutCandidatesInput}),
+});
+export const EventCreateOrConnectWithoutCandidatesInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventCreateOrConnectWithoutCandidatesInput>>('EventCreateOrConnectWithoutCandidatesInput').implement({
+  fields: EventCreateOrConnectWithoutCandidatesInputFields,
+});
+
 export const TagSourceUpsertWithoutCandidateReferrerInputFields = (t: any) => ({
   update: t.field({"required":true,"type":TagSourceUpdateWithoutCandidateReferrerInput}),
   create: t.field({"required":true,"type":TagSourceCreateWithoutCandidateReferrerInput}),
@@ -25317,15 +25382,16 @@ export const HiringRoleUpdateWithoutHiredCandidatesInputFields = (t: any) => ({
   company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutHiringRolesNestedInput}),
   attachments: t.field({"required":false,"type":AttachmentUpdateManyWithoutUploaderNestedInput}),
   auditLogs: t.field({"required":false,"type":AuditLogUpdateManyWithoutUserNestedInput}),
-  eventScheduleInterviewer: t.field({"required":false,"type":EventScheduleInterviewerUpdateManyWithoutTeamMemberNestedInput}),
-  eventInterviewer: t.field({"required":false,"type":EventInterviewerUpdateManyWithoutTeamMemberNestedInput}),
+  eventScheduleInterviewers: t.field({"required":false,"type":EventScheduleInterviewerUpdateManyWithoutTeamMemberNestedInput}),
+  createdEvents: t.field({"required":false,"type":EventUpdateManyWithoutCreatedByNestedInput}),
   offerRecruiter: t.field({"required":false,"type":OfferUpdateOneWithoutRecruiterNestedInput}),
   offerHiringManager: t.field({"required":false,"type":OfferUpdateOneWithoutHiringManagerNestedInput}),
   memberships: t.field({"required":false,"type":MembershipUpdateManyWithoutTeamMemberNestedInput}),
-  stageVisibility: t.field({"required":false,"type":StageVisibilityUpdateManyWithoutTeamMemberNestedInput}),
+  stageVisibilities: t.field({"required":false,"type":StageVisibilityUpdateManyWithoutTeamMemberNestedInput}),
   evaluations: t.field({"required":false,"type":EvaluationUpdateManyWithoutTeamMemberNestedInput}),
   tasks: t.field({"required":false,"type":TaskMemberUpdateManyWithoutTeamMemberNestedInput}),
   follows: t.field({"required":false,"type":FollowUpdateManyWithoutTeamMemberNestedInput}),
+  interviewerEvents: t.field({"required":false,"type":EventUpdateManyWithoutInterviewersNestedInput}),
 });
 export const HiringRoleUpdateWithoutHiredCandidatesInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpdateWithoutHiredCandidatesInput>>('HiringRoleUpdateWithoutHiredCandidatesInput').implement({
   fields: HiringRoleUpdateWithoutHiredCandidatesInputFields,
@@ -25641,6 +25707,31 @@ export const CompanyUpdateWithoutCandidatesInput = builder.inputRef<PrismaUpdate
   fields: CompanyUpdateWithoutCandidatesInputFields,
 });
 
+export const EventUpsertWithWhereUniqueWithoutCandidatesInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":EventWhereUniqueInput}),
+  update: t.field({"required":true,"type":EventUpdateWithoutCandidatesInput}),
+  create: t.field({"required":true,"type":EventCreateWithoutCandidatesInput}),
+});
+export const EventUpsertWithWhereUniqueWithoutCandidatesInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventUpsertWithWhereUniqueWithoutCandidatesInput>>('EventUpsertWithWhereUniqueWithoutCandidatesInput').implement({
+  fields: EventUpsertWithWhereUniqueWithoutCandidatesInputFields,
+});
+
+export const EventUpdateWithWhereUniqueWithoutCandidatesInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":EventWhereUniqueInput}),
+  data: t.field({"required":true,"type":EventUpdateWithoutCandidatesInput}),
+});
+export const EventUpdateWithWhereUniqueWithoutCandidatesInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventUpdateWithWhereUniqueWithoutCandidatesInput>>('EventUpdateWithWhereUniqueWithoutCandidatesInput').implement({
+  fields: EventUpdateWithWhereUniqueWithoutCandidatesInputFields,
+});
+
+export const EventUpdateManyWithWhereWithoutCandidatesInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":EventScalarWhereInput}),
+  data: t.field({"required":true,"type":EventUpdateManyMutationInput}),
+});
+export const EventUpdateManyWithWhereWithoutCandidatesInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventUpdateManyWithWhereWithoutCandidatesInput>>('EventUpdateManyWithWhereWithoutCandidatesInput').implement({
+  fields: EventUpdateManyWithWhereWithoutCandidatesInputFields,
+});
+
 export const CandidateCreateWithoutCandidateTagsInputFields = (t: any) => ({
   firstName: t.string({"required":true}),
   lastName: t.string({"required":true}),
@@ -25672,6 +25763,7 @@ export const CandidateCreateWithoutCandidateTagsInputFields = (t: any) => ({
   follows: t.field({"required":false,"type":FollowCreateNestedManyWithoutCandidateInput}),
   SharedCandidateLink: t.field({"required":false,"type":SharedCandidateLinkCreateNestedManyWithoutCandidateInput}),
   company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutCandidatesInput}),
+  events: t.field({"required":false,"type":EventCreateNestedManyWithoutCandidatesInput}),
 });
 export const CandidateCreateWithoutCandidateTagsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateCreateWithoutCandidateTagsInput>>('CandidateCreateWithoutCandidateTagsInput').implement({
   fields: CandidateCreateWithoutCandidateTagsInputFields,
@@ -25752,6 +25844,7 @@ export const CandidateUpdateWithoutCandidateTagsInputFields = (t: any) => ({
   follows: t.field({"required":false,"type":FollowUpdateManyWithoutCandidateNestedInput}),
   SharedCandidateLink: t.field({"required":false,"type":SharedCandidateLinkUpdateManyWithoutCandidateNestedInput}),
   company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutCandidatesNestedInput}),
+  events: t.field({"required":false,"type":EventUpdateManyWithoutCandidatesNestedInput}),
 });
 export const CandidateUpdateWithoutCandidateTagsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateUpdateWithoutCandidateTagsInput>>('CandidateUpdateWithoutCandidateTagsInput').implement({
   fields: CandidateUpdateWithoutCandidateTagsInputFields,
@@ -25816,6 +25909,7 @@ export const CandidateCreateWithoutCandidateCustomFieldsInputFields = (t: any) =
   follows: t.field({"required":false,"type":FollowCreateNestedManyWithoutCandidateInput}),
   SharedCandidateLink: t.field({"required":false,"type":SharedCandidateLinkCreateNestedManyWithoutCandidateInput}),
   company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutCandidatesInput}),
+  events: t.field({"required":false,"type":EventCreateNestedManyWithoutCandidatesInput}),
 });
 export const CandidateCreateWithoutCandidateCustomFieldsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateCreateWithoutCandidateCustomFieldsInput>>('CandidateCreateWithoutCandidateCustomFieldsInput').implement({
   fields: CandidateCreateWithoutCandidateCustomFieldsInputFields,
@@ -25896,6 +25990,7 @@ export const CandidateUpdateWithoutCandidateCustomFieldsInputFields = (t: any) =
   follows: t.field({"required":false,"type":FollowUpdateManyWithoutCandidateNestedInput}),
   SharedCandidateLink: t.field({"required":false,"type":SharedCandidateLinkUpdateManyWithoutCandidateNestedInput}),
   company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutCandidatesNestedInput}),
+  events: t.field({"required":false,"type":EventUpdateManyWithoutCandidatesNestedInput}),
 });
 export const CandidateUpdateWithoutCandidateCustomFieldsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateUpdateWithoutCandidateCustomFieldsInput>>('CandidateUpdateWithoutCandidateCustomFieldsInput').implement({
   fields: CandidateUpdateWithoutCandidateCustomFieldsInputFields,
@@ -26191,6 +26286,7 @@ export const CandidateCreateWithoutEvaluationsInputFields = (t: any) => ({
   follows: t.field({"required":false,"type":FollowCreateNestedManyWithoutCandidateInput}),
   SharedCandidateLink: t.field({"required":false,"type":SharedCandidateLinkCreateNestedManyWithoutCandidateInput}),
   company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutCandidatesInput}),
+  events: t.field({"required":false,"type":EventCreateNestedManyWithoutCandidatesInput}),
 });
 export const CandidateCreateWithoutEvaluationsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateCreateWithoutEvaluationsInput>>('CandidateCreateWithoutEvaluationsInput').implement({
   fields: CandidateCreateWithoutEvaluationsInputFields,
@@ -26213,15 +26309,16 @@ export const HiringRoleCreateWithoutEvaluationsInputFields = (t: any) => ({
   company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutHiringRolesInput}),
   attachments: t.field({"required":false,"type":AttachmentCreateNestedManyWithoutUploaderInput}),
   auditLogs: t.field({"required":false,"type":AuditLogCreateNestedManyWithoutUserInput}),
-  eventScheduleInterviewer: t.field({"required":false,"type":EventScheduleInterviewerCreateNestedManyWithoutTeamMemberInput}),
-  eventInterviewer: t.field({"required":false,"type":EventInterviewerCreateNestedManyWithoutTeamMemberInput}),
+  eventScheduleInterviewers: t.field({"required":false,"type":EventScheduleInterviewerCreateNestedManyWithoutTeamMemberInput}),
+  createdEvents: t.field({"required":false,"type":EventCreateNestedManyWithoutCreatedByInput}),
   offerRecruiter: t.field({"required":false,"type":OfferCreateNestedOneWithoutRecruiterInput}),
   offerHiringManager: t.field({"required":false,"type":OfferCreateNestedOneWithoutHiringManagerInput}),
   memberships: t.field({"required":false,"type":MembershipCreateNestedManyWithoutTeamMemberInput}),
-  stageVisibility: t.field({"required":false,"type":StageVisibilityCreateNestedManyWithoutTeamMemberInput}),
+  stageVisibilities: t.field({"required":false,"type":StageVisibilityCreateNestedManyWithoutTeamMemberInput}),
   hiredCandidates: t.field({"required":false,"type":CandidateCreateNestedManyWithoutHiredByInput}),
   tasks: t.field({"required":false,"type":TaskMemberCreateNestedManyWithoutTeamMemberInput}),
   follows: t.field({"required":false,"type":FollowCreateNestedManyWithoutTeamMemberInput}),
+  interviewerEvents: t.field({"required":false,"type":EventCreateNestedManyWithoutInterviewersInput}),
 });
 export const HiringRoleCreateWithoutEvaluationsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleCreateWithoutEvaluationsInput>>('HiringRoleCreateWithoutEvaluationsInput').implement({
   fields: HiringRoleCreateWithoutEvaluationsInputFields,
@@ -26260,14 +26357,17 @@ export const EventScheduleEvaluationCreateManyEvaluationInputEnvelope = builder.
 
 export const EventCreateWithoutEvaluationsInputFields = (t: any) => ({
   date: t.field({"required":true,"type":DateTime}),
-  time: t.int({"required":true}),
-  duration: t.int({"required":true}),
+  duration: t.int({"required":false}),
   type: t.string({"required":true}),
-  location: t.string({"required":true}),
-  note: t.string({"required":true}),
-  privateNote: t.string({"required":true}),
+  location: t.string({"required":false}),
+  note: t.string({"required":false}),
+  privateNote: t.string({"required":false}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+  updatedAt: t.field({"required":false,"type":DateTime}),
   company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutEventsInput}),
-  eventInterviewers: t.field({"required":false,"type":EventInterviewerCreateNestedManyWithoutEventInput}),
+  interviewers: t.field({"required":false,"type":HiringRoleCreateNestedManyWithoutInterviewerEventsInput}),
+  candidates: t.field({"required":false,"type":CandidateCreateNestedManyWithoutEventsInput}),
+  createdBy: t.field({"required":true,"type":HiringRoleCreateNestedOneWithoutCreatedEventsInput}),
 });
 export const EventCreateWithoutEvaluationsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventCreateWithoutEvaluationsInput>>('EventCreateWithoutEvaluationsInput').implement({
   fields: EventCreateWithoutEvaluationsInputFields,
@@ -26450,6 +26550,7 @@ export const CandidateUpdateWithoutEvaluationsInputFields = (t: any) => ({
   follows: t.field({"required":false,"type":FollowUpdateManyWithoutCandidateNestedInput}),
   SharedCandidateLink: t.field({"required":false,"type":SharedCandidateLinkUpdateManyWithoutCandidateNestedInput}),
   company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutCandidatesNestedInput}),
+  events: t.field({"required":false,"type":EventUpdateManyWithoutCandidatesNestedInput}),
 });
 export const CandidateUpdateWithoutEvaluationsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateUpdateWithoutEvaluationsInput>>('CandidateUpdateWithoutEvaluationsInput').implement({
   fields: CandidateUpdateWithoutEvaluationsInputFields,
@@ -26481,15 +26582,16 @@ export const HiringRoleUpdateWithoutEvaluationsInputFields = (t: any) => ({
   company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutHiringRolesNestedInput}),
   attachments: t.field({"required":false,"type":AttachmentUpdateManyWithoutUploaderNestedInput}),
   auditLogs: t.field({"required":false,"type":AuditLogUpdateManyWithoutUserNestedInput}),
-  eventScheduleInterviewer: t.field({"required":false,"type":EventScheduleInterviewerUpdateManyWithoutTeamMemberNestedInput}),
-  eventInterviewer: t.field({"required":false,"type":EventInterviewerUpdateManyWithoutTeamMemberNestedInput}),
+  eventScheduleInterviewers: t.field({"required":false,"type":EventScheduleInterviewerUpdateManyWithoutTeamMemberNestedInput}),
+  createdEvents: t.field({"required":false,"type":EventUpdateManyWithoutCreatedByNestedInput}),
   offerRecruiter: t.field({"required":false,"type":OfferUpdateOneWithoutRecruiterNestedInput}),
   offerHiringManager: t.field({"required":false,"type":OfferUpdateOneWithoutHiringManagerNestedInput}),
   memberships: t.field({"required":false,"type":MembershipUpdateManyWithoutTeamMemberNestedInput}),
-  stageVisibility: t.field({"required":false,"type":StageVisibilityUpdateManyWithoutTeamMemberNestedInput}),
+  stageVisibilities: t.field({"required":false,"type":StageVisibilityUpdateManyWithoutTeamMemberNestedInput}),
   hiredCandidates: t.field({"required":false,"type":CandidateUpdateManyWithoutHiredByNestedInput}),
   tasks: t.field({"required":false,"type":TaskMemberUpdateManyWithoutTeamMemberNestedInput}),
   follows: t.field({"required":false,"type":FollowUpdateManyWithoutTeamMemberNestedInput}),
+  interviewerEvents: t.field({"required":false,"type":EventUpdateManyWithoutInterviewersNestedInput}),
 });
 export const HiringRoleUpdateWithoutEvaluationsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpdateWithoutEvaluationsInput>>('HiringRoleUpdateWithoutEvaluationsInput').implement({
   fields: HiringRoleUpdateWithoutEvaluationsInputFields,
@@ -26539,14 +26641,17 @@ export const EventUpdateToOneWithWhereWithoutEvaluationsInput = builder.inputRef
 
 export const EventUpdateWithoutEvaluationsInputFields = (t: any) => ({
   date: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
-  time: t.field({"required":false,"type":IntFieldUpdateOperationsInput}),
-  duration: t.field({"required":false,"type":IntFieldUpdateOperationsInput}),
+  duration: t.field({"required":false,"type":NullableIntFieldUpdateOperationsInput}),
   type: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
-  location: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
-  note: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
-  privateNote: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  location: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  note: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  privateNote: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
   company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutEventsNestedInput}),
-  eventInterviewers: t.field({"required":false,"type":EventInterviewerUpdateManyWithoutEventNestedInput}),
+  interviewers: t.field({"required":false,"type":HiringRoleUpdateManyWithoutInterviewerEventsNestedInput}),
+  candidates: t.field({"required":false,"type":CandidateUpdateManyWithoutEventsNestedInput}),
+  createdBy: t.field({"required":false,"type":HiringRoleUpdateOneRequiredWithoutCreatedEventsNestedInput}),
 });
 export const EventUpdateWithoutEvaluationsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventUpdateWithoutEvaluationsInput>>('EventUpdateWithoutEvaluationsInput').implement({
   fields: EventUpdateWithoutEvaluationsInputFields,
@@ -26682,6 +26787,7 @@ export const CandidateCreateWithoutSharedCandidateLinkInputFields = (t: any) => 
   tasks: t.field({"required":false,"type":TaskCreateNestedManyWithoutCandidateInput}),
   follows: t.field({"required":false,"type":FollowCreateNestedManyWithoutCandidateInput}),
   company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutCandidatesInput}),
+  events: t.field({"required":false,"type":EventCreateNestedManyWithoutCandidatesInput}),
 });
 export const CandidateCreateWithoutSharedCandidateLinkInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateCreateWithoutSharedCandidateLinkInput>>('CandidateCreateWithoutSharedCandidateLinkInput').implement({
   fields: CandidateCreateWithoutSharedCandidateLinkInputFields,
@@ -26743,6 +26849,7 @@ export const CandidateUpdateWithoutSharedCandidateLinkInputFields = (t: any) => 
   tasks: t.field({"required":false,"type":TaskUpdateManyWithoutCandidateNestedInput}),
   follows: t.field({"required":false,"type":FollowUpdateManyWithoutCandidateNestedInput}),
   company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutCandidatesNestedInput}),
+  events: t.field({"required":false,"type":EventUpdateManyWithoutCandidatesNestedInput}),
 });
 export const CandidateUpdateWithoutSharedCandidateLinkInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateUpdateWithoutSharedCandidateLinkInput>>('CandidateUpdateWithoutSharedCandidateLinkInput').implement({
   fields: CandidateUpdateWithoutSharedCandidateLinkInputFields,
@@ -26850,6 +26957,7 @@ export const CandidateCreateWithoutTasksInputFields = (t: any) => ({
   follows: t.field({"required":false,"type":FollowCreateNestedManyWithoutCandidateInput}),
   SharedCandidateLink: t.field({"required":false,"type":SharedCandidateLinkCreateNestedManyWithoutCandidateInput}),
   company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutCandidatesInput}),
+  events: t.field({"required":false,"type":EventCreateNestedManyWithoutCandidatesInput}),
 });
 export const CandidateCreateWithoutTasksInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateCreateWithoutTasksInput>>('CandidateCreateWithoutTasksInput').implement({
   fields: CandidateCreateWithoutTasksInputFields,
@@ -26993,6 +27101,7 @@ export const CandidateUpdateWithoutTasksInputFields = (t: any) => ({
   follows: t.field({"required":false,"type":FollowUpdateManyWithoutCandidateNestedInput}),
   SharedCandidateLink: t.field({"required":false,"type":SharedCandidateLinkUpdateManyWithoutCandidateNestedInput}),
   company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutCandidatesNestedInput}),
+  events: t.field({"required":false,"type":EventUpdateManyWithoutCandidatesNestedInput}),
 });
 export const CandidateUpdateWithoutTasksInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateUpdateWithoutTasksInput>>('CandidateUpdateWithoutTasksInput').implement({
   fields: CandidateUpdateWithoutTasksInputFields,
@@ -27027,15 +27136,16 @@ export const HiringRoleCreateWithoutTasksInputFields = (t: any) => ({
   company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutHiringRolesInput}),
   attachments: t.field({"required":false,"type":AttachmentCreateNestedManyWithoutUploaderInput}),
   auditLogs: t.field({"required":false,"type":AuditLogCreateNestedManyWithoutUserInput}),
-  eventScheduleInterviewer: t.field({"required":false,"type":EventScheduleInterviewerCreateNestedManyWithoutTeamMemberInput}),
-  eventInterviewer: t.field({"required":false,"type":EventInterviewerCreateNestedManyWithoutTeamMemberInput}),
+  eventScheduleInterviewers: t.field({"required":false,"type":EventScheduleInterviewerCreateNestedManyWithoutTeamMemberInput}),
+  createdEvents: t.field({"required":false,"type":EventCreateNestedManyWithoutCreatedByInput}),
   offerRecruiter: t.field({"required":false,"type":OfferCreateNestedOneWithoutRecruiterInput}),
   offerHiringManager: t.field({"required":false,"type":OfferCreateNestedOneWithoutHiringManagerInput}),
   memberships: t.field({"required":false,"type":MembershipCreateNestedManyWithoutTeamMemberInput}),
-  stageVisibility: t.field({"required":false,"type":StageVisibilityCreateNestedManyWithoutTeamMemberInput}),
+  stageVisibilities: t.field({"required":false,"type":StageVisibilityCreateNestedManyWithoutTeamMemberInput}),
   hiredCandidates: t.field({"required":false,"type":CandidateCreateNestedManyWithoutHiredByInput}),
   evaluations: t.field({"required":false,"type":EvaluationCreateNestedManyWithoutTeamMemberInput}),
   follows: t.field({"required":false,"type":FollowCreateNestedManyWithoutTeamMemberInput}),
+  interviewerEvents: t.field({"required":false,"type":EventCreateNestedManyWithoutInterviewersInput}),
 });
 export const HiringRoleCreateWithoutTasksInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleCreateWithoutTasksInput>>('HiringRoleCreateWithoutTasksInput').implement({
   fields: HiringRoleCreateWithoutTasksInputFields,
@@ -27104,15 +27214,16 @@ export const HiringRoleUpdateWithoutTasksInputFields = (t: any) => ({
   company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutHiringRolesNestedInput}),
   attachments: t.field({"required":false,"type":AttachmentUpdateManyWithoutUploaderNestedInput}),
   auditLogs: t.field({"required":false,"type":AuditLogUpdateManyWithoutUserNestedInput}),
-  eventScheduleInterviewer: t.field({"required":false,"type":EventScheduleInterviewerUpdateManyWithoutTeamMemberNestedInput}),
-  eventInterviewer: t.field({"required":false,"type":EventInterviewerUpdateManyWithoutTeamMemberNestedInput}),
+  eventScheduleInterviewers: t.field({"required":false,"type":EventScheduleInterviewerUpdateManyWithoutTeamMemberNestedInput}),
+  createdEvents: t.field({"required":false,"type":EventUpdateManyWithoutCreatedByNestedInput}),
   offerRecruiter: t.field({"required":false,"type":OfferUpdateOneWithoutRecruiterNestedInput}),
   offerHiringManager: t.field({"required":false,"type":OfferUpdateOneWithoutHiringManagerNestedInput}),
   memberships: t.field({"required":false,"type":MembershipUpdateManyWithoutTeamMemberNestedInput}),
-  stageVisibility: t.field({"required":false,"type":StageVisibilityUpdateManyWithoutTeamMemberNestedInput}),
+  stageVisibilities: t.field({"required":false,"type":StageVisibilityUpdateManyWithoutTeamMemberNestedInput}),
   hiredCandidates: t.field({"required":false,"type":CandidateUpdateManyWithoutHiredByNestedInput}),
   evaluations: t.field({"required":false,"type":EvaluationUpdateManyWithoutTeamMemberNestedInput}),
   follows: t.field({"required":false,"type":FollowUpdateManyWithoutTeamMemberNestedInput}),
+  interviewerEvents: t.field({"required":false,"type":EventUpdateManyWithoutInterviewersNestedInput}),
 });
 export const HiringRoleUpdateWithoutTasksInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpdateWithoutTasksInput>>('HiringRoleUpdateWithoutTasksInput').implement({
   fields: HiringRoleUpdateWithoutTasksInputFields,
@@ -27203,6 +27314,7 @@ export const CandidateCreateWithoutFollowsInputFields = (t: any) => ({
   tasks: t.field({"required":false,"type":TaskCreateNestedManyWithoutCandidateInput}),
   SharedCandidateLink: t.field({"required":false,"type":SharedCandidateLinkCreateNestedManyWithoutCandidateInput}),
   company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutCandidatesInput}),
+  events: t.field({"required":false,"type":EventCreateNestedManyWithoutCandidatesInput}),
 });
 export const CandidateCreateWithoutFollowsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateCreateWithoutFollowsInput>>('CandidateCreateWithoutFollowsInput').implement({
   fields: CandidateCreateWithoutFollowsInputFields,
@@ -27246,15 +27358,16 @@ export const HiringRoleCreateWithoutFollowsInputFields = (t: any) => ({
   company: t.field({"required":true,"type":CompanyCreateNestedOneWithoutHiringRolesInput}),
   attachments: t.field({"required":false,"type":AttachmentCreateNestedManyWithoutUploaderInput}),
   auditLogs: t.field({"required":false,"type":AuditLogCreateNestedManyWithoutUserInput}),
-  eventScheduleInterviewer: t.field({"required":false,"type":EventScheduleInterviewerCreateNestedManyWithoutTeamMemberInput}),
-  eventInterviewer: t.field({"required":false,"type":EventInterviewerCreateNestedManyWithoutTeamMemberInput}),
+  eventScheduleInterviewers: t.field({"required":false,"type":EventScheduleInterviewerCreateNestedManyWithoutTeamMemberInput}),
+  createdEvents: t.field({"required":false,"type":EventCreateNestedManyWithoutCreatedByInput}),
   offerRecruiter: t.field({"required":false,"type":OfferCreateNestedOneWithoutRecruiterInput}),
   offerHiringManager: t.field({"required":false,"type":OfferCreateNestedOneWithoutHiringManagerInput}),
   memberships: t.field({"required":false,"type":MembershipCreateNestedManyWithoutTeamMemberInput}),
-  stageVisibility: t.field({"required":false,"type":StageVisibilityCreateNestedManyWithoutTeamMemberInput}),
+  stageVisibilities: t.field({"required":false,"type":StageVisibilityCreateNestedManyWithoutTeamMemberInput}),
   hiredCandidates: t.field({"required":false,"type":CandidateCreateNestedManyWithoutHiredByInput}),
   evaluations: t.field({"required":false,"type":EvaluationCreateNestedManyWithoutTeamMemberInput}),
   tasks: t.field({"required":false,"type":TaskMemberCreateNestedManyWithoutTeamMemberInput}),
+  interviewerEvents: t.field({"required":false,"type":EventCreateNestedManyWithoutInterviewersInput}),
 });
 export const HiringRoleCreateWithoutFollowsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleCreateWithoutFollowsInput>>('HiringRoleCreateWithoutFollowsInput').implement({
   fields: HiringRoleCreateWithoutFollowsInputFields,
@@ -27379,6 +27492,7 @@ export const CandidateUpdateWithoutFollowsInputFields = (t: any) => ({
   tasks: t.field({"required":false,"type":TaskUpdateManyWithoutCandidateNestedInput}),
   SharedCandidateLink: t.field({"required":false,"type":SharedCandidateLinkUpdateManyWithoutCandidateNestedInput}),
   company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutCandidatesNestedInput}),
+  events: t.field({"required":false,"type":EventUpdateManyWithoutCandidatesNestedInput}),
 });
 export const CandidateUpdateWithoutFollowsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateUpdateWithoutFollowsInput>>('CandidateUpdateWithoutFollowsInput').implement({
   fields: CandidateUpdateWithoutFollowsInputFields,
@@ -27440,15 +27554,16 @@ export const HiringRoleUpdateWithoutFollowsInputFields = (t: any) => ({
   company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutHiringRolesNestedInput}),
   attachments: t.field({"required":false,"type":AttachmentUpdateManyWithoutUploaderNestedInput}),
   auditLogs: t.field({"required":false,"type":AuditLogUpdateManyWithoutUserNestedInput}),
-  eventScheduleInterviewer: t.field({"required":false,"type":EventScheduleInterviewerUpdateManyWithoutTeamMemberNestedInput}),
-  eventInterviewer: t.field({"required":false,"type":EventInterviewerUpdateManyWithoutTeamMemberNestedInput}),
+  eventScheduleInterviewers: t.field({"required":false,"type":EventScheduleInterviewerUpdateManyWithoutTeamMemberNestedInput}),
+  createdEvents: t.field({"required":false,"type":EventUpdateManyWithoutCreatedByNestedInput}),
   offerRecruiter: t.field({"required":false,"type":OfferUpdateOneWithoutRecruiterNestedInput}),
   offerHiringManager: t.field({"required":false,"type":OfferUpdateOneWithoutHiringManagerNestedInput}),
   memberships: t.field({"required":false,"type":MembershipUpdateManyWithoutTeamMemberNestedInput}),
-  stageVisibility: t.field({"required":false,"type":StageVisibilityUpdateManyWithoutTeamMemberNestedInput}),
+  stageVisibilities: t.field({"required":false,"type":StageVisibilityUpdateManyWithoutTeamMemberNestedInput}),
   hiredCandidates: t.field({"required":false,"type":CandidateUpdateManyWithoutHiredByNestedInput}),
   evaluations: t.field({"required":false,"type":EvaluationUpdateManyWithoutTeamMemberNestedInput}),
   tasks: t.field({"required":false,"type":TaskMemberUpdateManyWithoutTeamMemberNestedInput}),
+  interviewerEvents: t.field({"required":false,"type":EventUpdateManyWithoutInterviewersNestedInput}),
 });
 export const HiringRoleUpdateWithoutFollowsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpdateWithoutFollowsInput>>('HiringRoleUpdateWithoutFollowsInput').implement({
   fields: HiringRoleUpdateWithoutFollowsInputFields,
@@ -27548,16 +27663,17 @@ export const HiringRoleUpdateWithoutUserInputFields = (t: any) => ({
   company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutHiringRolesNestedInput}),
   attachments: t.field({"required":false,"type":AttachmentUpdateManyWithoutUploaderNestedInput}),
   auditLogs: t.field({"required":false,"type":AuditLogUpdateManyWithoutUserNestedInput}),
-  eventScheduleInterviewer: t.field({"required":false,"type":EventScheduleInterviewerUpdateManyWithoutTeamMemberNestedInput}),
-  eventInterviewer: t.field({"required":false,"type":EventInterviewerUpdateManyWithoutTeamMemberNestedInput}),
+  eventScheduleInterviewers: t.field({"required":false,"type":EventScheduleInterviewerUpdateManyWithoutTeamMemberNestedInput}),
+  createdEvents: t.field({"required":false,"type":EventUpdateManyWithoutCreatedByNestedInput}),
   offerRecruiter: t.field({"required":false,"type":OfferUpdateOneWithoutRecruiterNestedInput}),
   offerHiringManager: t.field({"required":false,"type":OfferUpdateOneWithoutHiringManagerNestedInput}),
   memberships: t.field({"required":false,"type":MembershipUpdateManyWithoutTeamMemberNestedInput}),
-  stageVisibility: t.field({"required":false,"type":StageVisibilityUpdateManyWithoutTeamMemberNestedInput}),
+  stageVisibilities: t.field({"required":false,"type":StageVisibilityUpdateManyWithoutTeamMemberNestedInput}),
   hiredCandidates: t.field({"required":false,"type":CandidateUpdateManyWithoutHiredByNestedInput}),
   evaluations: t.field({"required":false,"type":EvaluationUpdateManyWithoutTeamMemberNestedInput}),
   tasks: t.field({"required":false,"type":TaskMemberUpdateManyWithoutTeamMemberNestedInput}),
   follows: t.field({"required":false,"type":FollowUpdateManyWithoutTeamMemberNestedInput}),
+  interviewerEvents: t.field({"required":false,"type":EventUpdateManyWithoutInterviewersNestedInput}),
 });
 export const HiringRoleUpdateWithoutUserInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpdateWithoutUserInput>>('HiringRoleUpdateWithoutUserInput').implement({
   fields: HiringRoleUpdateWithoutUserInputFields,
@@ -27672,12 +27788,20 @@ export const EventScheduleInterviewerCreateManyTeamMemberInput = builder.inputRe
   fields: EventScheduleInterviewerCreateManyTeamMemberInputFields,
 });
 
-export const EventInterviewerCreateManyTeamMemberInputFields = (t: any) => ({
+export const EventCreateManyCreatedByInputFields = (t: any) => ({
   id: t.int({"required":false}),
-  eventId: t.int({"required":true}),
+  date: t.field({"required":true,"type":DateTime}),
+  duration: t.int({"required":false}),
+  type: t.string({"required":true}),
+  location: t.string({"required":false}),
+  note: t.string({"required":false}),
+  privateNote: t.string({"required":false}),
+  companyId: t.string({"required":true}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+  updatedAt: t.field({"required":false,"type":DateTime}),
 });
-export const EventInterviewerCreateManyTeamMemberInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventInterviewerCreateManyTeamMemberInput>>('EventInterviewerCreateManyTeamMemberInput').implement({
-  fields: EventInterviewerCreateManyTeamMemberInputFields,
+export const EventCreateManyCreatedByInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventCreateManyCreatedByInput>>('EventCreateManyCreatedByInput').implement({
+  fields: EventCreateManyCreatedByInputFields,
 });
 
 export const MembershipCreateManyTeamMemberInputFields = (t: any) => ({
@@ -27805,11 +27929,22 @@ export const EventScheduleInterviewerUpdateWithoutTeamMemberInput = builder.inpu
   fields: EventScheduleInterviewerUpdateWithoutTeamMemberInputFields,
 });
 
-export const EventInterviewerUpdateWithoutTeamMemberInputFields = (t: any) => ({
-  event: t.field({"required":false,"type":EventUpdateOneRequiredWithoutEventInterviewersNestedInput}),
+export const EventUpdateWithoutCreatedByInputFields = (t: any) => ({
+  date: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  duration: t.field({"required":false,"type":NullableIntFieldUpdateOperationsInput}),
+  type: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  location: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  note: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  privateNote: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutEventsNestedInput}),
+  interviewers: t.field({"required":false,"type":HiringRoleUpdateManyWithoutInterviewerEventsNestedInput}),
+  evaluations: t.field({"required":false,"type":EvaluationUpdateManyWithoutEventNestedInput}),
+  candidates: t.field({"required":false,"type":CandidateUpdateManyWithoutEventsNestedInput}),
 });
-export const EventInterviewerUpdateWithoutTeamMemberInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventInterviewerUpdateWithoutTeamMemberInput>>('EventInterviewerUpdateWithoutTeamMemberInput').implement({
-  fields: EventInterviewerUpdateWithoutTeamMemberInputFields,
+export const EventUpdateWithoutCreatedByInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventUpdateWithoutCreatedByInput>>('EventUpdateWithoutCreatedByInput').implement({
+  fields: EventUpdateWithoutCreatedByInputFields,
 });
 
 export const MembershipUpdateWithoutTeamMemberInputFields = (t: any) => ({
@@ -27861,6 +27996,7 @@ export const CandidateUpdateWithoutHiredByInputFields = (t: any) => ({
   follows: t.field({"required":false,"type":FollowUpdateManyWithoutCandidateNestedInput}),
   SharedCandidateLink: t.field({"required":false,"type":SharedCandidateLinkUpdateManyWithoutCandidateNestedInput}),
   company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutCandidatesNestedInput}),
+  events: t.field({"required":false,"type":EventUpdateManyWithoutCandidatesNestedInput}),
 });
 export const CandidateUpdateWithoutHiredByInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateUpdateWithoutHiredByInput>>('CandidateUpdateWithoutHiredByInput').implement({
   fields: CandidateUpdateWithoutHiredByInputFields,
@@ -27897,6 +28033,24 @@ export const FollowUpdateWithoutTeamMemberInputFields = (t: any) => ({
 });
 export const FollowUpdateWithoutTeamMemberInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.FollowUpdateWithoutTeamMemberInput>>('FollowUpdateWithoutTeamMemberInput').implement({
   fields: FollowUpdateWithoutTeamMemberInputFields,
+});
+
+export const EventUpdateWithoutInterviewersInputFields = (t: any) => ({
+  date: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  duration: t.field({"required":false,"type":NullableIntFieldUpdateOperationsInput}),
+  type: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  location: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  note: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  privateNote: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutEventsNestedInput}),
+  evaluations: t.field({"required":false,"type":EvaluationUpdateManyWithoutEventNestedInput}),
+  candidates: t.field({"required":false,"type":CandidateUpdateManyWithoutEventsNestedInput}),
+  createdBy: t.field({"required":false,"type":HiringRoleUpdateOneRequiredWithoutCreatedEventsNestedInput}),
+});
+export const EventUpdateWithoutInterviewersInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventUpdateWithoutInterviewersInput>>('EventUpdateWithoutInterviewersInput').implement({
+  fields: EventUpdateWithoutInterviewersInputFields,
 });
 
 export const HiringRoleCreateManyRoleInputFields = (t: any) => ({
@@ -27939,16 +28093,17 @@ export const HiringRoleUpdateWithoutRoleInputFields = (t: any) => ({
   company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutHiringRolesNestedInput}),
   attachments: t.field({"required":false,"type":AttachmentUpdateManyWithoutUploaderNestedInput}),
   auditLogs: t.field({"required":false,"type":AuditLogUpdateManyWithoutUserNestedInput}),
-  eventScheduleInterviewer: t.field({"required":false,"type":EventScheduleInterviewerUpdateManyWithoutTeamMemberNestedInput}),
-  eventInterviewer: t.field({"required":false,"type":EventInterviewerUpdateManyWithoutTeamMemberNestedInput}),
+  eventScheduleInterviewers: t.field({"required":false,"type":EventScheduleInterviewerUpdateManyWithoutTeamMemberNestedInput}),
+  createdEvents: t.field({"required":false,"type":EventUpdateManyWithoutCreatedByNestedInput}),
   offerRecruiter: t.field({"required":false,"type":OfferUpdateOneWithoutRecruiterNestedInput}),
   offerHiringManager: t.field({"required":false,"type":OfferUpdateOneWithoutHiringManagerNestedInput}),
   memberships: t.field({"required":false,"type":MembershipUpdateManyWithoutTeamMemberNestedInput}),
-  stageVisibility: t.field({"required":false,"type":StageVisibilityUpdateManyWithoutTeamMemberNestedInput}),
+  stageVisibilities: t.field({"required":false,"type":StageVisibilityUpdateManyWithoutTeamMemberNestedInput}),
   hiredCandidates: t.field({"required":false,"type":CandidateUpdateManyWithoutHiredByNestedInput}),
   evaluations: t.field({"required":false,"type":EvaluationUpdateManyWithoutTeamMemberNestedInput}),
   tasks: t.field({"required":false,"type":TaskMemberUpdateManyWithoutTeamMemberNestedInput}),
   follows: t.field({"required":false,"type":FollowUpdateManyWithoutTeamMemberNestedInput}),
+  interviewerEvents: t.field({"required":false,"type":EventUpdateManyWithoutInterviewersNestedInput}),
 });
 export const HiringRoleUpdateWithoutRoleInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpdateWithoutRoleInput>>('HiringRoleUpdateWithoutRoleInput').implement({
   fields: HiringRoleUpdateWithoutRoleInputFields,
@@ -27965,7 +28120,7 @@ export const MembershipUpdateWithoutRoleInput = builder.inputRef<PrismaUpdateOpe
 
 export const StageVisibilityUpdateWithoutRoleInputFields = (t: any) => ({
   type: t.field({"required":false,"type":EnumMembershipTypesFieldUpdateOperationsInput}),
-  teamMember: t.field({"required":false,"type":HiringRoleUpdateOneWithoutStageVisibilityNestedInput}),
+  teamMember: t.field({"required":false,"type":HiringRoleUpdateOneWithoutStageVisibilitiesNestedInput}),
   stage: t.field({"required":false,"type":StageUpdateOneRequiredWithoutVisibilityNestedInput}),
 });
 export const StageVisibilityUpdateWithoutRoleInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.StageVisibilityUpdateWithoutRoleInput>>('StageVisibilityUpdateWithoutRoleInput').implement({
@@ -28029,12 +28184,14 @@ export const EventScheduleCreateManyCompanyInput = builder.inputRef<PrismaUpdate
 export const EventCreateManyCompanyInputFields = (t: any) => ({
   id: t.int({"required":false}),
   date: t.field({"required":true,"type":DateTime}),
-  time: t.int({"required":true}),
-  duration: t.int({"required":true}),
+  duration: t.int({"required":false}),
   type: t.string({"required":true}),
-  location: t.string({"required":true}),
-  note: t.string({"required":true}),
-  privateNote: t.string({"required":true}),
+  location: t.string({"required":false}),
+  note: t.string({"required":false}),
+  privateNote: t.string({"required":false}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+  updatedAt: t.field({"required":false,"type":DateTime}),
+  createdById: t.int({"required":true}),
 });
 export const EventCreateManyCompanyInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventCreateManyCompanyInput>>('EventCreateManyCompanyInput').implement({
   fields: EventCreateManyCompanyInputFields,
@@ -28277,14 +28434,17 @@ export const EventScheduleUpdateWithoutCompanyInput = builder.inputRef<PrismaUpd
 
 export const EventUpdateWithoutCompanyInputFields = (t: any) => ({
   date: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
-  time: t.field({"required":false,"type":IntFieldUpdateOperationsInput}),
-  duration: t.field({"required":false,"type":IntFieldUpdateOperationsInput}),
+  duration: t.field({"required":false,"type":NullableIntFieldUpdateOperationsInput}),
   type: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
-  location: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
-  note: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
-  privateNote: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
-  eventInterviewers: t.field({"required":false,"type":EventInterviewerUpdateManyWithoutEventNestedInput}),
+  location: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  note: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  privateNote: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  interviewers: t.field({"required":false,"type":HiringRoleUpdateManyWithoutInterviewerEventsNestedInput}),
   evaluations: t.field({"required":false,"type":EvaluationUpdateManyWithoutEventNestedInput}),
+  candidates: t.field({"required":false,"type":CandidateUpdateManyWithoutEventsNestedInput}),
+  createdBy: t.field({"required":false,"type":HiringRoleUpdateOneRequiredWithoutCreatedEventsNestedInput}),
 });
 export const EventUpdateWithoutCompanyInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventUpdateWithoutCompanyInput>>('EventUpdateWithoutCompanyInput').implement({
   fields: EventUpdateWithoutCompanyInputFields,
@@ -28414,16 +28574,17 @@ export const HiringRoleUpdateWithoutCompanyInputFields = (t: any) => ({
   role: t.field({"required":false,"type":RoleUpdateOneRequiredWithoutHiringRolesNestedInput}),
   attachments: t.field({"required":false,"type":AttachmentUpdateManyWithoutUploaderNestedInput}),
   auditLogs: t.field({"required":false,"type":AuditLogUpdateManyWithoutUserNestedInput}),
-  eventScheduleInterviewer: t.field({"required":false,"type":EventScheduleInterviewerUpdateManyWithoutTeamMemberNestedInput}),
-  eventInterviewer: t.field({"required":false,"type":EventInterviewerUpdateManyWithoutTeamMemberNestedInput}),
+  eventScheduleInterviewers: t.field({"required":false,"type":EventScheduleInterviewerUpdateManyWithoutTeamMemberNestedInput}),
+  createdEvents: t.field({"required":false,"type":EventUpdateManyWithoutCreatedByNestedInput}),
   offerRecruiter: t.field({"required":false,"type":OfferUpdateOneWithoutRecruiterNestedInput}),
   offerHiringManager: t.field({"required":false,"type":OfferUpdateOneWithoutHiringManagerNestedInput}),
   memberships: t.field({"required":false,"type":MembershipUpdateManyWithoutTeamMemberNestedInput}),
-  stageVisibility: t.field({"required":false,"type":StageVisibilityUpdateManyWithoutTeamMemberNestedInput}),
+  stageVisibilities: t.field({"required":false,"type":StageVisibilityUpdateManyWithoutTeamMemberNestedInput}),
   hiredCandidates: t.field({"required":false,"type":CandidateUpdateManyWithoutHiredByNestedInput}),
   evaluations: t.field({"required":false,"type":EvaluationUpdateManyWithoutTeamMemberNestedInput}),
   tasks: t.field({"required":false,"type":TaskMemberUpdateManyWithoutTeamMemberNestedInput}),
   follows: t.field({"required":false,"type":FollowUpdateManyWithoutTeamMemberNestedInput}),
+  interviewerEvents: t.field({"required":false,"type":EventUpdateManyWithoutInterviewersNestedInput}),
 });
 export const HiringRoleUpdateWithoutCompanyInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpdateWithoutCompanyInput>>('HiringRoleUpdateWithoutCompanyInput').implement({
   fields: HiringRoleUpdateWithoutCompanyInputFields,
@@ -28460,6 +28621,7 @@ export const CandidateUpdateWithoutCompanyInputFields = (t: any) => ({
   tasks: t.field({"required":false,"type":TaskUpdateManyWithoutCandidateNestedInput}),
   follows: t.field({"required":false,"type":FollowUpdateManyWithoutCandidateNestedInput}),
   SharedCandidateLink: t.field({"required":false,"type":SharedCandidateLinkUpdateManyWithoutCandidateNestedInput}),
+  events: t.field({"required":false,"type":EventUpdateManyWithoutCandidatesNestedInput}),
 });
 export const CandidateUpdateWithoutCompanyInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateUpdateWithoutCompanyInput>>('CandidateUpdateWithoutCompanyInput').implement({
   fields: CandidateUpdateWithoutCompanyInputFields,
@@ -28695,6 +28857,7 @@ export const CandidateUpdateWithoutReferrerInputFields = (t: any) => ({
   follows: t.field({"required":false,"type":FollowUpdateManyWithoutCandidateNestedInput}),
   SharedCandidateLink: t.field({"required":false,"type":SharedCandidateLinkUpdateManyWithoutCandidateNestedInput}),
   company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutCandidatesNestedInput}),
+  events: t.field({"required":false,"type":EventUpdateManyWithoutCandidatesNestedInput}),
 });
 export const CandidateUpdateWithoutReferrerInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateUpdateWithoutReferrerInput>>('CandidateUpdateWithoutReferrerInput').implement({
   fields: CandidateUpdateWithoutReferrerInputFields,
@@ -28726,7 +28889,7 @@ export const EventScheduleEvaluationCreateManyEventScheduleInput = builder.input
 
 export const EventScheduleInterviewerUpdateWithoutEventScheduleInputFields = (t: any) => ({
   availability: t.field({"required":false,"type":Json}),
-  teamMember: t.field({"required":false,"type":HiringRoleUpdateOneRequiredWithoutEventScheduleInterviewerNestedInput}),
+  teamMember: t.field({"required":false,"type":HiringRoleUpdateOneRequiredWithoutEventScheduleInterviewersNestedInput}),
 });
 export const EventScheduleInterviewerUpdateWithoutEventScheduleInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventScheduleInterviewerUpdateWithoutEventScheduleInput>>('EventScheduleInterviewerUpdateWithoutEventScheduleInput').implement({
   fields: EventScheduleInterviewerUpdateWithoutEventScheduleInputFields,
@@ -28737,14 +28900,6 @@ export const EventScheduleEvaluationUpdateWithoutEventScheduleInputFields = (t: 
 });
 export const EventScheduleEvaluationUpdateWithoutEventScheduleInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventScheduleEvaluationUpdateWithoutEventScheduleInput>>('EventScheduleEvaluationUpdateWithoutEventScheduleInput').implement({
   fields: EventScheduleEvaluationUpdateWithoutEventScheduleInputFields,
-});
-
-export const EventInterviewerCreateManyEventInputFields = (t: any) => ({
-  id: t.int({"required":false}),
-  teamMemberId: t.int({"required":true}),
-});
-export const EventInterviewerCreateManyEventInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventInterviewerCreateManyEventInput>>('EventInterviewerCreateManyEventInput').implement({
-  fields: EventInterviewerCreateManyEventInputFields,
 });
 
 export const EvaluationCreateManyEventInputFields = (t: any) => ({
@@ -28763,11 +28918,28 @@ export const EvaluationCreateManyEventInput = builder.inputRef<PrismaUpdateOpera
   fields: EvaluationCreateManyEventInputFields,
 });
 
-export const EventInterviewerUpdateWithoutEventInputFields = (t: any) => ({
-  teamMember: t.field({"required":false,"type":HiringRoleUpdateOneRequiredWithoutEventInterviewerNestedInput}),
+export const HiringRoleUpdateWithoutInterviewerEventsInputFields = (t: any) => ({
+  extraAbilities: t.stringList({"required":false}),
+  createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  user: t.field({"required":false,"type":UserUpdateOneRequiredWithoutHiringRolesNestedInput}),
+  role: t.field({"required":false,"type":RoleUpdateOneRequiredWithoutHiringRolesNestedInput}),
+  company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutHiringRolesNestedInput}),
+  attachments: t.field({"required":false,"type":AttachmentUpdateManyWithoutUploaderNestedInput}),
+  auditLogs: t.field({"required":false,"type":AuditLogUpdateManyWithoutUserNestedInput}),
+  eventScheduleInterviewers: t.field({"required":false,"type":EventScheduleInterviewerUpdateManyWithoutTeamMemberNestedInput}),
+  createdEvents: t.field({"required":false,"type":EventUpdateManyWithoutCreatedByNestedInput}),
+  offerRecruiter: t.field({"required":false,"type":OfferUpdateOneWithoutRecruiterNestedInput}),
+  offerHiringManager: t.field({"required":false,"type":OfferUpdateOneWithoutHiringManagerNestedInput}),
+  memberships: t.field({"required":false,"type":MembershipUpdateManyWithoutTeamMemberNestedInput}),
+  stageVisibilities: t.field({"required":false,"type":StageVisibilityUpdateManyWithoutTeamMemberNestedInput}),
+  hiredCandidates: t.field({"required":false,"type":CandidateUpdateManyWithoutHiredByNestedInput}),
+  evaluations: t.field({"required":false,"type":EvaluationUpdateManyWithoutTeamMemberNestedInput}),
+  tasks: t.field({"required":false,"type":TaskMemberUpdateManyWithoutTeamMemberNestedInput}),
+  follows: t.field({"required":false,"type":FollowUpdateManyWithoutTeamMemberNestedInput}),
 });
-export const EventInterviewerUpdateWithoutEventInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventInterviewerUpdateWithoutEventInput>>('EventInterviewerUpdateWithoutEventInput').implement({
-  fields: EventInterviewerUpdateWithoutEventInputFields,
+export const HiringRoleUpdateWithoutInterviewerEventsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.HiringRoleUpdateWithoutInterviewerEventsInput>>('HiringRoleUpdateWithoutInterviewerEventsInput').implement({
+  fields: HiringRoleUpdateWithoutInterviewerEventsInputFields,
 });
 
 export const EvaluationUpdateWithoutEventInputFields = (t: any) => ({
@@ -28785,6 +28957,43 @@ export const EvaluationUpdateWithoutEventInputFields = (t: any) => ({
 });
 export const EvaluationUpdateWithoutEventInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EvaluationUpdateWithoutEventInput>>('EvaluationUpdateWithoutEventInput').implement({
   fields: EvaluationUpdateWithoutEventInputFields,
+});
+
+export const CandidateUpdateWithoutEventsInputFields = (t: any) => ({
+  firstName: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  lastName: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  email: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  phone: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  skills: t.stringList({"required":false}),
+  mainLanguage: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  languages: t.stringList({"required":false}),
+  coverLetterText: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  birthday: t.field({"required":false,"type":NullableDateTimeFieldUpdateOperationsInput}),
+  educationLevel: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  socials: t.stringList({"required":false}),
+  links: t.stringList({"required":false}),
+  salaryExpectation: t.field({"required":false,"type":NullableIntFieldUpdateOperationsInput}),
+  createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  referrer: t.field({"required":false,"type":TagSourceUpdateOneWithoutCandidateReferrerNestedInput}),
+  cv: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateCvNestedInput}),
+  avatar: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateAvatarNestedInput}),
+  coverLetter: t.field({"required":false,"type":AttachmentUpdateOneWithoutCandidateCoverLetterNestedInput}),
+  hiredAt: t.field({"required":false,"type":OfferUpdateOneWithoutHiredNestedInput}),
+  hiredBy: t.field({"required":false,"type":HiringRoleUpdateOneWithoutHiredCandidatesNestedInput}),
+  auditLogs: t.field({"required":false,"type":AuditLogUpdateManyWithoutCandidateNestedInput}),
+  offers: t.field({"required":false,"type":MatchUpdateManyWithoutCandidateNestedInput}),
+  talentPools: t.field({"required":false,"type":TalentPoolMatchUpdateManyWithoutCandidateNestedInput}),
+  candidateTags: t.field({"required":false,"type":CandidateTagUpdateManyWithoutCandidateNestedInput}),
+  candidateCustomFields: t.field({"required":false,"type":CandidateCustomFieldUpdateManyWithoutCandidateNestedInput}),
+  evaluations: t.field({"required":false,"type":EvaluationUpdateManyWithoutCandidateNestedInput}),
+  tasks: t.field({"required":false,"type":TaskUpdateManyWithoutCandidateNestedInput}),
+  follows: t.field({"required":false,"type":FollowUpdateManyWithoutCandidateNestedInput}),
+  SharedCandidateLink: t.field({"required":false,"type":SharedCandidateLinkUpdateManyWithoutCandidateNestedInput}),
+  company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutCandidatesNestedInput}),
+});
+export const CandidateUpdateWithoutEventsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateUpdateWithoutEventsInput>>('CandidateUpdateWithoutEventsInput').implement({
+  fields: CandidateUpdateWithoutEventsInputFields,
 });
 
 export const AuditLogCreateManyOfferInputFields = (t: any) => ({
@@ -28972,6 +29181,7 @@ export const CandidateUpdateWithoutHiredAtInputFields = (t: any) => ({
   follows: t.field({"required":false,"type":FollowUpdateManyWithoutCandidateNestedInput}),
   SharedCandidateLink: t.field({"required":false,"type":SharedCandidateLinkUpdateManyWithoutCandidateNestedInput}),
   company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutCandidatesNestedInput}),
+  events: t.field({"required":false,"type":EventUpdateManyWithoutCandidatesNestedInput}),
 });
 export const CandidateUpdateWithoutHiredAtInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.CandidateUpdateWithoutHiredAtInput>>('CandidateUpdateWithoutHiredAtInput').implement({
   fields: CandidateUpdateWithoutHiredAtInputFields,
@@ -29408,7 +29618,7 @@ export const MatchUpdateWithoutStageInput = builder.inputRef<PrismaUpdateOperati
 
 export const StageVisibilityUpdateWithoutStageInputFields = (t: any) => ({
   type: t.field({"required":false,"type":EnumMembershipTypesFieldUpdateOperationsInput}),
-  teamMember: t.field({"required":false,"type":HiringRoleUpdateOneWithoutStageVisibilityNestedInput}),
+  teamMember: t.field({"required":false,"type":HiringRoleUpdateOneWithoutStageVisibilitiesNestedInput}),
   role: t.field({"required":false,"type":RoleUpdateOneWithoutStageVisibilityNestedInput}),
 });
 export const StageVisibilityUpdateWithoutStageInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.StageVisibilityUpdateWithoutStageInput>>('StageVisibilityUpdateWithoutStageInput').implement({
@@ -29617,6 +29827,24 @@ export const SharedCandidateLinkUpdateWithoutCandidateInputFields = (t: any) => 
 });
 export const SharedCandidateLinkUpdateWithoutCandidateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.SharedCandidateLinkUpdateWithoutCandidateInput>>('SharedCandidateLinkUpdateWithoutCandidateInput').implement({
   fields: SharedCandidateLinkUpdateWithoutCandidateInputFields,
+});
+
+export const EventUpdateWithoutCandidatesInputFields = (t: any) => ({
+  date: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  duration: t.field({"required":false,"type":NullableIntFieldUpdateOperationsInput}),
+  type: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  location: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  note: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  privateNote: t.field({"required":false,"type":NullableStringFieldUpdateOperationsInput}),
+  createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  updatedAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  company: t.field({"required":false,"type":CompanyUpdateOneRequiredWithoutEventsNestedInput}),
+  interviewers: t.field({"required":false,"type":HiringRoleUpdateManyWithoutInterviewerEventsNestedInput}),
+  evaluations: t.field({"required":false,"type":EvaluationUpdateManyWithoutEventNestedInput}),
+  createdBy: t.field({"required":false,"type":HiringRoleUpdateOneRequiredWithoutCreatedEventsNestedInput}),
+});
+export const EventUpdateWithoutCandidatesInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.EventUpdateWithoutCandidatesInput>>('EventUpdateWithoutCandidatesInput').implement({
+  fields: EventUpdateWithoutCandidatesInputFields,
 });
 
 export const CandidateCustomFieldCreateManyCustomFieldInputFields = (t: any) => ({

@@ -47,20 +47,57 @@ export function Select({
               leaveTo="opacity-0"
             >
               <Listbox.Options className="absolute z-30 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
-                {list.map((element) => (
+                {list.length !== 0 ? (
+                  list.map((element) => (
+                    <Listbox.Option
+                      key={element.value}
+                      className={({ active }) =>
+                        clsx(
+                          active ? 'bg-primary-500 text-white' : 'text-gray-900',
+                          element.placeholder ? 'cursor-not-allowed opacity-50' : '',
+                          'relative cursor-default select-none p-2 sm:pl-8 sm:pr-4'
+                        )
+                      }
+                      value={element.value}
+                      disabled={element.placeholder}
+                    >
+                      {({ selected, active }) => (
+                        <>
+                          <span
+                            className={clsx(
+                              selected ? 'font-semibold' : 'font-normal',
+                              'block truncate'
+                            )}
+                          >
+                            {element.label}
+                          </span>
+
+                          {selected ? (
+                            <span
+                              className={clsx(
+                                active ? 'text-white' : 'text-primary-600',
+                                'absolute inset-y-0 left-0 hidden items-center pl-1.5 sm:flex'
+                              )}
+                            >
+                              <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                            </span>
+                          ) : null}
+                        </>
+                      )}
+                    </Listbox.Option>
+                  ))
+                ) : (
                   <Listbox.Option
-                    key={element.value}
                     className={({ active }) =>
                       clsx(
                         active ? 'bg-primary-500 text-white' : 'text-gray-900',
-                        element.placeholder ? 'cursor-not-allowed opacity-50' : '',
                         'relative cursor-default select-none p-2 sm:pl-8 sm:pr-4'
                       )
                     }
-                    value={element.value}
-                    disabled={element.placeholder}
+                    value={''}
+                    disabled={true}
                   >
-                    {({ selected, active }) => (
+                    {({ selected }) => (
                       <>
                         <span
                           className={clsx(
@@ -68,23 +105,12 @@ export function Select({
                             'block truncate'
                           )}
                         >
-                          {element.label}
+                          No options
                         </span>
-
-                        {selected ? (
-                          <span
-                            className={clsx(
-                              active ? 'text-white' : 'text-primary-600',
-                              'absolute inset-y-0 left-0 hidden items-center pl-1.5 sm:flex'
-                            )}
-                          >
-                            <CheckIcon className="h-5 w-5" aria-hidden="true" />
-                          </span>
-                        ) : null}
                       </>
                     )}
                   </Listbox.Option>
-                ))}
+                )}
               </Listbox.Options>
             </Transition>
           </div>
