@@ -17,4 +17,4 @@ export {
   GET_HUB_POOLS,
 } from './dashboard-candidates'
 
-export { GET_HUB_EVENTS, GET_CANDIDATES, GET_HIRING_ROLES } from './events'
+export { GET_HUB_EVENTS, GET_HIRING_ROLES_DROPDOWN } from './events'

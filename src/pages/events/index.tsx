@@ -12,226 +12,12 @@ import AddEventModal from '@/components/modals/add-event-modal'
 import DateSelector from '@/components/views/events/date-selector'
 import ButtonDropdown from '@/components/ui/btn-dropdown'
 import { BarsArrowDownIcon } from '@heroicons/react/24/outline'
-import { compareAsc } from 'date-fns'
 import { Event } from '@/components/views/events/event-card'
-import { useMutation, useQuery } from '@apollo/client'
+import { useQuery } from '@apollo/client'
 import { GET_HUB_EVENTS } from '@/graphql-operations/queries'
+import { isSameDay } from 'date-fns'
 
 const LIST_TYPES = ['meeting', 'interview', 'call', 'all events']
-const EVENT_TYPES = ['meeting', 'interview', 'call']
-const EVENTS = [
-  {
-    date: new Date(2023, 9, 21),
-    time: '2:00pm - 3:00pm',
-    type: `${EVENT_TYPES[Math.floor(Math.random() * EVENT_TYPES.length)]}`,
-    location: 'virtual',
-    note: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatum, maxime dolorem ducimus neque laborum est officia distinctio esse dicta rerum voluptatem. Ipsum, nesciunt hic aut magni magnam quaerat alias nulla!',
-    privateNote: 'this is a private note',
-    candidate: 'Jhon Doe',
-    description: 'First meeting',
-    candidateAvatar: `https://randomuser.me/api/portraits/women/${Math.floor(
-      Math.random() * 99
-    )}.jpg`,
-    interviewers: [
-      {
-        id: 1,
-        name: 'Jhon Doe',
-        avatar: `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 99)}.jpg`,
-      },
-      {
-        id: 2,
-        name: 'Jhon Doe',
-        avatar: `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 99)}.jpg`,
-      },
-      {
-        id: 3,
-        name: 'Jhon Doe',
-        avatar: `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 99)}.jpg`,
-      },
-    ],
-  },
-  {
-    date: new Date(2023, Math.floor(Math.random() * 12), Math.floor(Math.random() * 30)),
-    time: '2:00pm - 3:00pm',
-    type: `${EVENT_TYPES[Math.floor(Math.random() * EVENT_TYPES.length)]}`,
-    location: 'virtual',
-    note: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatum, maxime dolorem ducimus neque laborum est officia distinctio esse dicta rerum voluptatem. Ipsum, nesciunt hic aut magni magnam quaerat alias nulla!',
-    privateNote: 'this is a private note',
-    candidate: 'Jhon Doe',
-    description: 'First meeting',
-    candidateAvatar: `https://randomuser.me/api/portraits/women/${Math.floor(
-      Math.random() * 99
-    )}.jpg`,
-    interviewers: [
-      {
-        id: 1,
-        name: 'Jhon Doe',
-        avatar: `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 99)}.jpg`,
-      },
-      {
-        id: 2,
-        name: 'Jhon Doe',
-        avatar: `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 99)}.jpg`,
-      },
-      {
-        id: 3,
-        name: 'Jhon Doe',
-        avatar: `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 99)}.jpg`,
-      },
-    ],
-  },
-
-  {
-    date: new Date(2023, Math.floor(Math.random() * 12), Math.floor(Math.random() * 30)),
-    time: '2:00pm - 3:00pm',
-    type: `${EVENT_TYPES[Math.floor(Math.random() * EVENT_TYPES.length)]}`,
-    location: 'virtual',
-    note: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatum, maxime dolorem ducimus neque laborum est officia distinctio esse dicta rerum voluptatem. Ipsum, nesciunt hic aut magni magnam quaerat alias nulla!',
-    privateNote: 'this is a private note',
-    candidate: 'Jhon Doe',
-    description: 'First meeting',
-    candidateAvatar: `https://randomuser.me/api/portraits/women/${Math.floor(
-      Math.random() * 99
-    )}.jpg`,
-    interviewers: [
-      {
-        id: 1,
-        name: 'Jhon Doe',
-        avatar: `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 99)}.jpg`,
-      },
-      {
-        id: 2,
-        name: 'Jhon Doe',
-        avatar: `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 99)}.jpg`,
-      },
-      {
-        id: 3,
-        name: 'Jhon Doe',
-        avatar: `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 99)}.jpg`,
-      },
-    ],
-  },
-  {
-    date: new Date(2023, Math.floor(Math.random() * 12), Math.floor(Math.random() * 30)),
-    time: '2:00pm - 3:00pm',
-    type: `${EVENT_TYPES[Math.floor(Math.random() * EVENT_TYPES.length)]}`,
-    location: 'virtual',
-    note: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatum, maxime dolorem ducimus neque laborum est officia distinctio esse dicta rerum voluptatem. Ipsum, nesciunt hic aut magni magnam quaerat alias nulla!',
-    privateNote: 'this is a private note',
-    candidate: 'Jhon Doe',
-    description: 'First meeting',
-    candidateAvatar: `https://randomuser.me/api/portraits/men/${Math.floor(
-      Math.random() * 99
-    )}.jpg`,
-    interviewers: [
-      {
-        id: 1,
-        name: 'Jhon Doe',
-        avatar: `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 99)}.jpg`,
-      },
-      {
-        id: 2,
-        name: 'Jhon Doe',
-        avatar: `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 99)}.jpg`,
-      },
-      {
-        id: 3,
-        name: 'Jhon Doe',
-        avatar: `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 99)}.jpg`,
-      },
-    ],
-  },
-  {
-    date: new Date(2023, Math.floor(Math.random() * 12), Math.floor(Math.random() * 30)),
-    time: '2:00pm - 3:00pm',
-    type: `${EVENT_TYPES[Math.floor(Math.random() * EVENT_TYPES.length)]}`,
-    location: 'virtual',
-    note: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatum, maxime dolorem ducimus neque laborum est officia distinctio esse dicta rerum voluptatem. Ipsum, nesciunt hic aut magni magnam quaerat alias nulla!',
-    privateNote: 'this is a private note',
-    candidate: 'Jhon Doe',
-    description: 'First meeting',
-    candidateAvatar: `https://randomuser.me/api/portraits/men/${Math.floor(
-      Math.random() * 99
-    )}.jpg`,
-    interviewers: [
-      {
-        id: 1,
-        name: 'Jhon Doe',
-        avatar: `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 99)}.jpg`,
-      },
-      {
-        id: 2,
-        name: 'Jhon Doe',
-        avatar: `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 99)}.jpg`,
-      },
-      {
-        id: 3,
-        name: 'Jhon Doe',
-        avatar: `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 99)}.jpg`,
-      },
-    ],
-  },
-  {
-    date: new Date(2023, Math.floor(Math.random() * 12), Math.floor(Math.random() * 30)),
-    time: '2:00pm - 3:00pm',
-    type: `${EVENT_TYPES[Math.floor(Math.random() * EVENT_TYPES.length)]}`,
-    location: 'virtual',
-    note: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatum, maxime dolorem ducimus neque laborum est officia distinctio esse dicta rerum voluptatem. Ipsum, nesciunt hic aut magni magnam quaerat alias nulla!',
-    privateNote: 'this is a private note',
-    candidate: 'Jhon Doe',
-    description: 'First meeting',
-    candidateAvatar: `https://randomuser.me/api/portraits/men/${Math.floor(
-      Math.random() * 99
-    )}.jpg`,
-    interviewers: [
-      {
-        id: 1,
-        name: 'Jhon Doe',
-        avatar: `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 99)}.jpg`,
-      },
-      {
-        id: 2,
-        name: 'Jhon Doe',
-        avatar: `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 99)}.jpg`,
-      },
-      {
-        id: 3,
-        name: 'Jhon Doe',
-        avatar: `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 99)}.jpg`,
-      },
-    ],
-  },
-  {
-    date: new Date(2023, Math.floor(Math.random() * 12), Math.floor(Math.random() * 30)),
-    time: '2:00pm - 3:00pm',
-    type: `${EVENT_TYPES[Math.floor(Math.random() * EVENT_TYPES.length)]}`,
-    location: 'virtual',
-    note: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatum, maxime dolorem ducimus neque laborum est officia distinctio esse dicta rerum voluptatem. Ipsum, nesciunt hic aut magni magnam quaerat alias nulla!',
-    privateNote: 'this is a private note',
-    candidate: 'Jhon Doe',
-    description: 'First meeting',
-    candidateAvatar: `https://randomuser.me/api/portraits/men/${Math.floor(
-      Math.random() * 99
-    )}.jpg`,
-    interviewers: [
-      {
-        id: 1,
-        name: 'Jhon Doe',
-        avatar: `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 99)}.jpg`,
-      },
-      {
-        id: 2,
-        name: 'Jhon Doe',
-        avatar: `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 99)}.jpg`,
-      },
-      {
-        id: 3,
-        name: 'Jhon Doe',
-        avatar: `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 99)}.jpg`,
-      },
-    ],
-  },
-].sort((a, b) => a.date.getTime() - b.date.getTime())
 const TABS = ['upcoming', 'past']
 
 const Events: NextPageWithLayout = () => {
@@ -240,6 +26,7 @@ const Events: NextPageWithLayout = () => {
   const [filter, setFilter] = useState('')
   const [dateSelected, setDateSelected] = useState<Date>()
   const [events, setEvents] = useState<Event[]>([])
+  const currentTime = new Date().getTime()
 
   const { data: dataHubEvents, loading: loadingHubEvents } = useQuery(GET_HUB_EVENTS, {
     fetchPolicy: 'cache-and-network',
@@ -247,25 +34,20 @@ const Events: NextPageWithLayout = () => {
 
   useEffect(() => {
     setEvents(
-      dataHubEvents?.findManyEvent
-      // dataHubEvents?.findManyEvent.filter((event: any) => {
-      //   if (dateSelected) return compareAsc(event.date, dateSelected) === 0
-      //   if (filter === 'all events') return true
-      //   if (filter === '')
-      //     return currentTab === 'upcoming' && event.date
-      //       ? event.date > currentTime
-      //       : event.date < currentTime
-      //   return (
-      //     event.type === filter &&
-      //     (currentTab === 'upcoming' ? event.date > currentTime : event.date < currentTime)
-      //   )
-      // })
+      dataHubEvents?.findManyEvent.filter((event: any) => {
+        if (dateSelected) return isSameDay(new Date(event.date), dateSelected)
+        if (filter === 'all events') return true
+        if (filter === '')
+          return currentTab === 'upcoming' && event.date
+            ? new Date(event.date).getTime() > currentTime
+            : new Date(event.date).getTime() < currentTime
+
+        return event.type === filter
+      })
     )
-  }, [dataHubEvents?.findManyEvent, currentTab])
+  }, [dataHubEvents, dateSelected, filter, currentTab])
 
-  console.log('data', events)
-
-  const currentTime = new Date().getTime()
+  console.log('EVENTS', events)
 
   const selectFilter = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (e.currentTarget.innerText.toLowerCase() === 'all events') {
@@ -283,7 +65,6 @@ const Events: NextPageWithLayout = () => {
   }
 
   return (
-    !loadingHubEvents &&
     events && (
       <LayoutSideMenu>
         <h2 className="w-8/12 justify-self-start">Events</h2>
@@ -315,7 +96,7 @@ const Events: NextPageWithLayout = () => {
                 <EmptyState tab={currentTab} />
               ) : (
                 events.map((event: Event) => {
-                  return <EventsCard key={event.type} event={event} />
+                  return <EventsCard key={`${event.type}-${event.id}`} event={event} />
                 })
               )}
             </div>
@@ -324,7 +105,7 @@ const Events: NextPageWithLayout = () => {
             <DateSelector
               selectDate={setDateSelected}
               dateSelected={dateSelected ? dateSelected.toDateString() : ''}
-              events={EVENTS}
+              events={dataHubEvents?.findManyEvent}
             />
           </div>
         </div>
