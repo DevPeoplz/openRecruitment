@@ -19,4 +19,6 @@ export {
 
 export { GET_JOB_BY_ID } from './jobs'
 
+export { GET_COMPANY_BY_ID } from './company'
+
 export { GET_HUB_EVENTS, GET_HIRING_ROLES_DROPDOWN } from './events'
