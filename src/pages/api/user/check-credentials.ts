@@ -55,6 +55,6 @@ async function handlePOST(res: NextApiResponse, req: NextApiRequest) {
   if (user && user.password && (await compare(req.body.password, user.password))) {
     res.json(omit(user, 'password'))
   } else {
-    res.status(400).end('Invalid credentials')
+    res.status(400).json({ error: 'Invalid credentials' })
   }
 }

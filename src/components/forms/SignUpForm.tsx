@@ -1,136 +1,93 @@
-import React, { useEffect, useState } from 'react'
-import { Button } from '@/components/ui/Button'
-import { PhoneField, SelectField, TextField } from '@/components/ui/fields'
-import Link from 'next/link'
-import BackgroundIllustration from '../layout/BackgroundIlustration'
+import React, { useState } from 'react'
 import { useMutation } from '@apollo/client'
-import Alert from '@/components/alert'
+import { SIGNUP_MUTATION } from '@/graphql-operations/mutations/signup-candidate'
 import { signIn } from 'next-auth/react'
-import { SIGNUP_MUTATION } from '@/graphql-operations/mutations'
+import { Button } from '@/components/ui/Button'
+import { TextField } from '@/components/ui/fields'
+import Alert from '@/components/alert'
+import ErrorHandler from '@/types/errorHandler'
 
-const SignUpForm = () => {
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [companyName, setCompanyName] = useState('')
+const SignUpForm: React.FC = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    companyName: '',
+  })
 
-  const [signup, { data, error }] = useMutation(SIGNUP_MUTATION)
+  const [signup, { loading, error }] = useMutation(SIGNUP_MUTATION)
 
-  useEffect(() => {
-    if (error) {
-      Alert({ type: 'error', message: error.message })
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value })
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    const email = e.target.email.value
+    console.log('Email being sent:', email) // Add this line for debugging
+    let result
+    try {
+      result = await ErrorHandler.catchAsync(async () => {
+        const { data } = await signup({ variables: { data: formData } })
+        if (data.signUpUser) {
+          await signIn('credentials', {
+            email: formData.email,
+            password: formData.password,
+            callbackUrl: '/dashboard',
+          })
+        }
+      })
+      console.log('Full response:', result)
+    } catch (error) {
+      console.log('Error:', error) // Add this line for debugging
     }
 
-    if (data) {
-      console.log('success')
-      signIn('credentials', { email, password })
+    if (typeof result === 'string') {
+      Alert({ type: 'error', message: result })
     }
-  }, [error, data, email, password])
+  }
 
   return (
-    <div className="px-4">
-      <BackgroundIllustration
-        width="900"
-        height="900"
-        className="absolute -top-7 left-1/2 -z-10 hidden h-[788px] -translate-x-1/2 stroke-gray-300 [mask-image:linear-gradient(to_bottom,white_20%,transparent_100%)] sm:-top-9 sm:block sm:h-auto"
+    <form onSubmit={handleSubmit}>
+      <TextField
+        id="name"
+        label="Name"
+        name="name"
+        value={formData.name}
+        onChange={handleChange}
+        required
       />
-      <h1 className="text-2xl font-semibold text-gray-900">Create a company account</h1>
-      <p className="mt-2 text-gray-600">
-        Does your company already has account? &nbsp;
-        <Link href="/login" className="text-cyan-600 hover:underline">
-          Log in
-        </Link>
-      </p>
-
-      <form
-        className="my-4 rounded-3xl bg-white px-4 py-8 md:p-8"
-        onSubmit={async (e) => {
-          e.preventDefault()
-
-          await signup({
-            variables: {
-              data: {
-                name: name,
-                email: email,
-                companyName: companyName,
-              },
-            },
-          })
-        }}
-      >
-        <div className="mb-4 grid grid-cols-2 gap-6">
-          <TextField
-            className="col-span-full"
-            label="Company name"
-            id="company"
-            name="company"
-            type="text"
-            autoComplete="company"
-            required
-            onChange={(e) => setCompanyName(e.target.value)}
-          />
-          <TextField
-            label="First name"
-            id="first_name"
-            name="first_name"
-            type="text"
-            autoComplete="given-name"
-            required
-            onChange={(e) => setName(e.target.value)}
-          />
-          <TextField
-            label="Last name"
-            id="last_name"
-            name="last_name"
-            type="text"
-            autoComplete="family-name"
-            required
-          />
-          <TextField
-            className="col-span-full"
-            label="Email address"
-            id="email"
-            name="email"
-            type="email"
-            autoComplete="email"
-            required
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <PhoneField
-            className="col-span-full"
-            label="Phone number"
-            id="phone"
-            name="phone"
-            autoComplete="tel"
-            required
-          />
-          <TextField
-            className="col-span-full"
-            label="Password"
-            id="password"
-            name="password"
-            type="password"
-            autoComplete="new-password"
-            required
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <SelectField
-            className="col-span-full"
-            label="How did you hear about us?"
-            id="referral-source"
-            name="referral_source"
-            options={[
-              { value: 'google', label: 'Google' },
-              { value: 'friend', label: 'Friend' },
-              { value: 'other', label: 'Other' },
-            ]}
-          ></SelectField>
-        </div>
-        <Button type="submit" color="primary" className="mt-8 w-full">
-          Start your free trial
-        </Button>
-      </form>
-    </div>
+      <TextField
+        id="email"
+        label="Email"
+        name="email"
+        type="email"
+        value={formData.email}
+        onChange={handleChange}
+        required
+      />
+      <TextField
+        id="password"
+        label="Password"
+        name="password"
+        type="password"
+        value={formData.password}
+        onChange={handleChange}
+        required
+      />
+      <TextField
+        id="companyName"
+        label="Company Name"
+        name="companyName"
+        value={formData.companyName}
+        onChange={handleChange}
+        required
+      />
+      <Button type="submit" disabled={loading}>
+        {loading ? 'Signing up...' : 'Sign Up'}
+      </Button>
+      {error && <p className="text-red-500">{ErrorHandler.getErrorMessage(error)}</p>}
+    </form>
   )
 }
 

@@ -5,17 +5,23 @@ export const SIGNUP_MUTATION = gql`
     signUpUser(data: $data) {
       id
       email
-      companies {
-        id
-      }
+      name
     }
   }
 `
 
+export interface UserSignUpInput {
+  email: string
+  password: string
+  name: string
+  companyName: string
+}
 export const ADD_CANDIDATE_MUTATION = gql`
   mutation ADD_CANDIDATE_MUTATION($data: CandidateCreateInputExtended!) {
     createOneCandidate(data: $data) {
       id
+      email
+      name
     }
   }
 `

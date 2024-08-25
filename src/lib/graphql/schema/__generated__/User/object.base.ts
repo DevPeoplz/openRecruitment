@@ -17,6 +17,7 @@ export const UserObject = definePrismaObject('User', {
     emailVerified: t.field(UserEmailVerifiedFieldObject),
     image: t.field(UserImageFieldObject),
     password: t.field(UserPasswordFieldObject),
+    passwordSalt: t.field(UserPasswordSaltFieldObject),
     phone: t.field(UserPhoneFieldObject),
     firstName: t.field(UserFirstNameFieldObject),
     lastName: t.field(UserLastNameFieldObject),
@@ -32,6 +33,8 @@ export const UserObject = definePrismaObject('User', {
     notifications: t.field(UserNotificationsFieldObject),
     createdAt: t.field(UserCreatedAtFieldObject),
     updatedAt: t.field(UserUpdatedAtFieldObject),
+    lastLoginAt: t.field(UserLastLoginAtFieldObject),
+    isActive: t.field(UserIsActiveFieldObject),
     accounts: t.relation('accounts', UserAccountsFieldObject(t)),
     sessions: t.relation('sessions', UserSessionsFieldObject(t)),
     hiringRoles: t.relation('hiringRoles', UserHiringRolesFieldObject(t)),
@@ -80,6 +83,13 @@ export const UserPasswordFieldObject = defineFieldObject('User', {
   description: undefined,
   nullable: true,
   resolve: (parent) => parent.password,
+});
+
+export const UserPasswordSaltFieldObject = defineFieldObject('User', {
+  type: "String",
+  description: undefined,
+  nullable: true,
+  resolve: (parent) => parent.passwordSalt,
 });
 
 export const UserPhoneFieldObject = defineFieldObject('User', {
@@ -185,6 +195,20 @@ export const UserUpdatedAtFieldObject = defineFieldObject('User', {
   description: undefined,
   nullable: false,
   resolve: (parent) => parent.updatedAt,
+});
+
+export const UserLastLoginAtFieldObject = defineFieldObject('User', {
+  type: Inputs.DateTime,
+  description: undefined,
+  nullable: true,
+  resolve: (parent) => parent.lastLoginAt,
+});
+
+export const UserIsActiveFieldObject = defineFieldObject('User', {
+  type: "Boolean",
+  description: undefined,
+  nullable: false,
+  resolve: (parent) => parent.isActive,
 });
 
 export const UserAccountsFieldArgs = builder.args((t) => ({

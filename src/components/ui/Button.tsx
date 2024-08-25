@@ -35,7 +35,7 @@ const variantStyles = {
   },
 }
 
-interface ButtonProps {
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'solid' | 'outline' | 'noborder'
   color?: 'primary' | 'white' | 'gray'
   className?: string
@@ -47,7 +47,7 @@ interface ButtonProps {
   icon?: React.ReactNode
 }
 
-export const Button = ({
+export const Button: React.FC<ButtonProps> = ({
   variant = 'solid',
   color = 'primary',
   size = 'medium',

@@ -27,6 +27,7 @@ export const EventObject = definePrismaObject('Event', {
     updatedAt: t.field(EventUpdatedAtFieldObject),
     createdBy: t.relation('createdBy', EventCreatedByFieldObject),
     createdById: t.field(EventCreatedByIdFieldObject),
+    EventInterviewer: t.relation('EventInterviewer', EventEventInterviewerFieldObject(t)),
   }),
 });
 
@@ -195,3 +196,28 @@ export const EventCreatedByIdFieldObject = defineFieldObject('Event', {
   nullable: false,
   resolve: (parent) => parent.createdById,
 });
+
+export const EventEventInterviewerFieldArgs = builder.args((t) => ({
+  where: t.field({ type: Inputs.EventInterviewerWhereInput, required: false }),
+  orderBy: t.field({ type: [Inputs.EventInterviewerOrderByWithRelationInput], required: false }),
+  cursor: t.field({ type: Inputs.EventInterviewerWhereUniqueInput, required: false }),
+  take: t.field({ type: 'Int', required: false }),
+  skip: t.field({ type: 'Int', required: false }),
+  distinct: t.field({ type: [Inputs.EventInterviewerScalarFieldEnum], required: false }),
+}))
+
+export const EventEventInterviewerFieldObject = defineRelationFunction('Event', (t) =>
+  defineRelationObject('Event', 'EventInterviewer', {
+    description: undefined,
+    nullable: false,
+    args: EventEventInterviewerFieldArgs,
+    query: (args) => ({
+      where: args.where || undefined,
+      cursor: args.cursor || undefined,
+      take: args.take || undefined,
+      distinct: args.distinct || undefined,
+      skip: args.skip || undefined,
+      orderBy: args.orderBy || undefined,
+    }),
+  }),
+);

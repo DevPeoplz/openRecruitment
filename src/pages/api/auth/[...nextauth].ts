@@ -4,7 +4,6 @@ import CredentialsProvider from 'next-auth/providers/credentials'
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import { prisma } from '@/lib/prisma'
 import { userBelongsToCompany } from '@/utils/backend'
-import { getURL } from '@/utils/dual'
 import { omit } from 'lodash'
 import { getUserWithCredentials } from '@/pages/api/user/check-credentials'
 
@@ -50,9 +49,10 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async jwt({ token, user, trigger, session }) {
-      if (user) {
-        token.userRole = user?.userRole
-        token.image = user?.photo?.path
+      if (user && user.userRole) {
+        token.userRole = user?.userRole ?? null
+        token.image = user?.photo?.path ?? null
+        token.name = user?.name ?? null // Ensure `name` is set to null if undefined
       }
 
       if (trigger === 'update' && session?.selectedCompany) {
@@ -73,12 +73,14 @@ export const authOptions: NextAuthOptions = {
         ...session,
         user: {
           ...session.user,
-          image: token.image ? token.image : session.user?.image ?? null,
+          image: token.image ?? null,
           userRole: token.userRole ?? null,
+          name: token.name ?? null, // Ensure `name` is set to null if undefined
           selectedCompany: token.selectedCompany ?? null,
         },
       }
     },
   },
 }
+
 export default NextAuth(authOptions)

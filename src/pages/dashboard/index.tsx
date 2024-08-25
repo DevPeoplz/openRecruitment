@@ -182,5 +182,29 @@ export default Dashboard
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await getServerSession(context.req, context.res, authOptions)
 
-  return { props: { session } }
+  // If there's no session, redirect to login
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    }
+  }
+
+  // Ensure all session data is serializable
+  const safeSession = {
+    user: {
+      name: session.user?.name || null,
+      email: session.user?.email || null,
+      // Include other fields you need, with null fallbacks
+    },
+    // Include other session data you need
+  }
+
+  return {
+    props: {
+      session: safeSession,
+    },
+  }
 }

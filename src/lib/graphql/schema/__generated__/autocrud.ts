@@ -17,6 +17,7 @@ import * as EventSchedule from './EventSchedule';
 import * as EventScheduleInterviewer from './EventScheduleInterviewer';
 import * as EventScheduleEvaluation from './EventScheduleEvaluation';
 import * as Event from './Event';
+import * as EventInterviewer from './EventInterviewer';
 import * as Offer from './Offer';
 import * as OfferFile from './OfferFile';
 import * as Match from './Match';
@@ -392,6 +393,24 @@ export const Cruds: Record<
       updateMany: Event.updateManyEventMutationObject,
       updateOne: Event.updateOneEventMutationObject,
       upsertOne: Event.upsertOneEventMutationObject,
+    },
+  },
+  EventInterviewer: {
+    Object: EventInterviewer.EventInterviewerObject,
+    queries: {
+      findFirst: EventInterviewer.findFirstEventInterviewerQueryObject,
+      findMany: EventInterviewer.findManyEventInterviewerQueryObject,
+      count: EventInterviewer.countEventInterviewerQueryObject,
+      findUnique: EventInterviewer.findUniqueEventInterviewerQueryObject,
+    },
+    mutations: {
+      createMany: EventInterviewer.createManyEventInterviewerMutationObject,
+      createOne: EventInterviewer.createOneEventInterviewerMutationObject,
+      deleteMany: EventInterviewer.deleteManyEventInterviewerMutationObject,
+      deleteOne: EventInterviewer.deleteOneEventInterviewerMutationObject,
+      updateMany: EventInterviewer.updateManyEventInterviewerMutationObject,
+      updateOne: EventInterviewer.updateOneEventInterviewerMutationObject,
+      upsertOne: EventInterviewer.upsertOneEventInterviewerMutationObject,
     },
   },
   Offer: {

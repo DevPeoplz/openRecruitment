@@ -34,6 +34,7 @@ export const HiringRoleObject = definePrismaObject('HiringRole', {
     tasks: t.relation('tasks', HiringRoleTasksFieldObject(t)),
     follows: t.relation('follows', HiringRoleFollowsFieldObject(t)),
     interviewerEvents: t.relation('interviewerEvents', HiringRoleInterviewerEventsFieldObject(t)),
+    EventInterviewer: t.relation('EventInterviewer', HiringRoleEventInterviewerFieldObject(t)),
   }),
 });
 
@@ -385,6 +386,31 @@ export const HiringRoleInterviewerEventsFieldObject = defineRelationFunction('Hi
     description: undefined,
     nullable: false,
     args: HiringRoleInterviewerEventsFieldArgs,
+    query: (args) => ({
+      where: args.where || undefined,
+      cursor: args.cursor || undefined,
+      take: args.take || undefined,
+      distinct: args.distinct || undefined,
+      skip: args.skip || undefined,
+      orderBy: args.orderBy || undefined,
+    }),
+  }),
+);
+
+export const HiringRoleEventInterviewerFieldArgs = builder.args((t) => ({
+  where: t.field({ type: Inputs.EventInterviewerWhereInput, required: false }),
+  orderBy: t.field({ type: [Inputs.EventInterviewerOrderByWithRelationInput], required: false }),
+  cursor: t.field({ type: Inputs.EventInterviewerWhereUniqueInput, required: false }),
+  take: t.field({ type: 'Int', required: false }),
+  skip: t.field({ type: 'Int', required: false }),
+  distinct: t.field({ type: [Inputs.EventInterviewerScalarFieldEnum], required: false }),
+}))
+
+export const HiringRoleEventInterviewerFieldObject = defineRelationFunction('HiringRole', (t) =>
+  defineRelationObject('HiringRole', 'EventInterviewer', {
+    description: undefined,
+    nullable: false,
+    args: HiringRoleEventInterviewerFieldArgs,
     query: (args) => ({
       where: args.where || undefined,
       cursor: args.cursor || undefined,

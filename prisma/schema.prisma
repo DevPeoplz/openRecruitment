@@ -28,10 +28,10 @@ model User {
   emailVerified     DateTime?
   image             String?
   password          String?
+  passwordSalt      String?      // Added for password security
   phone             String?
   firstName         String?
   lastName          String?
-  // initials String
   preferredLanguage String?      @default("en")
   timeformat24      Boolean      @default(false)
   timezone          String       @default("UTC")
@@ -39,11 +39,13 @@ model User {
   photo             Attachment?  @relation("profilePhoto", fields: [photoId], references: [id])
   photoId           Int?         @unique
   featureDiscovery  String[]
-  emailProviders    String[] // Test actual Integrations
+  emailProviders    String[]
   theme             String?
   notifications     Json?
   createdAt         DateTime     @default(now())
   updatedAt         DateTime     @updatedAt
+  lastLoginAt       DateTime?    // Added to track user activity
+  isActive          Boolean      @default(true)
   accounts          Account[]
   sessions          Session[]
   hiringRoles       HiringRole[]

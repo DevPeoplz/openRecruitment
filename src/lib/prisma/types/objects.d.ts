@@ -1,5 +1,5 @@
 /* eslint-disable */
-import type { Prisma, User, Account, Session, VerificationToken, Attachment, HiringRole, Role, Company, SubscriptionData, CompanyMetadata, Department, DisqualifyReason, TagSource, AuditLog, MeetingRoom, EventSchedule, EventScheduleInterviewer, EventScheduleEvaluation, Event, Offer, OfferFile, Match, OfferTag, Membership, TalentPool, TalentPoolFile, TalentPoolMatch, Template, Stage, StageVisibility, StageMetadata, Candidate, CandidateTag, CandidateCustomField, CustomField, Evaluation, EvaluationQuestion, SharedCandidateLink, Task, TaskMember, Follow } from ".prisma/client";
+import type { Prisma, User, Account, Session, VerificationToken, Attachment, HiringRole, Role, Company, SubscriptionData, CompanyMetadata, Department, DisqualifyReason, TagSource, AuditLog, MeetingRoom, EventSchedule, EventScheduleInterviewer, EventScheduleEvaluation, Event, EventInterviewer, Offer, OfferFile, Match, OfferTag, Membership, TalentPool, TalentPoolFile, TalentPoolMatch, Template, Stage, StageVisibility, StageMetadata, Candidate, CandidateTag, CandidateCustomField, CustomField, Evaluation, EvaluationQuestion, SharedCandidateLink, Task, TaskMember, Follow } from ".prisma/client";
 export default interface PrismaTypes {
     User: {
         Name: "User";
@@ -149,8 +149,8 @@ export default interface PrismaTypes {
         Where: Prisma.HiringRoleWhereInput;
         Create: {};
         Update: {};
-        RelationName: "user" | "role" | "company" | "attachments" | "auditLogs" | "eventScheduleInterviewers" | "createdEvents" | "offerRecruiter" | "offerHiringManager" | "memberships" | "stageVisibilities" | "hiredCandidates" | "evaluations" | "tasks" | "follows" | "interviewerEvents";
-        ListRelations: "attachments" | "auditLogs" | "eventScheduleInterviewers" | "createdEvents" | "memberships" | "stageVisibilities" | "hiredCandidates" | "evaluations" | "tasks" | "follows" | "interviewerEvents";
+        RelationName: "user" | "role" | "company" | "attachments" | "auditLogs" | "eventScheduleInterviewers" | "createdEvents" | "offerRecruiter" | "offerHiringManager" | "memberships" | "stageVisibilities" | "hiredCandidates" | "evaluations" | "tasks" | "follows" | "interviewerEvents" | "EventInterviewer";
+        ListRelations: "attachments" | "auditLogs" | "eventScheduleInterviewers" | "createdEvents" | "memberships" | "stageVisibilities" | "hiredCandidates" | "evaluations" | "tasks" | "follows" | "interviewerEvents" | "EventInterviewer";
         Relations: {
             user: {
                 Shape: User;
@@ -215,6 +215,10 @@ export default interface PrismaTypes {
             interviewerEvents: {
                 Shape: Event[];
                 Name: "Event";
+            };
+            EventInterviewer: {
+                Shape: EventInterviewer[];
+                Name: "EventInterviewer";
             };
         };
     };
@@ -592,8 +596,8 @@ export default interface PrismaTypes {
         Where: Prisma.EventWhereInput;
         Create: {};
         Update: {};
-        RelationName: "company" | "interviewers" | "evaluations" | "candidates" | "createdBy";
-        ListRelations: "interviewers" | "evaluations" | "candidates";
+        RelationName: "company" | "interviewers" | "evaluations" | "candidates" | "createdBy" | "EventInterviewer";
+        ListRelations: "interviewers" | "evaluations" | "candidates" | "EventInterviewer";
         Relations: {
             company: {
                 Shape: Company;
@@ -612,6 +616,33 @@ export default interface PrismaTypes {
                 Name: "Candidate";
             };
             createdBy: {
+                Shape: HiringRole;
+                Name: "HiringRole";
+            };
+            EventInterviewer: {
+                Shape: EventInterviewer[];
+                Name: "EventInterviewer";
+            };
+        };
+    };
+    EventInterviewer: {
+        Name: "EventInterviewer";
+        Shape: EventInterviewer;
+        Include: Prisma.EventInterviewerInclude;
+        Select: Prisma.EventInterviewerSelect;
+        OrderBy: Prisma.EventInterviewerOrderByWithRelationInput;
+        WhereUnique: Prisma.EventInterviewerWhereUniqueInput;
+        Where: Prisma.EventInterviewerWhereInput;
+        Create: {};
+        Update: {};
+        RelationName: "event" | "teamMember";
+        ListRelations: never;
+        Relations: {
+            event: {
+                Shape: Event;
+                Name: "Event";
+            };
+            teamMember: {
                 Shape: HiringRole;
                 Name: "HiringRole";
             };
