@@ -1,18 +1,19 @@
 import React, { useState } from 'react'
 import { useMutation } from '@apollo/client'
-import { SIGNUP_MUTATION } from '@/graphql-operations/mutations/signup-candidate'
+import { SIGNUP_MUTATION, UserSignUpInput } from '@/graphql-operations/mutations/signup-candidate'
 import { signIn } from 'next-auth/react'
 import { Button } from '@/components/ui/Button'
 import { TextField } from '@/components/ui/fields'
 import Alert from '@/components/alert'
 import ErrorHandler from '@/types/errorHandler'
+import { v4 as uuidv4 } from 'uuid'
 
 const SignUpForm: React.FC = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<UserSignUpInput>({
     name: '',
     email: '',
     password: '',
-    companyName: '',
+    companyName: `Personal_${uuidv4()}`,
   })
 
   const [signup, { loading, error }] = useMutation(SIGNUP_MUTATION)
@@ -21,10 +22,8 @@ const SignUpForm: React.FC = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const email = e.target.email.value
-    console.log('Email being sent:', email) // Add this line for debugging
     let result
     try {
       result = await ErrorHandler.catchAsync(async () => {
@@ -39,7 +38,7 @@ const SignUpForm: React.FC = () => {
       })
       console.log('Full response:', result)
     } catch (error) {
-      console.log('Error:', error) // Add this line for debugging
+      console.log('Error:', error)
     }
 
     if (typeof result === 'string') {
@@ -64,7 +63,7 @@ const SignUpForm: React.FC = () => {
         type="email"
         value={formData.email}
         onChange={handleChange}
-        required
+        // required
       />
       <TextField
         id="password"
@@ -72,14 +71,6 @@ const SignUpForm: React.FC = () => {
         name="password"
         type="password"
         value={formData.password}
-        onChange={handleChange}
-        required
-      />
-      <TextField
-        id="companyName"
-        label="Company Name"
-        name="companyName"
-        value={formData.companyName}
         onChange={handleChange}
         required
       />

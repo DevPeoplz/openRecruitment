@@ -1,11 +1,11 @@
 import { prisma } from '@/lib/prisma'
-import { hash, genSalt } from 'bcryptjs'
+import { hash, genSalt } from 'bcrypt'
 import { UserInputError } from 'apollo-server-micro'
-import { UserSignUpInput } from '../mutations/signup-candidate'
+import { v4 as uuidv4 } from 'uuid'
 
 export const userResolvers = {
   Mutation: {
-    signUpUser: async (_: any, { data }: { data: UserSignUpInput }) => {
+    signUpUser: async (_: any, { data }: { data: { name: string; email: string; password: string; companyName: string } }) => {
       const { email, password, name, companyName } = data
 
       // Validate email
@@ -39,10 +39,11 @@ export const userResolvers = {
         },
       })
 
-      // Create company
+      // Create company with provided name or a default name
+      const companyNameToUse = companyName || `Personal_${uuidv4()}`
       const company = await prisma.company.create({
         data: {
-          name: companyName,
+          name: companyNameToUse,
           owner: {
             connect: { id: user.id },
           },
